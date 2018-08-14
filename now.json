@@ -1,0 +1,7 @@
+{
+    "env": {
+        "PRISMA_SECRET": "@prisma-secret"
+    },
+    "alias": "now-advanced.now.sh",
+    "name": "now-advanced"
+}
