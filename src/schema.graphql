@@ -10,6 +10,7 @@ type Mutation {
   signup(email: String!, password: String!, name: String!): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
   createEnquiry(dateLocal: String!): Enquiry
+  updateEnquiry(id: ID!, dateLocal: String): Enquiry
   deleteAllEnquiries: BatchPayload!
   # publish(id: ID!): Post!
   # deletePost(id: ID!): Post!

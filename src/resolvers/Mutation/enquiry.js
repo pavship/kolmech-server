@@ -19,6 +19,19 @@ const enquiry = {
     )
   },
 
+  updateEnquiry(_, { id, dateLocal }, ctx, info) {
+    // const userId = getUserId(ctx)
+    return ctx.db.mutation.updateEnquiry(
+      {
+        where: { id },
+        data: {
+            dateLocal
+        },
+      },
+      info,
+    )
+  },
+
   deleteAllEnquiries(_, __, ctx, info) {
       return ctx.db.mutation.deleteManyEnquiries({}, info)
   },
