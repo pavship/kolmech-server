@@ -2,7 +2,11 @@ const { getUserId } = require('../utils')
 
 const Query = {
   enquiries(parent, args, ctx, info) {
-    return ctx.db.query.enquiries(null, info)
+    return ctx.db.query.enquiries({ orderBy: 'id_DESC' }, info)
+  },
+  
+  enquiry(_, { id }, ctx, info) {
+    return ctx.db.query.enquiry({ where: { id } }, info)
   },
 
   // drafts(parent, args, ctx, info) {
@@ -16,10 +20,6 @@ const Query = {
   //   }
 
   //   return ctx.db.query.posts({ where }, info)
-  // },
-
-  // post(parent, { id }, ctx, info) {
-  //   return ctx.db.query.post({ where: { id } }, info)
   // },
 
   me(parent, args, ctx, info) {

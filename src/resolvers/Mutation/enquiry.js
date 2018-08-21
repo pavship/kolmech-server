@@ -1,15 +1,26 @@
 const { getUserId } = require('../../utils')
 
 const enquiry = {
-  createEnquiry(parent, { message }, ctx, info) {
+  async createEnquiry(_, { dateLocal }, ctx, info) {
+    // const userId = getUserId(ctx)
+    // Automatically increment counter number for the new enquiry
+    const lastEnquiry = await ctx.db.query.enquiries({
+        last: 1
+    }, '{ num }')
+    const num = (!lastEnquiry[0] || !lastEnquiry[0].num) ? 1 : lastEnquiry[0].num + 1
     return ctx.db.mutation.createEnquiry(
       {
         data: {
-          message
+            num,
+            dateLocal
         },
       },
       info,
     )
+  },
+
+  deleteAllEnquiries(_, __, ctx, info) {
+      return ctx.db.mutation.deleteManyEnquiries({}, info)
   },
 
   // async createDraft(parent, { title, text }, ctx, info) {
