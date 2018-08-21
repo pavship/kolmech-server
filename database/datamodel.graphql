@@ -1,20 +1,37 @@
 type User {
-  id: ID! @unique
-  email: String! @unique
-  password: String!
-  name: String!
+    id: ID! @unique
+    email: String! @unique
+    password: String!
+    name: String!
+    comments: [Comment!]! @relation(name: "CommentByUser")
 }
 
 type Org {
-  id: ID! @unique
-  name: String!
-  enquiries: [Enquiry!]!
+    id: ID! @unique
+    name: String!
+    enquiries: [Enquiry!]!
 }
 
 type Enquiry {
-  id: ID! @unique
-  num: Int
-  message: String
-  dateLocal: String
-  org: Org
+    id: ID! @unique
+    num: Int!
+    message: String
+    dateLocal: String
+    org: Org
+    comments: [Comment!]! @relation(name: "CommentOnEnquiry" onDelete: CASCADE)
+}
+
+type Comment {
+    id: ID! @unique
+    user: User @relation(name: "CommentByUser")
+    enquiry: Enquiry @relation(name: "CommentOnEnquiry")
+    datetimeLocal: String!
+    text: String
+    type: CommentType
+}
+
+enum CommentType {
+    CREATE
+    UPDATE
+    COMMENT
 }

@@ -1,5 +1,9 @@
-# source: http://prism-publi-13cngbwm0y9ic-2025920928.eu-west-1.elb.amazonaws.com/prisma-fargate/dev
-# timestamp: Mon Aug 13 2018 23:17:19 GMT+0300 (RTZ 2 (зима))
+# source: https://kolmech-heroku-server.herokuapp.com/prisma-heroku/dev
+# timestamp: Tue Aug 21 2018 23:16:22 GMT+0300 (RTZ 2 (зима))
+
+type AggregateComment {
+  count: Int!
+}
 
 type AggregateEnquiry {
   count: Int!
@@ -18,12 +22,349 @@ type BatchPayload {
   count: Long!
 }
 
+type Comment implements Node {
+  id: ID!
+  user(where: UserWhereInput): User
+  enquiry(where: EnquiryWhereInput): Enquiry
+  datetimeLocal: String!
+  text: String
+  type: CommentType
+}
+
+"""A connection to a list of items."""
+type CommentConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [CommentEdge]!
+  aggregate: AggregateComment!
+}
+
+input CommentCreateInput {
+  datetimeLocal: String!
+  text: String
+  type: CommentType
+  user: UserCreateOneWithoutCommentsInput
+  enquiry: EnquiryCreateOneWithoutCommentsInput
+}
+
+input CommentCreateManyWithoutEnquiryInput {
+  create: [CommentCreateWithoutEnquiryInput!]
+  connect: [CommentWhereUniqueInput!]
+}
+
+input CommentCreateManyWithoutUserInput {
+  create: [CommentCreateWithoutUserInput!]
+  connect: [CommentWhereUniqueInput!]
+}
+
+input CommentCreateWithoutEnquiryInput {
+  datetimeLocal: String!
+  text: String
+  type: CommentType
+  user: UserCreateOneWithoutCommentsInput
+}
+
+input CommentCreateWithoutUserInput {
+  datetimeLocal: String!
+  text: String
+  type: CommentType
+  enquiry: EnquiryCreateOneWithoutCommentsInput
+}
+
+"""An edge in a connection."""
+type CommentEdge {
+  """The item at the end of the edge."""
+  node: Comment!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum CommentOrderByInput {
+  id_ASC
+  id_DESC
+  datetimeLocal_ASC
+  datetimeLocal_DESC
+  text_ASC
+  text_DESC
+  type_ASC
+  type_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type CommentPreviousValues {
+  id: ID!
+  datetimeLocal: String!
+  text: String
+  type: CommentType
+}
+
+type CommentSubscriptionPayload {
+  mutation: MutationType!
+  node: Comment
+  updatedFields: [String!]
+  previousValues: CommentPreviousValues
+}
+
+input CommentSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [CommentSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [CommentSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [CommentSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: CommentWhereInput
+}
+
+enum CommentType {
+  CREATE
+  UPDATE
+  COMMENT
+}
+
+input CommentUpdateInput {
+  datetimeLocal: String
+  text: String
+  type: CommentType
+  user: UserUpdateOneWithoutCommentsInput
+  enquiry: EnquiryUpdateOneWithoutCommentsInput
+}
+
+input CommentUpdateManyWithoutEnquiryInput {
+  create: [CommentCreateWithoutEnquiryInput!]
+  connect: [CommentWhereUniqueInput!]
+  disconnect: [CommentWhereUniqueInput!]
+  delete: [CommentWhereUniqueInput!]
+  update: [CommentUpdateWithWhereUniqueWithoutEnquiryInput!]
+  upsert: [CommentUpsertWithWhereUniqueWithoutEnquiryInput!]
+}
+
+input CommentUpdateManyWithoutUserInput {
+  create: [CommentCreateWithoutUserInput!]
+  connect: [CommentWhereUniqueInput!]
+  disconnect: [CommentWhereUniqueInput!]
+  delete: [CommentWhereUniqueInput!]
+  update: [CommentUpdateWithWhereUniqueWithoutUserInput!]
+  upsert: [CommentUpsertWithWhereUniqueWithoutUserInput!]
+}
+
+input CommentUpdateWithoutEnquiryDataInput {
+  datetimeLocal: String
+  text: String
+  type: CommentType
+  user: UserUpdateOneWithoutCommentsInput
+}
+
+input CommentUpdateWithoutUserDataInput {
+  datetimeLocal: String
+  text: String
+  type: CommentType
+  enquiry: EnquiryUpdateOneWithoutCommentsInput
+}
+
+input CommentUpdateWithWhereUniqueWithoutEnquiryInput {
+  where: CommentWhereUniqueInput!
+  data: CommentUpdateWithoutEnquiryDataInput!
+}
+
+input CommentUpdateWithWhereUniqueWithoutUserInput {
+  where: CommentWhereUniqueInput!
+  data: CommentUpdateWithoutUserDataInput!
+}
+
+input CommentUpsertWithWhereUniqueWithoutEnquiryInput {
+  where: CommentWhereUniqueInput!
+  update: CommentUpdateWithoutEnquiryDataInput!
+  create: CommentCreateWithoutEnquiryInput!
+}
+
+input CommentUpsertWithWhereUniqueWithoutUserInput {
+  where: CommentWhereUniqueInput!
+  update: CommentUpdateWithoutUserDataInput!
+  create: CommentCreateWithoutUserInput!
+}
+
+input CommentWhereInput {
+  """Logical AND on all given filters."""
+  AND: [CommentWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [CommentWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [CommentWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  datetimeLocal: String
+
+  """All values that are not equal to given value."""
+  datetimeLocal_not: String
+
+  """All values that are contained in given list."""
+  datetimeLocal_in: [String!]
+
+  """All values that are not contained in given list."""
+  datetimeLocal_not_in: [String!]
+
+  """All values less than the given value."""
+  datetimeLocal_lt: String
+
+  """All values less than or equal the given value."""
+  datetimeLocal_lte: String
+
+  """All values greater than the given value."""
+  datetimeLocal_gt: String
+
+  """All values greater than or equal the given value."""
+  datetimeLocal_gte: String
+
+  """All values containing the given string."""
+  datetimeLocal_contains: String
+
+  """All values not containing the given string."""
+  datetimeLocal_not_contains: String
+
+  """All values starting with the given string."""
+  datetimeLocal_starts_with: String
+
+  """All values not starting with the given string."""
+  datetimeLocal_not_starts_with: String
+
+  """All values ending with the given string."""
+  datetimeLocal_ends_with: String
+
+  """All values not ending with the given string."""
+  datetimeLocal_not_ends_with: String
+  text: String
+
+  """All values that are not equal to given value."""
+  text_not: String
+
+  """All values that are contained in given list."""
+  text_in: [String!]
+
+  """All values that are not contained in given list."""
+  text_not_in: [String!]
+
+  """All values less than the given value."""
+  text_lt: String
+
+  """All values less than or equal the given value."""
+  text_lte: String
+
+  """All values greater than the given value."""
+  text_gt: String
+
+  """All values greater than or equal the given value."""
+  text_gte: String
+
+  """All values containing the given string."""
+  text_contains: String
+
+  """All values not containing the given string."""
+  text_not_contains: String
+
+  """All values starting with the given string."""
+  text_starts_with: String
+
+  """All values not starting with the given string."""
+  text_not_starts_with: String
+
+  """All values ending with the given string."""
+  text_ends_with: String
+
+  """All values not ending with the given string."""
+  text_not_ends_with: String
+  type: CommentType
+
+  """All values that are not equal to given value."""
+  type_not: CommentType
+
+  """All values that are contained in given list."""
+  type_in: [CommentType!]
+
+  """All values that are not contained in given list."""
+  type_not_in: [CommentType!]
+  user: UserWhereInput
+  enquiry: EnquiryWhereInput
+}
+
+input CommentWhereUniqueInput {
+  id: ID
+}
+
 type Enquiry implements Node {
   id: ID!
-  num: Int
+  num: Int!
   message: String
   dateLocal: String
   org(where: OrgWhereInput): Org
+  comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
 }
 
 """A connection to a list of items."""
@@ -37,10 +378,11 @@ type EnquiryConnection {
 }
 
 input EnquiryCreateInput {
-  num: Int
+  num: Int!
   message: String
   dateLocal: String
   org: OrgCreateOneWithoutEnquiriesInput
+  comments: CommentCreateManyWithoutEnquiryInput
 }
 
 input EnquiryCreateManyWithoutOrgInput {
@@ -48,10 +390,23 @@ input EnquiryCreateManyWithoutOrgInput {
   connect: [EnquiryWhereUniqueInput!]
 }
 
-input EnquiryCreateWithoutOrgInput {
-  num: Int
+input EnquiryCreateOneWithoutCommentsInput {
+  create: EnquiryCreateWithoutCommentsInput
+  connect: EnquiryWhereUniqueInput
+}
+
+input EnquiryCreateWithoutCommentsInput {
+  num: Int!
   message: String
   dateLocal: String
+  org: OrgCreateOneWithoutEnquiriesInput
+}
+
+input EnquiryCreateWithoutOrgInput {
+  num: Int!
+  message: String
+  dateLocal: String
+  comments: CommentCreateManyWithoutEnquiryInput
 }
 
 """An edge in a connection."""
@@ -80,7 +435,7 @@ enum EnquiryOrderByInput {
 
 type EnquiryPreviousValues {
   id: ID!
-  num: Int
+  num: Int!
   message: String
   dateLocal: String
 }
@@ -129,6 +484,7 @@ input EnquiryUpdateInput {
   message: String
   dateLocal: String
   org: OrgUpdateOneWithoutEnquiriesInput
+  comments: CommentUpdateManyWithoutEnquiryInput
 }
 
 input EnquiryUpdateManyWithoutOrgInput {
@@ -140,15 +496,37 @@ input EnquiryUpdateManyWithoutOrgInput {
   upsert: [EnquiryUpsertWithWhereUniqueWithoutOrgInput!]
 }
 
+input EnquiryUpdateOneWithoutCommentsInput {
+  create: EnquiryCreateWithoutCommentsInput
+  connect: EnquiryWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: EnquiryUpdateWithoutCommentsDataInput
+  upsert: EnquiryUpsertWithoutCommentsInput
+}
+
+input EnquiryUpdateWithoutCommentsDataInput {
+  num: Int
+  message: String
+  dateLocal: String
+  org: OrgUpdateOneWithoutEnquiriesInput
+}
+
 input EnquiryUpdateWithoutOrgDataInput {
   num: Int
   message: String
   dateLocal: String
+  comments: CommentUpdateManyWithoutEnquiryInput
 }
 
 input EnquiryUpdateWithWhereUniqueWithoutOrgInput {
   where: EnquiryWhereUniqueInput!
   data: EnquiryUpdateWithoutOrgDataInput!
+}
+
+input EnquiryUpsertWithoutCommentsInput {
+  update: EnquiryUpdateWithoutCommentsDataInput!
+  create: EnquiryCreateWithoutCommentsInput!
 }
 
 input EnquiryUpsertWithWhereUniqueWithoutOrgInput {
@@ -309,6 +687,9 @@ input EnquiryWhereInput {
   """All values not ending with the given string."""
   dateLocal_not_ends_with: String
   org: OrgWhereInput
+  comments_every: CommentWhereInput
+  comments_some: CommentWhereInput
+  comments_none: CommentWhereInput
 }
 
 input EnquiryWhereUniqueInput {
@@ -325,21 +706,27 @@ type Mutation {
   createUser(data: UserCreateInput!): User!
   createOrg(data: OrgCreateInput!): Org!
   createEnquiry(data: EnquiryCreateInput!): Enquiry!
+  createComment(data: CommentCreateInput!): Comment!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateOrg(data: OrgUpdateInput!, where: OrgWhereUniqueInput!): Org
   updateEnquiry(data: EnquiryUpdateInput!, where: EnquiryWhereUniqueInput!): Enquiry
+  updateComment(data: CommentUpdateInput!, where: CommentWhereUniqueInput!): Comment
   deleteUser(where: UserWhereUniqueInput!): User
   deleteOrg(where: OrgWhereUniqueInput!): Org
   deleteEnquiry(where: EnquiryWhereUniqueInput!): Enquiry
+  deleteComment(where: CommentWhereUniqueInput!): Comment
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertOrg(where: OrgWhereUniqueInput!, create: OrgCreateInput!, update: OrgUpdateInput!): Org!
   upsertEnquiry(where: EnquiryWhereUniqueInput!, create: EnquiryCreateInput!, update: EnquiryUpdateInput!): Enquiry!
+  upsertComment(where: CommentWhereUniqueInput!, create: CommentCreateInput!, update: CommentUpdateInput!): Comment!
   updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
   updateManyOrgs(data: OrgUpdateInput!, where: OrgWhereInput): BatchPayload!
   updateManyEnquiries(data: EnquiryUpdateInput!, where: EnquiryWhereInput): BatchPayload!
+  updateManyComments(data: CommentUpdateInput!, where: CommentWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyOrgs(where: OrgWhereInput): BatchPayload!
   deleteManyEnquiries(where: EnquiryWhereInput): BatchPayload!
+  deleteManyComments(where: CommentWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -588,12 +975,15 @@ type Query {
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   orgs(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Org]!
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry]!
+  comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment]!
   user(where: UserWhereUniqueInput!): User
   org(where: OrgWhereUniqueInput!): Org
   enquiry(where: EnquiryWhereUniqueInput!): Enquiry
+  comment(where: CommentWhereUniqueInput!): Comment
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   orgsConnection(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgConnection!
   enquiriesConnection(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EnquiryConnection!
+  commentsConnection(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CommentConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -606,6 +996,7 @@ type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   org(where: OrgSubscriptionWhereInput): OrgSubscriptionPayload
   enquiry(where: EnquirySubscriptionWhereInput): EnquirySubscriptionPayload
+  comment(where: CommentSubscriptionWhereInput): CommentSubscriptionPayload
 }
 
 type User implements Node {
@@ -613,6 +1004,7 @@ type User implements Node {
   email: String!
   password: String!
   name: String!
+  comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
 }
 
 """A connection to a list of items."""
@@ -626,6 +1018,18 @@ type UserConnection {
 }
 
 input UserCreateInput {
+  email: String!
+  password: String!
+  name: String!
+  comments: CommentCreateManyWithoutUserInput
+}
+
+input UserCreateOneWithoutCommentsInput {
+  create: UserCreateWithoutCommentsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutCommentsInput {
   email: String!
   password: String!
   name: String!
@@ -705,6 +1109,27 @@ input UserUpdateInput {
   email: String
   password: String
   name: String
+  comments: CommentUpdateManyWithoutUserInput
+}
+
+input UserUpdateOneWithoutCommentsInput {
+  create: UserCreateWithoutCommentsInput
+  connect: UserWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: UserUpdateWithoutCommentsDataInput
+  upsert: UserUpsertWithoutCommentsInput
+}
+
+input UserUpdateWithoutCommentsDataInput {
+  email: String
+  password: String
+  name: String
+}
+
+input UserUpsertWithoutCommentsInput {
+  update: UserUpdateWithoutCommentsDataInput!
+  create: UserCreateWithoutCommentsInput!
 }
 
 input UserWhereInput {
@@ -876,6 +1301,9 @@ input UserWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
+  comments_every: CommentWhereInput
+  comments_some: CommentWhereInput
+  comments_none: CommentWhereInput
 }
 
 input UserWhereUniqueInput {

@@ -22,7 +22,7 @@ const Query = {
   //   return ctx.db.query.posts({ where }, info)
   // },
 
-  me(parent, args, ctx, info) {
+  me(_, __, ctx, info) {
     const id = getUserId(ctx)
     return ctx.db.query.user({ where: { id } }, info)
   },

@@ -12,6 +12,7 @@ type Mutation {
   createEnquiry(dateLocal: String!): Enquiry
   updateEnquiry(id: ID!, dateLocal: String): Enquiry
   deleteAllEnquiries: BatchPayload!
+  createEnquiryComment(enquiryId: ID!, text: String): Comment
   # publish(id: ID!): Post!
   # deletePost(id: ID!): Post!
 }
