@@ -21,12 +21,13 @@ const enquiry = {
 						//     }
 						// },
 						datetimeLocal: toLocalTimestamp(new Date()),
-						text: "First comment",
+						// htmlText: `<p><strong>Создал</strong> заявку с параметрами:</p>\n<p>Номер: <strong>${num}</strong></p>\n<p>Дата: <strong>${dateLocal}</strong></p>`,
+						htmlText: `<p><strong>Создал</strong> заявку с параметрами:</p><table><tbody><tr><td></td><td>Номер</td><td><strong>${num}</strong></td></tr> <tr><td></td><td>Дата</td><td><strong>${dateLocal}</strong></td></tr></tbody></table>`,
 						type: 'CREATE'
 					}]
 				}
 			}
-		}, info )
+		}, info)
 	},
 
   updateEnquiry(_, { id, dateLocal }, ctx, info) {
@@ -46,7 +47,7 @@ const enquiry = {
       return ctx.db.mutation.deleteManyEnquiries({}, info)
   },
 
-  createEnquiryComment(_, { enquiryId, text }, ctx, info) {
+  createEnquiryComment(_, { enquiryId, htmlText }, ctx, info) {
 	// const userId = getUserId(ctx)
 	return ctx.db.mutation.createComment({
 		data: {
@@ -56,8 +57,7 @@ const enquiry = {
 				}
 			},
 			datetimeLocal: toLocalTimestamp(new Date()),
-			text,
-			type: 'CREATE',
+			htmlText
 		}
 	}, info )
 },

@@ -1,6 +1,8 @@
 {
     "env": {
-        "PRISMA_SECRET": "@prisma-secret"
+        "PRISMA_ENDPOINT": "@prisma-endpoint",
+        "PRISMA_SECRET": "@prisma-secret",
+        "APP_SECRET": "@app-secret"
     },
     "alias": "now-advanced.now.sh",
     "name": "now-advanced"

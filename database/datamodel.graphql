@@ -2,8 +2,16 @@ type User {
     id: ID! @unique
     email: String! @unique
     password: String!
-    name: String!
+    person: Person
+    role: UserRole
     comments: [Comment!]! @relation(name: "CommentByUser")
+}
+
+type Person {
+    id: ID! @unique
+    fName: String!
+    lName: String
+    user: User
 }
 
 type Org {
@@ -27,11 +35,15 @@ type Comment {
     enquiry: Enquiry @relation(name: "CommentOnEnquiry")
     datetimeLocal: String!
     text: String
+    htmlText: String
     type: CommentType
 }
 
 enum CommentType {
     CREATE
     UPDATE
-    COMMENT
+}
+
+enum UserRole {
+    INACTIVE
 }
