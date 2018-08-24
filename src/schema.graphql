@@ -1,4 +1,4 @@
-# import Post from "./generated/prisma.graphql"
+# import User from "./generated/prisma.graphql"
 
 type Query {
   enquiries: [Enquiry!]!
@@ -13,8 +13,6 @@ type Mutation {
   updateEnquiry(id: ID!, dateLocal: String): Enquiry
   deleteAllEnquiries: BatchPayload!
   createEnquiryComment(enquiryId: ID!, htmlText: String): Comment
-  # publish(id: ID!): Post!
-  # deletePost(id: ID!): Post!
 }
 
 type Subscription {
@@ -25,8 +23,3 @@ type AuthPayload {
   token: String!
   user: User!
 }
-
-# type User {
-#   id: ID!
-#   email: String!
-# }
