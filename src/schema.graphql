@@ -10,7 +10,8 @@ type Mutation {
   signup(email: String!, password: String!, fName: String!, lName: String): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
   createEnquiry(dateLocal: String!): Enquiry
-  updateEnquiry(id: ID!, dateLocal: String): Enquiry
+#   updateEnquiry(id: ID!, dateLocal: String): Enquiry
+  updateEnquiry(input: EnquiryInput!): Enquiry
   deleteAllEnquiries: BatchPayload!
   createEnquiryComment(enquiryId: ID!, htmlText: String): Comment
 }
@@ -21,5 +22,9 @@ type Subscription {
 
 type AuthPayload {
   token: String!
-  user: User!
+}
+
+input EnquiryInput {
+  id: ID!
+  dateLocal: String
 }

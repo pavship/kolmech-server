@@ -3,7 +3,7 @@ const { toLocalTimestamp } = require('../../utils/dates')
 
 const enquiry = {
 	async createEnquiry(_, { dateLocal }, ctx, info) {
-		// const userId = getUserId(ctx)
+		const userId = getUserId(ctx)
 		// Automatically increment counter number for the new enquiry
 		const lastEnquiry = await ctx.db.query.enquiries({
 			last: 1
@@ -15,13 +15,12 @@ const enquiry = {
 				dateLocal,
 				comments: {
 					create: [{
-						// user: {
-						//     connect: {
-						//         id: userId
-						//     }
-						// },
+						user: {
+						    connect: {
+						        id: userId
+						    }
+						},
 						datetimeLocal: toLocalTimestamp(new Date()),
-						// htmlText: `<p><strong>Создал</strong> заявку с параметрами:</p>\n<p>Номер: <strong>${num}</strong></p>\n<p>Дата: <strong>${dateLocal}</strong></p>`,
 						htmlText: `<p><strong>Создал</strong> заявку с параметрами:</p><table><tbody><tr><td></td><td>Номер</td><td><strong>${num}</strong></td></tr> <tr><td></td><td>Дата</td><td><strong>${dateLocal}</strong></td></tr></tbody></table>`,
 						type: 'CREATE'
 					}]
@@ -30,38 +29,74 @@ const enquiry = {
 		}, info)
 	},
 
-  updateEnquiry(_, { id, dateLocal }, ctx, info) {
-    // const userId = getUserId(ctx)
-    return ctx.db.mutation.updateEnquiry(
-      {
-        where: { id },
-        data: {
-            dateLocal
-        },
-      },
-      info,
-    )
-  },
+	async updateEnquiry(_, {input}, ctx, info) {
+		const { id } = input
+		const userId = getUserId(ctx)
+		const updatedFields = Object.keys(input).filter(f => f !== 'id')
+		let fieldsToGet = '{'
+		updatedFields.forEach((f, i) => fieldsToGet += (i < updatedFields.length - 1) ? (f + ' ') : (f + '}'))
+		const oldEnquiry = await ctx.db.query.enquiry({
+			where: { id }
+		}, fieldsToGet)
+		// console.log(oldEnquiry)
+		return ctx.db.mutation.updateEnquiry(
+		{
+			where: { id },
+			data: {
+                dateLocal: input.dateLocal,
+                comments: {
+					create: [{
+						user: {
+						    connect: {
+						        id: userId
+						    }
+						},
+						datetimeLocal: toLocalTimestamp(new Date()),
+						htmlText: ` <p><strong>Внес изменения</strong> в заявку:</p>
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td></td>
+                                                <td>Дата</td>
+                                                <td>${oldEnquiry.dateLocal}</td>
+                                                <td>-></td>
+                                                <td><strong>${input.dateLocal}</strong></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>`,
+						type: 'UPDATE'
+					}]
+				}
+			},
+		},
+		info,
+		)
+	},
 
   deleteAllEnquiries(_, __, ctx, info) {
       return ctx.db.mutation.deleteManyEnquiries({}, info)
   },
 
   createEnquiryComment(_, { enquiryId, htmlText }, ctx, info) {
-	// const userId = getUserId(ctx)
+	const userId = getUserId(ctx)
 	return ctx.db.mutation.createComment({
 		data: {
 			enquiry: {
 				connect: {
 					id: enquiryId
 				}
-			},
-			datetimeLocal: toLocalTimestamp(new Date()),
-			htmlText
+            },
+			htmlText,
+            user: {
+                connect: {
+                    id: userId
+                }
+            },
+            datetimeLocal: toLocalTimestamp(new Date())
 		}
 	}, info )
 },
-
+ 
   // async createDraft(parent, { title, text }, ctx, info) {
   //   const userId = getUserId(ctx)
   //   return ctx.db.mutation.createPost(
