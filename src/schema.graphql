@@ -1,9 +1,10 @@
 # import User from "./generated/prisma.graphql"
 
 type Query {
+  me: User
   enquiries: [Enquiry!]!
   enquiry (id: ID!): Enquiry
-  me: User
+  orgs: [Org!]!
 }
 
 type Mutation {
@@ -14,6 +15,8 @@ type Mutation {
   updateEnquiry(input: EnquiryInput!): Enquiry
   deleteAllEnquiries: BatchPayload!
   createEnquiryComment(enquiryId: ID!, htmlText: String): Comment
+  createOrg(inn: String!): Org
+  deleteAllOrgs: BatchPayload!
 }
 
 type Subscription {

@@ -16,7 +16,10 @@ type Person {
 
 type Org {
     id: ID! @unique
+    inn: String @unique
+    moedeloId: String
     name: String!
+    legalAddress: String
     enquiries: [Enquiry!]!
 }
 

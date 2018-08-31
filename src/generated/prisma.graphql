@@ -1,5 +1,5 @@
 # source: https://kolmech-heroku-server.herokuapp.com/prisma-heroku/dev
-# timestamp: Thu Aug 23 2018 15:46:41 GMT+0300 (RTZ 2 (зима))
+# timestamp: Thu Aug 30 2018 15:02:21 GMT+0300 (RTZ 2 (зима))
 
 type AggregateComment {
   count: Int!
@@ -802,7 +802,10 @@ interface Node {
 
 type Org implements Node {
   id: ID!
+  inn: String
+  moedeloId: String
   name: String!
+  legalAddress: String
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry!]
 }
 
@@ -817,7 +820,10 @@ type OrgConnection {
 }
 
 input OrgCreateInput {
+  inn: String
+  moedeloId: String
   name: String!
+  legalAddress: String
   enquiries: EnquiryCreateManyWithoutOrgInput
 }
 
@@ -827,7 +833,10 @@ input OrgCreateOneWithoutEnquiriesInput {
 }
 
 input OrgCreateWithoutEnquiriesInput {
+  inn: String
+  moedeloId: String
   name: String!
+  legalAddress: String
 }
 
 """An edge in a connection."""
@@ -842,8 +851,14 @@ type OrgEdge {
 enum OrgOrderByInput {
   id_ASC
   id_DESC
+  inn_ASC
+  inn_DESC
+  moedeloId_ASC
+  moedeloId_DESC
   name_ASC
   name_DESC
+  legalAddress_ASC
+  legalAddress_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -852,7 +867,10 @@ enum OrgOrderByInput {
 
 type OrgPreviousValues {
   id: ID!
+  inn: String
+  moedeloId: String
   name: String!
+  legalAddress: String
 }
 
 type OrgSubscriptionPayload {
@@ -895,7 +913,10 @@ input OrgSubscriptionWhereInput {
 }
 
 input OrgUpdateInput {
+  inn: String
+  moedeloId: String
   name: String
+  legalAddress: String
   enquiries: EnquiryUpdateManyWithoutOrgInput
 }
 
@@ -909,7 +930,10 @@ input OrgUpdateOneWithoutEnquiriesInput {
 }
 
 input OrgUpdateWithoutEnquiriesDataInput {
+  inn: String
+  moedeloId: String
   name: String
+  legalAddress: String
 }
 
 input OrgUpsertWithoutEnquiriesInput {
@@ -966,6 +990,86 @@ input OrgWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  inn: String
+
+  """All values that are not equal to given value."""
+  inn_not: String
+
+  """All values that are contained in given list."""
+  inn_in: [String!]
+
+  """All values that are not contained in given list."""
+  inn_not_in: [String!]
+
+  """All values less than the given value."""
+  inn_lt: String
+
+  """All values less than or equal the given value."""
+  inn_lte: String
+
+  """All values greater than the given value."""
+  inn_gt: String
+
+  """All values greater than or equal the given value."""
+  inn_gte: String
+
+  """All values containing the given string."""
+  inn_contains: String
+
+  """All values not containing the given string."""
+  inn_not_contains: String
+
+  """All values starting with the given string."""
+  inn_starts_with: String
+
+  """All values not starting with the given string."""
+  inn_not_starts_with: String
+
+  """All values ending with the given string."""
+  inn_ends_with: String
+
+  """All values not ending with the given string."""
+  inn_not_ends_with: String
+  moedeloId: String
+
+  """All values that are not equal to given value."""
+  moedeloId_not: String
+
+  """All values that are contained in given list."""
+  moedeloId_in: [String!]
+
+  """All values that are not contained in given list."""
+  moedeloId_not_in: [String!]
+
+  """All values less than the given value."""
+  moedeloId_lt: String
+
+  """All values less than or equal the given value."""
+  moedeloId_lte: String
+
+  """All values greater than the given value."""
+  moedeloId_gt: String
+
+  """All values greater than or equal the given value."""
+  moedeloId_gte: String
+
+  """All values containing the given string."""
+  moedeloId_contains: String
+
+  """All values not containing the given string."""
+  moedeloId_not_contains: String
+
+  """All values starting with the given string."""
+  moedeloId_starts_with: String
+
+  """All values not starting with the given string."""
+  moedeloId_not_starts_with: String
+
+  """All values ending with the given string."""
+  moedeloId_ends_with: String
+
+  """All values not ending with the given string."""
+  moedeloId_not_ends_with: String
   name: String
 
   """All values that are not equal to given value."""
@@ -1006,6 +1110,46 @@ input OrgWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
+  legalAddress: String
+
+  """All values that are not equal to given value."""
+  legalAddress_not: String
+
+  """All values that are contained in given list."""
+  legalAddress_in: [String!]
+
+  """All values that are not contained in given list."""
+  legalAddress_not_in: [String!]
+
+  """All values less than the given value."""
+  legalAddress_lt: String
+
+  """All values less than or equal the given value."""
+  legalAddress_lte: String
+
+  """All values greater than the given value."""
+  legalAddress_gt: String
+
+  """All values greater than or equal the given value."""
+  legalAddress_gte: String
+
+  """All values containing the given string."""
+  legalAddress_contains: String
+
+  """All values not containing the given string."""
+  legalAddress_not_contains: String
+
+  """All values starting with the given string."""
+  legalAddress_starts_with: String
+
+  """All values not starting with the given string."""
+  legalAddress_not_starts_with: String
+
+  """All values ending with the given string."""
+  legalAddress_ends_with: String
+
+  """All values not ending with the given string."""
+  legalAddress_not_ends_with: String
   enquiries_every: EnquiryWhereInput
   enquiries_some: EnquiryWhereInput
   enquiries_none: EnquiryWhereInput
@@ -1013,6 +1157,7 @@ input OrgWhereInput {
 
 input OrgWhereUniqueInput {
   id: ID
+  inn: String
 }
 
 """Information about pagination in a connection."""
