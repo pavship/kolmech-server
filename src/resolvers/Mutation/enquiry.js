@@ -43,17 +43,16 @@ const enquiry = {
 		const userId = getUserId(ctx)
 		const org = orgId ? await ctx.db.query.org({ where: { id: orgId } }, '{ inn name }') : null
 		if ( orgId && !org) throw new Error(`Организация не найдена в базе`)
-		const updatedFields = Object.keys(input).filter(f => f !== 'id')
-		const fieldsToGet = updatedFields.reduce((res, f, i) => {
-			res += (f === 'orgId') ? (' org { name }') : (' ' + f)
-			if (i === updatedFields.length - 1) res += ' }'
-			return res
-		}, '{' )
-		console.log('fieldsToGet > ', fieldsToGet)
-		const oldEnquiry = await ctx.db.query.enquiry({
-			where: { id }
-		}, fieldsToGet)
-		// console.log(oldEnquiry)
+		// const updatedFields = Object.keys(input).filter(f => f !== 'id')
+		// const fieldsToGet = updatedFields.reduce((res, f, i) => {
+		// 	res += (f === 'orgId') ? (' org { name }') : (' ' + f)
+		// 	if (i === updatedFields.length - 1) res += ' }'
+		// 	return res
+		// }, '{' )
+		// console.log('fieldsToGet > ', fieldsToGet)
+		// const oldEnquiry = await ctx.db.query.enquiry({
+		// 	where: { id }
+		// }, fieldsToGet)
 		return ctx.db.mutation.updateEnquiry(
 		{
 			where: { id },
@@ -77,8 +76,8 @@ const enquiry = {
 						htmlText: ` <p><strong>Внес изменения</strong> в заявку:</p>
 									<table>
 										<tbody>
-											${dateLocal ? `<tr><td></td><td>Дата</td><td>${oldEnquiry.dateLocal}</td><td>-></td><td><strong>${dateLocal}</strong></td></tr>` : ''}
-											${orgId ? `<tr><td></td><td>Организация</td><td>${oldEnquiry.org.name}</td><td>-></td><td><strong>${org.name}</strong> (ИНН: ${org.inn})</td></tr>` : ''}
+											${dateLocal ? `<tr><td></td><td>Дата</td><td><span>-> </span><strong>${dateLocal}</strong></td></tr>` : ''}
+											${orgId ? `<tr><td></td><td>Организация</td><td><span>-> </span><strong>${org.name}</strong> (ИНН: ${org.inn})</td></tr>` : ''}
 										</tbody>
 									</table>`,
 						type: 'UPDATE'
