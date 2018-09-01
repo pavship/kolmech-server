@@ -2,8 +2,8 @@ const { getUserId } = require('../utils')
 
 const Query = {
 	me(_, __, ctx, info) {
-	const id = getUserId(ctx)
-	return ctx.db.query.user({ where: { id } }, info)
+        const id = getUserId(ctx)
+        return ctx.db.query.user({ where: { id } }, info)
 	},
 
 	enquiries(_, __, ctx, info) {

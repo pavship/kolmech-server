@@ -10,7 +10,7 @@ type Query {
 type Mutation {
   signup(email: String!, password: String!, fName: String!, lName: String): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
-  createEnquiry(dateLocal: String!): Enquiry
+  createEnquiry(dateLocal: String!, orgId: ID!): Enquiry
 #   updateEnquiry(id: ID!, dateLocal: String): Enquiry
   updateEnquiry(input: EnquiryInput!): Enquiry
   deleteAllEnquiries: BatchPayload!
@@ -30,4 +30,5 @@ type AuthPayload {
 input EnquiryInput {
   id: ID!
   dateLocal: String
+  orgId: ID
 }
