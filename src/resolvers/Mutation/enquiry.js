@@ -18,7 +18,7 @@ const enquiry = {
 						id: orgId
 					}
 				},
-				comments: {
+				events: {
 					create: [{
 						user: {
 							connect: {
@@ -30,8 +30,14 @@ const enquiry = {
 										<tr><td></td><td>Номер</td><td><strong>${num}</strong></td></tr> 
 										<tr><td></td><td>Дата</td><td><strong>${dateLocal}</strong></td></tr>
 										<tr><td></td><td>Организация</td><td><strong>${org.name}</strong> (ИНН: ${org.inn})</td></tr>
-									</tbody></table>`,
-						type: 'CREATE'
+									</tbody></table>
+									<p>Заявке присвоен <strong>статус<span>-></span>Новая</strong></p>`,
+						types: { set: ['CREATE', 'STATUS'] },
+						status: {
+							connect: {
+								id: "cjlj173nm000i0959pqsxsbt7"
+							}
+						}
 					}]
 				}
 			}
@@ -65,7 +71,7 @@ const enquiry = {
 							}
 						}
 					}),
-				comments: {
+				events: {
 					create: [{
 						user: {
 							connect: {
@@ -91,9 +97,9 @@ const enquiry = {
 	  return ctx.db.mutation.deleteManyEnquiries({}, info)
   },
 
-  createEnquiryComment(_, { enquiryId, htmlText }, ctx, info) {
+  createEnquiryEvent(_, { enquiryId, htmlText }, ctx, info) {
 	const userId = getUserId(ctx)
-	return ctx.db.mutation.createComment({
+	return ctx.db.mutation.createEvent({
 		data: {
 			enquiry: {
 				connect: {

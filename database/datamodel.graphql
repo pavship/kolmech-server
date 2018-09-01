@@ -4,7 +4,7 @@ type User {
     password: String!
     person: Person
     role: UserRole
-    comments: [Comment!]! @relation(name: "CommentByUser")
+    events: [Event!]! @relation(name: "EventByUser")
 }
 
 type Person {
@@ -26,25 +26,35 @@ type Org {
 type Enquiry {
     id: ID! @unique
     num: Int!
-    message: String
     dateLocal: String
     org: Org
-    comments: [Comment!]! @relation(name: "CommentOnEnquiry" onDelete: CASCADE)
+    events: [Event!]! @relation(name: "EventOnEnquiry" onDelete: CASCADE)
 }
 
-type Comment {
+type Event {
     id: ID! @unique
-    user: User @relation(name: "CommentByUser")
-    enquiry: Enquiry @relation(name: "CommentOnEnquiry")
+    user: User @relation(name: "EventByUser")
+    enquiry: Enquiry @relation(name: "EventOnEnquiry")
     datetimeLocal: String!
     text: String
     htmlText: String
-    type: CommentType
+    types: [EventType!]!
+    status: Status
 }
 
-enum CommentType {
+type Status {
+    id: ID! @unique
+    name: String!
+    stage: Int
+    prev: [Status!]! @relation(name: "StatusLink")
+    next: [Status!]! @relation(name: "StatusLink")
+}
+
+enum EventType {
     CREATE
     UPDATE
+    STATUS
+    COMMENT
 }
 
 enum UserRole {

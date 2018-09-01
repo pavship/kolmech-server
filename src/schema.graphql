@@ -14,7 +14,7 @@ type Mutation {
 #   updateEnquiry(id: ID!, dateLocal: String): Enquiry
   updateEnquiry(input: EnquiryInput!): Enquiry
   deleteAllEnquiries: BatchPayload!
-  createEnquiryComment(enquiryId: ID!, htmlText: String): Comment
+  createEnquiryEvent(enquiryId: ID!, htmlText: String): Event
   createOrg(inn: String!): Org
   deleteAllOrgs: BatchPayload!
 }

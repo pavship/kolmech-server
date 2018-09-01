@@ -1,11 +1,11 @@
 # source: https://kolmech-heroku-server.herokuapp.com/prisma-heroku/dev
-# timestamp: Thu Aug 30 2018 15:02:21 GMT+0300 (RTZ 2 (зима))
+# timestamp: Sat Sep 01 2018 11:38:35 GMT+0300 (RTZ 2 (зима))
 
-type AggregateComment {
+type AggregateEnquiry {
   count: Int!
 }
 
-type AggregateEnquiry {
+type AggregateEvent {
   count: Int!
 }
 
@@ -14,6 +14,10 @@ type AggregateOrg {
 }
 
 type AggregatePerson {
+  count: Int!
+}
+
+type AggregateStatus {
   count: Int!
 }
 
@@ -26,111 +30,97 @@ type BatchPayload {
   count: Long!
 }
 
-type Comment implements Node {
+type Enquiry implements Node {
   id: ID!
-  user(where: UserWhereInput): User
-  enquiry(where: EnquiryWhereInput): Enquiry
-  datetimeLocal: String!
-  text: String
-  htmlText: String
-  type: CommentType
+  num: Int!
+  dateLocal: String
+  org(where: OrgWhereInput): Org
+  events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
 }
 
 """A connection to a list of items."""
-type CommentConnection {
+type EnquiryConnection {
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
   """A list of edges."""
-  edges: [CommentEdge]!
-  aggregate: AggregateComment!
+  edges: [EnquiryEdge]!
+  aggregate: AggregateEnquiry!
 }
 
-input CommentCreateInput {
-  datetimeLocal: String!
-  text: String
-  htmlText: String
-  type: CommentType
-  user: UserCreateOneWithoutCommentsInput
-  enquiry: EnquiryCreateOneWithoutCommentsInput
+input EnquiryCreateInput {
+  num: Int!
+  dateLocal: String
+  org: OrgCreateOneWithoutEnquiriesInput
+  events: EventCreateManyWithoutEnquiryInput
 }
 
-input CommentCreateManyWithoutEnquiryInput {
-  create: [CommentCreateWithoutEnquiryInput!]
-  connect: [CommentWhereUniqueInput!]
+input EnquiryCreateManyWithoutOrgInput {
+  create: [EnquiryCreateWithoutOrgInput!]
+  connect: [EnquiryWhereUniqueInput!]
 }
 
-input CommentCreateManyWithoutUserInput {
-  create: [CommentCreateWithoutUserInput!]
-  connect: [CommentWhereUniqueInput!]
+input EnquiryCreateOneWithoutEventsInput {
+  create: EnquiryCreateWithoutEventsInput
+  connect: EnquiryWhereUniqueInput
 }
 
-input CommentCreateWithoutEnquiryInput {
-  datetimeLocal: String!
-  text: String
-  htmlText: String
-  type: CommentType
-  user: UserCreateOneWithoutCommentsInput
+input EnquiryCreateWithoutEventsInput {
+  num: Int!
+  dateLocal: String
+  org: OrgCreateOneWithoutEnquiriesInput
 }
 
-input CommentCreateWithoutUserInput {
-  datetimeLocal: String!
-  text: String
-  htmlText: String
-  type: CommentType
-  enquiry: EnquiryCreateOneWithoutCommentsInput
+input EnquiryCreateWithoutOrgInput {
+  num: Int!
+  dateLocal: String
+  events: EventCreateManyWithoutEnquiryInput
 }
 
 """An edge in a connection."""
-type CommentEdge {
+type EnquiryEdge {
   """The item at the end of the edge."""
-  node: Comment!
+  node: Enquiry!
 
   """A cursor for use in pagination."""
   cursor: String!
 }
 
-enum CommentOrderByInput {
+enum EnquiryOrderByInput {
   id_ASC
   id_DESC
-  datetimeLocal_ASC
-  datetimeLocal_DESC
-  text_ASC
-  text_DESC
-  htmlText_ASC
-  htmlText_DESC
-  type_ASC
-  type_DESC
+  num_ASC
+  num_DESC
+  dateLocal_ASC
+  dateLocal_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
   createdAt_DESC
 }
 
-type CommentPreviousValues {
+type EnquiryPreviousValues {
   id: ID!
-  datetimeLocal: String!
-  text: String
-  htmlText: String
-  type: CommentType
+  num: Int!
+  dateLocal: String
 }
 
-type CommentSubscriptionPayload {
+type EnquirySubscriptionPayload {
   mutation: MutationType!
-  node: Comment
+  node: Enquiry
   updatedFields: [String!]
-  previousValues: CommentPreviousValues
+  previousValues: EnquiryPreviousValues
 }
 
-input CommentSubscriptionWhereInput {
+input EnquirySubscriptionWhereInput {
   """Logical AND on all given filters."""
-  AND: [CommentSubscriptionWhereInput!]
+  AND: [EnquirySubscriptionWhereInput!]
 
   """Logical OR on all given filters."""
-  OR: [CommentSubscriptionWhereInput!]
+  OR: [EnquirySubscriptionWhereInput!]
 
   """Logical NOT on all given filters combined by AND."""
-  NOT: [CommentSubscriptionWhereInput!]
+  NOT: [EnquirySubscriptionWhereInput!]
 
   """
   The subscription event gets dispatched when it's listed in mutation_in
@@ -151,88 +141,405 @@ input CommentSubscriptionWhereInput {
   The subscription event gets only dispatched when some of the field names included in this list have been updated
   """
   updatedFields_contains_some: [String!]
-  node: CommentWhereInput
+  node: EnquiryWhereInput
 }
 
-enum CommentType {
-  CREATE
-  UPDATE
+input EnquiryUpdateInput {
+  num: Int
+  dateLocal: String
+  org: OrgUpdateOneWithoutEnquiriesInput
+  events: EventUpdateManyWithoutEnquiryInput
 }
 
-input CommentUpdateInput {
-  datetimeLocal: String
-  text: String
-  htmlText: String
-  type: CommentType
-  user: UserUpdateOneWithoutCommentsInput
-  enquiry: EnquiryUpdateOneWithoutCommentsInput
+input EnquiryUpdateManyWithoutOrgInput {
+  create: [EnquiryCreateWithoutOrgInput!]
+  connect: [EnquiryWhereUniqueInput!]
+  disconnect: [EnquiryWhereUniqueInput!]
+  delete: [EnquiryWhereUniqueInput!]
+  update: [EnquiryUpdateWithWhereUniqueWithoutOrgInput!]
+  upsert: [EnquiryUpsertWithWhereUniqueWithoutOrgInput!]
 }
 
-input CommentUpdateManyWithoutEnquiryInput {
-  create: [CommentCreateWithoutEnquiryInput!]
-  connect: [CommentWhereUniqueInput!]
-  disconnect: [CommentWhereUniqueInput!]
-  delete: [CommentWhereUniqueInput!]
-  update: [CommentUpdateWithWhereUniqueWithoutEnquiryInput!]
-  upsert: [CommentUpsertWithWhereUniqueWithoutEnquiryInput!]
+input EnquiryUpdateOneWithoutEventsInput {
+  create: EnquiryCreateWithoutEventsInput
+  connect: EnquiryWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: EnquiryUpdateWithoutEventsDataInput
+  upsert: EnquiryUpsertWithoutEventsInput
 }
 
-input CommentUpdateManyWithoutUserInput {
-  create: [CommentCreateWithoutUserInput!]
-  connect: [CommentWhereUniqueInput!]
-  disconnect: [CommentWhereUniqueInput!]
-  delete: [CommentWhereUniqueInput!]
-  update: [CommentUpdateWithWhereUniqueWithoutUserInput!]
-  upsert: [CommentUpsertWithWhereUniqueWithoutUserInput!]
+input EnquiryUpdateWithoutEventsDataInput {
+  num: Int
+  dateLocal: String
+  org: OrgUpdateOneWithoutEnquiriesInput
 }
 
-input CommentUpdateWithoutEnquiryDataInput {
-  datetimeLocal: String
-  text: String
-  htmlText: String
-  type: CommentType
-  user: UserUpdateOneWithoutCommentsInput
+input EnquiryUpdateWithoutOrgDataInput {
+  num: Int
+  dateLocal: String
+  events: EventUpdateManyWithoutEnquiryInput
 }
 
-input CommentUpdateWithoutUserDataInput {
-  datetimeLocal: String
-  text: String
-  htmlText: String
-  type: CommentType
-  enquiry: EnquiryUpdateOneWithoutCommentsInput
+input EnquiryUpdateWithWhereUniqueWithoutOrgInput {
+  where: EnquiryWhereUniqueInput!
+  data: EnquiryUpdateWithoutOrgDataInput!
 }
 
-input CommentUpdateWithWhereUniqueWithoutEnquiryInput {
-  where: CommentWhereUniqueInput!
-  data: CommentUpdateWithoutEnquiryDataInput!
+input EnquiryUpsertWithoutEventsInput {
+  update: EnquiryUpdateWithoutEventsDataInput!
+  create: EnquiryCreateWithoutEventsInput!
 }
 
-input CommentUpdateWithWhereUniqueWithoutUserInput {
-  where: CommentWhereUniqueInput!
-  data: CommentUpdateWithoutUserDataInput!
+input EnquiryUpsertWithWhereUniqueWithoutOrgInput {
+  where: EnquiryWhereUniqueInput!
+  update: EnquiryUpdateWithoutOrgDataInput!
+  create: EnquiryCreateWithoutOrgInput!
 }
 
-input CommentUpsertWithWhereUniqueWithoutEnquiryInput {
-  where: CommentWhereUniqueInput!
-  update: CommentUpdateWithoutEnquiryDataInput!
-  create: CommentCreateWithoutEnquiryInput!
-}
-
-input CommentUpsertWithWhereUniqueWithoutUserInput {
-  where: CommentWhereUniqueInput!
-  update: CommentUpdateWithoutUserDataInput!
-  create: CommentCreateWithoutUserInput!
-}
-
-input CommentWhereInput {
+input EnquiryWhereInput {
   """Logical AND on all given filters."""
-  AND: [CommentWhereInput!]
+  AND: [EnquiryWhereInput!]
 
   """Logical OR on all given filters."""
-  OR: [CommentWhereInput!]
+  OR: [EnquiryWhereInput!]
 
   """Logical NOT on all given filters combined by AND."""
-  NOT: [CommentWhereInput!]
+  NOT: [EnquiryWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  num: Int
+
+  """All values that are not equal to given value."""
+  num_not: Int
+
+  """All values that are contained in given list."""
+  num_in: [Int!]
+
+  """All values that are not contained in given list."""
+  num_not_in: [Int!]
+
+  """All values less than the given value."""
+  num_lt: Int
+
+  """All values less than or equal the given value."""
+  num_lte: Int
+
+  """All values greater than the given value."""
+  num_gt: Int
+
+  """All values greater than or equal the given value."""
+  num_gte: Int
+  dateLocal: String
+
+  """All values that are not equal to given value."""
+  dateLocal_not: String
+
+  """All values that are contained in given list."""
+  dateLocal_in: [String!]
+
+  """All values that are not contained in given list."""
+  dateLocal_not_in: [String!]
+
+  """All values less than the given value."""
+  dateLocal_lt: String
+
+  """All values less than or equal the given value."""
+  dateLocal_lte: String
+
+  """All values greater than the given value."""
+  dateLocal_gt: String
+
+  """All values greater than or equal the given value."""
+  dateLocal_gte: String
+
+  """All values containing the given string."""
+  dateLocal_contains: String
+
+  """All values not containing the given string."""
+  dateLocal_not_contains: String
+
+  """All values starting with the given string."""
+  dateLocal_starts_with: String
+
+  """All values not starting with the given string."""
+  dateLocal_not_starts_with: String
+
+  """All values ending with the given string."""
+  dateLocal_ends_with: String
+
+  """All values not ending with the given string."""
+  dateLocal_not_ends_with: String
+  org: OrgWhereInput
+  events_every: EventWhereInput
+  events_some: EventWhereInput
+  events_none: EventWhereInput
+}
+
+input EnquiryWhereUniqueInput {
+  id: ID
+}
+
+type Event implements Node {
+  id: ID!
+  user(where: UserWhereInput): User
+  enquiry(where: EnquiryWhereInput): Enquiry
+  datetimeLocal: String!
+  text: String
+  htmlText: String
+  types: [EventType!]!
+  status(where: StatusWhereInput): Status
+}
+
+"""A connection to a list of items."""
+type EventConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [EventEdge]!
+  aggregate: AggregateEvent!
+}
+
+input EventCreateInput {
+  datetimeLocal: String!
+  text: String
+  htmlText: String
+  types: EventCreatetypesInput
+  user: UserCreateOneWithoutEventsInput
+  enquiry: EnquiryCreateOneWithoutEventsInput
+  status: StatusCreateOneInput
+}
+
+input EventCreateManyWithoutEnquiryInput {
+  create: [EventCreateWithoutEnquiryInput!]
+  connect: [EventWhereUniqueInput!]
+}
+
+input EventCreateManyWithoutUserInput {
+  create: [EventCreateWithoutUserInput!]
+  connect: [EventWhereUniqueInput!]
+}
+
+input EventCreatetypesInput {
+  set: [EventType!]
+}
+
+input EventCreateWithoutEnquiryInput {
+  datetimeLocal: String!
+  text: String
+  htmlText: String
+  types: EventCreatetypesInput
+  user: UserCreateOneWithoutEventsInput
+  status: StatusCreateOneInput
+}
+
+input EventCreateWithoutUserInput {
+  datetimeLocal: String!
+  text: String
+  htmlText: String
+  types: EventCreatetypesInput
+  enquiry: EnquiryCreateOneWithoutEventsInput
+  status: StatusCreateOneInput
+}
+
+"""An edge in a connection."""
+type EventEdge {
+  """The item at the end of the edge."""
+  node: Event!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum EventOrderByInput {
+  id_ASC
+  id_DESC
+  datetimeLocal_ASC
+  datetimeLocal_DESC
+  text_ASC
+  text_DESC
+  htmlText_ASC
+  htmlText_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type EventPreviousValues {
+  id: ID!
+  datetimeLocal: String!
+  text: String
+  htmlText: String
+  types: [EventType!]!
+}
+
+type EventSubscriptionPayload {
+  mutation: MutationType!
+  node: Event
+  updatedFields: [String!]
+  previousValues: EventPreviousValues
+}
+
+input EventSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [EventSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [EventSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [EventSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: EventWhereInput
+}
+
+enum EventType {
+  CREATE
+  UPDATE
+  STATUS
+  COMMENT
+}
+
+input EventUpdateInput {
+  datetimeLocal: String
+  text: String
+  htmlText: String
+  types: EventUpdatetypesInput
+  user: UserUpdateOneWithoutEventsInput
+  enquiry: EnquiryUpdateOneWithoutEventsInput
+  status: StatusUpdateOneInput
+}
+
+input EventUpdateManyWithoutEnquiryInput {
+  create: [EventCreateWithoutEnquiryInput!]
+  connect: [EventWhereUniqueInput!]
+  disconnect: [EventWhereUniqueInput!]
+  delete: [EventWhereUniqueInput!]
+  update: [EventUpdateWithWhereUniqueWithoutEnquiryInput!]
+  upsert: [EventUpsertWithWhereUniqueWithoutEnquiryInput!]
+}
+
+input EventUpdateManyWithoutUserInput {
+  create: [EventCreateWithoutUserInput!]
+  connect: [EventWhereUniqueInput!]
+  disconnect: [EventWhereUniqueInput!]
+  delete: [EventWhereUniqueInput!]
+  update: [EventUpdateWithWhereUniqueWithoutUserInput!]
+  upsert: [EventUpsertWithWhereUniqueWithoutUserInput!]
+}
+
+input EventUpdatetypesInput {
+  set: [EventType!]
+}
+
+input EventUpdateWithoutEnquiryDataInput {
+  datetimeLocal: String
+  text: String
+  htmlText: String
+  types: EventUpdatetypesInput
+  user: UserUpdateOneWithoutEventsInput
+  status: StatusUpdateOneInput
+}
+
+input EventUpdateWithoutUserDataInput {
+  datetimeLocal: String
+  text: String
+  htmlText: String
+  types: EventUpdatetypesInput
+  enquiry: EnquiryUpdateOneWithoutEventsInput
+  status: StatusUpdateOneInput
+}
+
+input EventUpdateWithWhereUniqueWithoutEnquiryInput {
+  where: EventWhereUniqueInput!
+  data: EventUpdateWithoutEnquiryDataInput!
+}
+
+input EventUpdateWithWhereUniqueWithoutUserInput {
+  where: EventWhereUniqueInput!
+  data: EventUpdateWithoutUserDataInput!
+}
+
+input EventUpsertWithWhereUniqueWithoutEnquiryInput {
+  where: EventWhereUniqueInput!
+  update: EventUpdateWithoutEnquiryDataInput!
+  create: EventCreateWithoutEnquiryInput!
+}
+
+input EventUpsertWithWhereUniqueWithoutUserInput {
+  where: EventWhereUniqueInput!
+  update: EventUpdateWithoutUserDataInput!
+  create: EventCreateWithoutUserInput!
+}
+
+input EventWhereInput {
+  """Logical AND on all given filters."""
+  AND: [EventWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [EventWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [EventWhereInput!]
   id: ID
 
   """All values that are not equal to given value."""
@@ -393,359 +700,12 @@ input CommentWhereInput {
 
   """All values not ending with the given string."""
   htmlText_not_ends_with: String
-  type: CommentType
-
-  """All values that are not equal to given value."""
-  type_not: CommentType
-
-  """All values that are contained in given list."""
-  type_in: [CommentType!]
-
-  """All values that are not contained in given list."""
-  type_not_in: [CommentType!]
   user: UserWhereInput
   enquiry: EnquiryWhereInput
+  status: StatusWhereInput
 }
 
-input CommentWhereUniqueInput {
-  id: ID
-}
-
-type Enquiry implements Node {
-  id: ID!
-  num: Int!
-  message: String
-  dateLocal: String
-  org(where: OrgWhereInput): Org
-  comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
-}
-
-"""A connection to a list of items."""
-type EnquiryConnection {
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """A list of edges."""
-  edges: [EnquiryEdge]!
-  aggregate: AggregateEnquiry!
-}
-
-input EnquiryCreateInput {
-  num: Int!
-  message: String
-  dateLocal: String
-  org: OrgCreateOneWithoutEnquiriesInput
-  comments: CommentCreateManyWithoutEnquiryInput
-}
-
-input EnquiryCreateManyWithoutOrgInput {
-  create: [EnquiryCreateWithoutOrgInput!]
-  connect: [EnquiryWhereUniqueInput!]
-}
-
-input EnquiryCreateOneWithoutCommentsInput {
-  create: EnquiryCreateWithoutCommentsInput
-  connect: EnquiryWhereUniqueInput
-}
-
-input EnquiryCreateWithoutCommentsInput {
-  num: Int!
-  message: String
-  dateLocal: String
-  org: OrgCreateOneWithoutEnquiriesInput
-}
-
-input EnquiryCreateWithoutOrgInput {
-  num: Int!
-  message: String
-  dateLocal: String
-  comments: CommentCreateManyWithoutEnquiryInput
-}
-
-"""An edge in a connection."""
-type EnquiryEdge {
-  """The item at the end of the edge."""
-  node: Enquiry!
-
-  """A cursor for use in pagination."""
-  cursor: String!
-}
-
-enum EnquiryOrderByInput {
-  id_ASC
-  id_DESC
-  num_ASC
-  num_DESC
-  message_ASC
-  message_DESC
-  dateLocal_ASC
-  dateLocal_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  createdAt_ASC
-  createdAt_DESC
-}
-
-type EnquiryPreviousValues {
-  id: ID!
-  num: Int!
-  message: String
-  dateLocal: String
-}
-
-type EnquirySubscriptionPayload {
-  mutation: MutationType!
-  node: Enquiry
-  updatedFields: [String!]
-  previousValues: EnquiryPreviousValues
-}
-
-input EnquirySubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [EnquirySubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [EnquirySubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [EnquirySubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
-  mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
-  updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
-  updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
-  updatedFields_contains_some: [String!]
-  node: EnquiryWhereInput
-}
-
-input EnquiryUpdateInput {
-  num: Int
-  message: String
-  dateLocal: String
-  org: OrgUpdateOneWithoutEnquiriesInput
-  comments: CommentUpdateManyWithoutEnquiryInput
-}
-
-input EnquiryUpdateManyWithoutOrgInput {
-  create: [EnquiryCreateWithoutOrgInput!]
-  connect: [EnquiryWhereUniqueInput!]
-  disconnect: [EnquiryWhereUniqueInput!]
-  delete: [EnquiryWhereUniqueInput!]
-  update: [EnquiryUpdateWithWhereUniqueWithoutOrgInput!]
-  upsert: [EnquiryUpsertWithWhereUniqueWithoutOrgInput!]
-}
-
-input EnquiryUpdateOneWithoutCommentsInput {
-  create: EnquiryCreateWithoutCommentsInput
-  connect: EnquiryWhereUniqueInput
-  disconnect: Boolean
-  delete: Boolean
-  update: EnquiryUpdateWithoutCommentsDataInput
-  upsert: EnquiryUpsertWithoutCommentsInput
-}
-
-input EnquiryUpdateWithoutCommentsDataInput {
-  num: Int
-  message: String
-  dateLocal: String
-  org: OrgUpdateOneWithoutEnquiriesInput
-}
-
-input EnquiryUpdateWithoutOrgDataInput {
-  num: Int
-  message: String
-  dateLocal: String
-  comments: CommentUpdateManyWithoutEnquiryInput
-}
-
-input EnquiryUpdateWithWhereUniqueWithoutOrgInput {
-  where: EnquiryWhereUniqueInput!
-  data: EnquiryUpdateWithoutOrgDataInput!
-}
-
-input EnquiryUpsertWithoutCommentsInput {
-  update: EnquiryUpdateWithoutCommentsDataInput!
-  create: EnquiryCreateWithoutCommentsInput!
-}
-
-input EnquiryUpsertWithWhereUniqueWithoutOrgInput {
-  where: EnquiryWhereUniqueInput!
-  update: EnquiryUpdateWithoutOrgDataInput!
-  create: EnquiryCreateWithoutOrgInput!
-}
-
-input EnquiryWhereInput {
-  """Logical AND on all given filters."""
-  AND: [EnquiryWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [EnquiryWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [EnquiryWhereInput!]
-  id: ID
-
-  """All values that are not equal to given value."""
-  id_not: ID
-
-  """All values that are contained in given list."""
-  id_in: [ID!]
-
-  """All values that are not contained in given list."""
-  id_not_in: [ID!]
-
-  """All values less than the given value."""
-  id_lt: ID
-
-  """All values less than or equal the given value."""
-  id_lte: ID
-
-  """All values greater than the given value."""
-  id_gt: ID
-
-  """All values greater than or equal the given value."""
-  id_gte: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values not ending with the given string."""
-  id_not_ends_with: ID
-  num: Int
-
-  """All values that are not equal to given value."""
-  num_not: Int
-
-  """All values that are contained in given list."""
-  num_in: [Int!]
-
-  """All values that are not contained in given list."""
-  num_not_in: [Int!]
-
-  """All values less than the given value."""
-  num_lt: Int
-
-  """All values less than or equal the given value."""
-  num_lte: Int
-
-  """All values greater than the given value."""
-  num_gt: Int
-
-  """All values greater than or equal the given value."""
-  num_gte: Int
-  message: String
-
-  """All values that are not equal to given value."""
-  message_not: String
-
-  """All values that are contained in given list."""
-  message_in: [String!]
-
-  """All values that are not contained in given list."""
-  message_not_in: [String!]
-
-  """All values less than the given value."""
-  message_lt: String
-
-  """All values less than or equal the given value."""
-  message_lte: String
-
-  """All values greater than the given value."""
-  message_gt: String
-
-  """All values greater than or equal the given value."""
-  message_gte: String
-
-  """All values containing the given string."""
-  message_contains: String
-
-  """All values not containing the given string."""
-  message_not_contains: String
-
-  """All values starting with the given string."""
-  message_starts_with: String
-
-  """All values not starting with the given string."""
-  message_not_starts_with: String
-
-  """All values ending with the given string."""
-  message_ends_with: String
-
-  """All values not ending with the given string."""
-  message_not_ends_with: String
-  dateLocal: String
-
-  """All values that are not equal to given value."""
-  dateLocal_not: String
-
-  """All values that are contained in given list."""
-  dateLocal_in: [String!]
-
-  """All values that are not contained in given list."""
-  dateLocal_not_in: [String!]
-
-  """All values less than the given value."""
-  dateLocal_lt: String
-
-  """All values less than or equal the given value."""
-  dateLocal_lte: String
-
-  """All values greater than the given value."""
-  dateLocal_gt: String
-
-  """All values greater than or equal the given value."""
-  dateLocal_gte: String
-
-  """All values containing the given string."""
-  dateLocal_contains: String
-
-  """All values not containing the given string."""
-  dateLocal_not_contains: String
-
-  """All values starting with the given string."""
-  dateLocal_starts_with: String
-
-  """All values not starting with the given string."""
-  dateLocal_not_starts_with: String
-
-  """All values ending with the given string."""
-  dateLocal_ends_with: String
-
-  """All values not ending with the given string."""
-  dateLocal_not_ends_with: String
-  org: OrgWhereInput
-  comments_every: CommentWhereInput
-  comments_some: CommentWhereInput
-  comments_none: CommentWhereInput
-}
-
-input EnquiryWhereUniqueInput {
+input EventWhereUniqueInput {
   id: ID
 }
 
@@ -760,32 +720,38 @@ type Mutation {
   createPerson(data: PersonCreateInput!): Person!
   createOrg(data: OrgCreateInput!): Org!
   createEnquiry(data: EnquiryCreateInput!): Enquiry!
-  createComment(data: CommentCreateInput!): Comment!
+  createEvent(data: EventCreateInput!): Event!
+  createStatus(data: StatusCreateInput!): Status!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updatePerson(data: PersonUpdateInput!, where: PersonWhereUniqueInput!): Person
   updateOrg(data: OrgUpdateInput!, where: OrgWhereUniqueInput!): Org
   updateEnquiry(data: EnquiryUpdateInput!, where: EnquiryWhereUniqueInput!): Enquiry
-  updateComment(data: CommentUpdateInput!, where: CommentWhereUniqueInput!): Comment
+  updateEvent(data: EventUpdateInput!, where: EventWhereUniqueInput!): Event
+  updateStatus(data: StatusUpdateInput!, where: StatusWhereUniqueInput!): Status
   deleteUser(where: UserWhereUniqueInput!): User
   deletePerson(where: PersonWhereUniqueInput!): Person
   deleteOrg(where: OrgWhereUniqueInput!): Org
   deleteEnquiry(where: EnquiryWhereUniqueInput!): Enquiry
-  deleteComment(where: CommentWhereUniqueInput!): Comment
+  deleteEvent(where: EventWhereUniqueInput!): Event
+  deleteStatus(where: StatusWhereUniqueInput!): Status
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertPerson(where: PersonWhereUniqueInput!, create: PersonCreateInput!, update: PersonUpdateInput!): Person!
   upsertOrg(where: OrgWhereUniqueInput!, create: OrgCreateInput!, update: OrgUpdateInput!): Org!
   upsertEnquiry(where: EnquiryWhereUniqueInput!, create: EnquiryCreateInput!, update: EnquiryUpdateInput!): Enquiry!
-  upsertComment(where: CommentWhereUniqueInput!, create: CommentCreateInput!, update: CommentUpdateInput!): Comment!
+  upsertEvent(where: EventWhereUniqueInput!, create: EventCreateInput!, update: EventUpdateInput!): Event!
+  upsertStatus(where: StatusWhereUniqueInput!, create: StatusCreateInput!, update: StatusUpdateInput!): Status!
   updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
   updateManyPersons(data: PersonUpdateInput!, where: PersonWhereInput): BatchPayload!
   updateManyOrgs(data: OrgUpdateInput!, where: OrgWhereInput): BatchPayload!
   updateManyEnquiries(data: EnquiryUpdateInput!, where: EnquiryWhereInput): BatchPayload!
-  updateManyComments(data: CommentUpdateInput!, where: CommentWhereInput): BatchPayload!
+  updateManyEvents(data: EventUpdateInput!, where: EventWhereInput): BatchPayload!
+  updateManyStatuses(data: StatusUpdateInput!, where: StatusWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyPersons(where: PersonWhereInput): BatchPayload!
   deleteManyOrgs(where: OrgWhereInput): BatchPayload!
   deleteManyEnquiries(where: EnquiryWhereInput): BatchPayload!
-  deleteManyComments(where: CommentWhereInput): BatchPayload!
+  deleteManyEvents(where: EventWhereInput): BatchPayload!
+  deleteManyStatuses(where: StatusWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -1441,17 +1407,20 @@ type Query {
   persons(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Person]!
   orgs(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Org]!
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry]!
-  comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment]!
+  events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event]!
+  statuses(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Status]!
   user(where: UserWhereUniqueInput!): User
   person(where: PersonWhereUniqueInput!): Person
   org(where: OrgWhereUniqueInput!): Org
   enquiry(where: EnquiryWhereUniqueInput!): Enquiry
-  comment(where: CommentWhereUniqueInput!): Comment
+  event(where: EventWhereUniqueInput!): Event
+  status(where: StatusWhereUniqueInput!): Status
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   personsConnection(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PersonConnection!
   orgsConnection(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgConnection!
   enquiriesConnection(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EnquiryConnection!
-  commentsConnection(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CommentConnection!
+  eventsConnection(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EventConnection!
+  statusesConnection(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StatusConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -1460,12 +1429,338 @@ type Query {
   ): Node
 }
 
+type Status implements Node {
+  id: ID!
+  name: String!
+  stage: Int
+  prev(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Status!]
+  next(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Status!]
+}
+
+"""A connection to a list of items."""
+type StatusConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [StatusEdge]!
+  aggregate: AggregateStatus!
+}
+
+input StatusCreateInput {
+  name: String!
+  stage: Int
+  prev: StatusCreateManyWithoutNextInput
+  next: StatusCreateManyWithoutPrevInput
+}
+
+input StatusCreateManyWithoutNextInput {
+  create: [StatusCreateWithoutNextInput!]
+  connect: [StatusWhereUniqueInput!]
+}
+
+input StatusCreateManyWithoutPrevInput {
+  create: [StatusCreateWithoutPrevInput!]
+  connect: [StatusWhereUniqueInput!]
+}
+
+input StatusCreateOneInput {
+  create: StatusCreateInput
+  connect: StatusWhereUniqueInput
+}
+
+input StatusCreateWithoutNextInput {
+  name: String!
+  stage: Int
+  prev: StatusCreateManyWithoutNextInput
+}
+
+input StatusCreateWithoutPrevInput {
+  name: String!
+  stage: Int
+  next: StatusCreateManyWithoutPrevInput
+}
+
+"""An edge in a connection."""
+type StatusEdge {
+  """The item at the end of the edge."""
+  node: Status!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum StatusOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  stage_ASC
+  stage_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type StatusPreviousValues {
+  id: ID!
+  name: String!
+  stage: Int
+}
+
+type StatusSubscriptionPayload {
+  mutation: MutationType!
+  node: Status
+  updatedFields: [String!]
+  previousValues: StatusPreviousValues
+}
+
+input StatusSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [StatusSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [StatusSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [StatusSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: StatusWhereInput
+}
+
+input StatusUpdateDataInput {
+  name: String
+  stage: Int
+  prev: StatusUpdateManyWithoutNextInput
+  next: StatusUpdateManyWithoutPrevInput
+}
+
+input StatusUpdateInput {
+  name: String
+  stage: Int
+  prev: StatusUpdateManyWithoutNextInput
+  next: StatusUpdateManyWithoutPrevInput
+}
+
+input StatusUpdateManyWithoutNextInput {
+  create: [StatusCreateWithoutNextInput!]
+  connect: [StatusWhereUniqueInput!]
+  disconnect: [StatusWhereUniqueInput!]
+  delete: [StatusWhereUniqueInput!]
+  update: [StatusUpdateWithWhereUniqueWithoutNextInput!]
+  upsert: [StatusUpsertWithWhereUniqueWithoutNextInput!]
+}
+
+input StatusUpdateManyWithoutPrevInput {
+  create: [StatusCreateWithoutPrevInput!]
+  connect: [StatusWhereUniqueInput!]
+  disconnect: [StatusWhereUniqueInput!]
+  delete: [StatusWhereUniqueInput!]
+  update: [StatusUpdateWithWhereUniqueWithoutPrevInput!]
+  upsert: [StatusUpsertWithWhereUniqueWithoutPrevInput!]
+}
+
+input StatusUpdateOneInput {
+  create: StatusCreateInput
+  connect: StatusWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: StatusUpdateDataInput
+  upsert: StatusUpsertNestedInput
+}
+
+input StatusUpdateWithoutNextDataInput {
+  name: String
+  stage: Int
+  prev: StatusUpdateManyWithoutNextInput
+}
+
+input StatusUpdateWithoutPrevDataInput {
+  name: String
+  stage: Int
+  next: StatusUpdateManyWithoutPrevInput
+}
+
+input StatusUpdateWithWhereUniqueWithoutNextInput {
+  where: StatusWhereUniqueInput!
+  data: StatusUpdateWithoutNextDataInput!
+}
+
+input StatusUpdateWithWhereUniqueWithoutPrevInput {
+  where: StatusWhereUniqueInput!
+  data: StatusUpdateWithoutPrevDataInput!
+}
+
+input StatusUpsertNestedInput {
+  update: StatusUpdateDataInput!
+  create: StatusCreateInput!
+}
+
+input StatusUpsertWithWhereUniqueWithoutNextInput {
+  where: StatusWhereUniqueInput!
+  update: StatusUpdateWithoutNextDataInput!
+  create: StatusCreateWithoutNextInput!
+}
+
+input StatusUpsertWithWhereUniqueWithoutPrevInput {
+  where: StatusWhereUniqueInput!
+  update: StatusUpdateWithoutPrevDataInput!
+  create: StatusCreateWithoutPrevInput!
+}
+
+input StatusWhereInput {
+  """Logical AND on all given filters."""
+  AND: [StatusWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [StatusWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [StatusWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  stage: Int
+
+  """All values that are not equal to given value."""
+  stage_not: Int
+
+  """All values that are contained in given list."""
+  stage_in: [Int!]
+
+  """All values that are not contained in given list."""
+  stage_not_in: [Int!]
+
+  """All values less than the given value."""
+  stage_lt: Int
+
+  """All values less than or equal the given value."""
+  stage_lte: Int
+
+  """All values greater than the given value."""
+  stage_gt: Int
+
+  """All values greater than or equal the given value."""
+  stage_gte: Int
+  prev_every: StatusWhereInput
+  prev_some: StatusWhereInput
+  prev_none: StatusWhereInput
+  next_every: StatusWhereInput
+  next_some: StatusWhereInput
+  next_none: StatusWhereInput
+  _MagicalBackRelation_EventToStatus_every: EventWhereInput
+  _MagicalBackRelation_EventToStatus_some: EventWhereInput
+  _MagicalBackRelation_EventToStatus_none: EventWhereInput
+}
+
+input StatusWhereUniqueInput {
+  id: ID
+}
+
 type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   person(where: PersonSubscriptionWhereInput): PersonSubscriptionPayload
   org(where: OrgSubscriptionWhereInput): OrgSubscriptionPayload
   enquiry(where: EnquirySubscriptionWhereInput): EnquirySubscriptionPayload
-  comment(where: CommentSubscriptionWhereInput): CommentSubscriptionPayload
+  event(where: EventSubscriptionWhereInput): EventSubscriptionPayload
+  status(where: StatusSubscriptionWhereInput): StatusSubscriptionPayload
 }
 
 type User implements Node {
@@ -1474,7 +1769,7 @@ type User implements Node {
   password: String!
   person(where: PersonWhereInput): Person
   role: UserRole
-  comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
+  events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
 }
 
 """A connection to a list of items."""
@@ -1492,11 +1787,11 @@ input UserCreateInput {
   password: String!
   role: UserRole
   person: PersonCreateOneWithoutUserInput
-  comments: CommentCreateManyWithoutUserInput
+  events: EventCreateManyWithoutUserInput
 }
 
-input UserCreateOneWithoutCommentsInput {
-  create: UserCreateWithoutCommentsInput
+input UserCreateOneWithoutEventsInput {
+  create: UserCreateWithoutEventsInput
   connect: UserWhereUniqueInput
 }
 
@@ -1505,7 +1800,7 @@ input UserCreateOneWithoutPersonInput {
   connect: UserWhereUniqueInput
 }
 
-input UserCreateWithoutCommentsInput {
+input UserCreateWithoutEventsInput {
   email: String!
   password: String!
   role: UserRole
@@ -1516,7 +1811,7 @@ input UserCreateWithoutPersonInput {
   email: String!
   password: String!
   role: UserRole
-  comments: CommentCreateManyWithoutUserInput
+  events: EventCreateManyWithoutUserInput
 }
 
 """An edge in a connection."""
@@ -1598,16 +1893,16 @@ input UserUpdateInput {
   password: String
   role: UserRole
   person: PersonUpdateOneWithoutUserInput
-  comments: CommentUpdateManyWithoutUserInput
+  events: EventUpdateManyWithoutUserInput
 }
 
-input UserUpdateOneWithoutCommentsInput {
-  create: UserCreateWithoutCommentsInput
+input UserUpdateOneWithoutEventsInput {
+  create: UserCreateWithoutEventsInput
   connect: UserWhereUniqueInput
   disconnect: Boolean
   delete: Boolean
-  update: UserUpdateWithoutCommentsDataInput
-  upsert: UserUpsertWithoutCommentsInput
+  update: UserUpdateWithoutEventsDataInput
+  upsert: UserUpsertWithoutEventsInput
 }
 
 input UserUpdateOneWithoutPersonInput {
@@ -1619,7 +1914,7 @@ input UserUpdateOneWithoutPersonInput {
   upsert: UserUpsertWithoutPersonInput
 }
 
-input UserUpdateWithoutCommentsDataInput {
+input UserUpdateWithoutEventsDataInput {
   email: String
   password: String
   role: UserRole
@@ -1630,12 +1925,12 @@ input UserUpdateWithoutPersonDataInput {
   email: String
   password: String
   role: UserRole
-  comments: CommentUpdateManyWithoutUserInput
+  events: EventUpdateManyWithoutUserInput
 }
 
-input UserUpsertWithoutCommentsInput {
-  update: UserUpdateWithoutCommentsDataInput!
-  create: UserCreateWithoutCommentsInput!
+input UserUpsertWithoutEventsInput {
+  update: UserUpdateWithoutEventsDataInput!
+  create: UserCreateWithoutEventsInput!
 }
 
 input UserUpsertWithoutPersonInput {
@@ -1783,9 +2078,9 @@ input UserWhereInput {
   """All values that are not contained in given list."""
   role_not_in: [UserRole!]
   person: PersonWhereInput
-  comments_every: CommentWhereInput
-  comments_some: CommentWhereInput
-  comments_none: CommentWhereInput
+  events_every: EventWhereInput
+  events_some: EventWhereInput
+  events_none: EventWhereInput
 }
 
 input UserWhereUniqueInput {
