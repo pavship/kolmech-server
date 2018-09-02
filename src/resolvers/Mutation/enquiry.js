@@ -32,7 +32,7 @@ const enquiry = {
 										<tr><td></td><td>Организация</td><td><strong>${org.name}</strong> (ИНН: ${org.inn})</td></tr>
 									</tbody></table>
 									<p>Заявке присвоен <strong>статус<span>-></span>Новая</strong></p>`,
-						types: { set: ['CREATE', 'STATUS'] },
+						type: 'CREATE',
 						status: {
 							connect: {
 								id: "cjlj173nm000i0959pqsxsbt7"
@@ -112,6 +112,7 @@ const enquiry = {
 					id: userId
 				}
 			},
+			type: 'COMMENT',
 			datetimeLocal: toLocalTimestamp(new Date())
 		}
 	}, info )
