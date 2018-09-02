@@ -103,8 +103,9 @@ const enquiry = {
 		return { count }
 	},
 
-	createEnquiryEvent(_, { enquiryId, htmlText }, ctx, info) {
+	async createEnquiryEvent(_, { enquiryId, htmlText, statusId }, ctx, info) {
 		const userId = getUserId(ctx)
+		const status = statusId ? await ctx.db.query.status({where: {id: statusId}}, '{ name }') : null
 		return ctx.db.mutation.createEvent({
 			data: {
 				enquiry: {
@@ -112,13 +113,22 @@ const enquiry = {
 						id: enquiryId
 					}
 				},
-				htmlText,
+				htmlText: statusId 
+							? ` <p><strong>Изменид статус</strong> заявки на <strong>${status.name}</strong></p>`
+							: htmlText,
 				user: {
 					connect: {
 						id: userId
 					}
 				},
-				type: 'COMMENT',
+				...(statusId && {
+					status: {
+						connect: {
+							id: statusId
+						}
+					}
+				}),
+				type: statusId ? 'STATUS' : 'COMMENT',
 				datetimeLocal: toLocalTimestamp(new Date())
 			}
 		}, info )
