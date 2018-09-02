@@ -16,6 +16,7 @@ type Mutation {
   deleteAllEnquiries: BatchPayload!
   createEnquiryEvent(enquiryId: ID!, htmlText: String): Event
   createOrg(inn: String!): Org
+  deleteOrg(id: ID!): Org
   deleteAllOrgs: BatchPayload!
 }
 
