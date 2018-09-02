@@ -5,6 +5,7 @@ type Query {
   enquiries: [Enquiry!]!
   enquiry (id: ID!): Enquiry
   orgs: [Org!]!
+  statuses: [Status!]!
 }
 
 type Mutation {

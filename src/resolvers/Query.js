@@ -17,6 +17,11 @@ const Query = {
 	orgs(_, __, ctx, info) {
 		return ctx.db.query.orgs({ orderBy: 'name_ASC' }, info)
 	},
+	
+	statuses(_, __, ctx, info) {
+		// exclude "New" status from result 
+		return ctx.db.query.statuses({ where: { id_not: "cjlj173nm000i0959pqsxsbt7" }, orderBy: 'stage_ASC' }, info)
+	},
 
 	// drafts(parent, args, ctx, info) {
 	//   const id = getUserId(ctx)
