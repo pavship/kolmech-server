@@ -33,10 +33,9 @@ type Enquiry {
 
 type Event {
     id: ID! @unique
-    user: User @relation(name: "EventByUser" onDelete: SET_NULL)
+    user: User @relation(name: "EventByUser")
     enquiry: Enquiry @relation(name: "EventOnEnquiry")
     datetimeLocal: String!
-    text: String
     htmlText: String
     type: EventType
     status: Status

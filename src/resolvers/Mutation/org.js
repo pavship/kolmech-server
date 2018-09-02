@@ -39,10 +39,6 @@ const org = {
 			}
 		}, info)
     },
-    
-    // deleteOrg(_, { id }, ctx, info) {
-    //     return ctx.db.mutation.deleteOrg({ where: { id } }, info)
-    // },
 
     // delete all orgs from prisma db and corresponding orgs from MoeDelo
     async deleteAllOrgs(_, __, ctx, info) {

@@ -93,79 +93,49 @@ const enquiry = {
 		}, info )
 	},
 
-  deleteAllEnquiries(_, __, ctx, info) {
-	  return ctx.db.mutation.deleteManyEnquiries({}, info)
-  },
+	async deleteAllEnquiries(_, __, ctx, info) {
+		const enquiries = await ctx.db.query.enquiries({}, '{ id }')
+		let count = 0 
+		await Promise.all(enquiries.map(async ({ id }) => {
+			const response = await ctx.db.mutation.deleteEnquiry({ where: { id } }, '{id}')
+			if (response) count++
+		}))
+		return { count }
+	},
 
-  createEnquiryEvent(_, { enquiryId, htmlText }, ctx, info) {
-	const userId = getUserId(ctx)
-	return ctx.db.mutation.createEvent({
-		data: {
-			enquiry: {
-				connect: {
-					id: enquiryId
-				}
-			},
-			htmlText,
-			user: {
-				connect: {
-					id: userId
-				}
-			},
-			type: 'COMMENT',
-			datetimeLocal: toLocalTimestamp(new Date())
-		}
-	}, info )
-},
+	createEnquiryEvent(_, { enquiryId, htmlText }, ctx, info) {
+		const userId = getUserId(ctx)
+		return ctx.db.mutation.createEvent({
+			data: {
+				enquiry: {
+					connect: {
+						id: enquiryId
+					}
+				},
+				htmlText,
+				user: {
+					connect: {
+						id: userId
+					}
+				},
+				type: 'COMMENT',
+				datetimeLocal: toLocalTimestamp(new Date())
+			}
+		}, info )
+	},
  
-  // async createDraft(parent, { title, text }, ctx, info) {
-  //   const userId = getUserId(ctx)
-  //   return ctx.db.mutation.createPost(
-  //     {
-  //       data: {
-  //         title,
-  //         text,
-  //         isPublished: false,
-  //         author: {
-  //           connect: { id: userId },
-  //         },
-  //       },
-  //     },
-  //     info
-  //   )
-  // },
+	// async deletePost(parent, { id }, ctx, info) {
+	//   const userId = getUserId(ctx)
+	//   const postExists = await ctx.db.exists.Post({
+	//     id,
+	//     author: { id: userId },
+	//   })
+	//   if (!postExists) {
+	//     throw new Error(`Post not found or you're not the author`)
+	//   }
 
-  // async publish(parent, { id }, ctx, info) {
-  //   const userId = getUserId(ctx)
-  //   const postExists = await ctx.db.exists.Post({
-  //     id,
-  //     author: { id: userId },
-  //   })
-  //   if (!postExists) {
-  //     throw new Error(`Post not found or you're not the author`)
-  //   }
-
-  //   return ctx.db.mutation.updatePost(
-  //     {
-  //       where: { id },
-  //       data: { isPublished: true },
-  //     },
-  //     info,
-  //   )
-  // },
-
-  // async deletePost(parent, { id }, ctx, info) {
-  //   const userId = getUserId(ctx)
-  //   const postExists = await ctx.db.exists.Post({
-  //     id,
-  //     author: { id: userId },
-  //   })
-  //   if (!postExists) {
-  //     throw new Error(`Post not found or you're not the author`)
-  //   }
-
-  //   return ctx.db.mutation.deletePost({ where: { id } })
-  // },
+	//   return ctx.db.mutation.deletePost({ where: { id } })
+	// },
 }
 
 module.exports = { enquiry }
