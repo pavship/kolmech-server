@@ -30,8 +30,8 @@ const enquiry = {
 										<tr><td></td><td>Номер</td><td><strong>${num}</strong></td></tr> 
 										<tr><td></td><td>Дата</td><td><strong>${dateLocal}</strong></td></tr>
 										<tr><td></td><td>Организация</td><td><strong>${org.name}</strong> (ИНН: ${org.inn})</td></tr>
-									</tbody></table>
-									<p>Заявке присвоен <strong>статус<span>-></span>Новая</strong></p>`,
+										<tr><td></td><td>Статус</td><td><strong>Новая</strong></td></tr>
+									</tbody></table>`,
 						type: 'CREATE',
 						status: {
 							connect: {
@@ -113,8 +113,8 @@ const enquiry = {
 						id: enquiryId
 					}
 				},
-				htmlText: statusId 
-							? ` <p><strong>Изменид статус</strong> заявки на <strong>${status.name}</strong></p>`
+				htmlText: statusId
+							? ` <p><strong>Изменил статус</strong> заявки на <strong>${status.name}</strong></p>`
 							: htmlText,
 				user: {
 					connect: {
