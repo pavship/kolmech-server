@@ -104,8 +104,23 @@ const enquiry = {
 	},
 
 	async createEnquiryEvent(_, { enquiryId, htmlText, statusId }, ctx, info) {
-		const userId = getUserId(ctx)
-		const status = statusId ? await ctx.db.query.status({where: {id: statusId}}, '{ name }') : null
+        const userId = getUserId(ctx)
+        // // TODO make requests either parallel or combined
+        // const status = statusId ? await ctx.db.query.status({where: {id: statusId}}, '{ name }') : null
+        // const prevStatusEvent = statusId ? await ctx.db.query.events({
+        //     where: {
+		// 		AND: [{
+		// 			enquiry: {
+		// 				id: enquiryId
+		// 			}
+		// 		}, {
+		// 			status: {
+		// 				id_not: null
+		// 			}
+		// 		}]
+		// 	},
+		// 	last: 1
+		// }, '{ id status { stage } }') : null
 		return ctx.db.mutation.createEvent({
 			data: {
 				enquiry: {
