@@ -28,6 +28,7 @@ type Enquiry {
     num: Int!
     dateLocal: String
     org: Org
+    htmlNote: String
     events: [Event!]! @relation(name: "EventOnEnquiry" onDelete: CASCADE)
 }
 

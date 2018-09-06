@@ -45,7 +45,7 @@ const enquiry = {
 	},
 
 	async updateEnquiry(_, { input }, ctx, info) {
-		const { id, dateLocal, orgId } = input
+		const { id, dateLocal, orgId, htmlNote } = input
 		const userId = getUserId(ctx)
 		const org = orgId ? await ctx.db.query.org({ where: { id: orgId } }, '{ inn name }') : null
 		if ( orgId && !org) throw new Error(`Организация не найдена в базе`)
@@ -64,6 +64,7 @@ const enquiry = {
 			where: { id },
 			data: {
 				...(dateLocal && { dateLocal }),
+				...((htmlNote || htmlNote === null) && { htmlNote }),
 				...(orgId && {
 						org: {
 							connect: {
@@ -79,11 +80,13 @@ const enquiry = {
 							}
 						},
 						datetimeLocal: toLocalTimestamp(new Date()),
-						htmlText: ` <p><strong>Внес изменения</strong> в заявку:</p>
+						htmlText:  `<p><strong>Внес изменения</strong> в заявку:</p>
 									<table>
 										<tbody>
 											${dateLocal ? `<tr><td></td><td>Дата</td><td><span>-> </span><strong>${dateLocal}</strong></td></tr>` : ''}
 											${orgId ? `<tr><td></td><td>Организация</td><td><span>-> </span><strong>${org.name}</strong> (ИНН: ${org.inn})</td></tr>` : ''}
+											${htmlNote ? `<tr><td></td><td>Примечания:</td><td>${htmlNote}</td></tr>` : ''}
+											${(htmlNote === null) ? `<tr><td></td><td>Примечания</td><td>(удалены)</td></tr>` : ''}
 										</tbody>
 									</table>`,
 						type: 'UPDATE'
