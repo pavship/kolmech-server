@@ -12,7 +12,7 @@ type Query {
 type Mutation {
   signup(email: String!, password: String!, fName: String!, lName: String): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
-  createEnquiry(dateLocal: String!, orgId: ID!, modelId: ID!): Enquiry
+  createEnquiry(dateLocal: String!, orgId: ID!, modelId: ID!, qty: Int!): Enquiry
   updateEnquiry(input: EnquiryInput!): Enquiry
   deleteAllEnquiries: BatchPayload!
   createEnquiryEvent(enquiryId: ID!, htmlText: String, statusId: ID): Event

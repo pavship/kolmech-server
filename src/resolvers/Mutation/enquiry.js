@@ -2,7 +2,7 @@ const { getUserId } = require('../../utils')
 const { toLocalTimestamp } = require('../../utils/dates')
 
 const enquiry = {
-	async createEnquiry(_, { dateLocal, orgId, modelId }, ctx, info) {
+	async createEnquiry(_, { dateLocal, orgId, modelId, qty }, ctx, info) {
 		const userId = getUserId(ctx)
 		const org = await ctx.db.query.org({ where: { id: orgId } }, '{ inn name }')
 		const model = await ctx.db.query.model({ where: { id: modelId } }, '{ article name }')
@@ -24,6 +24,7 @@ const enquiry = {
 						id: modelId
 					}
 				},
+				qty,
 				events: {
 					create: [{
 						user: {
