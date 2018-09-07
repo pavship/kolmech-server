@@ -1,4 +1,10 @@
 const { getUserId } = require('../utils')
+const { GraphQLClient  } = require('graphql-request')
+
+const client = new GraphQLClient( 
+    process.env.GQ_ENDPOINT, 
+	{ headers: { Authorization: `Bearer ${process.env.GQ_TOKEN}` } }
+)
 
 const Query = {
 	me(_, __, ctx, info) {
@@ -21,19 +27,24 @@ const Query = {
 	statuses(_, __, ctx, info) {
 		return ctx.db.query.statuses({ orderBy: 'stage_ASC' }, info)
 	},
-
-	// drafts(parent, args, ctx, info) {
-	//   const id = getUserId(ctx)
-
-	//   const where = {
-	//     isPublished: false,
-	//     author: {
-	//       id
-	//     }
-	//   }
-
-	//   return ctx.db.query.posts({ where }, info)
-	// },
+    
+	async models(_, __, ctx, info) {
+        return ctx.db.query.models({ orderBy: 'name_DESC' }, info)
+        // try {
+        //     const models = await client.request(`{
+        //         allModels {
+        //             id
+        //             article
+        //             name
+        //         }
+        //     }`)
+        //     // console.log('models > ', models)
+        //     return models.allModels
+            
+        // } catch (err) {
+        //     console.log('err > ', err)
+        // }
+	},
 }
 
 module.exports = { Query }

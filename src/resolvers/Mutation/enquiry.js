@@ -2,9 +2,10 @@ const { getUserId } = require('../../utils')
 const { toLocalTimestamp } = require('../../utils/dates')
 
 const enquiry = {
-	async createEnquiry(_, { dateLocal, orgId }, ctx, info) {
+	async createEnquiry(_, { dateLocal, orgId, modelId }, ctx, info) {
 		const userId = getUserId(ctx)
 		const org = await ctx.db.query.org({ where: { id: orgId } }, '{ inn name }')
+		const model = await ctx.db.query.model({ where: { id: modelId } }, '{ article name }')
 		if (!org) throw new Error(`Организация не найдена в базе`)
 		// Automatically increment counter number for the new enquiry
 		const lastEnquiry = await ctx.db.query.enquiries({ last: 1 }, '{ num }')
@@ -16,6 +17,11 @@ const enquiry = {
 				org: {
 					connect: {
 						id: orgId
+					}
+				},
+				model: {
+					connect: {
+						id: modelId
 					}
 				},
 				events: {
@@ -30,6 +36,7 @@ const enquiry = {
 										<tr><td></td><td>Номер</td><td><strong>${num}</strong></td></tr> 
 										<tr><td></td><td>Дата</td><td><strong>${dateLocal}</strong></td></tr>
 										<tr><td></td><td>Организация</td><td><strong>${org.name}</strong> (ИНН: ${org.inn})</td></tr>
+										<tr><td></td><td>Изделие</td><td><strong>${model.name}</strong> (Артикул: ${model.article})</td></tr>
 										<tr><td></td><td>Статус</td><td><strong>Новая</strong></td></tr>
 									</tbody></table>`,
 						type: 'CREATE',
@@ -45,10 +52,12 @@ const enquiry = {
 	},
 
 	async updateEnquiry(_, { input }, ctx, info) {
-		const { id, dateLocal, orgId, htmlNote } = input
+		const { id, dateLocal, orgId, modelId, qty, htmlNote } = input
 		const userId = getUserId(ctx)
 		const org = orgId ? await ctx.db.query.org({ where: { id: orgId } }, '{ inn name }') : null
 		if ( orgId && !org) throw new Error(`Организация не найдена в базе`)
+		const model = modelId ? await ctx.db.query.model({ where: { id: modelId } }, '{ article name }') : null
+		if ( modelId && !model) throw new Error(`Изделие не найдено в базе`)
 		// const updatedFields = Object.keys(input).filter(f => f !== 'id')
 		// const fieldsToGet = updatedFields.reduce((res, f, i) => {
 		// 	res += (f === 'orgId') ? (' org { name }') : (' ' + f)
@@ -66,12 +75,20 @@ const enquiry = {
 				...(dateLocal && { dateLocal }),
 				...((htmlNote || htmlNote === null) && { htmlNote }),
 				...(orgId && {
-						org: {
-							connect: {
-								id: orgId
-							}
+					org: {
+						connect: {
+							id: orgId
 						}
-					}),
+					}
+				}),
+				...(modelId && {
+					model: {
+						connect: {
+							id: modelId
+						}
+					}
+				}),
+				...(qty && { qty }),
 				events: {
 					create: [{
 						user: {
@@ -81,14 +98,14 @@ const enquiry = {
 						},
 						datetimeLocal: toLocalTimestamp(new Date()),
 						htmlText:  `<p><strong>Внес изменения</strong> в заявку:</p>
-									<table>
-										<tbody>
+									<table><tbody>
 											${dateLocal ? `<tr><td></td><td>Дата</td><td><span>-> </span><strong>${dateLocal}</strong></td></tr>` : ''}
 											${orgId ? `<tr><td></td><td>Организация</td><td><span>-> </span><strong>${org.name}</strong> (ИНН: ${org.inn})</td></tr>` : ''}
+											${modelId ? `<tr><td></td><td>Изделие</td><td><span>-> </span><strong>${model.name}</strong> (ИНН: ${model.article})</td></tr>` : ''}
+											${qty ? `<tr><td></td><td>Кол-во</td><td><span>-> </span><strong>${qty}</strong> шт.</td></tr>` : ''}
 											${htmlNote ? `<tr><td></td><td>Примечания:</td><td>${htmlNote}</td></tr>` : ''}
 											${(htmlNote === null) ? `<tr><td></td><td>Примечания</td><td>(удалены)</td></tr>` : ''}
-										</tbody>
-									</table>`,
+									</tbody></table>`.replace(/\t|\n/g, ''),
 						type: 'UPDATE'
 					}]
 				}
@@ -109,7 +126,7 @@ const enquiry = {
 	async createEnquiryEvent(_, { enquiryId, htmlText, statusId }, ctx, info) {
         const userId = getUserId(ctx)
         // // TODO make requests either parallel or combined
-        // const status = statusId ? await ctx.db.query.status({where: {id: statusId}}, '{ name }') : null
+        const status = statusId ? await ctx.db.query.status({where: {id: statusId}}, '{ name }') : null
         // const prevStatusEvent = statusId ? await ctx.db.query.events({
         //     where: {
 		// 		AND: [{

@@ -3,7 +3,9 @@
         "PRISMA_ENDPOINT": "@prisma-endpoint",
         "PRISMA_SECRET": "@prisma-secret",
         "APP_SECRET": "@app-secret",
-        "MOEDELO_SECRET": "@moe-delo-secret"
+        "MOEDELO_SECRET": "@moe-delo-secret",
+        "GQ_TOKEN": "@gq-token",
+        "GQ_ENDPOINT": "@gq-endpoint"
     },
     "alias": "now-advanced.now.sh",
     "name": "now-advanced"

@@ -1,11 +1,15 @@
 # source: https://kolmech-heroku-server.herokuapp.com/prisma-heroku/dev
-# timestamp: Wed Sep 05 2018 22:35:31 GMT+0300 (RTZ 2 (зима))
+# timestamp: Fri Sep 07 2018 12:52:29 GMT+0300 (RTZ 2 (зима))
 
 type AggregateEnquiry {
   count: Int!
 }
 
 type AggregateEvent {
+  count: Int!
+}
+
+type AggregateModel {
   count: Int!
 }
 
@@ -35,6 +39,8 @@ type Enquiry implements Node {
   num: Int!
   dateLocal: String
   org(where: OrgWhereInput): Org
+  model(where: ModelWhereInput): Model
+  qty: Int
   htmlNote: String
   events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
 }
@@ -52,9 +58,16 @@ type EnquiryConnection {
 input EnquiryCreateInput {
   num: Int!
   dateLocal: String
+  qty: Int
   htmlNote: String
   org: OrgCreateOneWithoutEnquiriesInput
+  model: ModelCreateOneWithoutEnquiriesInput
   events: EventCreateManyWithoutEnquiryInput
+}
+
+input EnquiryCreateManyWithoutModelInput {
+  create: [EnquiryCreateWithoutModelInput!]
+  connect: [EnquiryWhereUniqueInput!]
 }
 
 input EnquiryCreateManyWithoutOrgInput {
@@ -70,14 +83,27 @@ input EnquiryCreateOneWithoutEventsInput {
 input EnquiryCreateWithoutEventsInput {
   num: Int!
   dateLocal: String
+  qty: Int
   htmlNote: String
   org: OrgCreateOneWithoutEnquiriesInput
+  model: ModelCreateOneWithoutEnquiriesInput
+}
+
+input EnquiryCreateWithoutModelInput {
+  num: Int!
+  dateLocal: String
+  qty: Int
+  htmlNote: String
+  org: OrgCreateOneWithoutEnquiriesInput
+  events: EventCreateManyWithoutEnquiryInput
 }
 
 input EnquiryCreateWithoutOrgInput {
   num: Int!
   dateLocal: String
+  qty: Int
   htmlNote: String
+  model: ModelCreateOneWithoutEnquiriesInput
   events: EventCreateManyWithoutEnquiryInput
 }
 
@@ -97,6 +123,8 @@ enum EnquiryOrderByInput {
   num_DESC
   dateLocal_ASC
   dateLocal_DESC
+  qty_ASC
+  qty_DESC
   htmlNote_ASC
   htmlNote_DESC
   updatedAt_ASC
@@ -109,6 +137,7 @@ type EnquiryPreviousValues {
   id: ID!
   num: Int!
   dateLocal: String
+  qty: Int
   htmlNote: String
 }
 
@@ -154,9 +183,20 @@ input EnquirySubscriptionWhereInput {
 input EnquiryUpdateInput {
   num: Int
   dateLocal: String
+  qty: Int
   htmlNote: String
   org: OrgUpdateOneWithoutEnquiriesInput
+  model: ModelUpdateOneWithoutEnquiriesInput
   events: EventUpdateManyWithoutEnquiryInput
+}
+
+input EnquiryUpdateManyWithoutModelInput {
+  create: [EnquiryCreateWithoutModelInput!]
+  connect: [EnquiryWhereUniqueInput!]
+  disconnect: [EnquiryWhereUniqueInput!]
+  delete: [EnquiryWhereUniqueInput!]
+  update: [EnquiryUpdateWithWhereUniqueWithoutModelInput!]
+  upsert: [EnquiryUpsertWithWhereUniqueWithoutModelInput!]
 }
 
 input EnquiryUpdateManyWithoutOrgInput {
@@ -180,15 +220,33 @@ input EnquiryUpdateOneWithoutEventsInput {
 input EnquiryUpdateWithoutEventsDataInput {
   num: Int
   dateLocal: String
+  qty: Int
   htmlNote: String
   org: OrgUpdateOneWithoutEnquiriesInput
+  model: ModelUpdateOneWithoutEnquiriesInput
+}
+
+input EnquiryUpdateWithoutModelDataInput {
+  num: Int
+  dateLocal: String
+  qty: Int
+  htmlNote: String
+  org: OrgUpdateOneWithoutEnquiriesInput
+  events: EventUpdateManyWithoutEnquiryInput
 }
 
 input EnquiryUpdateWithoutOrgDataInput {
   num: Int
   dateLocal: String
+  qty: Int
   htmlNote: String
+  model: ModelUpdateOneWithoutEnquiriesInput
   events: EventUpdateManyWithoutEnquiryInput
+}
+
+input EnquiryUpdateWithWhereUniqueWithoutModelInput {
+  where: EnquiryWhereUniqueInput!
+  data: EnquiryUpdateWithoutModelDataInput!
 }
 
 input EnquiryUpdateWithWhereUniqueWithoutOrgInput {
@@ -199,6 +257,12 @@ input EnquiryUpdateWithWhereUniqueWithoutOrgInput {
 input EnquiryUpsertWithoutEventsInput {
   update: EnquiryUpdateWithoutEventsDataInput!
   create: EnquiryCreateWithoutEventsInput!
+}
+
+input EnquiryUpsertWithWhereUniqueWithoutModelInput {
+  where: EnquiryWhereUniqueInput!
+  update: EnquiryUpdateWithoutModelDataInput!
+  create: EnquiryCreateWithoutModelInput!
 }
 
 input EnquiryUpsertWithWhereUniqueWithoutOrgInput {
@@ -318,6 +382,28 @@ input EnquiryWhereInput {
 
   """All values not ending with the given string."""
   dateLocal_not_ends_with: String
+  qty: Int
+
+  """All values that are not equal to given value."""
+  qty_not: Int
+
+  """All values that are contained in given list."""
+  qty_in: [Int!]
+
+  """All values that are not contained in given list."""
+  qty_not_in: [Int!]
+
+  """All values less than the given value."""
+  qty_lt: Int
+
+  """All values less than or equal the given value."""
+  qty_lte: Int
+
+  """All values greater than the given value."""
+  qty_gt: Int
+
+  """All values greater than or equal the given value."""
+  qty_gte: Int
   htmlNote: String
 
   """All values that are not equal to given value."""
@@ -359,6 +445,7 @@ input EnquiryWhereInput {
   """All values not ending with the given string."""
   htmlNote_not_ends_with: String
   org: OrgWhereInput
+  model: ModelWhereInput
   events_every: EventWhereInput
   events_some: EventWhereInput
   events_none: EventWhereInput
@@ -719,42 +806,360 @@ Long can represent values between -(2^63) and 2^63 - 1.
 """
 scalar Long
 
+type Model implements Node {
+  id: ID!
+  gqId: ID
+  article: String
+  name: String!
+  enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry!]
+}
+
+"""A connection to a list of items."""
+type ModelConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ModelEdge]!
+  aggregate: AggregateModel!
+}
+
+input ModelCreateInput {
+  gqId: ID
+  article: String
+  name: String!
+  enquiries: EnquiryCreateManyWithoutModelInput
+}
+
+input ModelCreateOneWithoutEnquiriesInput {
+  create: ModelCreateWithoutEnquiriesInput
+  connect: ModelWhereUniqueInput
+}
+
+input ModelCreateWithoutEnquiriesInput {
+  gqId: ID
+  article: String
+  name: String!
+}
+
+"""An edge in a connection."""
+type ModelEdge {
+  """The item at the end of the edge."""
+  node: Model!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum ModelOrderByInput {
+  id_ASC
+  id_DESC
+  gqId_ASC
+  gqId_DESC
+  article_ASC
+  article_DESC
+  name_ASC
+  name_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type ModelPreviousValues {
+  id: ID!
+  gqId: ID
+  article: String
+  name: String!
+}
+
+type ModelSubscriptionPayload {
+  mutation: MutationType!
+  node: Model
+  updatedFields: [String!]
+  previousValues: ModelPreviousValues
+}
+
+input ModelSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ModelSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ModelSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ModelSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ModelWhereInput
+}
+
+input ModelUpdateInput {
+  gqId: ID
+  article: String
+  name: String
+  enquiries: EnquiryUpdateManyWithoutModelInput
+}
+
+input ModelUpdateOneWithoutEnquiriesInput {
+  create: ModelCreateWithoutEnquiriesInput
+  connect: ModelWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: ModelUpdateWithoutEnquiriesDataInput
+  upsert: ModelUpsertWithoutEnquiriesInput
+}
+
+input ModelUpdateWithoutEnquiriesDataInput {
+  gqId: ID
+  article: String
+  name: String
+}
+
+input ModelUpsertWithoutEnquiriesInput {
+  update: ModelUpdateWithoutEnquiriesDataInput!
+  create: ModelCreateWithoutEnquiriesInput!
+}
+
+input ModelWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ModelWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ModelWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ModelWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  gqId: ID
+
+  """All values that are not equal to given value."""
+  gqId_not: ID
+
+  """All values that are contained in given list."""
+  gqId_in: [ID!]
+
+  """All values that are not contained in given list."""
+  gqId_not_in: [ID!]
+
+  """All values less than the given value."""
+  gqId_lt: ID
+
+  """All values less than or equal the given value."""
+  gqId_lte: ID
+
+  """All values greater than the given value."""
+  gqId_gt: ID
+
+  """All values greater than or equal the given value."""
+  gqId_gte: ID
+
+  """All values containing the given string."""
+  gqId_contains: ID
+
+  """All values not containing the given string."""
+  gqId_not_contains: ID
+
+  """All values starting with the given string."""
+  gqId_starts_with: ID
+
+  """All values not starting with the given string."""
+  gqId_not_starts_with: ID
+
+  """All values ending with the given string."""
+  gqId_ends_with: ID
+
+  """All values not ending with the given string."""
+  gqId_not_ends_with: ID
+  article: String
+
+  """All values that are not equal to given value."""
+  article_not: String
+
+  """All values that are contained in given list."""
+  article_in: [String!]
+
+  """All values that are not contained in given list."""
+  article_not_in: [String!]
+
+  """All values less than the given value."""
+  article_lt: String
+
+  """All values less than or equal the given value."""
+  article_lte: String
+
+  """All values greater than the given value."""
+  article_gt: String
+
+  """All values greater than or equal the given value."""
+  article_gte: String
+
+  """All values containing the given string."""
+  article_contains: String
+
+  """All values not containing the given string."""
+  article_not_contains: String
+
+  """All values starting with the given string."""
+  article_starts_with: String
+
+  """All values not starting with the given string."""
+  article_not_starts_with: String
+
+  """All values ending with the given string."""
+  article_ends_with: String
+
+  """All values not ending with the given string."""
+  article_not_ends_with: String
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  enquiries_every: EnquiryWhereInput
+  enquiries_some: EnquiryWhereInput
+  enquiries_none: EnquiryWhereInput
+}
+
+input ModelWhereUniqueInput {
+  id: ID
+  gqId: ID
+}
+
 type Mutation {
   createUser(data: UserCreateInput!): User!
   createPerson(data: PersonCreateInput!): Person!
   createOrg(data: OrgCreateInput!): Org!
   createEnquiry(data: EnquiryCreateInput!): Enquiry!
   createEvent(data: EventCreateInput!): Event!
+  createModel(data: ModelCreateInput!): Model!
   createStatus(data: StatusCreateInput!): Status!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updatePerson(data: PersonUpdateInput!, where: PersonWhereUniqueInput!): Person
   updateOrg(data: OrgUpdateInput!, where: OrgWhereUniqueInput!): Org
   updateEnquiry(data: EnquiryUpdateInput!, where: EnquiryWhereUniqueInput!): Enquiry
   updateEvent(data: EventUpdateInput!, where: EventWhereUniqueInput!): Event
+  updateModel(data: ModelUpdateInput!, where: ModelWhereUniqueInput!): Model
   updateStatus(data: StatusUpdateInput!, where: StatusWhereUniqueInput!): Status
   deleteUser(where: UserWhereUniqueInput!): User
   deletePerson(where: PersonWhereUniqueInput!): Person
   deleteOrg(where: OrgWhereUniqueInput!): Org
   deleteEnquiry(where: EnquiryWhereUniqueInput!): Enquiry
   deleteEvent(where: EventWhereUniqueInput!): Event
+  deleteModel(where: ModelWhereUniqueInput!): Model
   deleteStatus(where: StatusWhereUniqueInput!): Status
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertPerson(where: PersonWhereUniqueInput!, create: PersonCreateInput!, update: PersonUpdateInput!): Person!
   upsertOrg(where: OrgWhereUniqueInput!, create: OrgCreateInput!, update: OrgUpdateInput!): Org!
   upsertEnquiry(where: EnquiryWhereUniqueInput!, create: EnquiryCreateInput!, update: EnquiryUpdateInput!): Enquiry!
   upsertEvent(where: EventWhereUniqueInput!, create: EventCreateInput!, update: EventUpdateInput!): Event!
+  upsertModel(where: ModelWhereUniqueInput!, create: ModelCreateInput!, update: ModelUpdateInput!): Model!
   upsertStatus(where: StatusWhereUniqueInput!, create: StatusCreateInput!, update: StatusUpdateInput!): Status!
   updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
   updateManyPersons(data: PersonUpdateInput!, where: PersonWhereInput): BatchPayload!
   updateManyOrgs(data: OrgUpdateInput!, where: OrgWhereInput): BatchPayload!
   updateManyEnquiries(data: EnquiryUpdateInput!, where: EnquiryWhereInput): BatchPayload!
   updateManyEvents(data: EventUpdateInput!, where: EventWhereInput): BatchPayload!
+  updateManyModels(data: ModelUpdateInput!, where: ModelWhereInput): BatchPayload!
   updateManyStatuses(data: StatusUpdateInput!, where: StatusWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyPersons(where: PersonWhereInput): BatchPayload!
   deleteManyOrgs(where: OrgWhereInput): BatchPayload!
   deleteManyEnquiries(where: EnquiryWhereInput): BatchPayload!
   deleteManyEvents(where: EventWhereInput): BatchPayload!
+  deleteManyModels(where: ModelWhereInput): BatchPayload!
   deleteManyStatuses(where: StatusWhereInput): BatchPayload!
 }
 
@@ -1412,18 +1817,21 @@ type Query {
   orgs(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Org]!
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry]!
   events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event]!
+  models(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Model]!
   statuses(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Status]!
   user(where: UserWhereUniqueInput!): User
   person(where: PersonWhereUniqueInput!): Person
   org(where: OrgWhereUniqueInput!): Org
   enquiry(where: EnquiryWhereUniqueInput!): Enquiry
   event(where: EventWhereUniqueInput!): Event
+  model(where: ModelWhereUniqueInput!): Model
   status(where: StatusWhereUniqueInput!): Status
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   personsConnection(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PersonConnection!
   orgsConnection(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgConnection!
   enquiriesConnection(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EnquiryConnection!
   eventsConnection(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EventConnection!
+  modelsConnection(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ModelConnection!
   statusesConnection(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StatusConnection!
 
   """Fetches an object given its ID"""
@@ -1764,6 +2172,7 @@ type Subscription {
   org(where: OrgSubscriptionWhereInput): OrgSubscriptionPayload
   enquiry(where: EnquirySubscriptionWhereInput): EnquirySubscriptionPayload
   event(where: EventSubscriptionWhereInput): EventSubscriptionPayload
+  model(where: ModelSubscriptionWhereInput): ModelSubscriptionPayload
   status(where: StatusSubscriptionWhereInput): StatusSubscriptionPayload
 }
 

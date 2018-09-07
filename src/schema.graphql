@@ -6,19 +6,20 @@ type Query {
   enquiry (id: ID!): Enquiry
   orgs: [Org!]!
   statuses: [Status!]!
+  models: [Model!]!
 }
 
 type Mutation {
   signup(email: String!, password: String!, fName: String!, lName: String): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
-  createEnquiry(dateLocal: String!, orgId: ID!): Enquiry
-#   updateEnquiry(id: ID!, dateLocal: String): Enquiry
+  createEnquiry(dateLocal: String!, orgId: ID!, modelId: ID!): Enquiry
   updateEnquiry(input: EnquiryInput!): Enquiry
   deleteAllEnquiries: BatchPayload!
   createEnquiryEvent(enquiryId: ID!, htmlText: String, statusId: ID): Event
   createOrg(inn: String!): Org
   deleteOrg(id: ID!): Org
   deleteAllOrgs: BatchPayload!
+  importModels: BatchPayload!
 }
 
 type Subscription {
@@ -33,5 +34,7 @@ input EnquiryInput {
   id: ID!
   dateLocal: String
   orgId: ID
+  modelId: ID
+  qty: Int
   htmlNote: String
 }
