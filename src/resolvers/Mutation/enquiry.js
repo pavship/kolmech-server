@@ -38,6 +38,7 @@ const enquiry = {
 										<tr><td></td><td>Дата</td><td><strong>${dateLocal}</strong></td></tr>
 										<tr><td></td><td>Организация</td><td><strong>${org.name}</strong> (ИНН: ${org.inn})</td></tr>
 										<tr><td></td><td>Изделие</td><td><strong>${model.name}</strong> (Артикул: ${model.article})</td></tr>
+										<tr><td></td><td>Кол-во</td><td><strong>${qty}</strong> шт.</td></tr>
 										<tr><td></td><td>Статус</td><td><strong>Новая</strong></td></tr>
 									</tbody></table>`,
 						type: 'CREATE',
@@ -102,7 +103,7 @@ const enquiry = {
 									<table><tbody>
 											${dateLocal ? `<tr><td></td><td>Дата</td><td><span>-> </span><strong>${dateLocal}</strong></td></tr>` : ''}
 											${orgId ? `<tr><td></td><td>Организация</td><td><span>-> </span><strong>${org.name}</strong> (ИНН: ${org.inn})</td></tr>` : ''}
-											${modelId ? `<tr><td></td><td>Изделие</td><td><span>-> </span><strong>${model.name}</strong> (ИНН: ${model.article})</td></tr>` : ''}
+											${modelId ? `<tr><td></td><td>Изделие</td><td><span>-> </span><strong>${model.name}</strong> (Артикул: ${model.article})</td></tr>` : ''}
 											${qty ? `<tr><td></td><td>Кол-во</td><td><span>-> </span><strong>${qty}</strong> шт.</td></tr>` : ''}
 											${htmlNote ? `<tr><td></td><td>Примечания:</td><td>${htmlNote}</td></tr>` : ''}
 											${(htmlNote === null) ? `<tr><td></td><td>Примечания</td><td>(удалены)</td></tr>` : ''}
