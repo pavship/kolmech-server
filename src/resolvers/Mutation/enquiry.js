@@ -155,7 +155,7 @@ const enquiry = {
                     (statusId && !doc ) ?  `<p>Изменил статус заявки на <strong>${status.name}</strong></p>` :
                     (statusId && doc )  ?  `<p>Создал <strong>коммерческое предложение</strong> с параметрами:</p><table><tbody>
                                                 <tr><td></td><td>Дата</td><td><strong>${doc.dateLocal}</strong></td></tr>
-                                                <tr><td></td><td>Сумма</td><td><strong>${currency(doc.amount)}</strong> с НДС</td></tr>
+                                                <tr><td></td><td>Сумма</td><td><strong>${currency(doc.amount, true)}</strong> с НДС</td></tr>
                                             </tbody></table>
                                             <p>Статус заявки изменен на <strong>${status.name}</strong></p>`.replace(/\t|\n/g, '')
                                         :   htmlText,
