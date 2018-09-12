@@ -1,5 +1,6 @@
 const { getUserId } = require('../../utils')
 const { toLocalTimestamp } = require('../../utils/dates')
+const { currency } = require('../../utils/format')
 
 const enquiry = {
 	async createEnquiry(_, { dateLocal, orgId, modelId, qty }, ctx, info) {
@@ -40,7 +41,7 @@ const enquiry = {
 										<tr><td></td><td>Изделие</td><td><strong>${model.name}</strong> (Артикул: ${model.article})</td></tr>
 										<tr><td></td><td>Кол-во</td><td><strong>${qty}</strong> шт.</td></tr>
 										<tr><td></td><td>Статус</td><td><strong>Новая</strong></td></tr>
-									</tbody></table>`,
+									</tbody></table>`.replace(/\t|\n/g, ''),
 						type: 'CREATE',
 						status: {
 							connect: {
@@ -99,7 +100,7 @@ const enquiry = {
 							}
 						},
 						datetimeLocal: toLocalTimestamp(new Date()),
-						htmlText:  `<p><strong>Внес изменения</strong> в заявку:</p>
+						htmlText:  `<p>Внес <strong>изменения</strong> в заявку:</p>
 									<table><tbody>
 											${dateLocal ? `<tr><td></td><td>Дата</td><td><span>-> </span><strong>${dateLocal}</strong></td></tr>` : ''}
 											${orgId ? `<tr><td></td><td>Организация</td><td><span>-> </span><strong>${org.name}</strong> (ИНН: ${org.inn})</td></tr>` : ''}
@@ -125,7 +126,7 @@ const enquiry = {
 		return { count }
 	},
 
-	async createEnquiryEvent(_, { enquiryId, htmlText, statusId }, ctx, info) {
+	async createEnquiryEvent(_, { enquiryId, htmlText, statusId, doc }, ctx, info) {
         const userId = getUserId(ctx)
         // // TODO make requests either parallel or combined
         const status = statusId ? await ctx.db.query.status({where: {id: statusId}}, '{ name }') : null
@@ -150,9 +151,14 @@ const enquiry = {
 						id: enquiryId
 					}
 				},
-				htmlText: statusId
-							? ` <p><strong>Изменил статус</strong> заявки на <strong>${status.name}</strong></p>`
-							: htmlText,
+                htmlText: 
+                    (statusId && !doc ) ?  `<p>Изменил статус заявки на <strong>${status.name}</strong></p>` :
+                    (statusId && doc )  ?  `<p>Создал <strong>коммерческое предложение</strong> с параметрами:</p><table><tbody>
+                                                <tr><td></td><td>Дата</td><td><strong>${doc.dateLocal}</strong></td></tr>
+                                                <tr><td></td><td>Сумма</td><td><strong>${currency(doc.amount)}</strong> с НДС</td></tr>
+                                            </tbody></table>
+                                            <p>Статус заявки изменен на <strong>${status.name}</strong></p>`.replace(/\t|\n/g, '')
+                                        :   htmlText,
 				user: {
 					connect: {
 						id: userId
@@ -164,7 +170,17 @@ const enquiry = {
 							id: statusId
 						}
 					}
-				}),
+                }),
+                ...(doc && {
+					doc: {
+						create: {
+                            dateLocal: doc.dateLocal,
+                            amount: doc.amount,
+                            type: 'CO',
+                            nds: true
+						}
+					}
+                }),
 				type: statusId ? 'STATUS' : 'COMMENT',
 				datetimeLocal: toLocalTimestamp(new Date())
 			}

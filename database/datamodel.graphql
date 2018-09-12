@@ -42,6 +42,15 @@ type Event {
     htmlText: String
     type: EventType
     status: Status
+    doc: Doc @relation(name: "EventDoc" onDelete: CASCADE)
+}
+
+type Doc {
+    id: ID! @unique
+    dateLocal: String
+    amount: Float
+    nds: Boolean
+    type: DocType
 }
 
 type Status {
@@ -85,6 +94,10 @@ enum EventType {
     UPDATE
     STATUS
     COMMENT
+}
+
+enum DocType {
+    CO
 }
 
 enum UserRole {

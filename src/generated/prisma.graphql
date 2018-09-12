@@ -1,5 +1,9 @@
 # source: https://kolmech-heroku-server.herokuapp.com/prisma-heroku/dev
-# timestamp: Fri Sep 07 2018 12:52:29 GMT+0300 (RTZ 2 (зима))
+# timestamp: Tue Sep 11 2018 07:29:49 GMT+0300 (RTZ 2 (зима))
+
+type AggregateDoc {
+  count: Int!
+}
 
 type AggregateEnquiry {
   count: Int!
@@ -32,6 +36,275 @@ type AggregateUser {
 type BatchPayload {
   """The number of nodes that have been affected by the Batch operation."""
   count: Long!
+}
+
+type Doc implements Node {
+  id: ID!
+  dateLocal: String
+  amount: Float
+  nds: Boolean
+  type: DocType
+}
+
+"""A connection to a list of items."""
+type DocConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [DocEdge]!
+  aggregate: AggregateDoc!
+}
+
+input DocCreateInput {
+  dateLocal: String
+  amount: Float
+  nds: Boolean
+  type: DocType
+}
+
+input DocCreateOneInput {
+  create: DocCreateInput
+  connect: DocWhereUniqueInput
+}
+
+"""An edge in a connection."""
+type DocEdge {
+  """The item at the end of the edge."""
+  node: Doc!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum DocOrderByInput {
+  id_ASC
+  id_DESC
+  dateLocal_ASC
+  dateLocal_DESC
+  amount_ASC
+  amount_DESC
+  nds_ASC
+  nds_DESC
+  type_ASC
+  type_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type DocPreviousValues {
+  id: ID!
+  dateLocal: String
+  amount: Float
+  nds: Boolean
+  type: DocType
+}
+
+type DocSubscriptionPayload {
+  mutation: MutationType!
+  node: Doc
+  updatedFields: [String!]
+  previousValues: DocPreviousValues
+}
+
+input DocSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [DocSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [DocSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [DocSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: DocWhereInput
+}
+
+enum DocType {
+  CO
+}
+
+input DocUpdateDataInput {
+  dateLocal: String
+  amount: Float
+  nds: Boolean
+  type: DocType
+}
+
+input DocUpdateInput {
+  dateLocal: String
+  amount: Float
+  nds: Boolean
+  type: DocType
+}
+
+input DocUpdateOneInput {
+  create: DocCreateInput
+  connect: DocWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: DocUpdateDataInput
+  upsert: DocUpsertNestedInput
+}
+
+input DocUpsertNestedInput {
+  update: DocUpdateDataInput!
+  create: DocCreateInput!
+}
+
+input DocWhereInput {
+  """Logical AND on all given filters."""
+  AND: [DocWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [DocWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [DocWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  dateLocal: String
+
+  """All values that are not equal to given value."""
+  dateLocal_not: String
+
+  """All values that are contained in given list."""
+  dateLocal_in: [String!]
+
+  """All values that are not contained in given list."""
+  dateLocal_not_in: [String!]
+
+  """All values less than the given value."""
+  dateLocal_lt: String
+
+  """All values less than or equal the given value."""
+  dateLocal_lte: String
+
+  """All values greater than the given value."""
+  dateLocal_gt: String
+
+  """All values greater than or equal the given value."""
+  dateLocal_gte: String
+
+  """All values containing the given string."""
+  dateLocal_contains: String
+
+  """All values not containing the given string."""
+  dateLocal_not_contains: String
+
+  """All values starting with the given string."""
+  dateLocal_starts_with: String
+
+  """All values not starting with the given string."""
+  dateLocal_not_starts_with: String
+
+  """All values ending with the given string."""
+  dateLocal_ends_with: String
+
+  """All values not ending with the given string."""
+  dateLocal_not_ends_with: String
+  amount: Float
+
+  """All values that are not equal to given value."""
+  amount_not: Float
+
+  """All values that are contained in given list."""
+  amount_in: [Float!]
+
+  """All values that are not contained in given list."""
+  amount_not_in: [Float!]
+
+  """All values less than the given value."""
+  amount_lt: Float
+
+  """All values less than or equal the given value."""
+  amount_lte: Float
+
+  """All values greater than the given value."""
+  amount_gt: Float
+
+  """All values greater than or equal the given value."""
+  amount_gte: Float
+  nds: Boolean
+
+  """All values that are not equal to given value."""
+  nds_not: Boolean
+  type: DocType
+
+  """All values that are not equal to given value."""
+  type_not: DocType
+
+  """All values that are contained in given list."""
+  type_in: [DocType!]
+
+  """All values that are not contained in given list."""
+  type_not_in: [DocType!]
+  _MagicalBackRelation_EventDoc_every: EventWhereInput
+  _MagicalBackRelation_EventDoc_some: EventWhereInput
+  _MagicalBackRelation_EventDoc_none: EventWhereInput
+}
+
+input DocWhereUniqueInput {
+  id: ID
 }
 
 type Enquiry implements Node {
@@ -463,6 +736,7 @@ type Event implements Node {
   htmlText: String
   type: EventType
   status(where: StatusWhereInput): Status
+  doc(where: DocWhereInput): Doc
 }
 
 """A connection to a list of items."""
@@ -482,6 +756,7 @@ input EventCreateInput {
   user: UserCreateOneWithoutEventsInput
   enquiry: EnquiryCreateOneWithoutEventsInput
   status: StatusCreateOneInput
+  doc: DocCreateOneInput
 }
 
 input EventCreateManyWithoutEnquiryInput {
@@ -500,6 +775,7 @@ input EventCreateWithoutEnquiryInput {
   type: EventType
   user: UserCreateOneWithoutEventsInput
   status: StatusCreateOneInput
+  doc: DocCreateOneInput
 }
 
 input EventCreateWithoutUserInput {
@@ -508,6 +784,7 @@ input EventCreateWithoutUserInput {
   type: EventType
   enquiry: EnquiryCreateOneWithoutEventsInput
   status: StatusCreateOneInput
+  doc: DocCreateOneInput
 }
 
 """An edge in a connection."""
@@ -594,6 +871,7 @@ input EventUpdateInput {
   user: UserUpdateOneWithoutEventsInput
   enquiry: EnquiryUpdateOneWithoutEventsInput
   status: StatusUpdateOneInput
+  doc: DocUpdateOneInput
 }
 
 input EventUpdateManyWithoutEnquiryInput {
@@ -620,6 +898,7 @@ input EventUpdateWithoutEnquiryDataInput {
   type: EventType
   user: UserUpdateOneWithoutEventsInput
   status: StatusUpdateOneInput
+  doc: DocUpdateOneInput
 }
 
 input EventUpdateWithoutUserDataInput {
@@ -628,6 +907,7 @@ input EventUpdateWithoutUserDataInput {
   type: EventType
   enquiry: EnquiryUpdateOneWithoutEventsInput
   status: StatusUpdateOneInput
+  doc: DocUpdateOneInput
 }
 
 input EventUpdateWithWhereUniqueWithoutEnquiryInput {
@@ -794,6 +1074,7 @@ input EventWhereInput {
   user: UserWhereInput
   enquiry: EnquiryWhereInput
   status: StatusWhereInput
+  doc: DocWhereInput
 }
 
 input EventWhereUniqueInput {
@@ -1126,6 +1407,7 @@ type Mutation {
   createEvent(data: EventCreateInput!): Event!
   createModel(data: ModelCreateInput!): Model!
   createStatus(data: StatusCreateInput!): Status!
+  createDoc(data: DocCreateInput!): Doc!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updatePerson(data: PersonUpdateInput!, where: PersonWhereUniqueInput!): Person
   updateOrg(data: OrgUpdateInput!, where: OrgWhereUniqueInput!): Org
@@ -1133,6 +1415,7 @@ type Mutation {
   updateEvent(data: EventUpdateInput!, where: EventWhereUniqueInput!): Event
   updateModel(data: ModelUpdateInput!, where: ModelWhereUniqueInput!): Model
   updateStatus(data: StatusUpdateInput!, where: StatusWhereUniqueInput!): Status
+  updateDoc(data: DocUpdateInput!, where: DocWhereUniqueInput!): Doc
   deleteUser(where: UserWhereUniqueInput!): User
   deletePerson(where: PersonWhereUniqueInput!): Person
   deleteOrg(where: OrgWhereUniqueInput!): Org
@@ -1140,6 +1423,7 @@ type Mutation {
   deleteEvent(where: EventWhereUniqueInput!): Event
   deleteModel(where: ModelWhereUniqueInput!): Model
   deleteStatus(where: StatusWhereUniqueInput!): Status
+  deleteDoc(where: DocWhereUniqueInput!): Doc
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertPerson(where: PersonWhereUniqueInput!, create: PersonCreateInput!, update: PersonUpdateInput!): Person!
   upsertOrg(where: OrgWhereUniqueInput!, create: OrgCreateInput!, update: OrgUpdateInput!): Org!
@@ -1147,6 +1431,7 @@ type Mutation {
   upsertEvent(where: EventWhereUniqueInput!, create: EventCreateInput!, update: EventUpdateInput!): Event!
   upsertModel(where: ModelWhereUniqueInput!, create: ModelCreateInput!, update: ModelUpdateInput!): Model!
   upsertStatus(where: StatusWhereUniqueInput!, create: StatusCreateInput!, update: StatusUpdateInput!): Status!
+  upsertDoc(where: DocWhereUniqueInput!, create: DocCreateInput!, update: DocUpdateInput!): Doc!
   updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
   updateManyPersons(data: PersonUpdateInput!, where: PersonWhereInput): BatchPayload!
   updateManyOrgs(data: OrgUpdateInput!, where: OrgWhereInput): BatchPayload!
@@ -1154,6 +1439,7 @@ type Mutation {
   updateManyEvents(data: EventUpdateInput!, where: EventWhereInput): BatchPayload!
   updateManyModels(data: ModelUpdateInput!, where: ModelWhereInput): BatchPayload!
   updateManyStatuses(data: StatusUpdateInput!, where: StatusWhereInput): BatchPayload!
+  updateManyDocs(data: DocUpdateInput!, where: DocWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyPersons(where: PersonWhereInput): BatchPayload!
   deleteManyOrgs(where: OrgWhereInput): BatchPayload!
@@ -1161,6 +1447,7 @@ type Mutation {
   deleteManyEvents(where: EventWhereInput): BatchPayload!
   deleteManyModels(where: ModelWhereInput): BatchPayload!
   deleteManyStatuses(where: StatusWhereInput): BatchPayload!
+  deleteManyDocs(where: DocWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -1819,6 +2106,7 @@ type Query {
   events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event]!
   models(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Model]!
   statuses(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Status]!
+  docs(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Doc]!
   user(where: UserWhereUniqueInput!): User
   person(where: PersonWhereUniqueInput!): Person
   org(where: OrgWhereUniqueInput!): Org
@@ -1826,6 +2114,7 @@ type Query {
   event(where: EventWhereUniqueInput!): Event
   model(where: ModelWhereUniqueInput!): Model
   status(where: StatusWhereUniqueInput!): Status
+  doc(where: DocWhereUniqueInput!): Doc
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   personsConnection(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PersonConnection!
   orgsConnection(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgConnection!
@@ -1833,6 +2122,7 @@ type Query {
   eventsConnection(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EventConnection!
   modelsConnection(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ModelConnection!
   statusesConnection(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StatusConnection!
+  docsConnection(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DocConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -2174,6 +2464,7 @@ type Subscription {
   event(where: EventSubscriptionWhereInput): EventSubscriptionPayload
   model(where: ModelSubscriptionWhereInput): ModelSubscriptionPayload
   status(where: StatusSubscriptionWhereInput): StatusSubscriptionPayload
+  doc(where: DocSubscriptionWhereInput): DocSubscriptionPayload
 }
 
 type User implements Node {

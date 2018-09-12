@@ -15,7 +15,7 @@ type Mutation {
   createEnquiry(dateLocal: String!, orgId: ID!, modelId: ID!, qty: Int!): Enquiry
   updateEnquiry(input: EnquiryInput!): Enquiry
   deleteAllEnquiries: BatchPayload!
-  createEnquiryEvent(enquiryId: ID!, htmlText: String, statusId: ID): Event
+  createEnquiryEvent(enquiryId: ID!, htmlText: String, statusId: ID, doc: DocCreateInput): Event
   createOrg(inn: String!): Org
   deleteOrg(id: ID!): Org
   deleteAllOrgs: BatchPayload!
