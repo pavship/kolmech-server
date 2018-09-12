@@ -10,7 +10,7 @@ const resolvers = require('./resolvers')
 // 	}
 // )
 
-// module.exports = { client }
+// module.exports = { client } 
 
 const db = new Prisma({
   typeDefs: 'src/generated/prisma.graphql', // the auto-generated GraphQL schema of the Prisma API
