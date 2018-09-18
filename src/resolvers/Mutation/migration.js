@@ -36,6 +36,23 @@ const migration = {
 				}, '{ gqId }')
 				count++
 			}
+            // add notInTheList item (temporary solution) //TODO implement model creation feature
+            const notInTheList = ctx.db.mutation.upsertModel({
+                where: {
+                  name: 'Нет в списке'
+                },
+                create: {
+                    gqId: 0,
+                    article: 0,
+                    name: 'Нет в списке'
+                },
+                update: {
+                    gqId: 0,
+                    article: 0,
+                    name: 'Нет в списке'
+                }
+            }, '{ gqId }')
+            count++
 			return { count }
 		} catch (err) {
 			console.log(err)

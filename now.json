@@ -2,6 +2,8 @@
     "env": {
         "PRISMA_ENDPOINT": "@prisma-endpoint",
         "PRISMA_SECRET": "@prisma-secret",
+        "PRISMA_ENDPOINT_PROD": "@prisma-endpoint-prod",
+        "PRISMA_SECRET_PROD": "@prisma-secret-prod",
         "APP_SECRET": "@app-secret",
         "MOEDELO_SECRET": "@moe-delo-secret",
         "GQ_TOKEN": "@gq-token",

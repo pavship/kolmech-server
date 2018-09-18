@@ -1,5 +1,4 @@
-# source: https://kolmech-heroku-server.herokuapp.com/prisma-heroku/dev
-# timestamp: Tue Sep 11 2018 07:29:49 GMT+0300 (RTZ 2 (зима))
+# timestamp: Sun Sep 16 2018 10:34:21 GMT+0300 (RTZ 2 (зима))
 
 type AggregateDoc {
   count: Int!
@@ -298,9 +297,6 @@ input DocWhereInput {
 
   """All values that are not contained in given list."""
   type_not_in: [DocType!]
-  _MagicalBackRelation_EventDoc_every: EventWhereInput
-  _MagicalBackRelation_EventDoc_some: EventWhereInput
-  _MagicalBackRelation_EventDoc_none: EventWhereInput
 }
 
 input DocWhereUniqueInput {
@@ -2447,9 +2443,6 @@ input StatusWhereInput {
   next_every: StatusWhereInput
   next_some: StatusWhereInput
   next_none: StatusWhereInput
-  _MagicalBackRelation_EventToStatus_every: EventWhereInput
-  _MagicalBackRelation_EventToStatus_some: EventWhereInput
-  _MagicalBackRelation_EventToStatus_none: EventWhereInput
 }
 
 input StatusWhereUniqueInput {

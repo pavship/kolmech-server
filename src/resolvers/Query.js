@@ -1,4 +1,3 @@
-const { getUserId } = require('../utils')
 const { GraphQLClient  } = require('graphql-request')
 
 const client = new GraphQLClient( 
@@ -8,8 +7,8 @@ const client = new GraphQLClient(
 
 const Query = {
 	me(_, __, ctx, info) {
-        const id = getUserId(ctx)
-        return ctx.db.query.user({ where: { id } }, info)
+        const { userId, db } = ctx
+        return db.query.user({ where: { id: userId } }, info)
 	},
 
 	enquiries(_, __, ctx, info) {

@@ -1,17 +1,16 @@
-const { getUserId } = require('../../utils')
 const { toLocalTimestamp } = require('../../utils/dates')
 const { currency } = require('../../utils/format')
 
 const enquiry = {
 	async createEnquiry(_, { dateLocal, orgId, modelId, qty }, ctx, info) {
-		const userId = getUserId(ctx)
-		const org = await ctx.db.query.org({ where: { id: orgId } }, '{ inn name }')
-		const model = await ctx.db.query.model({ where: { id: modelId } }, '{ article name }')
+		const { userId, db } = ctx
+		const org = await db.query.org({ where: { id: orgId } }, '{ inn name }')
+		const model = await db.query.model({ where: { id: modelId } }, '{ article name }')
 		if (!org) throw new Error(`Организация не найдена в базе`)
 		// Automatically increment counter number for the new enquiry
-		const lastEnquiry = await ctx.db.query.enquiries({ last: 1 }, '{ num }')
+		const lastEnquiry = await db.query.enquiries({ last: 1 }, '{ num }')
 		const num = (!lastEnquiry[0] || !lastEnquiry[0].num) ? 1 : lastEnquiry[0].num + 1
-		return ctx.db.mutation.createEnquiry({
+		return db.mutation.createEnquiry({
 			data: {
 				num,
 				dateLocal,
@@ -55,11 +54,11 @@ const enquiry = {
 	},
 
 	async updateEnquiry(_, { input }, ctx, info) {
+		const { userId, db } = ctx
 		const { id, dateLocal, orgId, modelId, qty, htmlNote } = input
-		const userId = getUserId(ctx)
-		const org = orgId ? await ctx.db.query.org({ where: { id: orgId } }, '{ inn name }') : null
+		const org = orgId ? await db.query.org({ where: { id: orgId } }, '{ inn name }') : null
 		if ( orgId && !org) throw new Error(`Организация не найдена в базе`)
-		const model = modelId ? await ctx.db.query.model({ where: { id: modelId } }, '{ article name }') : null
+		const model = modelId ? await db.query.model({ where: { id: modelId } }, '{ article name }') : null
 		if ( modelId && !model) throw new Error(`Изделие не найдено в базе`)
 		// const updatedFields = Object.keys(input).filter(f => f !== 'id')
 		// const fieldsToGet = updatedFields.reduce((res, f, i) => {
@@ -68,10 +67,10 @@ const enquiry = {
 		// 	return res
 		// }, '{' )
 		// console.log('fieldsToGet > ', fieldsToGet)
-		// const oldEnquiry = await ctx.db.query.enquiry({
+		// const oldEnquiry = await db.query.enquiry({
 		// 	where: { id }
 		// }, fieldsToGet)
-		return ctx.db.mutation.updateEnquiry(
+		return db.mutation.updateEnquiry(
 		{
 			where: { id },
 			data: {
@@ -127,10 +126,10 @@ const enquiry = {
 	},
 
 	async createEnquiryEvent(_, { enquiryId, htmlText, statusId, doc }, ctx, info) {
-        const userId = getUserId(ctx)
+        const { userId, db } = ctx
         // // TODO make requests either parallel or combined
-        const status = statusId ? await ctx.db.query.status({where: {id: statusId}}, '{ name }') : null
-        // const prevStatusEvent = statusId ? await ctx.db.query.events({
+        const status = statusId ? await db.query.status({where: {id: statusId}}, '{ name }') : null
+        // const prevStatusEvent = statusId ? await db.query.events({
         //     where: {
 		// 		AND: [{
 		// 			enquiry: {
@@ -144,7 +143,7 @@ const enquiry = {
 		// 	},
 		// 	last: 1
 		// }, '{ id status { stage } }') : null
-		return ctx.db.mutation.createEvent({
+		return db.mutation.createEvent({
 			data: {
 				enquiry: {
 					connect: {
@@ -188,8 +187,8 @@ const enquiry = {
 	},
  
 	// async deletePost(parent, { id }, ctx, info) {
-	//   const userId = getUserId(ctx)
-	//   const postExists = await ctx.db.exists.Post({
+	//   const { userId, db } = ctx
+	//   const postExists = await db.exists.Post({
 	//     id,
 	//     author: { id: userId },
 	//   })
@@ -197,7 +196,7 @@ const enquiry = {
 	//     throw new Error(`Post not found or you're not the author`)
 	//   }
 
-	//   return ctx.db.mutation.deletePost({ where: { id } })
+	//   return db.mutation.deletePost({ where: { id } })
 	// },
 }
 

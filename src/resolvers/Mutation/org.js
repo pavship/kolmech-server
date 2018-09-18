@@ -1,13 +1,12 @@
 const fetch = require('node-fetch')
 const baseURL = 'https://restapi.moedelo.org/kontragents/api/v1/kontragent'
-const { getUserId } = require('../../utils')
 const { toLocalTimestamp } = require('../../utils/dates')
 
 const org = {
 	async createOrg(_, { inn }, ctx, info) {
-        const userId = getUserId(ctx)
+        const { userId, db } = ctx
         // check org with provided INN doesn't exist
-        const orgExists = await ctx.db.exists.Org({ inn })
+        const orgExists = await db.exists.Org({ inn })
         if (orgExists) throw new Error(`Организация с инн ${inn} уже существует в базе`)
         // Create contractor in the Moedelo
         const url = baseURL + '/inn'
@@ -32,7 +31,7 @@ const org = {
         //     moedeloId,
         //     name
         // }
-		return ctx.db.mutation.createOrg({
+		return db.mutation.createOrg({
 			data: {
 				inn,
                 moedeloId,
