@@ -28,7 +28,7 @@ const Query = {
 	},
     
 	async models(_, __, ctx, info) {
-        return ctx.db.query.models({ orderBy: 'name_DESC' }, info)
+        return ctx.db.query.models({ orderBy: 'name_ASC' }, info)
         // try {
         //     const models = await client.request(`{
         //         allModels {

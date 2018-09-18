@@ -9,7 +9,8 @@ const enquiry = {
 		if (!org) throw new Error(`Организация не найдена в базе`)
 		// Automatically increment counter number for the new enquiry
 		const lastEnquiry = await db.query.enquiries({ last: 1 }, '{ num }')
-		const num = (!lastEnquiry[0] || !lastEnquiry[0].num) ? 1 : lastEnquiry[0].num + 1
+        const num = (!lastEnquiry[0] || !lastEnquiry[0].num) ? 1 : lastEnquiry[0].num + 1
+        const newEnquiryStatus = await db.query.status({ where: { name: "Новая" }}, '{ id }')
 		return db.mutation.createEnquiry({
 			data: {
 				num,
@@ -44,7 +45,7 @@ const enquiry = {
 						type: 'CREATE',
 						status: {
 							connect: {
-								id: "cjlj173nm000i0959pqsxsbt7"
+								id: newEnquiryStatus.id
 							}
 						}
 					}]

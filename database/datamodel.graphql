@@ -55,7 +55,7 @@ type Doc {
 
 type Status {
     id: ID! @unique
-    name: String!
+    name: String! @unique
     stage: Int
     prev: [Status!]! @relation(name: "StatusLink")
     next: [Status!]! @relation(name: "StatusLink")
@@ -65,7 +65,7 @@ type Model {
   id: ID! @unique
   gqId: ID @unique #Graphcool id
   article: String
-  name: String!
+  name: String! @unique
   enquiries: [Enquiry!]! @relation(name: "EnquiryModel")
 #   prods: [Prod!]! @relation(name: "ModelOnProd")
 #   deptModels: [DeptModel!]! @relation(name: "ModelOnDeptModel")
