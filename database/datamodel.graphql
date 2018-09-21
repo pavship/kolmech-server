@@ -1,72 +1,81 @@
 type User {
-    id: ID! @unique
-    email: String! @unique
-    password: String!
-    person: Person
-    role: UserRole
-    events: [Event!]! @relation(name: "EventByUser")
+	id: ID! @unique
+	email: String! @unique
+	password: String!
+	person: Person
+	role: UserRole
+	events: [Event!]! @relation(name: "EventByUser")
 }
 
 type Person {
-    id: ID! @unique
-    fName: String!
-    lName: String
-    user: User
+	id: ID! @unique
+	fName: String!
+	lName: String
+	user: User
 }
 
 type Org {
-    id: ID! @unique
-    inn: String @unique
-    moedeloId: String
-    name: String!
-    legalAddress: String
-    enquiries: [Enquiry!]!
+	id: ID! @unique
+	inn: String @unique
+	moedeloId: String
+	name: String!
+	legalAddress: String
+	enquiries: [Enquiry!]!
 }
 
 type Enquiry {
-    id: ID! @unique
-    num: Int!
-    dateLocal: String
-    org: Org
-    model: Model @relation(name: "EnquiryModel")
-    qty: Int
-    htmlNote: String
-    events: [Event!]! @relation(name: "EventOnEnquiry" onDelete: CASCADE)
+	id: ID! @unique
+	num: Int!
+	dateLocal: String
+	org: Org
+	model: Model @relation(name: "EnquiryModel")
+	qty: Int
+	htmlNote: String
+	events: [Event!]! @relation(name: "EventOnEnquiry" onDelete: CASCADE)
+	orders: [Order!]!  @relation(name: "EnquiryOrders")
 }
 
 type Event {
-    id: ID! @unique
-    user: User @relation(name: "EventByUser")
-    enquiry: Enquiry @relation(name: "EventOnEnquiry")
-    datetimeLocal: String!
-    htmlText: String
-    type: EventType
-    status: Status
-    doc: Doc @relation(name: "EventDoc" onDelete: CASCADE)
+	id: ID! @unique
+	user: User @relation(name: "EventByUser")
+	enquiry: Enquiry @relation(name: "EventOnEnquiry")
+	datetimeLocal: String!
+	htmlText: String
+	type: EventType
+	status: Status
+	doc: Doc @relation(name: "EventDoc" onDelete: CASCADE)
 }
 
 type Doc {
-    id: ID! @unique
-    dateLocal: String
-    amount: Float
-    nds: Boolean
-    type: DocType
+	id: ID! @unique
+	dateLocal: String
+	amount: Float
+	nds: Boolean
+	type: DocType
 }
 
 type Status {
-    id: ID! @unique
-    name: String! @unique
-    stage: Int
-    prev: [Status!]! @relation(name: "StatusLink")
-    next: [Status!]! @relation(name: "StatusLink")
+	id: ID! @unique
+	name: String! @unique
+	stage: Int
+	prev: [Status!]! @relation(name: "StatusLink")
+	next: [Status!]! @relation(name: "StatusLink")
+}
+
+type Order {
+	id: ID! @unique
+	dateLocal: String
+	enquiry: Enquiry @relation(name: "EnquiryOrders")
+	num: Int
+	amount: Float
 }
 
 type Model {
-  id: ID! @unique
-  gqId: ID @unique #Graphcool id
-  article: String
-  name: String! @unique
-  enquiries: [Enquiry!]! @relation(name: "EnquiryModel")
+	id: ID! @unique
+	gqId: ID @unique #Graphcool id
+	article: String
+	name: String! @unique
+	enquiries: [Enquiry!]! @relation(name: "EnquiryModel")
 #   prods: [Prod!]! @relation(name: "ModelOnProd")
 #   deptModels: [DeptModel!]! @relation(name: "ModelOnDeptModel")
 }
@@ -90,16 +99,16 @@ type Model {
 # }
 
 enum EventType {
-    CREATE
-    UPDATE
-    STATUS
-    COMMENT
+	CREATE
+	UPDATE
+	STATUS
+	COMMENT
 }
 
 enum DocType {
-    CO
+	CO
 }
 
 enum UserRole {
-    INACTIVE
+	INACTIVE
 }

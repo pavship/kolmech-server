@@ -1,5 +1,5 @@
 # source: https://kolmech-heroku-server.herokuapp.com/prisma-heroku/dev
-# timestamp: Tue Sep 18 2018 20:19:20 GMT+0300 (RTZ 2 (зима))
+# timestamp: Fri Sep 21 2018 15:14:03 GMT+0300 (RTZ 2 (зима))
 
 type AggregateDoc {
   count: Int!
@@ -14,6 +14,10 @@ type AggregateEvent {
 }
 
 type AggregateModel {
+  count: Int!
+}
+
+type AggregateOrder {
   count: Int!
 }
 
@@ -316,6 +320,7 @@ type Enquiry implements Node {
   qty: Int
   htmlNote: String
   events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
+  orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order!]
 }
 
 """A connection to a list of items."""
@@ -336,6 +341,7 @@ input EnquiryCreateInput {
   org: OrgCreateOneWithoutEnquiriesInput
   model: ModelCreateOneWithoutEnquiriesInput
   events: EventCreateManyWithoutEnquiryInput
+  orders: OrderCreateManyWithoutEnquiryInput
 }
 
 input EnquiryCreateManyWithoutModelInput {
@@ -353,6 +359,11 @@ input EnquiryCreateOneWithoutEventsInput {
   connect: EnquiryWhereUniqueInput
 }
 
+input EnquiryCreateOneWithoutOrdersInput {
+  create: EnquiryCreateWithoutOrdersInput
+  connect: EnquiryWhereUniqueInput
+}
+
 input EnquiryCreateWithoutEventsInput {
   num: Int!
   dateLocal: String
@@ -360,6 +371,7 @@ input EnquiryCreateWithoutEventsInput {
   htmlNote: String
   org: OrgCreateOneWithoutEnquiriesInput
   model: ModelCreateOneWithoutEnquiriesInput
+  orders: OrderCreateManyWithoutEnquiryInput
 }
 
 input EnquiryCreateWithoutModelInput {
@@ -368,6 +380,17 @@ input EnquiryCreateWithoutModelInput {
   qty: Int
   htmlNote: String
   org: OrgCreateOneWithoutEnquiriesInput
+  events: EventCreateManyWithoutEnquiryInput
+  orders: OrderCreateManyWithoutEnquiryInput
+}
+
+input EnquiryCreateWithoutOrdersInput {
+  num: Int!
+  dateLocal: String
+  qty: Int
+  htmlNote: String
+  org: OrgCreateOneWithoutEnquiriesInput
+  model: ModelCreateOneWithoutEnquiriesInput
   events: EventCreateManyWithoutEnquiryInput
 }
 
@@ -378,6 +401,7 @@ input EnquiryCreateWithoutOrgInput {
   htmlNote: String
   model: ModelCreateOneWithoutEnquiriesInput
   events: EventCreateManyWithoutEnquiryInput
+  orders: OrderCreateManyWithoutEnquiryInput
 }
 
 """An edge in a connection."""
@@ -461,6 +485,7 @@ input EnquiryUpdateInput {
   org: OrgUpdateOneWithoutEnquiriesInput
   model: ModelUpdateOneWithoutEnquiriesInput
   events: EventUpdateManyWithoutEnquiryInput
+  orders: OrderUpdateManyWithoutEnquiryInput
 }
 
 input EnquiryUpdateManyWithoutModelInput {
@@ -490,6 +515,15 @@ input EnquiryUpdateOneWithoutEventsInput {
   upsert: EnquiryUpsertWithoutEventsInput
 }
 
+input EnquiryUpdateOneWithoutOrdersInput {
+  create: EnquiryCreateWithoutOrdersInput
+  connect: EnquiryWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: EnquiryUpdateWithoutOrdersDataInput
+  upsert: EnquiryUpsertWithoutOrdersInput
+}
+
 input EnquiryUpdateWithoutEventsDataInput {
   num: Int
   dateLocal: String
@@ -497,6 +531,7 @@ input EnquiryUpdateWithoutEventsDataInput {
   htmlNote: String
   org: OrgUpdateOneWithoutEnquiriesInput
   model: ModelUpdateOneWithoutEnquiriesInput
+  orders: OrderUpdateManyWithoutEnquiryInput
 }
 
 input EnquiryUpdateWithoutModelDataInput {
@@ -505,6 +540,17 @@ input EnquiryUpdateWithoutModelDataInput {
   qty: Int
   htmlNote: String
   org: OrgUpdateOneWithoutEnquiriesInput
+  events: EventUpdateManyWithoutEnquiryInput
+  orders: OrderUpdateManyWithoutEnquiryInput
+}
+
+input EnquiryUpdateWithoutOrdersDataInput {
+  num: Int
+  dateLocal: String
+  qty: Int
+  htmlNote: String
+  org: OrgUpdateOneWithoutEnquiriesInput
+  model: ModelUpdateOneWithoutEnquiriesInput
   events: EventUpdateManyWithoutEnquiryInput
 }
 
@@ -515,6 +561,7 @@ input EnquiryUpdateWithoutOrgDataInput {
   htmlNote: String
   model: ModelUpdateOneWithoutEnquiriesInput
   events: EventUpdateManyWithoutEnquiryInput
+  orders: OrderUpdateManyWithoutEnquiryInput
 }
 
 input EnquiryUpdateWithWhereUniqueWithoutModelInput {
@@ -530,6 +577,11 @@ input EnquiryUpdateWithWhereUniqueWithoutOrgInput {
 input EnquiryUpsertWithoutEventsInput {
   update: EnquiryUpdateWithoutEventsDataInput!
   create: EnquiryCreateWithoutEventsInput!
+}
+
+input EnquiryUpsertWithoutOrdersInput {
+  update: EnquiryUpdateWithoutOrdersDataInput!
+  create: EnquiryCreateWithoutOrdersInput!
 }
 
 input EnquiryUpsertWithWhereUniqueWithoutModelInput {
@@ -722,6 +774,9 @@ input EnquiryWhereInput {
   events_every: EventWhereInput
   events_some: EventWhereInput
   events_none: EventWhereInput
+  orders_every: OrderWhereInput
+  orders_some: OrderWhereInput
+  orders_none: OrderWhereInput
 }
 
 input EnquiryWhereUniqueInput {
@@ -1406,6 +1461,7 @@ type Mutation {
   createOrg(data: OrgCreateInput!): Org!
   createEnquiry(data: EnquiryCreateInput!): Enquiry!
   createEvent(data: EventCreateInput!): Event!
+  createOrder(data: OrderCreateInput!): Order!
   createModel(data: ModelCreateInput!): Model!
   createStatus(data: StatusCreateInput!): Status!
   createDoc(data: DocCreateInput!): Doc!
@@ -1414,6 +1470,7 @@ type Mutation {
   updateOrg(data: OrgUpdateInput!, where: OrgWhereUniqueInput!): Org
   updateEnquiry(data: EnquiryUpdateInput!, where: EnquiryWhereUniqueInput!): Enquiry
   updateEvent(data: EventUpdateInput!, where: EventWhereUniqueInput!): Event
+  updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
   updateModel(data: ModelUpdateInput!, where: ModelWhereUniqueInput!): Model
   updateStatus(data: StatusUpdateInput!, where: StatusWhereUniqueInput!): Status
   updateDoc(data: DocUpdateInput!, where: DocWhereUniqueInput!): Doc
@@ -1422,6 +1479,7 @@ type Mutation {
   deleteOrg(where: OrgWhereUniqueInput!): Org
   deleteEnquiry(where: EnquiryWhereUniqueInput!): Enquiry
   deleteEvent(where: EventWhereUniqueInput!): Event
+  deleteOrder(where: OrderWhereUniqueInput!): Order
   deleteModel(where: ModelWhereUniqueInput!): Model
   deleteStatus(where: StatusWhereUniqueInput!): Status
   deleteDoc(where: DocWhereUniqueInput!): Doc
@@ -1430,6 +1488,7 @@ type Mutation {
   upsertOrg(where: OrgWhereUniqueInput!, create: OrgCreateInput!, update: OrgUpdateInput!): Org!
   upsertEnquiry(where: EnquiryWhereUniqueInput!, create: EnquiryCreateInput!, update: EnquiryUpdateInput!): Enquiry!
   upsertEvent(where: EventWhereUniqueInput!, create: EventCreateInput!, update: EventUpdateInput!): Event!
+  upsertOrder(where: OrderWhereUniqueInput!, create: OrderCreateInput!, update: OrderUpdateInput!): Order!
   upsertModel(where: ModelWhereUniqueInput!, create: ModelCreateInput!, update: ModelUpdateInput!): Model!
   upsertStatus(where: StatusWhereUniqueInput!, create: StatusCreateInput!, update: StatusUpdateInput!): Status!
   upsertDoc(where: DocWhereUniqueInput!, create: DocCreateInput!, update: DocUpdateInput!): Doc!
@@ -1438,6 +1497,7 @@ type Mutation {
   updateManyOrgs(data: OrgUpdateInput!, where: OrgWhereInput): BatchPayload!
   updateManyEnquiries(data: EnquiryUpdateInput!, where: EnquiryWhereInput): BatchPayload!
   updateManyEvents(data: EventUpdateInput!, where: EventWhereInput): BatchPayload!
+  updateManyOrders(data: OrderUpdateInput!, where: OrderWhereInput): BatchPayload!
   updateManyModels(data: ModelUpdateInput!, where: ModelWhereInput): BatchPayload!
   updateManyStatuses(data: StatusUpdateInput!, where: StatusWhereInput): BatchPayload!
   updateManyDocs(data: DocUpdateInput!, where: DocWhereInput): BatchPayload!
@@ -1446,6 +1506,7 @@ type Mutation {
   deleteManyOrgs(where: OrgWhereInput): BatchPayload!
   deleteManyEnquiries(where: EnquiryWhereInput): BatchPayload!
   deleteManyEvents(where: EventWhereInput): BatchPayload!
+  deleteManyOrders(where: OrderWhereInput): BatchPayload!
   deleteManyModels(where: ModelWhereInput): BatchPayload!
   deleteManyStatuses(where: StatusWhereInput): BatchPayload!
   deleteManyDocs(where: DocWhereInput): BatchPayload!
@@ -1461,6 +1522,285 @@ enum MutationType {
 interface Node {
   """The id of the object."""
   id: ID!
+}
+
+type Order implements Node {
+  id: ID!
+  dateLocal: String
+  enquiry(where: EnquiryWhereInput): Enquiry
+  num: Int
+  amount: Float
+}
+
+"""A connection to a list of items."""
+type OrderConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [OrderEdge]!
+  aggregate: AggregateOrder!
+}
+
+input OrderCreateInput {
+  dateLocal: String
+  num: Int
+  amount: Float
+  enquiry: EnquiryCreateOneWithoutOrdersInput
+}
+
+input OrderCreateManyWithoutEnquiryInput {
+  create: [OrderCreateWithoutEnquiryInput!]
+  connect: [OrderWhereUniqueInput!]
+}
+
+input OrderCreateWithoutEnquiryInput {
+  dateLocal: String
+  num: Int
+  amount: Float
+}
+
+"""An edge in a connection."""
+type OrderEdge {
+  """The item at the end of the edge."""
+  node: Order!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum OrderOrderByInput {
+  id_ASC
+  id_DESC
+  dateLocal_ASC
+  dateLocal_DESC
+  num_ASC
+  num_DESC
+  amount_ASC
+  amount_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type OrderPreviousValues {
+  id: ID!
+  dateLocal: String
+  num: Int
+  amount: Float
+}
+
+type OrderSubscriptionPayload {
+  mutation: MutationType!
+  node: Order
+  updatedFields: [String!]
+  previousValues: OrderPreviousValues
+}
+
+input OrderSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [OrderSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [OrderSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [OrderSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: OrderWhereInput
+}
+
+input OrderUpdateInput {
+  dateLocal: String
+  num: Int
+  amount: Float
+  enquiry: EnquiryUpdateOneWithoutOrdersInput
+}
+
+input OrderUpdateManyWithoutEnquiryInput {
+  create: [OrderCreateWithoutEnquiryInput!]
+  connect: [OrderWhereUniqueInput!]
+  disconnect: [OrderWhereUniqueInput!]
+  delete: [OrderWhereUniqueInput!]
+  update: [OrderUpdateWithWhereUniqueWithoutEnquiryInput!]
+  upsert: [OrderUpsertWithWhereUniqueWithoutEnquiryInput!]
+}
+
+input OrderUpdateWithoutEnquiryDataInput {
+  dateLocal: String
+  num: Int
+  amount: Float
+}
+
+input OrderUpdateWithWhereUniqueWithoutEnquiryInput {
+  where: OrderWhereUniqueInput!
+  data: OrderUpdateWithoutEnquiryDataInput!
+}
+
+input OrderUpsertWithWhereUniqueWithoutEnquiryInput {
+  where: OrderWhereUniqueInput!
+  update: OrderUpdateWithoutEnquiryDataInput!
+  create: OrderCreateWithoutEnquiryInput!
+}
+
+input OrderWhereInput {
+  """Logical AND on all given filters."""
+  AND: [OrderWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [OrderWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [OrderWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  dateLocal: String
+
+  """All values that are not equal to given value."""
+  dateLocal_not: String
+
+  """All values that are contained in given list."""
+  dateLocal_in: [String!]
+
+  """All values that are not contained in given list."""
+  dateLocal_not_in: [String!]
+
+  """All values less than the given value."""
+  dateLocal_lt: String
+
+  """All values less than or equal the given value."""
+  dateLocal_lte: String
+
+  """All values greater than the given value."""
+  dateLocal_gt: String
+
+  """All values greater than or equal the given value."""
+  dateLocal_gte: String
+
+  """All values containing the given string."""
+  dateLocal_contains: String
+
+  """All values not containing the given string."""
+  dateLocal_not_contains: String
+
+  """All values starting with the given string."""
+  dateLocal_starts_with: String
+
+  """All values not starting with the given string."""
+  dateLocal_not_starts_with: String
+
+  """All values ending with the given string."""
+  dateLocal_ends_with: String
+
+  """All values not ending with the given string."""
+  dateLocal_not_ends_with: String
+  num: Int
+
+  """All values that are not equal to given value."""
+  num_not: Int
+
+  """All values that are contained in given list."""
+  num_in: [Int!]
+
+  """All values that are not contained in given list."""
+  num_not_in: [Int!]
+
+  """All values less than the given value."""
+  num_lt: Int
+
+  """All values less than or equal the given value."""
+  num_lte: Int
+
+  """All values greater than the given value."""
+  num_gt: Int
+
+  """All values greater than or equal the given value."""
+  num_gte: Int
+  amount: Float
+
+  """All values that are not equal to given value."""
+  amount_not: Float
+
+  """All values that are contained in given list."""
+  amount_in: [Float!]
+
+  """All values that are not contained in given list."""
+  amount_not_in: [Float!]
+
+  """All values less than the given value."""
+  amount_lt: Float
+
+  """All values less than or equal the given value."""
+  amount_lte: Float
+
+  """All values greater than the given value."""
+  amount_gt: Float
+
+  """All values greater than or equal the given value."""
+  amount_gte: Float
+  enquiry: EnquiryWhereInput
+}
+
+input OrderWhereUniqueInput {
+  id: ID
 }
 
 type Org implements Node {
@@ -2105,6 +2445,7 @@ type Query {
   orgs(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Org]!
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry]!
   events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event]!
+  orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
   models(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Model]!
   statuses(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Status]!
   docs(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Doc]!
@@ -2113,6 +2454,7 @@ type Query {
   org(where: OrgWhereUniqueInput!): Org
   enquiry(where: EnquiryWhereUniqueInput!): Enquiry
   event(where: EventWhereUniqueInput!): Event
+  order(where: OrderWhereUniqueInput!): Order
   model(where: ModelWhereUniqueInput!): Model
   status(where: StatusWhereUniqueInput!): Status
   doc(where: DocWhereUniqueInput!): Doc
@@ -2121,6 +2463,7 @@ type Query {
   orgsConnection(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgConnection!
   enquiriesConnection(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EnquiryConnection!
   eventsConnection(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EventConnection!
+  ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
   modelsConnection(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ModelConnection!
   statusesConnection(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StatusConnection!
   docsConnection(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DocConnection!
@@ -2464,6 +2807,7 @@ type Subscription {
   org(where: OrgSubscriptionWhereInput): OrgSubscriptionPayload
   enquiry(where: EnquirySubscriptionWhereInput): EnquirySubscriptionPayload
   event(where: EventSubscriptionWhereInput): EventSubscriptionPayload
+  order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
   model(where: ModelSubscriptionWhereInput): ModelSubscriptionPayload
   status(where: StatusSubscriptionWhereInput): StatusSubscriptionPayload
   doc(where: DocSubscriptionWhereInput): DocSubscriptionPayload

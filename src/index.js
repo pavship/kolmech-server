@@ -15,11 +15,11 @@ const db = new Prisma({
 const server = new GraphQLServer({
 	typeDefs: './src/schema.graphql',
 	resolvers,
-	context: req => ({ 
+	context: req => ({
 		...req,
 		userId: getUserId(req),
 		db
-	}),
+	})
 })
 
 server.start({ tracing: false }, () => console.log('Server is running on http://localhost:4000'))
