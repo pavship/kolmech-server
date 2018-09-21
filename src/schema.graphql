@@ -19,7 +19,7 @@ type Mutation {
   createOrg(inn: String!): Org
   deleteOrg(id: ID!): Org
   deleteAllOrgs: BatchPayload!
-  upsertOrder(id: ID, enquiryId: ID, dateLocal: String!, num: Int, amount: Float): Order
+  upsertOrder(id: ID, enquiryId: ID, dateLocal: String!, qty: Int, amount: Float): Order
   importModels: BatchPayload!
   seedEnquiryStatuses: BatchPayload!
 }

@@ -1,5 +1,5 @@
 # source: https://kolmech-heroku-server.herokuapp.com/prisma-heroku/dev
-# timestamp: Fri Sep 21 2018 15:14:03 GMT+0300 (RTZ 2 (зима))
+# timestamp: Fri Sep 21 2018 16:26:10 GMT+0300 (RTZ 2 (зима))
 
 type AggregateDoc {
   count: Int!
@@ -1528,7 +1528,7 @@ type Order implements Node {
   id: ID!
   dateLocal: String
   enquiry(where: EnquiryWhereInput): Enquiry
-  num: Int
+  qty: Int
   amount: Float
 }
 
@@ -1544,7 +1544,7 @@ type OrderConnection {
 
 input OrderCreateInput {
   dateLocal: String
-  num: Int
+  qty: Int
   amount: Float
   enquiry: EnquiryCreateOneWithoutOrdersInput
 }
@@ -1556,7 +1556,7 @@ input OrderCreateManyWithoutEnquiryInput {
 
 input OrderCreateWithoutEnquiryInput {
   dateLocal: String
-  num: Int
+  qty: Int
   amount: Float
 }
 
@@ -1574,8 +1574,8 @@ enum OrderOrderByInput {
   id_DESC
   dateLocal_ASC
   dateLocal_DESC
-  num_ASC
-  num_DESC
+  qty_ASC
+  qty_DESC
   amount_ASC
   amount_DESC
   updatedAt_ASC
@@ -1587,7 +1587,7 @@ enum OrderOrderByInput {
 type OrderPreviousValues {
   id: ID!
   dateLocal: String
-  num: Int
+  qty: Int
   amount: Float
 }
 
@@ -1632,7 +1632,7 @@ input OrderSubscriptionWhereInput {
 
 input OrderUpdateInput {
   dateLocal: String
-  num: Int
+  qty: Int
   amount: Float
   enquiry: EnquiryUpdateOneWithoutOrdersInput
 }
@@ -1648,7 +1648,7 @@ input OrderUpdateManyWithoutEnquiryInput {
 
 input OrderUpdateWithoutEnquiryDataInput {
   dateLocal: String
-  num: Int
+  qty: Int
   amount: Float
 }
 
@@ -1752,28 +1752,28 @@ input OrderWhereInput {
 
   """All values not ending with the given string."""
   dateLocal_not_ends_with: String
-  num: Int
+  qty: Int
 
   """All values that are not equal to given value."""
-  num_not: Int
+  qty_not: Int
 
   """All values that are contained in given list."""
-  num_in: [Int!]
+  qty_in: [Int!]
 
   """All values that are not contained in given list."""
-  num_not_in: [Int!]
+  qty_not_in: [Int!]
 
   """All values less than the given value."""
-  num_lt: Int
+  qty_lt: Int
 
   """All values less than or equal the given value."""
-  num_lte: Int
+  qty_lte: Int
 
   """All values greater than the given value."""
-  num_gt: Int
+  qty_gt: Int
 
   """All values greater than or equal the given value."""
-  num_gte: Int
+  qty_gte: Int
   amount: Float
 
   """All values that are not equal to given value."""

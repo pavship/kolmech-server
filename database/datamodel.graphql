@@ -66,7 +66,7 @@ type Order {
 	id: ID! @unique
 	dateLocal: String
 	enquiry: Enquiry @relation(name: "EnquiryOrders")
-	num: Int
+	qty: Int
 	amount: Float
 }
 

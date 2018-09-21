@@ -1,24 +1,20 @@
-const fetch = require('node-fetch')
-const baseURL = 'https://restapi.moedelo.org/kontragents/api/v1/kontragent'
-const { toLocalTimestamp } = require('../../utils/dates')
-
 const order = {
-	async upsertOrder(_, { id, enquiryId, dateLocal, num, amount }, ctx, info) {
+	async upsertOrder(_, { id, enquiryId, dateLocal, qty, amount }, ctx, info) {
 		if (id) {
 			const enquiryExists = await ctx.db.exists.Enquiry({
 				id: enquiryId
 			})
 			if (!enquiryExists) {
-				throw new Error(`Post not found or you're not the author`)
+				throw new Error(`Заявка не найдена в БД`)
 			}
 		}
-		ctx.db.mutation.upsertOrder({
+		return ctx.db.mutation.upsertOrder({
 			where: {
-				id
+				id: 'new'
 			},
 			create: {
 				dateLocal,
-				num,
+				qty,
 				amount,
 				enquiry: {
 					connect: {
@@ -28,7 +24,7 @@ const order = {
 			},
 			update: {
 				...dateLocal && { dateLocal },
-				...num && { num },
+				...qty && { qty },
 				...amount && { amount },
 				...enquiryId && {
 					enquiry: {
