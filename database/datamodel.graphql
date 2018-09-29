@@ -20,14 +20,15 @@ type Org {
 	moedeloId: String
 	name: String!
 	legalAddress: String
-	enquiries: [Enquiry!]!
+	enquiries: [Enquiry!]! @relation(name: "OrgEnquiries")
+	orders: [Order!]! @relation(name: "OrgOrders")
 }
 
 type Enquiry {
 	id: ID! @unique
 	num: Int!
 	dateLocal: String
-	org: Org
+	org: Org @relation(name: "OrgEnquiries")
 	model: Model @relation(name: "EnquiryModel")
 	qty: Int
 	htmlNote: String
@@ -64,8 +65,10 @@ type Status {
 
 type Order {
 	id: ID! @unique
+	num: Int
 	dateLocal: String
 	enquiry: Enquiry @relation(name: "EnquiryOrders")
+	org: Org @relation(name: "OrgOrders")
 	qty: Int
 	amount: Float
 }

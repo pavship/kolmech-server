@@ -1,5 +1,5 @@
 # source: https://kolmech-heroku-server.herokuapp.com/prisma-heroku/dev
-# timestamp: Fri Sep 21 2018 16:26:10 GMT+0300 (RTZ 2 (зима))
+# timestamp: Thu Sep 27 2018 22:57:44 GMT+0300 (RTZ 2 (зима))
 
 type AggregateDoc {
   count: Int!
@@ -1526,8 +1526,10 @@ interface Node {
 
 type Order implements Node {
   id: ID!
+  num: Int
   dateLocal: String
   enquiry(where: EnquiryWhereInput): Enquiry
+  org(where: OrgWhereInput): Org
   qty: Int
   amount: Float
 }
@@ -1543,10 +1545,12 @@ type OrderConnection {
 }
 
 input OrderCreateInput {
+  num: Int
   dateLocal: String
   qty: Int
   amount: Float
   enquiry: EnquiryCreateOneWithoutOrdersInput
+  org: OrgCreateOneWithoutOrdersInput
 }
 
 input OrderCreateManyWithoutEnquiryInput {
@@ -1554,10 +1558,25 @@ input OrderCreateManyWithoutEnquiryInput {
   connect: [OrderWhereUniqueInput!]
 }
 
+input OrderCreateManyWithoutOrgInput {
+  create: [OrderCreateWithoutOrgInput!]
+  connect: [OrderWhereUniqueInput!]
+}
+
 input OrderCreateWithoutEnquiryInput {
+  num: Int
   dateLocal: String
   qty: Int
   amount: Float
+  org: OrgCreateOneWithoutOrdersInput
+}
+
+input OrderCreateWithoutOrgInput {
+  num: Int
+  dateLocal: String
+  qty: Int
+  amount: Float
+  enquiry: EnquiryCreateOneWithoutOrdersInput
 }
 
 """An edge in a connection."""
@@ -1572,6 +1591,8 @@ type OrderEdge {
 enum OrderOrderByInput {
   id_ASC
   id_DESC
+  num_ASC
+  num_DESC
   dateLocal_ASC
   dateLocal_DESC
   qty_ASC
@@ -1586,6 +1607,7 @@ enum OrderOrderByInput {
 
 type OrderPreviousValues {
   id: ID!
+  num: Int
   dateLocal: String
   qty: Int
   amount: Float
@@ -1631,10 +1653,12 @@ input OrderSubscriptionWhereInput {
 }
 
 input OrderUpdateInput {
+  num: Int
   dateLocal: String
   qty: Int
   amount: Float
   enquiry: EnquiryUpdateOneWithoutOrdersInput
+  org: OrgUpdateOneWithoutOrdersInput
 }
 
 input OrderUpdateManyWithoutEnquiryInput {
@@ -1646,10 +1670,29 @@ input OrderUpdateManyWithoutEnquiryInput {
   upsert: [OrderUpsertWithWhereUniqueWithoutEnquiryInput!]
 }
 
+input OrderUpdateManyWithoutOrgInput {
+  create: [OrderCreateWithoutOrgInput!]
+  connect: [OrderWhereUniqueInput!]
+  disconnect: [OrderWhereUniqueInput!]
+  delete: [OrderWhereUniqueInput!]
+  update: [OrderUpdateWithWhereUniqueWithoutOrgInput!]
+  upsert: [OrderUpsertWithWhereUniqueWithoutOrgInput!]
+}
+
 input OrderUpdateWithoutEnquiryDataInput {
+  num: Int
   dateLocal: String
   qty: Int
   amount: Float
+  org: OrgUpdateOneWithoutOrdersInput
+}
+
+input OrderUpdateWithoutOrgDataInput {
+  num: Int
+  dateLocal: String
+  qty: Int
+  amount: Float
+  enquiry: EnquiryUpdateOneWithoutOrdersInput
 }
 
 input OrderUpdateWithWhereUniqueWithoutEnquiryInput {
@@ -1657,10 +1700,21 @@ input OrderUpdateWithWhereUniqueWithoutEnquiryInput {
   data: OrderUpdateWithoutEnquiryDataInput!
 }
 
+input OrderUpdateWithWhereUniqueWithoutOrgInput {
+  where: OrderWhereUniqueInput!
+  data: OrderUpdateWithoutOrgDataInput!
+}
+
 input OrderUpsertWithWhereUniqueWithoutEnquiryInput {
   where: OrderWhereUniqueInput!
   update: OrderUpdateWithoutEnquiryDataInput!
   create: OrderCreateWithoutEnquiryInput!
+}
+
+input OrderUpsertWithWhereUniqueWithoutOrgInput {
+  where: OrderWhereUniqueInput!
+  update: OrderUpdateWithoutOrgDataInput!
+  create: OrderCreateWithoutOrgInput!
 }
 
 input OrderWhereInput {
@@ -1712,6 +1766,28 @@ input OrderWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  num: Int
+
+  """All values that are not equal to given value."""
+  num_not: Int
+
+  """All values that are contained in given list."""
+  num_in: [Int!]
+
+  """All values that are not contained in given list."""
+  num_not_in: [Int!]
+
+  """All values less than the given value."""
+  num_lt: Int
+
+  """All values less than or equal the given value."""
+  num_lte: Int
+
+  """All values greater than the given value."""
+  num_gt: Int
+
+  """All values greater than or equal the given value."""
+  num_gte: Int
   dateLocal: String
 
   """All values that are not equal to given value."""
@@ -1797,6 +1873,7 @@ input OrderWhereInput {
   """All values greater than or equal the given value."""
   amount_gte: Float
   enquiry: EnquiryWhereInput
+  org: OrgWhereInput
 }
 
 input OrderWhereUniqueInput {
@@ -1810,6 +1887,7 @@ type Org implements Node {
   name: String!
   legalAddress: String
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry!]
+  orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order!]
 }
 
 """A connection to a list of items."""
@@ -1828,10 +1906,16 @@ input OrgCreateInput {
   name: String!
   legalAddress: String
   enquiries: EnquiryCreateManyWithoutOrgInput
+  orders: OrderCreateManyWithoutOrgInput
 }
 
 input OrgCreateOneWithoutEnquiriesInput {
   create: OrgCreateWithoutEnquiriesInput
+  connect: OrgWhereUniqueInput
+}
+
+input OrgCreateOneWithoutOrdersInput {
+  create: OrgCreateWithoutOrdersInput
   connect: OrgWhereUniqueInput
 }
 
@@ -1840,6 +1924,15 @@ input OrgCreateWithoutEnquiriesInput {
   moedeloId: String
   name: String!
   legalAddress: String
+  orders: OrderCreateManyWithoutOrgInput
+}
+
+input OrgCreateWithoutOrdersInput {
+  inn: String
+  moedeloId: String
+  name: String!
+  legalAddress: String
+  enquiries: EnquiryCreateManyWithoutOrgInput
 }
 
 """An edge in a connection."""
@@ -1921,6 +2014,7 @@ input OrgUpdateInput {
   name: String
   legalAddress: String
   enquiries: EnquiryUpdateManyWithoutOrgInput
+  orders: OrderUpdateManyWithoutOrgInput
 }
 
 input OrgUpdateOneWithoutEnquiriesInput {
@@ -1932,16 +2026,39 @@ input OrgUpdateOneWithoutEnquiriesInput {
   upsert: OrgUpsertWithoutEnquiriesInput
 }
 
+input OrgUpdateOneWithoutOrdersInput {
+  create: OrgCreateWithoutOrdersInput
+  connect: OrgWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: OrgUpdateWithoutOrdersDataInput
+  upsert: OrgUpsertWithoutOrdersInput
+}
+
 input OrgUpdateWithoutEnquiriesDataInput {
   inn: String
   moedeloId: String
   name: String
   legalAddress: String
+  orders: OrderUpdateManyWithoutOrgInput
+}
+
+input OrgUpdateWithoutOrdersDataInput {
+  inn: String
+  moedeloId: String
+  name: String
+  legalAddress: String
+  enquiries: EnquiryUpdateManyWithoutOrgInput
 }
 
 input OrgUpsertWithoutEnquiriesInput {
   update: OrgUpdateWithoutEnquiriesDataInput!
   create: OrgCreateWithoutEnquiriesInput!
+}
+
+input OrgUpsertWithoutOrdersInput {
+  update: OrgUpdateWithoutOrdersDataInput!
+  create: OrgCreateWithoutOrdersInput!
 }
 
 input OrgWhereInput {
@@ -2156,6 +2273,9 @@ input OrgWhereInput {
   enquiries_every: EnquiryWhereInput
   enquiries_some: EnquiryWhereInput
   enquiries_none: EnquiryWhereInput
+  orders_every: OrderWhereInput
+  orders_some: OrderWhereInput
+  orders_none: OrderWhereInput
 }
 
 input OrgWhereUniqueInput {
