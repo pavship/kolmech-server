@@ -1,5 +1,5 @@
 # source: https://kolmech-heroku-server.herokuapp.com/prisma-heroku/dev
-# timestamp: Thu Sep 27 2018 22:57:44 GMT+0300 (RTZ 2 (зима))
+# timestamp: Wed Oct 03 2018 22:49:23 GMT+0300 (RTZ 2 (зима))
 
 type AggregateDoc {
   count: Int!
@@ -787,6 +787,7 @@ type Event implements Node {
   id: ID!
   user(where: UserWhereInput): User
   enquiry(where: EnquiryWhereInput): Enquiry
+  order(where: OrderWhereInput): Order
   datetimeLocal: String!
   htmlText: String
   type: EventType
@@ -810,12 +811,18 @@ input EventCreateInput {
   type: EventType
   user: UserCreateOneWithoutEventsInput
   enquiry: EnquiryCreateOneWithoutEventsInput
+  order: OrderCreateOneWithoutEventsInput
   status: StatusCreateOneInput
   doc: DocCreateOneInput
 }
 
 input EventCreateManyWithoutEnquiryInput {
   create: [EventCreateWithoutEnquiryInput!]
+  connect: [EventWhereUniqueInput!]
+}
+
+input EventCreateManyWithoutOrderInput {
+  create: [EventCreateWithoutOrderInput!]
   connect: [EventWhereUniqueInput!]
 }
 
@@ -829,6 +836,17 @@ input EventCreateWithoutEnquiryInput {
   htmlText: String
   type: EventType
   user: UserCreateOneWithoutEventsInput
+  order: OrderCreateOneWithoutEventsInput
+  status: StatusCreateOneInput
+  doc: DocCreateOneInput
+}
+
+input EventCreateWithoutOrderInput {
+  datetimeLocal: String!
+  htmlText: String
+  type: EventType
+  user: UserCreateOneWithoutEventsInput
+  enquiry: EnquiryCreateOneWithoutEventsInput
   status: StatusCreateOneInput
   doc: DocCreateOneInput
 }
@@ -838,6 +856,7 @@ input EventCreateWithoutUserInput {
   htmlText: String
   type: EventType
   enquiry: EnquiryCreateOneWithoutEventsInput
+  order: OrderCreateOneWithoutEventsInput
   status: StatusCreateOneInput
   doc: DocCreateOneInput
 }
@@ -925,6 +944,7 @@ input EventUpdateInput {
   type: EventType
   user: UserUpdateOneWithoutEventsInput
   enquiry: EnquiryUpdateOneWithoutEventsInput
+  order: OrderUpdateOneWithoutEventsInput
   status: StatusUpdateOneInput
   doc: DocUpdateOneInput
 }
@@ -936,6 +956,15 @@ input EventUpdateManyWithoutEnquiryInput {
   delete: [EventWhereUniqueInput!]
   update: [EventUpdateWithWhereUniqueWithoutEnquiryInput!]
   upsert: [EventUpsertWithWhereUniqueWithoutEnquiryInput!]
+}
+
+input EventUpdateManyWithoutOrderInput {
+  create: [EventCreateWithoutOrderInput!]
+  connect: [EventWhereUniqueInput!]
+  disconnect: [EventWhereUniqueInput!]
+  delete: [EventWhereUniqueInput!]
+  update: [EventUpdateWithWhereUniqueWithoutOrderInput!]
+  upsert: [EventUpsertWithWhereUniqueWithoutOrderInput!]
 }
 
 input EventUpdateManyWithoutUserInput {
@@ -952,6 +981,17 @@ input EventUpdateWithoutEnquiryDataInput {
   htmlText: String
   type: EventType
   user: UserUpdateOneWithoutEventsInput
+  order: OrderUpdateOneWithoutEventsInput
+  status: StatusUpdateOneInput
+  doc: DocUpdateOneInput
+}
+
+input EventUpdateWithoutOrderDataInput {
+  datetimeLocal: String
+  htmlText: String
+  type: EventType
+  user: UserUpdateOneWithoutEventsInput
+  enquiry: EnquiryUpdateOneWithoutEventsInput
   status: StatusUpdateOneInput
   doc: DocUpdateOneInput
 }
@@ -961,6 +1001,7 @@ input EventUpdateWithoutUserDataInput {
   htmlText: String
   type: EventType
   enquiry: EnquiryUpdateOneWithoutEventsInput
+  order: OrderUpdateOneWithoutEventsInput
   status: StatusUpdateOneInput
   doc: DocUpdateOneInput
 }
@@ -968,6 +1009,11 @@ input EventUpdateWithoutUserDataInput {
 input EventUpdateWithWhereUniqueWithoutEnquiryInput {
   where: EventWhereUniqueInput!
   data: EventUpdateWithoutEnquiryDataInput!
+}
+
+input EventUpdateWithWhereUniqueWithoutOrderInput {
+  where: EventWhereUniqueInput!
+  data: EventUpdateWithoutOrderDataInput!
 }
 
 input EventUpdateWithWhereUniqueWithoutUserInput {
@@ -979,6 +1025,12 @@ input EventUpsertWithWhereUniqueWithoutEnquiryInput {
   where: EventWhereUniqueInput!
   update: EventUpdateWithoutEnquiryDataInput!
   create: EventCreateWithoutEnquiryInput!
+}
+
+input EventUpsertWithWhereUniqueWithoutOrderInput {
+  where: EventWhereUniqueInput!
+  update: EventUpdateWithoutOrderDataInput!
+  create: EventCreateWithoutOrderInput!
 }
 
 input EventUpsertWithWhereUniqueWithoutUserInput {
@@ -1128,6 +1180,7 @@ input EventWhereInput {
   type_not_in: [EventType!]
   user: UserWhereInput
   enquiry: EnquiryWhereInput
+  order: OrderWhereInput
   status: StatusWhereInput
   doc: DocWhereInput
 }
@@ -1148,6 +1201,7 @@ type Model implements Node {
   article: String
   name: String!
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry!]
+  orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order!]
 }
 
 """A connection to a list of items."""
@@ -1165,6 +1219,7 @@ input ModelCreateInput {
   article: String
   name: String!
   enquiries: EnquiryCreateManyWithoutModelInput
+  orders: OrderCreateManyWithoutModelInput
 }
 
 input ModelCreateOneWithoutEnquiriesInput {
@@ -1172,10 +1227,23 @@ input ModelCreateOneWithoutEnquiriesInput {
   connect: ModelWhereUniqueInput
 }
 
+input ModelCreateOneWithoutOrdersInput {
+  create: ModelCreateWithoutOrdersInput
+  connect: ModelWhereUniqueInput
+}
+
 input ModelCreateWithoutEnquiriesInput {
   gqId: ID
   article: String
   name: String!
+  orders: OrderCreateManyWithoutModelInput
+}
+
+input ModelCreateWithoutOrdersInput {
+  gqId: ID
+  article: String
+  name: String!
+  enquiries: EnquiryCreateManyWithoutModelInput
 }
 
 """An edge in a connection."""
@@ -1253,6 +1321,7 @@ input ModelUpdateInput {
   article: String
   name: String
   enquiries: EnquiryUpdateManyWithoutModelInput
+  orders: OrderUpdateManyWithoutModelInput
 }
 
 input ModelUpdateOneWithoutEnquiriesInput {
@@ -1264,15 +1333,37 @@ input ModelUpdateOneWithoutEnquiriesInput {
   upsert: ModelUpsertWithoutEnquiriesInput
 }
 
+input ModelUpdateOneWithoutOrdersInput {
+  create: ModelCreateWithoutOrdersInput
+  connect: ModelWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: ModelUpdateWithoutOrdersDataInput
+  upsert: ModelUpsertWithoutOrdersInput
+}
+
 input ModelUpdateWithoutEnquiriesDataInput {
   gqId: ID
   article: String
   name: String
+  orders: OrderUpdateManyWithoutModelInput
+}
+
+input ModelUpdateWithoutOrdersDataInput {
+  gqId: ID
+  article: String
+  name: String
+  enquiries: EnquiryUpdateManyWithoutModelInput
 }
 
 input ModelUpsertWithoutEnquiriesInput {
   update: ModelUpdateWithoutEnquiriesDataInput!
   create: ModelCreateWithoutEnquiriesInput!
+}
+
+input ModelUpsertWithoutOrdersInput {
+  update: ModelUpdateWithoutOrdersDataInput!
+  create: ModelCreateWithoutOrdersInput!
 }
 
 input ModelWhereInput {
@@ -1447,6 +1538,9 @@ input ModelWhereInput {
   enquiries_every: EnquiryWhereInput
   enquiries_some: EnquiryWhereInput
   enquiries_none: EnquiryWhereInput
+  orders_every: OrderWhereInput
+  orders_some: OrderWhereInput
+  orders_none: OrderWhereInput
 }
 
 input ModelWhereUniqueInput {
@@ -1528,10 +1622,13 @@ type Order implements Node {
   id: ID!
   num: Int
   dateLocal: String
-  enquiry(where: EnquiryWhereInput): Enquiry
-  org(where: OrgWhereInput): Org
   qty: Int
   amount: Float
+  htmlNote: String
+  enquiry(where: EnquiryWhereInput): Enquiry
+  org(where: OrgWhereInput): Org
+  model(where: ModelWhereInput): Model
+  events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
 }
 
 """A connection to a list of items."""
@@ -1549,12 +1646,20 @@ input OrderCreateInput {
   dateLocal: String
   qty: Int
   amount: Float
+  htmlNote: String
   enquiry: EnquiryCreateOneWithoutOrdersInput
   org: OrgCreateOneWithoutOrdersInput
+  model: ModelCreateOneWithoutOrdersInput
+  events: EventCreateManyWithoutOrderInput
 }
 
 input OrderCreateManyWithoutEnquiryInput {
   create: [OrderCreateWithoutEnquiryInput!]
+  connect: [OrderWhereUniqueInput!]
+}
+
+input OrderCreateManyWithoutModelInput {
+  create: [OrderCreateWithoutModelInput!]
   connect: [OrderWhereUniqueInput!]
 }
 
@@ -1563,12 +1668,42 @@ input OrderCreateManyWithoutOrgInput {
   connect: [OrderWhereUniqueInput!]
 }
 
+input OrderCreateOneWithoutEventsInput {
+  create: OrderCreateWithoutEventsInput
+  connect: OrderWhereUniqueInput
+}
+
 input OrderCreateWithoutEnquiryInput {
   num: Int
   dateLocal: String
   qty: Int
   amount: Float
+  htmlNote: String
   org: OrgCreateOneWithoutOrdersInput
+  model: ModelCreateOneWithoutOrdersInput
+  events: EventCreateManyWithoutOrderInput
+}
+
+input OrderCreateWithoutEventsInput {
+  num: Int
+  dateLocal: String
+  qty: Int
+  amount: Float
+  htmlNote: String
+  enquiry: EnquiryCreateOneWithoutOrdersInput
+  org: OrgCreateOneWithoutOrdersInput
+  model: ModelCreateOneWithoutOrdersInput
+}
+
+input OrderCreateWithoutModelInput {
+  num: Int
+  dateLocal: String
+  qty: Int
+  amount: Float
+  htmlNote: String
+  enquiry: EnquiryCreateOneWithoutOrdersInput
+  org: OrgCreateOneWithoutOrdersInput
+  events: EventCreateManyWithoutOrderInput
 }
 
 input OrderCreateWithoutOrgInput {
@@ -1576,7 +1711,10 @@ input OrderCreateWithoutOrgInput {
   dateLocal: String
   qty: Int
   amount: Float
+  htmlNote: String
   enquiry: EnquiryCreateOneWithoutOrdersInput
+  model: ModelCreateOneWithoutOrdersInput
+  events: EventCreateManyWithoutOrderInput
 }
 
 """An edge in a connection."""
@@ -1599,6 +1737,8 @@ enum OrderOrderByInput {
   qty_DESC
   amount_ASC
   amount_DESC
+  htmlNote_ASC
+  htmlNote_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -1611,6 +1751,7 @@ type OrderPreviousValues {
   dateLocal: String
   qty: Int
   amount: Float
+  htmlNote: String
 }
 
 type OrderSubscriptionPayload {
@@ -1657,8 +1798,11 @@ input OrderUpdateInput {
   dateLocal: String
   qty: Int
   amount: Float
+  htmlNote: String
   enquiry: EnquiryUpdateOneWithoutOrdersInput
   org: OrgUpdateOneWithoutOrdersInput
+  model: ModelUpdateOneWithoutOrdersInput
+  events: EventUpdateManyWithoutOrderInput
 }
 
 input OrderUpdateManyWithoutEnquiryInput {
@@ -1670,6 +1814,15 @@ input OrderUpdateManyWithoutEnquiryInput {
   upsert: [OrderUpsertWithWhereUniqueWithoutEnquiryInput!]
 }
 
+input OrderUpdateManyWithoutModelInput {
+  create: [OrderCreateWithoutModelInput!]
+  connect: [OrderWhereUniqueInput!]
+  disconnect: [OrderWhereUniqueInput!]
+  delete: [OrderWhereUniqueInput!]
+  update: [OrderUpdateWithWhereUniqueWithoutModelInput!]
+  upsert: [OrderUpsertWithWhereUniqueWithoutModelInput!]
+}
+
 input OrderUpdateManyWithoutOrgInput {
   create: [OrderCreateWithoutOrgInput!]
   connect: [OrderWhereUniqueInput!]
@@ -1679,12 +1832,46 @@ input OrderUpdateManyWithoutOrgInput {
   upsert: [OrderUpsertWithWhereUniqueWithoutOrgInput!]
 }
 
+input OrderUpdateOneWithoutEventsInput {
+  create: OrderCreateWithoutEventsInput
+  connect: OrderWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: OrderUpdateWithoutEventsDataInput
+  upsert: OrderUpsertWithoutEventsInput
+}
+
 input OrderUpdateWithoutEnquiryDataInput {
   num: Int
   dateLocal: String
   qty: Int
   amount: Float
+  htmlNote: String
   org: OrgUpdateOneWithoutOrdersInput
+  model: ModelUpdateOneWithoutOrdersInput
+  events: EventUpdateManyWithoutOrderInput
+}
+
+input OrderUpdateWithoutEventsDataInput {
+  num: Int
+  dateLocal: String
+  qty: Int
+  amount: Float
+  htmlNote: String
+  enquiry: EnquiryUpdateOneWithoutOrdersInput
+  org: OrgUpdateOneWithoutOrdersInput
+  model: ModelUpdateOneWithoutOrdersInput
+}
+
+input OrderUpdateWithoutModelDataInput {
+  num: Int
+  dateLocal: String
+  qty: Int
+  amount: Float
+  htmlNote: String
+  enquiry: EnquiryUpdateOneWithoutOrdersInput
+  org: OrgUpdateOneWithoutOrdersInput
+  events: EventUpdateManyWithoutOrderInput
 }
 
 input OrderUpdateWithoutOrgDataInput {
@@ -1692,7 +1879,10 @@ input OrderUpdateWithoutOrgDataInput {
   dateLocal: String
   qty: Int
   amount: Float
+  htmlNote: String
   enquiry: EnquiryUpdateOneWithoutOrdersInput
+  model: ModelUpdateOneWithoutOrdersInput
+  events: EventUpdateManyWithoutOrderInput
 }
 
 input OrderUpdateWithWhereUniqueWithoutEnquiryInput {
@@ -1700,15 +1890,31 @@ input OrderUpdateWithWhereUniqueWithoutEnquiryInput {
   data: OrderUpdateWithoutEnquiryDataInput!
 }
 
+input OrderUpdateWithWhereUniqueWithoutModelInput {
+  where: OrderWhereUniqueInput!
+  data: OrderUpdateWithoutModelDataInput!
+}
+
 input OrderUpdateWithWhereUniqueWithoutOrgInput {
   where: OrderWhereUniqueInput!
   data: OrderUpdateWithoutOrgDataInput!
+}
+
+input OrderUpsertWithoutEventsInput {
+  update: OrderUpdateWithoutEventsDataInput!
+  create: OrderCreateWithoutEventsInput!
 }
 
 input OrderUpsertWithWhereUniqueWithoutEnquiryInput {
   where: OrderWhereUniqueInput!
   update: OrderUpdateWithoutEnquiryDataInput!
   create: OrderCreateWithoutEnquiryInput!
+}
+
+input OrderUpsertWithWhereUniqueWithoutModelInput {
+  where: OrderWhereUniqueInput!
+  update: OrderUpdateWithoutModelDataInput!
+  create: OrderCreateWithoutModelInput!
 }
 
 input OrderUpsertWithWhereUniqueWithoutOrgInput {
@@ -1872,8 +2078,52 @@ input OrderWhereInput {
 
   """All values greater than or equal the given value."""
   amount_gte: Float
+  htmlNote: String
+
+  """All values that are not equal to given value."""
+  htmlNote_not: String
+
+  """All values that are contained in given list."""
+  htmlNote_in: [String!]
+
+  """All values that are not contained in given list."""
+  htmlNote_not_in: [String!]
+
+  """All values less than the given value."""
+  htmlNote_lt: String
+
+  """All values less than or equal the given value."""
+  htmlNote_lte: String
+
+  """All values greater than the given value."""
+  htmlNote_gt: String
+
+  """All values greater than or equal the given value."""
+  htmlNote_gte: String
+
+  """All values containing the given string."""
+  htmlNote_contains: String
+
+  """All values not containing the given string."""
+  htmlNote_not_contains: String
+
+  """All values starting with the given string."""
+  htmlNote_starts_with: String
+
+  """All values not starting with the given string."""
+  htmlNote_not_starts_with: String
+
+  """All values ending with the given string."""
+  htmlNote_ends_with: String
+
+  """All values not ending with the given string."""
+  htmlNote_not_ends_with: String
   enquiry: EnquiryWhereInput
   org: OrgWhereInput
+  model: ModelWhereInput
+  events_every: EventWhereInput
+  events_some: EventWhereInput
+  events_none: EventWhereInput
 }
 
 input OrderWhereUniqueInput {

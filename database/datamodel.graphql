@@ -40,6 +40,7 @@ type Event {
 	id: ID! @unique
 	user: User @relation(name: "EventByUser")
 	enquiry: Enquiry @relation(name: "EventOnEnquiry")
+	order: Order @relation(name: "OrderEvents")
 	datetimeLocal: String!
 	htmlText: String
 	type: EventType
@@ -67,10 +68,13 @@ type Order {
 	id: ID! @unique
 	num: Int
 	dateLocal: String
-	enquiry: Enquiry @relation(name: "EnquiryOrders")
-	org: Org @relation(name: "OrgOrders")
 	qty: Int
 	amount: Float
+	htmlNote: String
+	enquiry: Enquiry @relation(name: "EnquiryOrders")
+	org: Org @relation(name: "OrgOrders")
+	model: Model @relation(name: "ModelOrders")
+	events: [Event!]! @relation(name: "OrderEvents" onDelete: CASCADE)
 }
 
 type Model {
@@ -79,6 +83,7 @@ type Model {
 	article: String
 	name: String! @unique
 	enquiries: [Enquiry!]! @relation(name: "EnquiryModel")
+	orders: [Order!]! @relation(name: "ModelOrders")
 #   prods: [Prod!]! @relation(name: "ModelOnProd")
 #   deptModels: [DeptModel!]! @relation(name: "ModelOnDeptModel")
 }

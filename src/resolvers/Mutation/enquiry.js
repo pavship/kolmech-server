@@ -71,27 +71,26 @@ const enquiry = {
 		// const oldEnquiry = await db.query.enquiry({
 		// 	where: { id }
 		// }, fieldsToGet)
-		return db.mutation.updateEnquiry(
-		{
+		const updatedEnquiry = await db.mutation.updateEnquiry({
 			where: { id },
 			data: {
-				...(dateLocal && { dateLocal }),
-				...((htmlNote || htmlNote === null) && { htmlNote }),
-				...(orgId && {
+				...dateLocal && { dateLocal },
+				...(htmlNote || htmlNote === null) && { htmlNote },
+				...orgId && {
 					org: {
 						connect: {
 							id: orgId
 						}
 					}
-				}),
-				...(modelId && {
+				},
+				...modelId && {
 					model: {
 						connect: {
 							id: modelId
 						}
 					}
-				}),
-				...(qty && { qty }),
+				},
+				...qty && { qty },
 				events: {
 					create: [{
 						user: {
@@ -114,6 +113,32 @@ const enquiry = {
 				}
 			},
 		}, info )
+		if (orgId || modelId) {
+			await db.mutation.updateManyOrders({
+				where: {
+					enquiry: {
+						id
+					}
+				},
+				data: {
+					...orgId && {
+						org: {
+							connect: {
+								id: orgId
+							}
+						}
+					},
+					...modelId && {
+						model: {
+							connect: {
+								id: modelId
+							}
+						}
+					}
+				}
+			}, '{ count }')
+		}
+		return updatedEnquiry
 	},
 
 	async deleteAllEnquiries(_, __, ctx, info) {

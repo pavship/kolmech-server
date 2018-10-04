@@ -4,6 +4,7 @@ type Query {
   me: User
   enquiries: [Enquiry!]!
   enquiry (id: ID!): Enquiry
+  order (id: ID!): Order
   orgs: [Org!]!
   statuses: [Status!]!
   models: [Model!]!
