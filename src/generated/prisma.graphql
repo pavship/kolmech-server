@@ -1,5 +1,9 @@
 # source: https://kolmech-heroku-server.herokuapp.com/prisma-heroku/dev
-# timestamp: Wed Oct 03 2018 22:49:23 GMT+0300 (RTZ 2 (зима))
+# timestamp: Thu Oct 04 2018 17:51:15 GMT+0300 (RTZ 2 (зима))
+
+type AggregateDept {
+  count: Int!
+}
 
 type AggregateDoc {
   count: Int!
@@ -29,6 +33,10 @@ type AggregatePerson {
   count: Int!
 }
 
+type AggregateProd {
+  count: Int!
+}
+
 type AggregateStatus {
   count: Int!
 }
@@ -40,6 +48,245 @@ type AggregateUser {
 type BatchPayload {
   """The number of nodes that have been affected by the Batch operation."""
   count: Long!
+}
+
+type Dept implements Node {
+  id: ID!
+  type: DeptType!
+  name: String!
+  prods(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Prod!]
+}
+
+"""A connection to a list of items."""
+type DeptConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [DeptEdge]!
+  aggregate: AggregateDept!
+}
+
+input DeptCreateInput {
+  type: DeptType!
+  name: String!
+  prods: ProdCreateManyWithoutDeptInput
+}
+
+input DeptCreateOneWithoutProdsInput {
+  create: DeptCreateWithoutProdsInput
+  connect: DeptWhereUniqueInput
+}
+
+input DeptCreateWithoutProdsInput {
+  type: DeptType!
+  name: String!
+}
+
+"""An edge in a connection."""
+type DeptEdge {
+  """The item at the end of the edge."""
+  node: Dept!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum DeptOrderByInput {
+  id_ASC
+  id_DESC
+  type_ASC
+  type_DESC
+  name_ASC
+  name_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type DeptPreviousValues {
+  id: ID!
+  type: DeptType!
+  name: String!
+}
+
+type DeptSubscriptionPayload {
+  mutation: MutationType!
+  node: Dept
+  updatedFields: [String!]
+  previousValues: DeptPreviousValues
+}
+
+input DeptSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [DeptSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [DeptSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [DeptSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: DeptWhereInput
+}
+
+enum DeptType {
+  OWNED
+  CLIENT
+  PARTNER
+  TRANSPORT
+}
+
+input DeptUpdateInput {
+  type: DeptType
+  name: String
+  prods: ProdUpdateManyWithoutDeptInput
+}
+
+input DeptUpdateOneWithoutProdsInput {
+  create: DeptCreateWithoutProdsInput
+  connect: DeptWhereUniqueInput
+  delete: Boolean
+  update: DeptUpdateWithoutProdsDataInput
+  upsert: DeptUpsertWithoutProdsInput
+}
+
+input DeptUpdateWithoutProdsDataInput {
+  type: DeptType
+  name: String
+}
+
+input DeptUpsertWithoutProdsInput {
+  update: DeptUpdateWithoutProdsDataInput!
+  create: DeptCreateWithoutProdsInput!
+}
+
+input DeptWhereInput {
+  """Logical AND on all given filters."""
+  AND: [DeptWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [DeptWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [DeptWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  type: DeptType
+
+  """All values that are not equal to given value."""
+  type_not: DeptType
+
+  """All values that are contained in given list."""
+  type_in: [DeptType!]
+
+  """All values that are not contained in given list."""
+  type_not_in: [DeptType!]
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  prods_every: ProdWhereInput
+  prods_some: ProdWhereInput
+  prods_none: ProdWhereInput
+}
+
+input DeptWhereUniqueInput {
+  id: ID
 }
 
 type Doc implements Node {
@@ -1202,6 +1449,7 @@ type Model implements Node {
   name: String!
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry!]
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order!]
+  prods(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Prod!]
 }
 
 """A connection to a list of items."""
@@ -1220,6 +1468,7 @@ input ModelCreateInput {
   name: String!
   enquiries: EnquiryCreateManyWithoutModelInput
   orders: OrderCreateManyWithoutModelInput
+  prods: ProdCreateManyWithoutModelInput
 }
 
 input ModelCreateOneWithoutEnquiriesInput {
@@ -1232,11 +1481,17 @@ input ModelCreateOneWithoutOrdersInput {
   connect: ModelWhereUniqueInput
 }
 
+input ModelCreateOneWithoutProdsInput {
+  create: ModelCreateWithoutProdsInput
+  connect: ModelWhereUniqueInput
+}
+
 input ModelCreateWithoutEnquiriesInput {
   gqId: ID
   article: String
   name: String!
   orders: OrderCreateManyWithoutModelInput
+  prods: ProdCreateManyWithoutModelInput
 }
 
 input ModelCreateWithoutOrdersInput {
@@ -1244,6 +1499,15 @@ input ModelCreateWithoutOrdersInput {
   article: String
   name: String!
   enquiries: EnquiryCreateManyWithoutModelInput
+  prods: ProdCreateManyWithoutModelInput
+}
+
+input ModelCreateWithoutProdsInput {
+  gqId: ID
+  article: String
+  name: String!
+  enquiries: EnquiryCreateManyWithoutModelInput
+  orders: OrderCreateManyWithoutModelInput
 }
 
 """An edge in a connection."""
@@ -1322,6 +1586,7 @@ input ModelUpdateInput {
   name: String
   enquiries: EnquiryUpdateManyWithoutModelInput
   orders: OrderUpdateManyWithoutModelInput
+  prods: ProdUpdateManyWithoutModelInput
 }
 
 input ModelUpdateOneWithoutEnquiriesInput {
@@ -1342,11 +1607,20 @@ input ModelUpdateOneWithoutOrdersInput {
   upsert: ModelUpsertWithoutOrdersInput
 }
 
+input ModelUpdateOneWithoutProdsInput {
+  create: ModelCreateWithoutProdsInput
+  connect: ModelWhereUniqueInput
+  delete: Boolean
+  update: ModelUpdateWithoutProdsDataInput
+  upsert: ModelUpsertWithoutProdsInput
+}
+
 input ModelUpdateWithoutEnquiriesDataInput {
   gqId: ID
   article: String
   name: String
   orders: OrderUpdateManyWithoutModelInput
+  prods: ProdUpdateManyWithoutModelInput
 }
 
 input ModelUpdateWithoutOrdersDataInput {
@@ -1354,6 +1628,15 @@ input ModelUpdateWithoutOrdersDataInput {
   article: String
   name: String
   enquiries: EnquiryUpdateManyWithoutModelInput
+  prods: ProdUpdateManyWithoutModelInput
+}
+
+input ModelUpdateWithoutProdsDataInput {
+  gqId: ID
+  article: String
+  name: String
+  enquiries: EnquiryUpdateManyWithoutModelInput
+  orders: OrderUpdateManyWithoutModelInput
 }
 
 input ModelUpsertWithoutEnquiriesInput {
@@ -1364,6 +1647,11 @@ input ModelUpsertWithoutEnquiriesInput {
 input ModelUpsertWithoutOrdersInput {
   update: ModelUpdateWithoutOrdersDataInput!
   create: ModelCreateWithoutOrdersInput!
+}
+
+input ModelUpsertWithoutProdsInput {
+  update: ModelUpdateWithoutProdsDataInput!
+  create: ModelCreateWithoutProdsInput!
 }
 
 input ModelWhereInput {
@@ -1541,6 +1829,9 @@ input ModelWhereInput {
   orders_every: OrderWhereInput
   orders_some: OrderWhereInput
   orders_none: OrderWhereInput
+  prods_every: ProdWhereInput
+  prods_some: ProdWhereInput
+  prods_none: ProdWhereInput
 }
 
 input ModelWhereUniqueInput {
@@ -1553,55 +1844,67 @@ type Mutation {
   createUser(data: UserCreateInput!): User!
   createPerson(data: PersonCreateInput!): Person!
   createOrg(data: OrgCreateInput!): Org!
+  createDept(data: DeptCreateInput!): Dept!
   createEnquiry(data: EnquiryCreateInput!): Enquiry!
   createEvent(data: EventCreateInput!): Event!
   createOrder(data: OrderCreateInput!): Order!
   createModel(data: ModelCreateInput!): Model!
+  createProd(data: ProdCreateInput!): Prod!
   createStatus(data: StatusCreateInput!): Status!
   createDoc(data: DocCreateInput!): Doc!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updatePerson(data: PersonUpdateInput!, where: PersonWhereUniqueInput!): Person
   updateOrg(data: OrgUpdateInput!, where: OrgWhereUniqueInput!): Org
+  updateDept(data: DeptUpdateInput!, where: DeptWhereUniqueInput!): Dept
   updateEnquiry(data: EnquiryUpdateInput!, where: EnquiryWhereUniqueInput!): Enquiry
   updateEvent(data: EventUpdateInput!, where: EventWhereUniqueInput!): Event
   updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
   updateModel(data: ModelUpdateInput!, where: ModelWhereUniqueInput!): Model
+  updateProd(data: ProdUpdateInput!, where: ProdWhereUniqueInput!): Prod
   updateStatus(data: StatusUpdateInput!, where: StatusWhereUniqueInput!): Status
   updateDoc(data: DocUpdateInput!, where: DocWhereUniqueInput!): Doc
   deleteUser(where: UserWhereUniqueInput!): User
   deletePerson(where: PersonWhereUniqueInput!): Person
   deleteOrg(where: OrgWhereUniqueInput!): Org
+  deleteDept(where: DeptWhereUniqueInput!): Dept
   deleteEnquiry(where: EnquiryWhereUniqueInput!): Enquiry
   deleteEvent(where: EventWhereUniqueInput!): Event
   deleteOrder(where: OrderWhereUniqueInput!): Order
   deleteModel(where: ModelWhereUniqueInput!): Model
+  deleteProd(where: ProdWhereUniqueInput!): Prod
   deleteStatus(where: StatusWhereUniqueInput!): Status
   deleteDoc(where: DocWhereUniqueInput!): Doc
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertPerson(where: PersonWhereUniqueInput!, create: PersonCreateInput!, update: PersonUpdateInput!): Person!
   upsertOrg(where: OrgWhereUniqueInput!, create: OrgCreateInput!, update: OrgUpdateInput!): Org!
+  upsertDept(where: DeptWhereUniqueInput!, create: DeptCreateInput!, update: DeptUpdateInput!): Dept!
   upsertEnquiry(where: EnquiryWhereUniqueInput!, create: EnquiryCreateInput!, update: EnquiryUpdateInput!): Enquiry!
   upsertEvent(where: EventWhereUniqueInput!, create: EventCreateInput!, update: EventUpdateInput!): Event!
   upsertOrder(where: OrderWhereUniqueInput!, create: OrderCreateInput!, update: OrderUpdateInput!): Order!
   upsertModel(where: ModelWhereUniqueInput!, create: ModelCreateInput!, update: ModelUpdateInput!): Model!
+  upsertProd(where: ProdWhereUniqueInput!, create: ProdCreateInput!, update: ProdUpdateInput!): Prod!
   upsertStatus(where: StatusWhereUniqueInput!, create: StatusCreateInput!, update: StatusUpdateInput!): Status!
   upsertDoc(where: DocWhereUniqueInput!, create: DocCreateInput!, update: DocUpdateInput!): Doc!
   updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
   updateManyPersons(data: PersonUpdateInput!, where: PersonWhereInput): BatchPayload!
   updateManyOrgs(data: OrgUpdateInput!, where: OrgWhereInput): BatchPayload!
+  updateManyDepts(data: DeptUpdateInput!, where: DeptWhereInput): BatchPayload!
   updateManyEnquiries(data: EnquiryUpdateInput!, where: EnquiryWhereInput): BatchPayload!
   updateManyEvents(data: EventUpdateInput!, where: EventWhereInput): BatchPayload!
   updateManyOrders(data: OrderUpdateInput!, where: OrderWhereInput): BatchPayload!
   updateManyModels(data: ModelUpdateInput!, where: ModelWhereInput): BatchPayload!
+  updateManyProds(data: ProdUpdateInput!, where: ProdWhereInput): BatchPayload!
   updateManyStatuses(data: StatusUpdateInput!, where: StatusWhereInput): BatchPayload!
   updateManyDocs(data: DocUpdateInput!, where: DocWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyPersons(where: PersonWhereInput): BatchPayload!
   deleteManyOrgs(where: OrgWhereInput): BatchPayload!
+  deleteManyDepts(where: DeptWhereInput): BatchPayload!
   deleteManyEnquiries(where: EnquiryWhereInput): BatchPayload!
   deleteManyEvents(where: EventWhereInput): BatchPayload!
   deleteManyOrders(where: OrderWhereInput): BatchPayload!
   deleteManyModels(where: ModelWhereInput): BatchPayload!
+  deleteManyProds(where: ProdWhereInput): BatchPayload!
   deleteManyStatuses(where: StatusWhereInput): BatchPayload!
   deleteManyDocs(where: DocWhereInput): BatchPayload!
 }
@@ -2809,32 +3112,536 @@ input PersonWhereUniqueInput {
   id: ID
 }
 
+type Prod implements Node {
+  id: ID!
+  dept(where: DeptWhereInput): Dept!
+  fullnumber: String
+  hasDefect: Boolean
+  isSpoiled: Boolean
+  melt: Int
+  meltShift: Int
+  model(where: ModelWhereInput): Model!
+  htmlNote: String
+  number: Int
+  progress: Float
+  year: Int
+}
+
+"""A connection to a list of items."""
+type ProdConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ProdEdge]!
+  aggregate: AggregateProd!
+}
+
+input ProdCreateInput {
+  fullnumber: String
+  hasDefect: Boolean
+  isSpoiled: Boolean
+  melt: Int
+  meltShift: Int
+  htmlNote: String
+  number: Int
+  progress: Float
+  year: Int
+  dept: DeptCreateOneWithoutProdsInput!
+  model: ModelCreateOneWithoutProdsInput!
+}
+
+input ProdCreateManyWithoutDeptInput {
+  create: [ProdCreateWithoutDeptInput!]
+  connect: [ProdWhereUniqueInput!]
+}
+
+input ProdCreateManyWithoutModelInput {
+  create: [ProdCreateWithoutModelInput!]
+  connect: [ProdWhereUniqueInput!]
+}
+
+input ProdCreateWithoutDeptInput {
+  fullnumber: String
+  hasDefect: Boolean
+  isSpoiled: Boolean
+  melt: Int
+  meltShift: Int
+  htmlNote: String
+  number: Int
+  progress: Float
+  year: Int
+  model: ModelCreateOneWithoutProdsInput!
+}
+
+input ProdCreateWithoutModelInput {
+  fullnumber: String
+  hasDefect: Boolean
+  isSpoiled: Boolean
+  melt: Int
+  meltShift: Int
+  htmlNote: String
+  number: Int
+  progress: Float
+  year: Int
+  dept: DeptCreateOneWithoutProdsInput!
+}
+
+"""An edge in a connection."""
+type ProdEdge {
+  """The item at the end of the edge."""
+  node: Prod!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum ProdOrderByInput {
+  id_ASC
+  id_DESC
+  fullnumber_ASC
+  fullnumber_DESC
+  hasDefect_ASC
+  hasDefect_DESC
+  isSpoiled_ASC
+  isSpoiled_DESC
+  melt_ASC
+  melt_DESC
+  meltShift_ASC
+  meltShift_DESC
+  htmlNote_ASC
+  htmlNote_DESC
+  number_ASC
+  number_DESC
+  progress_ASC
+  progress_DESC
+  year_ASC
+  year_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type ProdPreviousValues {
+  id: ID!
+  fullnumber: String
+  hasDefect: Boolean
+  isSpoiled: Boolean
+  melt: Int
+  meltShift: Int
+  htmlNote: String
+  number: Int
+  progress: Float
+  year: Int
+}
+
+type ProdSubscriptionPayload {
+  mutation: MutationType!
+  node: Prod
+  updatedFields: [String!]
+  previousValues: ProdPreviousValues
+}
+
+input ProdSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ProdSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ProdSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ProdSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ProdWhereInput
+}
+
+input ProdUpdateInput {
+  fullnumber: String
+  hasDefect: Boolean
+  isSpoiled: Boolean
+  melt: Int
+  meltShift: Int
+  htmlNote: String
+  number: Int
+  progress: Float
+  year: Int
+  dept: DeptUpdateOneWithoutProdsInput
+  model: ModelUpdateOneWithoutProdsInput
+}
+
+input ProdUpdateManyWithoutDeptInput {
+  create: [ProdCreateWithoutDeptInput!]
+  connect: [ProdWhereUniqueInput!]
+  disconnect: [ProdWhereUniqueInput!]
+  delete: [ProdWhereUniqueInput!]
+  update: [ProdUpdateWithWhereUniqueWithoutDeptInput!]
+  upsert: [ProdUpsertWithWhereUniqueWithoutDeptInput!]
+}
+
+input ProdUpdateManyWithoutModelInput {
+  create: [ProdCreateWithoutModelInput!]
+  connect: [ProdWhereUniqueInput!]
+  disconnect: [ProdWhereUniqueInput!]
+  delete: [ProdWhereUniqueInput!]
+  update: [ProdUpdateWithWhereUniqueWithoutModelInput!]
+  upsert: [ProdUpsertWithWhereUniqueWithoutModelInput!]
+}
+
+input ProdUpdateWithoutDeptDataInput {
+  fullnumber: String
+  hasDefect: Boolean
+  isSpoiled: Boolean
+  melt: Int
+  meltShift: Int
+  htmlNote: String
+  number: Int
+  progress: Float
+  year: Int
+  model: ModelUpdateOneWithoutProdsInput
+}
+
+input ProdUpdateWithoutModelDataInput {
+  fullnumber: String
+  hasDefect: Boolean
+  isSpoiled: Boolean
+  melt: Int
+  meltShift: Int
+  htmlNote: String
+  number: Int
+  progress: Float
+  year: Int
+  dept: DeptUpdateOneWithoutProdsInput
+}
+
+input ProdUpdateWithWhereUniqueWithoutDeptInput {
+  where: ProdWhereUniqueInput!
+  data: ProdUpdateWithoutDeptDataInput!
+}
+
+input ProdUpdateWithWhereUniqueWithoutModelInput {
+  where: ProdWhereUniqueInput!
+  data: ProdUpdateWithoutModelDataInput!
+}
+
+input ProdUpsertWithWhereUniqueWithoutDeptInput {
+  where: ProdWhereUniqueInput!
+  update: ProdUpdateWithoutDeptDataInput!
+  create: ProdCreateWithoutDeptInput!
+}
+
+input ProdUpsertWithWhereUniqueWithoutModelInput {
+  where: ProdWhereUniqueInput!
+  update: ProdUpdateWithoutModelDataInput!
+  create: ProdCreateWithoutModelInput!
+}
+
+input ProdWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ProdWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ProdWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ProdWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  fullnumber: String
+
+  """All values that are not equal to given value."""
+  fullnumber_not: String
+
+  """All values that are contained in given list."""
+  fullnumber_in: [String!]
+
+  """All values that are not contained in given list."""
+  fullnumber_not_in: [String!]
+
+  """All values less than the given value."""
+  fullnumber_lt: String
+
+  """All values less than or equal the given value."""
+  fullnumber_lte: String
+
+  """All values greater than the given value."""
+  fullnumber_gt: String
+
+  """All values greater than or equal the given value."""
+  fullnumber_gte: String
+
+  """All values containing the given string."""
+  fullnumber_contains: String
+
+  """All values not containing the given string."""
+  fullnumber_not_contains: String
+
+  """All values starting with the given string."""
+  fullnumber_starts_with: String
+
+  """All values not starting with the given string."""
+  fullnumber_not_starts_with: String
+
+  """All values ending with the given string."""
+  fullnumber_ends_with: String
+
+  """All values not ending with the given string."""
+  fullnumber_not_ends_with: String
+  hasDefect: Boolean
+
+  """All values that are not equal to given value."""
+  hasDefect_not: Boolean
+  isSpoiled: Boolean
+
+  """All values that are not equal to given value."""
+  isSpoiled_not: Boolean
+  melt: Int
+
+  """All values that are not equal to given value."""
+  melt_not: Int
+
+  """All values that are contained in given list."""
+  melt_in: [Int!]
+
+  """All values that are not contained in given list."""
+  melt_not_in: [Int!]
+
+  """All values less than the given value."""
+  melt_lt: Int
+
+  """All values less than or equal the given value."""
+  melt_lte: Int
+
+  """All values greater than the given value."""
+  melt_gt: Int
+
+  """All values greater than or equal the given value."""
+  melt_gte: Int
+  meltShift: Int
+
+  """All values that are not equal to given value."""
+  meltShift_not: Int
+
+  """All values that are contained in given list."""
+  meltShift_in: [Int!]
+
+  """All values that are not contained in given list."""
+  meltShift_not_in: [Int!]
+
+  """All values less than the given value."""
+  meltShift_lt: Int
+
+  """All values less than or equal the given value."""
+  meltShift_lte: Int
+
+  """All values greater than the given value."""
+  meltShift_gt: Int
+
+  """All values greater than or equal the given value."""
+  meltShift_gte: Int
+  htmlNote: String
+
+  """All values that are not equal to given value."""
+  htmlNote_not: String
+
+  """All values that are contained in given list."""
+  htmlNote_in: [String!]
+
+  """All values that are not contained in given list."""
+  htmlNote_not_in: [String!]
+
+  """All values less than the given value."""
+  htmlNote_lt: String
+
+  """All values less than or equal the given value."""
+  htmlNote_lte: String
+
+  """All values greater than the given value."""
+  htmlNote_gt: String
+
+  """All values greater than or equal the given value."""
+  htmlNote_gte: String
+
+  """All values containing the given string."""
+  htmlNote_contains: String
+
+  """All values not containing the given string."""
+  htmlNote_not_contains: String
+
+  """All values starting with the given string."""
+  htmlNote_starts_with: String
+
+  """All values not starting with the given string."""
+  htmlNote_not_starts_with: String
+
+  """All values ending with the given string."""
+  htmlNote_ends_with: String
+
+  """All values not ending with the given string."""
+  htmlNote_not_ends_with: String
+  number: Int
+
+  """All values that are not equal to given value."""
+  number_not: Int
+
+  """All values that are contained in given list."""
+  number_in: [Int!]
+
+  """All values that are not contained in given list."""
+  number_not_in: [Int!]
+
+  """All values less than the given value."""
+  number_lt: Int
+
+  """All values less than or equal the given value."""
+  number_lte: Int
+
+  """All values greater than the given value."""
+  number_gt: Int
+
+  """All values greater than or equal the given value."""
+  number_gte: Int
+  progress: Float
+
+  """All values that are not equal to given value."""
+  progress_not: Float
+
+  """All values that are contained in given list."""
+  progress_in: [Float!]
+
+  """All values that are not contained in given list."""
+  progress_not_in: [Float!]
+
+  """All values less than the given value."""
+  progress_lt: Float
+
+  """All values less than or equal the given value."""
+  progress_lte: Float
+
+  """All values greater than the given value."""
+  progress_gt: Float
+
+  """All values greater than or equal the given value."""
+  progress_gte: Float
+  year: Int
+
+  """All values that are not equal to given value."""
+  year_not: Int
+
+  """All values that are contained in given list."""
+  year_in: [Int!]
+
+  """All values that are not contained in given list."""
+  year_not_in: [Int!]
+
+  """All values less than the given value."""
+  year_lt: Int
+
+  """All values less than or equal the given value."""
+  year_lte: Int
+
+  """All values greater than the given value."""
+  year_gt: Int
+
+  """All values greater than or equal the given value."""
+  year_gte: Int
+  dept: DeptWhereInput
+  model: ModelWhereInput
+}
+
+input ProdWhereUniqueInput {
+  id: ID
+}
+
 type Query {
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   persons(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Person]!
   orgs(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Org]!
+  depts(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Dept]!
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry]!
   events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event]!
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
   models(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Model]!
+  prods(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Prod]!
   statuses(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Status]!
   docs(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Doc]!
   user(where: UserWhereUniqueInput!): User
   person(where: PersonWhereUniqueInput!): Person
   org(where: OrgWhereUniqueInput!): Org
+  dept(where: DeptWhereUniqueInput!): Dept
   enquiry(where: EnquiryWhereUniqueInput!): Enquiry
   event(where: EventWhereUniqueInput!): Event
   order(where: OrderWhereUniqueInput!): Order
   model(where: ModelWhereUniqueInput!): Model
+  prod(where: ProdWhereUniqueInput!): Prod
   status(where: StatusWhereUniqueInput!): Status
   doc(where: DocWhereUniqueInput!): Doc
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   personsConnection(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PersonConnection!
   orgsConnection(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgConnection!
+  deptsConnection(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DeptConnection!
   enquiriesConnection(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EnquiryConnection!
   eventsConnection(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EventConnection!
   ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
   modelsConnection(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ModelConnection!
+  prodsConnection(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProdConnection!
   statusesConnection(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StatusConnection!
   docsConnection(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DocConnection!
 
@@ -3175,10 +3982,12 @@ type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   person(where: PersonSubscriptionWhereInput): PersonSubscriptionPayload
   org(where: OrgSubscriptionWhereInput): OrgSubscriptionPayload
+  dept(where: DeptSubscriptionWhereInput): DeptSubscriptionPayload
   enquiry(where: EnquirySubscriptionWhereInput): EnquirySubscriptionPayload
   event(where: EventSubscriptionWhereInput): EventSubscriptionPayload
   order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
   model(where: ModelSubscriptionWhereInput): ModelSubscriptionPayload
+  prod(where: ProdSubscriptionWhereInput): ProdSubscriptionPayload
   status(where: StatusSubscriptionWhereInput): StatusSubscriptionPayload
   doc(where: DocSubscriptionWhereInput): DocSubscriptionPayload
 }

@@ -6,8 +6,10 @@ type Query {
   enquiry (id: ID!): Enquiry
   order (id: ID!): Order
   orgs: [Org!]!
+  depts: [Dept!]!
   statuses: [Status!]!
   models: [Model!]!
+  modelProds(modelId: ID!): [Prod!]!
 }
 
 type Mutation {
@@ -21,6 +23,8 @@ type Mutation {
   deleteOrg(id: ID!): Org
   deleteAllOrgs: BatchPayload!
   upsertOrder(id: ID, enquiryId: ID, dateLocal: String!, qty: Int, amount: Float): Order
+  upsertProd(input: ProdInput!): Prod
+  moveProds(to: ID!, prodIds: [ID!]!): MoveProdPayload!
   importModels: BatchPayload!
   seedEnquiryStatuses: BatchPayload!
 }
@@ -33,6 +37,11 @@ type AuthPayload {
   token: String!
 }
 
+type MoveProdPayload {
+  prods: [Prod!]!
+  to: ID!
+}
+
 input EnquiryInput {
   id: ID!
   dateLocal: String
@@ -40,4 +49,19 @@ input EnquiryInput {
   modelId: ID
   qty: Int
   htmlNote: String
+}
+
+input ProdInput {
+  id: ID
+  fullnumber: String
+  hasDefect: Boolean
+  isSpoiled: Boolean
+  melt: Int
+  meltShift: Int
+  htmlNote: String
+  number: Int
+  progress: Float
+  year: Int
+  deptId: ID
+  modelId: ID
 }

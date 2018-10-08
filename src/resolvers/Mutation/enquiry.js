@@ -176,14 +176,14 @@ const enquiry = {
 						id: enquiryId
 					}
 				},
-                htmlText: 
-                    (statusId && !doc ) ?  `<p>Изменил статус заявки на <strong>${status.name}</strong></p>` :
-                    (statusId && doc )  ?  `<p>Создал <strong>коммерческое предложение</strong> с параметрами:</p><table><tbody>
-                                                <tr><td></td><td>Дата</td><td><strong>${doc.dateLocal}</strong></td></tr>
-                                                <tr><td></td><td>Сумма</td><td><strong>${currency(doc.amount, true)}</strong> с НДС</td></tr>
-                                            </tbody></table>
-                                            <p>Статус заявки изменен на <strong>${status.name}</strong></p>`.replace(/\t|\n/g, '')
-                                        :   htmlText,
+				htmlText: 
+					(statusId && !doc ) ?  `<p>Изменил статус заявки на <strong>${status.name}</strong></p>` :
+					(statusId && doc )  ?  `<p>Создал <strong>коммерческое предложение</strong> с параметрами:</p><table><tbody>
+																			<tr><td></td><td>Дата</td><td><strong>${doc.dateLocal}</strong></td></tr>
+																			<tr><td></td><td>Сумма</td><td><strong>${currency(doc.amount, true)}</strong> с НДС</td></tr>
+																	</tbody></table>
+																	<p>Статус заявки изменен на <strong>${status.name}</strong></p>`.replace(/\t|\n/g, '')
+															:   htmlText,
 				user: {
 					connect: {
 						id: userId
@@ -195,17 +195,17 @@ const enquiry = {
 							id: statusId
 						}
 					}
-                }),
-                ...(doc && {
+				}),
+				...(doc && {
 					doc: {
 						create: {
-                            dateLocal: doc.dateLocal,
-                            amount: doc.amount,
-                            type: 'CO',
-                            nds: true
+							dateLocal: doc.dateLocal,
+							amount: doc.amount,
+							type: 'CO',
+							nds: true
 						}
 					}
-                }),
+				}),
 				type: statusId ? 'STATUS' : 'COMMENT',
 				datetimeLocal: toLocalTimestamp(new Date())
 			}

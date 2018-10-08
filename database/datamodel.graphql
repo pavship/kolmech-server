@@ -24,6 +24,13 @@ type Org {
 	orders: [Order!]! @relation(name: "OrgOrders")
 }
 
+type Dept {
+  id: ID! @unique
+  type: DeptType!
+  name: String!
+  prods: [Prod!]! @relation(name: "DeptProds")
+}
+
 type Enquiry {
 	id: ID! @unique
 	num: Int!
@@ -48,22 +55,6 @@ type Event {
 	doc: Doc @relation(name: "EventDoc" onDelete: CASCADE)
 }
 
-type Doc {
-	id: ID! @unique
-	dateLocal: String
-	amount: Float
-	nds: Boolean
-	type: DocType
-}
-
-type Status {
-	id: ID! @unique
-	name: String! @unique
-	stage: Int
-	prev: [Status!]! @relation(name: "StatusLink")
-	next: [Status!]! @relation(name: "StatusLink")
-}
-
 type Order {
 	id: ID! @unique
 	num: Int
@@ -77,6 +68,22 @@ type Order {
 	events: [Event!]! @relation(name: "OrderEvents" onDelete: CASCADE)
 }
 
+type Status {
+	id: ID! @unique
+	name: String! @unique
+	stage: Int
+	prev: [Status!]! @relation(name: "StatusLink")
+	next: [Status!]! @relation(name: "StatusLink")
+}
+
+type Doc {
+	id: ID! @unique
+	dateLocal: String
+	amount: Float
+	nds: Boolean
+	type: DocType
+}
+
 type Model {
 	id: ID! @unique
 	gqId: ID @unique #Graphcool id
@@ -84,27 +91,30 @@ type Model {
 	name: String! @unique
 	enquiries: [Enquiry!]! @relation(name: "EnquiryModel")
 	orders: [Order!]! @relation(name: "ModelOrders")
-#   prods: [Prod!]! @relation(name: "ModelOnProd")
-#   deptModels: [DeptModel!]! @relation(name: "ModelOnDeptModel")
+  prods: [Prod!]! @relation(name: "ModelProds")
 }
 
-# type Prod {
-#   id: ID! @unique
-#   dept: Dept! @relation(name: "DeptOnProd")
-#   deptModel: DeptModel @relation(name: "DeptModelOnProd")
-#   fullnumber: String
-#   hasDefect: Boolean
-#   isSpoiled: Boolean
-#   melt: Int!
-#   meltShift: Int
-#   model: Model! @relation(name: "ModelOnProd")
-#   note: String
-#   number: Int!
-#   progress: Float
-#   updTrigger: Boolean
-#   updatedAt: DateTime!
-#   year: Int!
-# }
+type Prod {
+  id: ID! @unique
+  dept: Dept! @relation(name: "DeptProds")
+  fullnumber: String
+  hasDefect: Boolean
+  isSpoiled: Boolean
+  melt: Int
+  meltShift: Int
+  model: Model! @relation(name: "ModelProds")
+  htmlNote: String
+  number: Int
+  progress: Float
+  year: Int
+}
+
+enum DeptType {
+  OWNED
+  CLIENT
+  PARTNER
+  TRANSPORT
+}
 
 enum EventType {
 	CREATE

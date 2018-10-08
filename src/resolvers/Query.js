@@ -21,10 +21,14 @@ const Query = {
         
 	order(_, { id }, ctx, info) {
 		return ctx.db.query.order({ where: { id } }, info)
-        },
+	},
         
 	orgs(_, __, ctx, info) {
 		return ctx.db.query.orgs({ orderBy: 'name_ASC' }, info)
+	},
+        
+	depts(_, __, ctx, info) {
+		return ctx.db.query.depts({ orderBy: 'type_ASC' }, info)
 	},
 	
 	statuses(_, __, ctx, info) {
@@ -47,6 +51,10 @@ const Query = {
         // } catch (err) {
         //     console.log('err > ', err)
         // }
+	},
+
+	modelProds(_, { modelId }, ctx, info) {
+		return ctx.db.query.prods({ where: { model: { id: modelId } } }, info)
 	},
 }
 
