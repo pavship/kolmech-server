@@ -1,5 +1,5 @@
 # source: https://kolmech-heroku-server.herokuapp.com/prisma-heroku/dev
-# timestamp: Thu Oct 04 2018 17:51:15 GMT+0300 (RTZ 2 (зима))
+# timestamp: Mon Oct 08 2018 20:10:47 GMT+0300 (RTZ 2 (зима))
 
 type AggregateDept {
   count: Int!
@@ -1932,6 +1932,7 @@ type Order implements Node {
   org(where: OrgWhereInput): Org
   model(where: ModelWhereInput): Model
   events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
+  prods(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Prod!]
 }
 
 """A connection to a list of items."""
@@ -1954,6 +1955,7 @@ input OrderCreateInput {
   org: OrgCreateOneWithoutOrdersInput
   model: ModelCreateOneWithoutOrdersInput
   events: EventCreateManyWithoutOrderInput
+  prods: ProdCreateManyWithoutOrderInput
 }
 
 input OrderCreateManyWithoutEnquiryInput {
@@ -1976,6 +1978,11 @@ input OrderCreateOneWithoutEventsInput {
   connect: OrderWhereUniqueInput
 }
 
+input OrderCreateOneWithoutProdsInput {
+  create: OrderCreateWithoutProdsInput
+  connect: OrderWhereUniqueInput
+}
+
 input OrderCreateWithoutEnquiryInput {
   num: Int
   dateLocal: String
@@ -1985,6 +1992,7 @@ input OrderCreateWithoutEnquiryInput {
   org: OrgCreateOneWithoutOrdersInput
   model: ModelCreateOneWithoutOrdersInput
   events: EventCreateManyWithoutOrderInput
+  prods: ProdCreateManyWithoutOrderInput
 }
 
 input OrderCreateWithoutEventsInput {
@@ -1996,6 +2004,7 @@ input OrderCreateWithoutEventsInput {
   enquiry: EnquiryCreateOneWithoutOrdersInput
   org: OrgCreateOneWithoutOrdersInput
   model: ModelCreateOneWithoutOrdersInput
+  prods: ProdCreateManyWithoutOrderInput
 }
 
 input OrderCreateWithoutModelInput {
@@ -2007,6 +2016,7 @@ input OrderCreateWithoutModelInput {
   enquiry: EnquiryCreateOneWithoutOrdersInput
   org: OrgCreateOneWithoutOrdersInput
   events: EventCreateManyWithoutOrderInput
+  prods: ProdCreateManyWithoutOrderInput
 }
 
 input OrderCreateWithoutOrgInput {
@@ -2016,6 +2026,19 @@ input OrderCreateWithoutOrgInput {
   amount: Float
   htmlNote: String
   enquiry: EnquiryCreateOneWithoutOrdersInput
+  model: ModelCreateOneWithoutOrdersInput
+  events: EventCreateManyWithoutOrderInput
+  prods: ProdCreateManyWithoutOrderInput
+}
+
+input OrderCreateWithoutProdsInput {
+  num: Int
+  dateLocal: String
+  qty: Int
+  amount: Float
+  htmlNote: String
+  enquiry: EnquiryCreateOneWithoutOrdersInput
+  org: OrgCreateOneWithoutOrdersInput
   model: ModelCreateOneWithoutOrdersInput
   events: EventCreateManyWithoutOrderInput
 }
@@ -2106,6 +2129,7 @@ input OrderUpdateInput {
   org: OrgUpdateOneWithoutOrdersInput
   model: ModelUpdateOneWithoutOrdersInput
   events: EventUpdateManyWithoutOrderInput
+  prods: ProdUpdateManyWithoutOrderInput
 }
 
 input OrderUpdateManyWithoutEnquiryInput {
@@ -2144,6 +2168,15 @@ input OrderUpdateOneWithoutEventsInput {
   upsert: OrderUpsertWithoutEventsInput
 }
 
+input OrderUpdateOneWithoutProdsInput {
+  create: OrderCreateWithoutProdsInput
+  connect: OrderWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: OrderUpdateWithoutProdsDataInput
+  upsert: OrderUpsertWithoutProdsInput
+}
+
 input OrderUpdateWithoutEnquiryDataInput {
   num: Int
   dateLocal: String
@@ -2153,6 +2186,7 @@ input OrderUpdateWithoutEnquiryDataInput {
   org: OrgUpdateOneWithoutOrdersInput
   model: ModelUpdateOneWithoutOrdersInput
   events: EventUpdateManyWithoutOrderInput
+  prods: ProdUpdateManyWithoutOrderInput
 }
 
 input OrderUpdateWithoutEventsDataInput {
@@ -2164,6 +2198,7 @@ input OrderUpdateWithoutEventsDataInput {
   enquiry: EnquiryUpdateOneWithoutOrdersInput
   org: OrgUpdateOneWithoutOrdersInput
   model: ModelUpdateOneWithoutOrdersInput
+  prods: ProdUpdateManyWithoutOrderInput
 }
 
 input OrderUpdateWithoutModelDataInput {
@@ -2175,6 +2210,7 @@ input OrderUpdateWithoutModelDataInput {
   enquiry: EnquiryUpdateOneWithoutOrdersInput
   org: OrgUpdateOneWithoutOrdersInput
   events: EventUpdateManyWithoutOrderInput
+  prods: ProdUpdateManyWithoutOrderInput
 }
 
 input OrderUpdateWithoutOrgDataInput {
@@ -2184,6 +2220,19 @@ input OrderUpdateWithoutOrgDataInput {
   amount: Float
   htmlNote: String
   enquiry: EnquiryUpdateOneWithoutOrdersInput
+  model: ModelUpdateOneWithoutOrdersInput
+  events: EventUpdateManyWithoutOrderInput
+  prods: ProdUpdateManyWithoutOrderInput
+}
+
+input OrderUpdateWithoutProdsDataInput {
+  num: Int
+  dateLocal: String
+  qty: Int
+  amount: Float
+  htmlNote: String
+  enquiry: EnquiryUpdateOneWithoutOrdersInput
+  org: OrgUpdateOneWithoutOrdersInput
   model: ModelUpdateOneWithoutOrdersInput
   events: EventUpdateManyWithoutOrderInput
 }
@@ -2206,6 +2255,11 @@ input OrderUpdateWithWhereUniqueWithoutOrgInput {
 input OrderUpsertWithoutEventsInput {
   update: OrderUpdateWithoutEventsDataInput!
   create: OrderCreateWithoutEventsInput!
+}
+
+input OrderUpsertWithoutProdsInput {
+  update: OrderUpdateWithoutProdsDataInput!
+  create: OrderCreateWithoutProdsInput!
 }
 
 input OrderUpsertWithWhereUniqueWithoutEnquiryInput {
@@ -2427,6 +2481,9 @@ input OrderWhereInput {
   events_every: EventWhereInput
   events_some: EventWhereInput
   events_none: EventWhereInput
+  prods_every: ProdWhereInput
+  prods_some: ProdWhereInput
+  prods_none: ProdWhereInput
 }
 
 input OrderWhereUniqueInput {
@@ -3121,6 +3178,7 @@ type Prod implements Node {
   melt: Int
   meltShift: Int
   model(where: ModelWhereInput): Model!
+  order(where: OrderWhereInput): Order
   htmlNote: String
   number: Int
   progress: Float
@@ -3149,6 +3207,7 @@ input ProdCreateInput {
   year: Int
   dept: DeptCreateOneWithoutProdsInput!
   model: ModelCreateOneWithoutProdsInput!
+  order: OrderCreateOneWithoutProdsInput
 }
 
 input ProdCreateManyWithoutDeptInput {
@@ -3158,6 +3217,11 @@ input ProdCreateManyWithoutDeptInput {
 
 input ProdCreateManyWithoutModelInput {
   create: [ProdCreateWithoutModelInput!]
+  connect: [ProdWhereUniqueInput!]
+}
+
+input ProdCreateManyWithoutOrderInput {
+  create: [ProdCreateWithoutOrderInput!]
   connect: [ProdWhereUniqueInput!]
 }
 
@@ -3172,6 +3236,7 @@ input ProdCreateWithoutDeptInput {
   progress: Float
   year: Int
   model: ModelCreateOneWithoutProdsInput!
+  order: OrderCreateOneWithoutProdsInput
 }
 
 input ProdCreateWithoutModelInput {
@@ -3185,6 +3250,21 @@ input ProdCreateWithoutModelInput {
   progress: Float
   year: Int
   dept: DeptCreateOneWithoutProdsInput!
+  order: OrderCreateOneWithoutProdsInput
+}
+
+input ProdCreateWithoutOrderInput {
+  fullnumber: String
+  hasDefect: Boolean
+  isSpoiled: Boolean
+  melt: Int
+  meltShift: Int
+  htmlNote: String
+  number: Int
+  progress: Float
+  year: Int
+  dept: DeptCreateOneWithoutProdsInput!
+  model: ModelCreateOneWithoutProdsInput!
 }
 
 """An edge in a connection."""
@@ -3287,6 +3367,7 @@ input ProdUpdateInput {
   year: Int
   dept: DeptUpdateOneWithoutProdsInput
   model: ModelUpdateOneWithoutProdsInput
+  order: OrderUpdateOneWithoutProdsInput
 }
 
 input ProdUpdateManyWithoutDeptInput {
@@ -3307,6 +3388,15 @@ input ProdUpdateManyWithoutModelInput {
   upsert: [ProdUpsertWithWhereUniqueWithoutModelInput!]
 }
 
+input ProdUpdateManyWithoutOrderInput {
+  create: [ProdCreateWithoutOrderInput!]
+  connect: [ProdWhereUniqueInput!]
+  disconnect: [ProdWhereUniqueInput!]
+  delete: [ProdWhereUniqueInput!]
+  update: [ProdUpdateWithWhereUniqueWithoutOrderInput!]
+  upsert: [ProdUpsertWithWhereUniqueWithoutOrderInput!]
+}
+
 input ProdUpdateWithoutDeptDataInput {
   fullnumber: String
   hasDefect: Boolean
@@ -3318,6 +3408,7 @@ input ProdUpdateWithoutDeptDataInput {
   progress: Float
   year: Int
   model: ModelUpdateOneWithoutProdsInput
+  order: OrderUpdateOneWithoutProdsInput
 }
 
 input ProdUpdateWithoutModelDataInput {
@@ -3331,6 +3422,21 @@ input ProdUpdateWithoutModelDataInput {
   progress: Float
   year: Int
   dept: DeptUpdateOneWithoutProdsInput
+  order: OrderUpdateOneWithoutProdsInput
+}
+
+input ProdUpdateWithoutOrderDataInput {
+  fullnumber: String
+  hasDefect: Boolean
+  isSpoiled: Boolean
+  melt: Int
+  meltShift: Int
+  htmlNote: String
+  number: Int
+  progress: Float
+  year: Int
+  dept: DeptUpdateOneWithoutProdsInput
+  model: ModelUpdateOneWithoutProdsInput
 }
 
 input ProdUpdateWithWhereUniqueWithoutDeptInput {
@@ -3343,6 +3449,11 @@ input ProdUpdateWithWhereUniqueWithoutModelInput {
   data: ProdUpdateWithoutModelDataInput!
 }
 
+input ProdUpdateWithWhereUniqueWithoutOrderInput {
+  where: ProdWhereUniqueInput!
+  data: ProdUpdateWithoutOrderDataInput!
+}
+
 input ProdUpsertWithWhereUniqueWithoutDeptInput {
   where: ProdWhereUniqueInput!
   update: ProdUpdateWithoutDeptDataInput!
@@ -3353,6 +3464,12 @@ input ProdUpsertWithWhereUniqueWithoutModelInput {
   where: ProdWhereUniqueInput!
   update: ProdUpdateWithoutModelDataInput!
   create: ProdCreateWithoutModelInput!
+}
+
+input ProdUpsertWithWhereUniqueWithoutOrderInput {
+  where: ProdWhereUniqueInput!
+  update: ProdUpdateWithoutOrderDataInput!
+  create: ProdCreateWithoutOrderInput!
 }
 
 input ProdWhereInput {
@@ -3604,6 +3721,7 @@ input ProdWhereInput {
   year_gte: Int
   dept: DeptWhereInput
   model: ModelWhereInput
+  order: OrderWhereInput
 }
 
 input ProdWhereUniqueInput {
