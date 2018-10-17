@@ -1,3 +1,5 @@
+const differenceBy = require('lodash/differenceBy')
+
 const order = {
 	async upsertOrder(_, { id, enquiryId = '', dateLocal, qty, amount }, ctx, info) {
 		const { userId, db } = ctx
@@ -47,7 +49,31 @@ const order = {
 			}
 		}, info)
 	},
-
+	async reserveProds(_, { orderId, prodIds }, ctx, info) {
+		const { userId, db } = ctx
+    const newProds = await db.query.prods({
+      where: {
+        id_in: prodIds
+      }
+    }, '{ id fullnumber }')
+    if (newProds.length !== prodIds.length) {
+      throw new Error(`Не все изделия найдены в базе. Рзервирование не производилось.`)
+		}
+		const order = await db.query.order({
+			where: { id: orderId }
+		}, '{ id prods { id } }')
+		if (!order) throw new Error(`Заказ не найден в базе`)
+		const oldProds = order.prods
+		return db.mutation.updateOrder({
+			where: { id: orderId },
+			data: {
+				prods: {
+					disconnect: differenceBy(oldProds, newProds, 'id').map(({ id }) => ({ id })),
+					connect: differenceBy(newProds, oldProds, 'id').map(({ id }) => ({ id }))
+				}
+			}
+		}, info)
+	}
 }
 
 module.exports = { order }

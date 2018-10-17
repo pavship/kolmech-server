@@ -23,6 +23,7 @@ type Mutation {
   deleteOrg(id: ID!): Org
   deleteAllOrgs: BatchPayload!
   upsertOrder(id: ID, enquiryId: ID, dateLocal: String!, qty: Int, amount: Float): Order
+  reserveProds(orderId: ID!, prodIds: [ID!]!): Order
   upsertProd(input: ProdInput!): Prod
   moveProds(to: ID!, prodIds: [ID!]!): MoveProdPayload!
   importModels: BatchPayload!

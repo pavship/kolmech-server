@@ -19,7 +19,13 @@ const prod = {
     // if new
     let fullnumber = iFullnumber
 		if (!id) {
-      if (!fullnumber) fullnumber = melt.toString() + (meltShift ? ('.' + meltShift.toString() + '-') : '-') + number.toString() + '-' + year.toString()
+      if (!fullnumber) 
+        planeInput.fullnumber = 
+          melt.toString()
+          + (meltShift ? ('.' + meltShift.toString() + '-') : '-')
+          + number.toString()
+          + '-'
+          + year.toString()
       const deptExists = await db.exists.Dept({ id: deptId })
       if (!deptExists) { throw new Error(`Участок не найден в базе`) }
       const modelExists = await db.exists.Model({ id: modelId })
@@ -70,7 +76,6 @@ const prod = {
         id_in: prodIds
       }
     }, '{ id dept { id } }')
-    console.log('prods > ', prods)
     if (prods.length !== prodIds.length) {
       throw new Error(`Не все изделия найдены в базе. Перемещение не производилось.`)
     }
