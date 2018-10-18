@@ -10,6 +10,7 @@ type Query {
   statuses: [Status!]!
   models: [Model!]!
   modelProds(modelId: ID!): [Prod!]!
+  deptProds(deptId: ID!): [Prod!]!
 }
 
 type Mutation {

@@ -56,6 +56,10 @@ const Query = {
 	modelProds(_, { modelId }, ctx, info) {
 		return ctx.db.query.prods({ where: { model: { id: modelId } } }, info)
 	},
+
+	deptProds(_, { deptId }, ctx, info) {
+		return ctx.db.query.prods({ where: { dept: { id: deptId } } }, info)
+	},
 }
 
 module.exports = { Query }
