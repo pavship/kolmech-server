@@ -17,30 +17,37 @@ const auth = {
 			}
 		})
 		return {
-			token: jwt.sign({ userId: user.id }, process.env.APP_SECRET),
+			token: jwt.sign(
+				{ userId: user.id },
+				process.env.APP_SECRET,
+				// { expiresIn: '15h' }
+			),
 			// user,
 		}
 	},
 
-	async login(parent, { email, password }, ctx, info) {
-        const user = await ctx.db.query.user({ where: { email } }, '{id email password person { fName lName }}')
+	async login(_, { email, password }, ctx, info) {
+		const user = await ctx.db.query.user({ where: { email } }, '{id email password person { fName lName }}')
 		if (!user) {
-            throw new Error(`No such user found for email: ${email}`)
+			throw new Error(`No such user found for email: ${email}`)
 		}
 		const valid = await bcrypt.compare(password, user.password)
 		if (!valid) {
-            throw new Error('Invalid password')
+			throw new Error('Invalid password')
 		}
-        console.log(user)
+		console.log(user.person.fName + ' ' + user.person.lName + ' (' + email + ') '  + 'logged in')
 		return {
-            token: jwt.sign({ userId: user.id }, process.env.APP_SECRET),
-            // user
-            // user: {
-            //     email: user.email,
-            //     person: {
-            //         fName: user.person.fName
-            //     }
-            // }
+			token: jwt.sign(
+				{ userId: user.id },
+				process.env.APP_SECRET,
+				{ expiresIn: '15h' }
+			),
+			// user: {
+			// 	email: user.email,
+			// 	person: {
+			// 			fName: user.person.fName
+			// 	}
+			// }
 		}
 	},
 }
