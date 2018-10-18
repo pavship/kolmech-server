@@ -20,7 +20,7 @@ const auth = {
 			token: jwt.sign(
 				{ userId: user.id },
 				process.env.APP_SECRET,
-				// { expiresIn: '15h' }
+				{ expiresIn: '15h' }
 			),
 			// user,
 		}

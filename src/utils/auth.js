@@ -12,13 +12,13 @@ function getUserId(ctx) {
 	if (Authorization) {
 		const token = Authorization.replace('Bearer ', '')
 		// @ts-ignore
-		console.log('jwt.verify(token, process.env.APP_SECRET) > ', jwt.verify(token, process.env.APP_SECRET))
 		const { userId } = jwt.decode(token)
 		const jwtArgs = [
 			token,
 			process.env.APP_SECRET,
-			...userId === 'sf' ? [{ ignoreExpiration: true }] : []
+			...(userId === process.env.SERVER_USER_ID) ? [{ ignoreExpiration: true }] : []
 		]
+		// @ts-ignore
 		jwt.verify(...jwtArgs)
 		return userId
 	}

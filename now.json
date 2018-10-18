@@ -5,6 +5,7 @@
         "PRISMA_ENDPOINT_PROD": "@prisma-endpoint-prod",
         "PRISMA_SECRET_PROD": "@prisma-secret-prod",
         "APP_SECRET": "@app-secret",
+        "SERVER_USER_ID": "@server-user-id",
         "MOEDELO_SECRET": "@moe-delo-secret",
         "GQ_TOKEN": "@gq-token",
         "GQ_ENDPOINT": "@gq-endpoint"
