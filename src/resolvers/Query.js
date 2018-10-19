@@ -12,7 +12,7 @@ const Query = {
 	},
 
 	enquiries(_, __, ctx, info) {
-		return ctx.db.query.enquiries({ orderBy: 'id_DESC' }, info)
+		return ctx.db.query.enquiries({ orderBy: 'num_DESC' }, info)
 	},
 	
 	enquiry(_, { id }, ctx, info) {

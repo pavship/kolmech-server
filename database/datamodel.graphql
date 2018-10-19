@@ -87,7 +87,6 @@ type Doc {
 
 type Model {
 	id: ID! @unique
-	gqId: ID @unique #Graphcool id
 	article: String
 	name: String! @unique
 	enquiries: [Enquiry!]! @relation(name: "EnquiryModel")

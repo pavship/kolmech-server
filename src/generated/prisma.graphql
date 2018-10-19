@@ -1,5 +1,5 @@
 # source: https://kolmech-heroku-server.herokuapp.com/prisma-heroku/dev
-# timestamp: Mon Oct 08 2018 20:10:47 GMT+0300 (RTZ 2 (зима))
+# timestamp: Fri Oct 19 2018 05:14:50 GMT+0300 (RTZ 2 (зима))
 
 type AggregateDept {
   count: Int!
@@ -1444,7 +1444,6 @@ scalar Long
 
 type Model implements Node {
   id: ID!
-  gqId: ID
   article: String
   name: String!
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry!]
@@ -1463,7 +1462,6 @@ type ModelConnection {
 }
 
 input ModelCreateInput {
-  gqId: ID
   article: String
   name: String!
   enquiries: EnquiryCreateManyWithoutModelInput
@@ -1487,7 +1485,6 @@ input ModelCreateOneWithoutProdsInput {
 }
 
 input ModelCreateWithoutEnquiriesInput {
-  gqId: ID
   article: String
   name: String!
   orders: OrderCreateManyWithoutModelInput
@@ -1495,7 +1492,6 @@ input ModelCreateWithoutEnquiriesInput {
 }
 
 input ModelCreateWithoutOrdersInput {
-  gqId: ID
   article: String
   name: String!
   enquiries: EnquiryCreateManyWithoutModelInput
@@ -1503,7 +1499,6 @@ input ModelCreateWithoutOrdersInput {
 }
 
 input ModelCreateWithoutProdsInput {
-  gqId: ID
   article: String
   name: String!
   enquiries: EnquiryCreateManyWithoutModelInput
@@ -1522,8 +1517,6 @@ type ModelEdge {
 enum ModelOrderByInput {
   id_ASC
   id_DESC
-  gqId_ASC
-  gqId_DESC
   article_ASC
   article_DESC
   name_ASC
@@ -1536,7 +1529,6 @@ enum ModelOrderByInput {
 
 type ModelPreviousValues {
   id: ID!
-  gqId: ID
   article: String
   name: String!
 }
@@ -1581,7 +1573,6 @@ input ModelSubscriptionWhereInput {
 }
 
 input ModelUpdateInput {
-  gqId: ID
   article: String
   name: String
   enquiries: EnquiryUpdateManyWithoutModelInput
@@ -1616,7 +1607,6 @@ input ModelUpdateOneWithoutProdsInput {
 }
 
 input ModelUpdateWithoutEnquiriesDataInput {
-  gqId: ID
   article: String
   name: String
   orders: OrderUpdateManyWithoutModelInput
@@ -1624,7 +1614,6 @@ input ModelUpdateWithoutEnquiriesDataInput {
 }
 
 input ModelUpdateWithoutOrdersDataInput {
-  gqId: ID
   article: String
   name: String
   enquiries: EnquiryUpdateManyWithoutModelInput
@@ -1632,7 +1621,6 @@ input ModelUpdateWithoutOrdersDataInput {
 }
 
 input ModelUpdateWithoutProdsDataInput {
-  gqId: ID
   article: String
   name: String
   enquiries: EnquiryUpdateManyWithoutModelInput
@@ -1703,46 +1691,6 @@ input ModelWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
-  gqId: ID
-
-  """All values that are not equal to given value."""
-  gqId_not: ID
-
-  """All values that are contained in given list."""
-  gqId_in: [ID!]
-
-  """All values that are not contained in given list."""
-  gqId_not_in: [ID!]
-
-  """All values less than the given value."""
-  gqId_lt: ID
-
-  """All values less than or equal the given value."""
-  gqId_lte: ID
-
-  """All values greater than the given value."""
-  gqId_gt: ID
-
-  """All values greater than or equal the given value."""
-  gqId_gte: ID
-
-  """All values containing the given string."""
-  gqId_contains: ID
-
-  """All values not containing the given string."""
-  gqId_not_contains: ID
-
-  """All values starting with the given string."""
-  gqId_starts_with: ID
-
-  """All values not starting with the given string."""
-  gqId_not_starts_with: ID
-
-  """All values ending with the given string."""
-  gqId_ends_with: ID
-
-  """All values not ending with the given string."""
-  gqId_not_ends_with: ID
   article: String
 
   """All values that are not equal to given value."""
@@ -1836,7 +1784,6 @@ input ModelWhereInput {
 
 input ModelWhereUniqueInput {
   id: ID
-  gqId: ID
   name: String
 }
 
