@@ -41,6 +41,8 @@ type Enquiry {
 	htmlNote: String
 	events: [Event!]! @relation(name: "EventOnEnquiry" onDelete: CASCADE)
 	orders: [Order!]!  @relation(name: "EnquiryOrders")
+	docs: [Doc!]! @relation(name: "EnquiryDocs" onDelete: CASCADE)
+	status: Status
 }
 
 type Event {
@@ -83,6 +85,7 @@ type Doc {
 	amount: Float
 	nds: Boolean
 	type: DocType
+	enquiry: Enquiry @relation(name: "EnquiryDocs")
 }
 
 type Model {

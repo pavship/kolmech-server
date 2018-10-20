@@ -2,7 +2,9 @@ const { GraphQLClient  } = require('graphql-request')
 
 const client = new GraphQLClient( 
 	process.env.GQ_ENDPOINT, 
-	{ headers: { Authorization: `Bearer ${process.env.GQ_TOKEN}` } }
+	{
+		headers: { Authorization: `Bearer ${process.env.GQ_TOKEN}` }
+	}
 )
 
 const migration = {
@@ -116,7 +118,6 @@ const migration = {
 					update: {}
 				}, '{ id name }')
 			}))
-			// console.log('upsertedStatuses > ', upsertedStatuses)
 			const updatedStatuses = await Promise.all(upsertedStatuses.map(({ id, name }) => {
 				return ctx.db.mutation.updateStatus({
 					where: { id },
@@ -130,7 +131,6 @@ const migration = {
 					}
 				}, '{ id name stage prev { id name stage } next { id name stage } }')
 			}))
-			// console.log('updatedStatuses > ', updatedStatuses)
 			return { count: updatedStatuses.length }
 		} catch (err) {
 			console.log(err)
@@ -138,17 +138,51 @@ const migration = {
 		}
 	},
 
-	// async getConstants(_, __, ctx, info) {
-	// 	try {
-	// 		// statuses
-	// 		// const coStatusId = 'cjlj2561q00130959gtcqhoew' // commercial offer status
-	// 		// export const orderStatusId = 'cjlj2ckgy001i09599l147fot'
-	// 		// export const refusalStatusIds = ['cjlj25g4q00170959picodhln', 'cjlj2c004001c0959k6qq42xz']
-	// 	} catch (err) {
-	// 		console.log(err)
-	// 		return null
-	// 	}
-	// }
+	async connectEnquiriesToDocsAndStatus(_, __, ctx, info) {
+		try {
+			const { db } = ctx
+			const enquiries = await db.query.enquiries({}, `
+				{ 
+					id
+					num
+					events {
+						id
+						doc {
+							id
+							type
+						}
+						status {
+							id
+							name
+						}
+					}
+				}
+			`)
+			const updatedEnquiries = await Promise.all(enquiries.map(({ id, num, events }) =>
+				db.mutation.updateEnquiry({
+					where: { id },
+					data: {
+						status: {
+							connect: {
+								id: events.filter(e => !!e.status).pop().status.id
+							}
+						},
+						docs: {
+							connect: events
+								.filter(e => !!e.doc && e.doc.type === 'CO')
+								.map(e => ({ id: e.doc.id }))
+						}
+					}},
+					'{ id status { id } docs { id } }'
+				)
+			))
+			return { count: updatedEnquiries.length }
+		} catch (err) {
+			console.log(err)
+			return null
+		}
+	}
+
 }
 
 module.exports = { migration }
