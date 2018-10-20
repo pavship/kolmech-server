@@ -1,6 +1,7 @@
 {
 	"env": {
 		"PRISMA_ENDPOINT": "@prisma-endpoint",
+		"PRISMA_ENDPOINT_LOCAL": "@prisma-endpoint-local",
 		"PRISMA_SECRET": "@prisma-secret",
 		"APP_SECRET": "@app-secret",
 		"SERVER_USER_ID": "@server-user-id",

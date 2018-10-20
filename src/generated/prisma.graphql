@@ -1,5 +1,5 @@
-# source: https://kolmech-heroku-server.herokuapp.com/prisma-heroku/dev
-# timestamp: Fri Oct 19 2018 05:14:50 GMT+0300 (RTZ 2 (зима))
+# source: http://localhost:4466
+# timestamp: Sat Oct 20 2018 13:33:56 GMT+0300 (RTZ 2 (зима))
 
 type AggregateDept {
   count: Int!
@@ -163,10 +163,9 @@ input DeptUpdateInput {
   prods: ProdUpdateManyWithoutDeptInput
 }
 
-input DeptUpdateOneWithoutProdsInput {
+input DeptUpdateOneRequiredWithoutProdsInput {
   create: DeptCreateWithoutProdsInput
   connect: DeptWhereUniqueInput
-  delete: Boolean
   update: DeptUpdateWithoutProdsDataInput
   upsert: DeptUpsertWithoutProdsInput
 }
@@ -549,9 +548,6 @@ input DocWhereInput {
 
   """All values that are not contained in given list."""
   type_not_in: [DocType!]
-  _MagicalBackRelation_EventDoc_every: EventWhereInput
-  _MagicalBackRelation_EventDoc_some: EventWhereInput
-  _MagicalBackRelation_EventDoc_none: EventWhereInput
 }
 
 input DocWhereUniqueInput {
@@ -562,8 +558,8 @@ type Enquiry implements Node {
   id: ID!
   num: Int!
   dateLocal: String
-  org(where: OrgWhereInput): Org
-  model(where: ModelWhereInput): Model
+  org: Org
+  model: Model
   qty: Int
   htmlNote: String
   events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
@@ -1032,14 +1028,14 @@ input EnquiryWhereUniqueInput {
 
 type Event implements Node {
   id: ID!
-  user(where: UserWhereInput): User
-  enquiry(where: EnquiryWhereInput): Enquiry
-  order(where: OrderWhereInput): Order
+  user: User
+  enquiry: Enquiry
+  order: Order
   datetimeLocal: String!
   htmlText: String
   type: EventType
-  status(where: StatusWhereInput): Status
-  doc(where: DocWhereInput): Doc
+  status: Status
+  doc: Doc
 }
 
 """A connection to a list of items."""
@@ -1580,6 +1576,13 @@ input ModelUpdateInput {
   prods: ProdUpdateManyWithoutModelInput
 }
 
+input ModelUpdateOneRequiredWithoutProdsInput {
+  create: ModelCreateWithoutProdsInput
+  connect: ModelWhereUniqueInput
+  update: ModelUpdateWithoutProdsDataInput
+  upsert: ModelUpsertWithoutProdsInput
+}
+
 input ModelUpdateOneWithoutEnquiriesInput {
   create: ModelCreateWithoutEnquiriesInput
   connect: ModelWhereUniqueInput
@@ -1596,14 +1599,6 @@ input ModelUpdateOneWithoutOrdersInput {
   delete: Boolean
   update: ModelUpdateWithoutOrdersDataInput
   upsert: ModelUpsertWithoutOrdersInput
-}
-
-input ModelUpdateOneWithoutProdsInput {
-  create: ModelCreateWithoutProdsInput
-  connect: ModelWhereUniqueInput
-  delete: Boolean
-  update: ModelUpdateWithoutProdsDataInput
-  upsert: ModelUpsertWithoutProdsInput
 }
 
 input ModelUpdateWithoutEnquiriesDataInput {
@@ -1875,9 +1870,9 @@ type Order implements Node {
   qty: Int
   amount: Float
   htmlNote: String
-  enquiry(where: EnquiryWhereInput): Enquiry
-  org(where: OrgWhereInput): Org
-  model(where: ModelWhereInput): Model
+  enquiry: Enquiry
+  org: Org
+  model: Model
   events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
   prods(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Prod!]
 }
@@ -2859,7 +2854,7 @@ type Person implements Node {
   id: ID!
   fName: String!
   lName: String
-  user(where: UserWhereInput): User
+  user: User
 }
 
 """A connection to a list of items."""
@@ -3118,14 +3113,14 @@ input PersonWhereUniqueInput {
 
 type Prod implements Node {
   id: ID!
-  dept(where: DeptWhereInput): Dept!
+  dept: Dept!
   fullnumber: String
   hasDefect: Boolean
   isSpoiled: Boolean
   melt: Int
   meltShift: Int
-  model(where: ModelWhereInput): Model!
-  order(where: OrderWhereInput): Order
+  model: Model!
+  order: Order
   htmlNote: String
   number: Int
   progress: Float
@@ -3312,8 +3307,8 @@ input ProdUpdateInput {
   number: Int
   progress: Float
   year: Int
-  dept: DeptUpdateOneWithoutProdsInput
-  model: ModelUpdateOneWithoutProdsInput
+  dept: DeptUpdateOneRequiredWithoutProdsInput
+  model: ModelUpdateOneRequiredWithoutProdsInput
   order: OrderUpdateOneWithoutProdsInput
 }
 
@@ -3354,7 +3349,7 @@ input ProdUpdateWithoutDeptDataInput {
   number: Int
   progress: Float
   year: Int
-  model: ModelUpdateOneWithoutProdsInput
+  model: ModelUpdateOneRequiredWithoutProdsInput
   order: OrderUpdateOneWithoutProdsInput
 }
 
@@ -3368,7 +3363,7 @@ input ProdUpdateWithoutModelDataInput {
   number: Int
   progress: Float
   year: Int
-  dept: DeptUpdateOneWithoutProdsInput
+  dept: DeptUpdateOneRequiredWithoutProdsInput
   order: OrderUpdateOneWithoutProdsInput
 }
 
@@ -3382,8 +3377,8 @@ input ProdUpdateWithoutOrderDataInput {
   number: Int
   progress: Float
   year: Int
-  dept: DeptUpdateOneWithoutProdsInput
-  model: ModelUpdateOneWithoutProdsInput
+  dept: DeptUpdateOneRequiredWithoutProdsInput
+  model: ModelUpdateOneRequiredWithoutProdsInput
 }
 
 input ProdUpdateWithWhereUniqueWithoutDeptInput {
@@ -4033,9 +4028,6 @@ input StatusWhereInput {
   next_every: StatusWhereInput
   next_some: StatusWhereInput
   next_none: StatusWhereInput
-  _MagicalBackRelation_EventToStatus_every: EventWhereInput
-  _MagicalBackRelation_EventToStatus_some: EventWhereInput
-  _MagicalBackRelation_EventToStatus_none: EventWhereInput
 }
 
 input StatusWhereUniqueInput {
@@ -4061,7 +4053,7 @@ type User implements Node {
   id: ID!
   email: String!
   password: String!
-  person(where: PersonWhereInput): Person
+  person: Person
   role: UserRole
   events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
 }

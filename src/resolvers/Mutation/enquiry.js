@@ -106,7 +106,7 @@ const enquiry = {
 											${modelId ? `<tr><td></td><td>Изделие</td><td><span>-> </span><strong>${model.name}</strong> (Артикул: ${model.article})</td></tr>` : ''}
 											${qty ? `<tr><td></td><td>Кол-во</td><td><span>-> </span><strong>${qty}</strong> шт.</td></tr>` : ''}
 											${htmlNote ? `<tr><td></td><td>Примечания:</td><td>${htmlNote}</td></tr>` : ''}
-											${(htmlNote === null) ? `<tr><td></td><td>Примечания</td><td>(удалены)</td></tr>` : ''}
+											${(htmlNote === null) ? `<tr><td></td><td>Примечания:</td><td>(удалены)</td></tr>` : ''}
 									</tbody></table>`.replace(/\t|\n/g, ''),
 						type: 'UPDATE'
 					}]
