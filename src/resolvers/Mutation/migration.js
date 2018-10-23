@@ -135,7 +135,7 @@ const migration = {
 		} catch (err) {
 			console.log(err)
 			return null
-		}
+		} 
 	},
 
 	async connectEnquiriesToDocsAndStatus(_, __, ctx, info) {
