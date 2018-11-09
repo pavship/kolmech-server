@@ -45,6 +45,12 @@ type Enquiry {
 	status: Status
 }
 
+type File1 {
+	id: ID! @unique
+	name: String!
+	storeId: ID
+}
+
 type Event {
 	id: ID! @unique
 	user: User @relation(name: "EventByUser")

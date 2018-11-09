@@ -1,14 +1,20 @@
 const jwt = require('jsonwebtoken')
 
-function getUserId(ctx) {
-	// console.log('Object.keys(ctx.request) > ', Object.keys(ctx.request))
-	// console.log('Object.keys(ctx.request.headers) > ', Object.keys(ctx.request.headers))
-	// console.log('Object.keys(ctx.request.body) > ', Object.keys(ctx.request.body))
-	// console.log('ctx.request.body.operationName > ', ctx.request.body.operationName)
-    
-	if (ctx.request.body.operationName === 'Login') return null
+const unrestrictedOperations = ['Login', 'CreateOrg', 'SignupAndCreateEnquiry']
 
-	const Authorization = ctx.request.get('Authorization')
+function getUserId(ctx) {
+	// console.log('Object.keys(request) > ', Object.keys(request))
+	// console.log('Object.keys(request.headers) > ', Object.keys(request.headers))
+	// console.log('Object.keys(request.body) > ', Object.keys(request.body))
+	// console.log('request.body.operationName > ', request.body.operationName)
+	
+	// if (request.body.operationName === 'Login') return null
+	const { request } = ctx
+	const { operationName } = request.body
+	console.log('operationName > ', operationName)
+	if (unrestrictedOperations.includes(operationName)) return null
+
+	const Authorization = request.get('Authorization')
 	if (Authorization) {
 		const token = Authorization.replace('Bearer ', '')
 		// @ts-ignore
@@ -23,7 +29,10 @@ function getUserId(ctx) {
 		return userId
 	}
 
+	// console.log('Authorization > ', Authorization)
 	throw new AuthError()
+	// throw new Error('Not authorized')
+	// throw new Error({id: '1', name: 'df', inn: '23'})
 }
 
 class AuthError extends Error {

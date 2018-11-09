@@ -6,6 +6,7 @@ const { org } = require('./Mutation/org')
 const { order } = require('./Mutation/order')
 const { prod } = require('./Mutation/prod')
 const { migration } = require('./Mutation/migration')
+const { mixed } = require('./Mutation/mixed')
 const { AuthPayload } = require('./AuthPayload')
 
 module.exports = {
@@ -16,7 +17,8 @@ module.exports = {
     ...org,
     ...order,
     ...prod,
-    ...migration
+    ...migration,
+    ...mixed
   },
   Subscription,
   AuthPayload,
