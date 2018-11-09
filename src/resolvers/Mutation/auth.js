@@ -2,7 +2,18 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const auth = {
-	async signup(_, {email, password, fName, lName}, ctx, info) {
+	async signup(_, {
+		email,
+		password,
+		fName: fNameArg,
+		lName: lNameArg,
+		mName: mNameArg,
+		regName
+	}, ctx, info) {
+		let fName = fNameArg
+		let lName = lNameArg
+		let mName = mNameArg
+		[fNameDerived, lNameDerived, mNameDerived] = parseFullname
 		const passwordHash = await bcrypt.hash(password, 10)
 		const user = await ctx.db.mutation.createUser({
 			data: { 

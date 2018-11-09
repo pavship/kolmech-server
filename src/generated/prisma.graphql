@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Fri Nov 09 2018 18:58:33 GMT+0300 (RTZ 2 (зима))
+# timestamp: Fri Nov 09 2018 20:51:55 GMT+0300 (RTZ 2 (зима))
 
 type AggregateDept {
   count: Int!
@@ -3255,6 +3255,8 @@ type Person implements Node {
   id: ID!
   fName: String!
   lName: String
+  mName: String
+  regName: String
   user: User
 }
 
@@ -3271,6 +3273,8 @@ type PersonConnection {
 input PersonCreateInput {
   fName: String!
   lName: String
+  mName: String
+  regName: String
   user: UserCreateOneWithoutPersonInput
 }
 
@@ -3282,6 +3286,8 @@ input PersonCreateOneWithoutUserInput {
 input PersonCreateWithoutUserInput {
   fName: String!
   lName: String
+  mName: String
+  regName: String
 }
 
 """An edge in a connection."""
@@ -3300,6 +3306,10 @@ enum PersonOrderByInput {
   fName_DESC
   lName_ASC
   lName_DESC
+  mName_ASC
+  mName_DESC
+  regName_ASC
+  regName_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -3310,6 +3320,8 @@ type PersonPreviousValues {
   id: ID!
   fName: String!
   lName: String
+  mName: String
+  regName: String
 }
 
 type PersonSubscriptionPayload {
@@ -3354,12 +3366,16 @@ input PersonSubscriptionWhereInput {
 input PersonUpdateInput {
   fName: String
   lName: String
+  mName: String
+  regName: String
   user: UserUpdateOneWithoutPersonInput
 }
 
 input PersonUpdateManyMutationInput {
   fName: String
   lName: String
+  mName: String
+  regName: String
 }
 
 input PersonUpdateOneWithoutUserInput {
@@ -3374,6 +3390,8 @@ input PersonUpdateOneWithoutUserInput {
 input PersonUpdateWithoutUserDataInput {
   fName: String
   lName: String
+  mName: String
+  regName: String
 }
 
 input PersonUpsertWithoutUserInput {
@@ -3510,6 +3528,86 @@ input PersonWhereInput {
 
   """All values not ending with the given string."""
   lName_not_ends_with: String
+  mName: String
+
+  """All values that are not equal to given value."""
+  mName_not: String
+
+  """All values that are contained in given list."""
+  mName_in: [String!]
+
+  """All values that are not contained in given list."""
+  mName_not_in: [String!]
+
+  """All values less than the given value."""
+  mName_lt: String
+
+  """All values less than or equal the given value."""
+  mName_lte: String
+
+  """All values greater than the given value."""
+  mName_gt: String
+
+  """All values greater than or equal the given value."""
+  mName_gte: String
+
+  """All values containing the given string."""
+  mName_contains: String
+
+  """All values not containing the given string."""
+  mName_not_contains: String
+
+  """All values starting with the given string."""
+  mName_starts_with: String
+
+  """All values not starting with the given string."""
+  mName_not_starts_with: String
+
+  """All values ending with the given string."""
+  mName_ends_with: String
+
+  """All values not ending with the given string."""
+  mName_not_ends_with: String
+  regName: String
+
+  """All values that are not equal to given value."""
+  regName_not: String
+
+  """All values that are contained in given list."""
+  regName_in: [String!]
+
+  """All values that are not contained in given list."""
+  regName_not_in: [String!]
+
+  """All values less than the given value."""
+  regName_lt: String
+
+  """All values less than or equal the given value."""
+  regName_lte: String
+
+  """All values greater than the given value."""
+  regName_gt: String
+
+  """All values greater than or equal the given value."""
+  regName_gte: String
+
+  """All values containing the given string."""
+  regName_contains: String
+
+  """All values not containing the given string."""
+  regName_not_contains: String
+
+  """All values starting with the given string."""
+  regName_starts_with: String
+
+  """All values not starting with the given string."""
+  regName_not_starts_with: String
+
+  """All values ending with the given string."""
+  regName_ends_with: String
+
+  """All values not ending with the given string."""
+  regName_not_ends_with: String
   user: UserWhereInput
 }
 

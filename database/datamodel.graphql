@@ -11,6 +11,8 @@ type Person {
 	id: ID! @unique
 	fName: String!
 	lName: String
+	mName: String
+	regName: String
 	user: User
 }
 
