@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Sat Oct 20 2018 15:48:02 GMT+0300 (RTZ 2 (зима))
+# timestamp: Fri Nov 09 2018 18:58:33 GMT+0300 (RTZ 2 (зима))
 
 type AggregateDept {
   count: Int!
@@ -14,6 +14,10 @@ type AggregateEnquiry {
 }
 
 type AggregateEvent {
+  count: Int!
+}
+
+type AggregateFile1 {
   count: Int!
 }
 
@@ -161,6 +165,11 @@ input DeptUpdateInput {
   type: DeptType
   name: String
   prods: ProdUpdateManyWithoutDeptInput
+}
+
+input DeptUpdateManyMutationInput {
+  type: DeptType
+  name: String
 }
 
 input DeptUpdateOneRequiredWithoutProdsInput {
@@ -423,6 +432,13 @@ input DocUpdateInput {
   nds: Boolean
   type: DocType
   enquiry: EnquiryUpdateOneWithoutDocsInput
+}
+
+input DocUpdateManyMutationInput {
+  dateLocal: String
+  amount: Float
+  nds: Boolean
+  type: DocType
 }
 
 input DocUpdateManyWithoutEnquiryInput {
@@ -804,6 +820,13 @@ input EnquiryUpdateInput {
   orders: OrderUpdateManyWithoutEnquiryInput
   docs: DocUpdateManyWithoutEnquiryInput
   status: StatusUpdateOneInput
+}
+
+input EnquiryUpdateManyMutationInput {
+  num: Int
+  dateLocal: String
+  qty: Int
+  htmlNote: String
 }
 
 input EnquiryUpdateManyWithoutModelInput {
@@ -1305,6 +1328,12 @@ input EventUpdateInput {
   doc: DocUpdateOneInput
 }
 
+input EventUpdateManyMutationInput {
+  datetimeLocal: String
+  htmlText: String
+  type: EventType
+}
+
 input EventUpdateManyWithoutEnquiryInput {
   create: [EventCreateWithoutEnquiryInput!]
   connect: [EventWhereUniqueInput!]
@@ -1545,6 +1574,239 @@ input EventWhereUniqueInput {
   id: ID
 }
 
+type File1 implements Node {
+  id: ID!
+  name: String!
+  storeId: ID
+}
+
+"""A connection to a list of items."""
+type File1Connection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [File1Edge]!
+  aggregate: AggregateFile1!
+}
+
+input File1CreateInput {
+  name: String!
+  storeId: ID
+}
+
+"""An edge in a connection."""
+type File1Edge {
+  """The item at the end of the edge."""
+  node: File1!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum File1OrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  storeId_ASC
+  storeId_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type File1PreviousValues {
+  id: ID!
+  name: String!
+  storeId: ID
+}
+
+type File1SubscriptionPayload {
+  mutation: MutationType!
+  node: File1
+  updatedFields: [String!]
+  previousValues: File1PreviousValues
+}
+
+input File1SubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [File1SubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [File1SubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [File1SubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: File1WhereInput
+}
+
+input File1UpdateInput {
+  name: String
+  storeId: ID
+}
+
+input File1UpdateManyMutationInput {
+  name: String
+  storeId: ID
+}
+
+input File1WhereInput {
+  """Logical AND on all given filters."""
+  AND: [File1WhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [File1WhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [File1WhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  storeId: ID
+
+  """All values that are not equal to given value."""
+  storeId_not: ID
+
+  """All values that are contained in given list."""
+  storeId_in: [ID!]
+
+  """All values that are not contained in given list."""
+  storeId_not_in: [ID!]
+
+  """All values less than the given value."""
+  storeId_lt: ID
+
+  """All values less than or equal the given value."""
+  storeId_lte: ID
+
+  """All values greater than the given value."""
+  storeId_gt: ID
+
+  """All values greater than or equal the given value."""
+  storeId_gte: ID
+
+  """All values containing the given string."""
+  storeId_contains: ID
+
+  """All values not containing the given string."""
+  storeId_not_contains: ID
+
+  """All values starting with the given string."""
+  storeId_starts_with: ID
+
+  """All values not starting with the given string."""
+  storeId_not_starts_with: ID
+
+  """All values ending with the given string."""
+  storeId_ends_with: ID
+
+  """All values not ending with the given string."""
+  storeId_not_ends_with: ID
+}
+
+input File1WhereUniqueInput {
+  id: ID
+}
+
 """
 The `Long` scalar type represents non-fractional signed whole numeric values.
 Long can represent values between -(2^63) and 2^63 - 1.
@@ -1687,6 +1949,11 @@ input ModelUpdateInput {
   enquiries: EnquiryUpdateManyWithoutModelInput
   orders: OrderUpdateManyWithoutModelInput
   prods: ProdUpdateManyWithoutModelInput
+}
+
+input ModelUpdateManyMutationInput {
+  article: String
+  name: String
 }
 
 input ModelUpdateOneRequiredWithoutProdsInput {
@@ -1901,6 +2168,7 @@ type Mutation {
   createOrg(data: OrgCreateInput!): Org!
   createDept(data: DeptCreateInput!): Dept!
   createEnquiry(data: EnquiryCreateInput!): Enquiry!
+  createFile1(data: File1CreateInput!): File1!
   createEvent(data: EventCreateInput!): Event!
   createOrder(data: OrderCreateInput!): Order!
   createModel(data: ModelCreateInput!): Model!
@@ -1912,6 +2180,7 @@ type Mutation {
   updateOrg(data: OrgUpdateInput!, where: OrgWhereUniqueInput!): Org
   updateDept(data: DeptUpdateInput!, where: DeptWhereUniqueInput!): Dept
   updateEnquiry(data: EnquiryUpdateInput!, where: EnquiryWhereUniqueInput!): Enquiry
+  updateFile1(data: File1UpdateInput!, where: File1WhereUniqueInput!): File1
   updateEvent(data: EventUpdateInput!, where: EventWhereUniqueInput!): Event
   updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
   updateModel(data: ModelUpdateInput!, where: ModelWhereUniqueInput!): Model
@@ -1923,6 +2192,7 @@ type Mutation {
   deleteOrg(where: OrgWhereUniqueInput!): Org
   deleteDept(where: DeptWhereUniqueInput!): Dept
   deleteEnquiry(where: EnquiryWhereUniqueInput!): Enquiry
+  deleteFile1(where: File1WhereUniqueInput!): File1
   deleteEvent(where: EventWhereUniqueInput!): Event
   deleteOrder(where: OrderWhereUniqueInput!): Order
   deleteModel(where: ModelWhereUniqueInput!): Model
@@ -1934,28 +2204,31 @@ type Mutation {
   upsertOrg(where: OrgWhereUniqueInput!, create: OrgCreateInput!, update: OrgUpdateInput!): Org!
   upsertDept(where: DeptWhereUniqueInput!, create: DeptCreateInput!, update: DeptUpdateInput!): Dept!
   upsertEnquiry(where: EnquiryWhereUniqueInput!, create: EnquiryCreateInput!, update: EnquiryUpdateInput!): Enquiry!
+  upsertFile1(where: File1WhereUniqueInput!, create: File1CreateInput!, update: File1UpdateInput!): File1!
   upsertEvent(where: EventWhereUniqueInput!, create: EventCreateInput!, update: EventUpdateInput!): Event!
   upsertOrder(where: OrderWhereUniqueInput!, create: OrderCreateInput!, update: OrderUpdateInput!): Order!
   upsertModel(where: ModelWhereUniqueInput!, create: ModelCreateInput!, update: ModelUpdateInput!): Model!
   upsertProd(where: ProdWhereUniqueInput!, create: ProdCreateInput!, update: ProdUpdateInput!): Prod!
   upsertStatus(where: StatusWhereUniqueInput!, create: StatusCreateInput!, update: StatusUpdateInput!): Status!
   upsertDoc(where: DocWhereUniqueInput!, create: DocCreateInput!, update: DocUpdateInput!): Doc!
-  updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
-  updateManyPersons(data: PersonUpdateInput!, where: PersonWhereInput): BatchPayload!
-  updateManyOrgs(data: OrgUpdateInput!, where: OrgWhereInput): BatchPayload!
-  updateManyDepts(data: DeptUpdateInput!, where: DeptWhereInput): BatchPayload!
-  updateManyEnquiries(data: EnquiryUpdateInput!, where: EnquiryWhereInput): BatchPayload!
-  updateManyEvents(data: EventUpdateInput!, where: EventWhereInput): BatchPayload!
-  updateManyOrders(data: OrderUpdateInput!, where: OrderWhereInput): BatchPayload!
-  updateManyModels(data: ModelUpdateInput!, where: ModelWhereInput): BatchPayload!
-  updateManyProds(data: ProdUpdateInput!, where: ProdWhereInput): BatchPayload!
-  updateManyStatuses(data: StatusUpdateInput!, where: StatusWhereInput): BatchPayload!
-  updateManyDocs(data: DocUpdateInput!, where: DocWhereInput): BatchPayload!
+  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  updateManyPersons(data: PersonUpdateManyMutationInput!, where: PersonWhereInput): BatchPayload!
+  updateManyOrgs(data: OrgUpdateManyMutationInput!, where: OrgWhereInput): BatchPayload!
+  updateManyDepts(data: DeptUpdateManyMutationInput!, where: DeptWhereInput): BatchPayload!
+  updateManyEnquiries(data: EnquiryUpdateManyMutationInput!, where: EnquiryWhereInput): BatchPayload!
+  updateManyFile1s(data: File1UpdateManyMutationInput!, where: File1WhereInput): BatchPayload!
+  updateManyEvents(data: EventUpdateManyMutationInput!, where: EventWhereInput): BatchPayload!
+  updateManyOrders(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
+  updateManyModels(data: ModelUpdateManyMutationInput!, where: ModelWhereInput): BatchPayload!
+  updateManyProds(data: ProdUpdateManyMutationInput!, where: ProdWhereInput): BatchPayload!
+  updateManyStatuses(data: StatusUpdateManyMutationInput!, where: StatusWhereInput): BatchPayload!
+  updateManyDocs(data: DocUpdateManyMutationInput!, where: DocWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyPersons(where: PersonWhereInput): BatchPayload!
   deleteManyOrgs(where: OrgWhereInput): BatchPayload!
   deleteManyDepts(where: DeptWhereInput): BatchPayload!
   deleteManyEnquiries(where: EnquiryWhereInput): BatchPayload!
+  deleteManyFile1s(where: File1WhereInput): BatchPayload!
   deleteManyEvents(where: EventWhereInput): BatchPayload!
   deleteManyOrders(where: OrderWhereInput): BatchPayload!
   deleteManyModels(where: ModelWhereInput): BatchPayload!
@@ -2185,6 +2458,14 @@ input OrderUpdateInput {
   model: ModelUpdateOneWithoutOrdersInput
   events: EventUpdateManyWithoutOrderInput
   prods: ProdUpdateManyWithoutOrderInput
+}
+
+input OrderUpdateManyMutationInput {
+  num: Int
+  dateLocal: String
+  qty: Int
+  amount: Float
+  htmlNote: String
 }
 
 input OrderUpdateManyWithoutEnquiryInput {
@@ -2682,6 +2963,13 @@ input OrgUpdateInput {
   orders: OrderUpdateManyWithoutOrgInput
 }
 
+input OrgUpdateManyMutationInput {
+  inn: String
+  moedeloId: String
+  name: String
+  legalAddress: String
+}
+
 input OrgUpdateOneWithoutEnquiriesInput {
   create: OrgCreateWithoutEnquiriesInput
   connect: OrgWhereUniqueInput
@@ -3069,6 +3357,11 @@ input PersonUpdateInput {
   user: UserUpdateOneWithoutPersonInput
 }
 
+input PersonUpdateManyMutationInput {
+  fName: String
+  lName: String
+}
+
 input PersonUpdateOneWithoutUserInput {
   create: PersonCreateWithoutUserInput
   connect: PersonWhereUniqueInput
@@ -3423,6 +3716,18 @@ input ProdUpdateInput {
   dept: DeptUpdateOneRequiredWithoutProdsInput
   model: ModelUpdateOneRequiredWithoutProdsInput
   order: OrderUpdateOneWithoutProdsInput
+}
+
+input ProdUpdateManyMutationInput {
+  fullnumber: String
+  hasDefect: Boolean
+  isSpoiled: Boolean
+  melt: Int
+  meltShift: Int
+  htmlNote: String
+  number: Int
+  progress: Float
+  year: Int
 }
 
 input ProdUpdateManyWithoutDeptInput {
@@ -3789,6 +4094,7 @@ type Query {
   orgs(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Org]!
   depts(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Dept]!
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry]!
+  file1s(where: File1WhereInput, orderBy: File1OrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [File1]!
   events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event]!
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
   models(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Model]!
@@ -3800,6 +4106,7 @@ type Query {
   org(where: OrgWhereUniqueInput!): Org
   dept(where: DeptWhereUniqueInput!): Dept
   enquiry(where: EnquiryWhereUniqueInput!): Enquiry
+  file1(where: File1WhereUniqueInput!): File1
   event(where: EventWhereUniqueInput!): Event
   order(where: OrderWhereUniqueInput!): Order
   model(where: ModelWhereUniqueInput!): Model
@@ -3811,6 +4118,7 @@ type Query {
   orgsConnection(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgConnection!
   deptsConnection(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DeptConnection!
   enquiriesConnection(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EnquiryConnection!
+  file1sConnection(where: File1WhereInput, orderBy: File1OrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): File1Connection!
   eventsConnection(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EventConnection!
   ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
   modelsConnection(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ModelConnection!
@@ -3956,6 +4264,11 @@ input StatusUpdateInput {
   stage: Int
   prev: StatusUpdateManyWithoutNextInput
   next: StatusUpdateManyWithoutPrevInput
+}
+
+input StatusUpdateManyMutationInput {
+  name: String
+  stage: Int
 }
 
 input StatusUpdateManyWithoutNextInput {
@@ -4154,6 +4467,7 @@ type Subscription {
   org(where: OrgSubscriptionWhereInput): OrgSubscriptionPayload
   dept(where: DeptSubscriptionWhereInput): DeptSubscriptionPayload
   enquiry(where: EnquirySubscriptionWhereInput): EnquirySubscriptionPayload
+  file1(where: File1SubscriptionWhereInput): File1SubscriptionPayload
   event(where: EventSubscriptionWhereInput): EventSubscriptionPayload
   order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
   model(where: ModelSubscriptionWhereInput): ModelSubscriptionPayload
@@ -4293,6 +4607,12 @@ input UserUpdateInput {
   role: UserRole
   person: PersonUpdateOneWithoutUserInput
   events: EventUpdateManyWithoutUserInput
+}
+
+input UserUpdateManyMutationInput {
+  email: String
+  password: String
+  role: UserRole
 }
 
 input UserUpdateOneWithoutEventsInput {

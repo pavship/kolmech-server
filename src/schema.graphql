@@ -17,7 +17,7 @@ type Mutation {
   signup(email: String!, password: String!, fName: String!, lName: String): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
   createEnquiry(dateLocal: String!, orgId: ID!, modelId: ID!, qty: Int!): Enquiry
-  signupAndCreateEnquiry(orgId: ID!, regName: String!, email: String!, tel: String!, country: String!, modelName: String!, qty: Int!, period: String!, deadlineDateLocal: String, htmlText: String, orgId: ID!, files: [File1Input!]!, hasAgreedToRules: Boolean!, hasAgreedToSearch3rdParty: Boolean): Enquiry
+  # signupAndCreateEnquiry(orgId: ID!, regName: String!, email: String!, tel: String!, country: String!, modelName: String!, qty: Int!, period: String!, deadlineDateLocal: String, htmlText: String, orgId: ID!, files: [File1Input!]!, hasAgreedToRules: Boolean!, hasAgreedToSearch3rdParty: Boolean): Enquiry
   updateEnquiry(input: EnquiryInput!): Enquiry
   deleteAllEnquiries: BatchPayload!
   createEnquiryEvent(enquiryId: ID!, htmlText: String, statusId: ID, doc: DocCreateInput): Event
@@ -44,12 +44,6 @@ type AuthPayload {
 type MoveProdPayload {
   prods: [Prod!]!
   to: ID!
-}
-
-type File1 {
-	id: ID!
-	name: String!
-	storeId: ID
 }
 
 input EnquiryInput {
