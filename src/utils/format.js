@@ -11,6 +11,17 @@ const parseOrThrow = (func, entity, funcConfig) => {
 	if (!res) throw new Error(err.message)
 	return res
 }
+const parseFullname = (fullname, err) => {
+	// check for numbers
+	const numbers = fullname.match(/\d+/g)
+	if (numbers) {
+		err.message = 'В ФИО найдены числа'
+		return false
+	}
+	const names = fullname.split(' ').filter(s => s !== '')
+	if (names.length > 1) names.splice(0, 2, names[1], names[0])
+	return names
+}
 const parsePhone = (phone, err, config) => {
 	const { country } = config
 	const numbers = phone.match(/\d+/g)
@@ -27,5 +38,6 @@ const parsePhone = (phone, err, config) => {
 module.exports = {
 	currency,
 	parseOrThrow,
+	parseFullname,
 	parsePhone
 }

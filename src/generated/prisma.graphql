@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Fri Nov 09 2018 20:51:55 GMT+0300 (RTZ 2 (зима))
+# timestamp: Tue Nov 20 2018 21:23:03 GMT+0300 (RTZ 2 (зима))
 
 type AggregateDept {
   count: Int!
@@ -17,7 +17,7 @@ type AggregateEvent {
   count: Int!
 }
 
-type AggregateFile1 {
+type AggregateFileLink {
   count: Int!
 }
 
@@ -1574,37 +1574,37 @@ input EventWhereUniqueInput {
   id: ID
 }
 
-type File1 implements Node {
+type FileLink implements Node {
   id: ID!
   name: String!
   storeId: ID
 }
 
 """A connection to a list of items."""
-type File1Connection {
+type FileLinkConnection {
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
   """A list of edges."""
-  edges: [File1Edge]!
-  aggregate: AggregateFile1!
+  edges: [FileLinkEdge]!
+  aggregate: AggregateFileLink!
 }
 
-input File1CreateInput {
+input FileLinkCreateInput {
   name: String!
   storeId: ID
 }
 
 """An edge in a connection."""
-type File1Edge {
+type FileLinkEdge {
   """The item at the end of the edge."""
-  node: File1!
+  node: FileLink!
 
   """A cursor for use in pagination."""
   cursor: String!
 }
 
-enum File1OrderByInput {
+enum FileLinkOrderByInput {
   id_ASC
   id_DESC
   name_ASC
@@ -1617,28 +1617,28 @@ enum File1OrderByInput {
   createdAt_DESC
 }
 
-type File1PreviousValues {
+type FileLinkPreviousValues {
   id: ID!
   name: String!
   storeId: ID
 }
 
-type File1SubscriptionPayload {
+type FileLinkSubscriptionPayload {
   mutation: MutationType!
-  node: File1
+  node: FileLink
   updatedFields: [String!]
-  previousValues: File1PreviousValues
+  previousValues: FileLinkPreviousValues
 }
 
-input File1SubscriptionWhereInput {
+input FileLinkSubscriptionWhereInput {
   """Logical AND on all given filters."""
-  AND: [File1SubscriptionWhereInput!]
+  AND: [FileLinkSubscriptionWhereInput!]
 
   """Logical OR on all given filters."""
-  OR: [File1SubscriptionWhereInput!]
+  OR: [FileLinkSubscriptionWhereInput!]
 
   """Logical NOT on all given filters combined by AND."""
-  NOT: [File1SubscriptionWhereInput!]
+  NOT: [FileLinkSubscriptionWhereInput!]
 
   """
   The subscription event gets dispatched when it's listed in mutation_in
@@ -1659,28 +1659,28 @@ input File1SubscriptionWhereInput {
   The subscription event gets only dispatched when some of the field names included in this list have been updated
   """
   updatedFields_contains_some: [String!]
-  node: File1WhereInput
+  node: FileLinkWhereInput
 }
 
-input File1UpdateInput {
+input FileLinkUpdateInput {
   name: String
   storeId: ID
 }
 
-input File1UpdateManyMutationInput {
+input FileLinkUpdateManyMutationInput {
   name: String
   storeId: ID
 }
 
-input File1WhereInput {
+input FileLinkWhereInput {
   """Logical AND on all given filters."""
-  AND: [File1WhereInput!]
+  AND: [FileLinkWhereInput!]
 
   """Logical OR on all given filters."""
-  OR: [File1WhereInput!]
+  OR: [FileLinkWhereInput!]
 
   """Logical NOT on all given filters combined by AND."""
-  NOT: [File1WhereInput!]
+  NOT: [FileLinkWhereInput!]
   id: ID
 
   """All values that are not equal to given value."""
@@ -1803,7 +1803,7 @@ input File1WhereInput {
   storeId_not_ends_with: ID
 }
 
-input File1WhereUniqueInput {
+input FileLinkWhereUniqueInput {
   id: ID
 }
 
@@ -2168,7 +2168,7 @@ type Mutation {
   createOrg(data: OrgCreateInput!): Org!
   createDept(data: DeptCreateInput!): Dept!
   createEnquiry(data: EnquiryCreateInput!): Enquiry!
-  createFile1(data: File1CreateInput!): File1!
+  createFileLink(data: FileLinkCreateInput!): FileLink!
   createEvent(data: EventCreateInput!): Event!
   createOrder(data: OrderCreateInput!): Order!
   createModel(data: ModelCreateInput!): Model!
@@ -2180,7 +2180,7 @@ type Mutation {
   updateOrg(data: OrgUpdateInput!, where: OrgWhereUniqueInput!): Org
   updateDept(data: DeptUpdateInput!, where: DeptWhereUniqueInput!): Dept
   updateEnquiry(data: EnquiryUpdateInput!, where: EnquiryWhereUniqueInput!): Enquiry
-  updateFile1(data: File1UpdateInput!, where: File1WhereUniqueInput!): File1
+  updateFileLink(data: FileLinkUpdateInput!, where: FileLinkWhereUniqueInput!): FileLink
   updateEvent(data: EventUpdateInput!, where: EventWhereUniqueInput!): Event
   updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
   updateModel(data: ModelUpdateInput!, where: ModelWhereUniqueInput!): Model
@@ -2192,7 +2192,7 @@ type Mutation {
   deleteOrg(where: OrgWhereUniqueInput!): Org
   deleteDept(where: DeptWhereUniqueInput!): Dept
   deleteEnquiry(where: EnquiryWhereUniqueInput!): Enquiry
-  deleteFile1(where: File1WhereUniqueInput!): File1
+  deleteFileLink(where: FileLinkWhereUniqueInput!): FileLink
   deleteEvent(where: EventWhereUniqueInput!): Event
   deleteOrder(where: OrderWhereUniqueInput!): Order
   deleteModel(where: ModelWhereUniqueInput!): Model
@@ -2204,7 +2204,7 @@ type Mutation {
   upsertOrg(where: OrgWhereUniqueInput!, create: OrgCreateInput!, update: OrgUpdateInput!): Org!
   upsertDept(where: DeptWhereUniqueInput!, create: DeptCreateInput!, update: DeptUpdateInput!): Dept!
   upsertEnquiry(where: EnquiryWhereUniqueInput!, create: EnquiryCreateInput!, update: EnquiryUpdateInput!): Enquiry!
-  upsertFile1(where: File1WhereUniqueInput!, create: File1CreateInput!, update: File1UpdateInput!): File1!
+  upsertFileLink(where: FileLinkWhereUniqueInput!, create: FileLinkCreateInput!, update: FileLinkUpdateInput!): FileLink!
   upsertEvent(where: EventWhereUniqueInput!, create: EventCreateInput!, update: EventUpdateInput!): Event!
   upsertOrder(where: OrderWhereUniqueInput!, create: OrderCreateInput!, update: OrderUpdateInput!): Order!
   upsertModel(where: ModelWhereUniqueInput!, create: ModelCreateInput!, update: ModelUpdateInput!): Model!
@@ -2216,7 +2216,7 @@ type Mutation {
   updateManyOrgs(data: OrgUpdateManyMutationInput!, where: OrgWhereInput): BatchPayload!
   updateManyDepts(data: DeptUpdateManyMutationInput!, where: DeptWhereInput): BatchPayload!
   updateManyEnquiries(data: EnquiryUpdateManyMutationInput!, where: EnquiryWhereInput): BatchPayload!
-  updateManyFile1s(data: File1UpdateManyMutationInput!, where: File1WhereInput): BatchPayload!
+  updateManyFileLinks(data: FileLinkUpdateManyMutationInput!, where: FileLinkWhereInput): BatchPayload!
   updateManyEvents(data: EventUpdateManyMutationInput!, where: EventWhereInput): BatchPayload!
   updateManyOrders(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
   updateManyModels(data: ModelUpdateManyMutationInput!, where: ModelWhereInput): BatchPayload!
@@ -2228,7 +2228,7 @@ type Mutation {
   deleteManyOrgs(where: OrgWhereInput): BatchPayload!
   deleteManyDepts(where: DeptWhereInput): BatchPayload!
   deleteManyEnquiries(where: EnquiryWhereInput): BatchPayload!
-  deleteManyFile1s(where: File1WhereInput): BatchPayload!
+  deleteManyFileLinks(where: FileLinkWhereInput): BatchPayload!
   deleteManyEvents(where: EventWhereInput): BatchPayload!
   deleteManyOrders(where: OrderWhereInput): BatchPayload!
   deleteManyModels(where: ModelWhereInput): BatchPayload!
@@ -4192,7 +4192,7 @@ type Query {
   orgs(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Org]!
   depts(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Dept]!
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry]!
-  file1s(where: File1WhereInput, orderBy: File1OrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [File1]!
+  fileLinks(where: FileLinkWhereInput, orderBy: FileLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [FileLink]!
   events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event]!
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
   models(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Model]!
@@ -4204,7 +4204,7 @@ type Query {
   org(where: OrgWhereUniqueInput!): Org
   dept(where: DeptWhereUniqueInput!): Dept
   enquiry(where: EnquiryWhereUniqueInput!): Enquiry
-  file1(where: File1WhereUniqueInput!): File1
+  fileLink(where: FileLinkWhereUniqueInput!): FileLink
   event(where: EventWhereUniqueInput!): Event
   order(where: OrderWhereUniqueInput!): Order
   model(where: ModelWhereUniqueInput!): Model
@@ -4216,7 +4216,7 @@ type Query {
   orgsConnection(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgConnection!
   deptsConnection(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DeptConnection!
   enquiriesConnection(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EnquiryConnection!
-  file1sConnection(where: File1WhereInput, orderBy: File1OrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): File1Connection!
+  fileLinksConnection(where: FileLinkWhereInput, orderBy: FileLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileLinkConnection!
   eventsConnection(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EventConnection!
   ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
   modelsConnection(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ModelConnection!
@@ -4565,7 +4565,7 @@ type Subscription {
   org(where: OrgSubscriptionWhereInput): OrgSubscriptionPayload
   dept(where: DeptSubscriptionWhereInput): DeptSubscriptionPayload
   enquiry(where: EnquirySubscriptionWhereInput): EnquirySubscriptionPayload
-  file1(where: File1SubscriptionWhereInput): File1SubscriptionPayload
+  fileLink(where: FileLinkSubscriptionWhereInput): FileLinkSubscriptionPayload
   event(where: EventSubscriptionWhereInput): EventSubscriptionPayload
   order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
   model(where: ModelSubscriptionWhereInput): ModelSubscriptionPayload

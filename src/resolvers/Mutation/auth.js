@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const { parseOrThrow, parseFullname } = require('../../utils/format')
 
 const auth = {
 	async signup(_, {
@@ -13,7 +14,14 @@ const auth = {
 		let fName = fNameArg
 		let lName = lNameArg
 		let mName = mNameArg
-		[fNameDerived, lNameDerived, mNameDerived] = parseFullname
+		if (regName) {
+			const [fNameDerived, lNameDerived, mNameDerived] = parseOrThrow(parseFullname, regName)
+			fName = fNameArg || fNameDerived
+			lName = lNameArg || lNameDerived
+			mName = mNameArg || mNameDerived
+			console.log('fNameDerived, lNameDerived, mNameDerived > ', fNameDerived, lNameDerived, mNameDerived)
+		}
+		if (!fName) throw new Error('Не найдено имени для создания записи пользователя')
 		const passwordHash = await bcrypt.hash(password, 10)
 		const user = await ctx.db.mutation.createUser({
 			data: { 
@@ -22,7 +30,9 @@ const auth = {
 				person: {
 					create: {
 						fName,
-						lName
+						...lName && { lName },
+						...mName && { mName },
+						...regName && { regName },
 					}
 				}
 			}

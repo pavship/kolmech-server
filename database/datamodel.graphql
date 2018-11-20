@@ -47,7 +47,7 @@ type Enquiry {
 	status: Status
 }
 
-type File1 {
+type FileLink {
 	id: ID! @unique
 	name: String!
 	storeId: ID
