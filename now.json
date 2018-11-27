@@ -7,7 +7,8 @@
 		"SERVER_USER_ID": "@server-user-id",
 		"MOEDELO_SECRET": "@moe-delo-secret",
 		"GQ_TOKEN": "@gq-token",
-		"GQ_ENDPOINT": "@gq-endpoint"
+		"GQ_ENDPOINT": "@gq-endpoint",
+		"EMAIL_PASS": "@email-pass"
 	},
 	"alias": "now-advanced.now.sh",
 	"name": "now-advanced"

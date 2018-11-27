@@ -26,6 +26,11 @@ const enquiry = {
 					}
 				},
 				qty,
+				status: {
+					connect: {
+						id: newEnquiryStatus.id
+					}
+				},
 				events: {
 					create: [{
 						user: {
@@ -61,16 +66,19 @@ const enquiry = {
 		if ( orgId && !org) throw new Error(`Организация не найдена в базе`)
 		const model = modelId ? await db.query.model({ where: { id: modelId } }, '{ article name }') : null
 		if ( modelId && !model) throw new Error(`Изделие не найдено в базе`)
-		// const updatedFields = Object.keys(input).filter(f => f !== 'id')
-		// const fieldsToGet = updatedFields.reduce((res, f, i) => {
-		// 	res += (f === 'orgId') ? (' org { name }') : (' ' + f)
-		// 	if (i === updatedFields.length - 1) res += ' }'
-		// 	return res
-		// }, '{' )
-		// console.log('fieldsToGet > ', fieldsToGet)
-		// const oldEnquiry = await db.query.enquiry({
-		// 	where: { id }
-		// }, fieldsToGet)
+		const hiddenComments = {
+			// In case I need to dynamically generate fields to get: 
+			// const updatedFields = Object.keys(input).filter(f => f !== 'id')
+			// const fieldsToGet = updatedFields.reduce((res, f, i) => {
+			// 	res += (f === 'orgId') ? (' org { name }') : (' ' + f)
+			// 	if (i === updatedFields.length - 1) res += ' }'
+			// 	return res
+			// }, '{' )
+			// console.log('fieldsToGet > ', fieldsToGet)
+			// const oldEnquiry = await db.query.enquiry({
+			// 	where: { id }
+			// }, fieldsToGet)
+		}
 		const updatedEnquiry = await db.mutation.updateEnquiry({
 			where: { id },
 			data: {
@@ -152,38 +160,25 @@ const enquiry = {
 	},
 
 	async createEnquiryEvent(_, { enquiryId, htmlText, statusId, doc }, ctx, info) {
-        const { userId, db } = ctx
-        // // TODO make requests either parallel or combined
-        const status = statusId ? await db.query.status({where: {id: statusId}}, '{ name }') : null
-        // const prevStatusEvent = statusId ? await db.query.events({
-        //     where: {
-		// 		AND: [{
-		// 			enquiry: {
-		// 				id: enquiryId
-		// 			}
-		// 		}, {
-		// 			status: {
-		// 				id_not: null
-		// 			}
-		// 		}]
-		// 	},
-		// 	last: 1
-		// }, '{ id status { stage } }') : null
-		return db.mutation.createEvent({
+		const { userId, db } = ctx
+		const status = statusId ? await db.query.status({where: {id: statusId}}, '{ name }') : null
+		const createdEvent = await db.mutation.createEvent({
 			data: {
 				enquiry: {
 					connect: {
 						id: enquiryId
 					}
 				},
-				htmlText: 
-					(statusId && !doc ) ?  `<p>Изменил статус заявки на <strong>${status.name}</strong></p>` :
-					(statusId && doc )  ?  `<p>Создал <strong>коммерческое предложение</strong> с параметрами:</p><table><tbody>
-																			<tr><td></td><td>Дата</td><td><strong>${doc.dateLocal}</strong></td></tr>
-																			<tr><td></td><td>Сумма</td><td><strong>${currency(doc.amount, true)}</strong> с НДС</td></tr>
-																	</tbody></table>
-																	<p>Статус заявки изменен на <strong>${status.name}</strong></p>`.replace(/\t|\n/g, '')
-															:   htmlText,
+				htmlText:
+					(statusId && !doc )
+						?  `<p>Изменил статус заявки на <strong>${status.name}</strong></p>` :
+					(statusId && doc ) 
+						?  `<p>Создал <strong>коммерческое предложение</strong> с параметрами:</p><table><tbody>
+										<tr><td></td><td>Дата</td><td><strong>${doc.dateLocal}</strong></td></tr>
+										<tr><td></td><td>Сумма</td><td><strong>${currency(doc.amount, true)}</strong> с НДС</td></tr>
+								</tbody></table>
+								<p>Статус заявки изменен на <strong>${status.name}</strong></p>`.replace(/\t|\n/g, '')
+					: htmlText,
 				user: {
 					connect: {
 						id: userId
@@ -210,6 +205,30 @@ const enquiry = {
 				datetimeLocal: toLocalTimestamp(new Date())
 			}
 		}, info )
+		// If this is status changing or document event, update enquiry first
+		console.log('createdEvent > ', createdEvent)
+		if (statusId || doc) {
+			await db.mutation.updateEnquiry({
+				where: {
+					 id: enquiryId
+				},
+				data: {
+					status: {
+						connect: {
+							id: statusId
+						}
+					},
+					...(doc && {
+						docs: {
+							connect: {
+								id: createdEvent.doc.id
+							}
+						}
+					})
+				}
+			})
+		}
+		return createdEvent
 	},
  
 	// async deletePost(parent, { id }, ctx, info) {

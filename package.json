@@ -11,7 +11,10 @@
     "graphql-yoga": "1.16.0",
     "jsonwebtoken": "8.3.0",
     "node-fetch": "^2.2.0",
-    "prisma-binding": "2.1.4"
+    "nodemailer": "^4.7.0",
+    "password-generator": "^2.2.0",
+    "prisma-binding": "2.1.4",
+    "yup": "^0.26.6"
   },
   "devDependencies": {
     "dotenv": "6.0.0",

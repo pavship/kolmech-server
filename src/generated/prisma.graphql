@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Tue Nov 20 2018 21:23:03 GMT+0300 (RTZ 2 (зима))
+# timestamp: Sat Nov 24 2018 22:55:23 GMT+0300 (RTZ 2 (зима))
 
 type AggregateDept {
   count: Int!
@@ -42,6 +42,10 @@ type AggregateProd {
 }
 
 type AggregateStatus {
+  count: Int!
+}
+
+type AggregateTel {
   count: Int!
 }
 
@@ -2174,6 +2178,7 @@ type Mutation {
   createModel(data: ModelCreateInput!): Model!
   createProd(data: ProdCreateInput!): Prod!
   createStatus(data: StatusCreateInput!): Status!
+  createTel(data: TelCreateInput!): Tel!
   createDoc(data: DocCreateInput!): Doc!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updatePerson(data: PersonUpdateInput!, where: PersonWhereUniqueInput!): Person
@@ -2186,6 +2191,7 @@ type Mutation {
   updateModel(data: ModelUpdateInput!, where: ModelWhereUniqueInput!): Model
   updateProd(data: ProdUpdateInput!, where: ProdWhereUniqueInput!): Prod
   updateStatus(data: StatusUpdateInput!, where: StatusWhereUniqueInput!): Status
+  updateTel(data: TelUpdateInput!, where: TelWhereUniqueInput!): Tel
   updateDoc(data: DocUpdateInput!, where: DocWhereUniqueInput!): Doc
   deleteUser(where: UserWhereUniqueInput!): User
   deletePerson(where: PersonWhereUniqueInput!): Person
@@ -2198,6 +2204,7 @@ type Mutation {
   deleteModel(where: ModelWhereUniqueInput!): Model
   deleteProd(where: ProdWhereUniqueInput!): Prod
   deleteStatus(where: StatusWhereUniqueInput!): Status
+  deleteTel(where: TelWhereUniqueInput!): Tel
   deleteDoc(where: DocWhereUniqueInput!): Doc
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertPerson(where: PersonWhereUniqueInput!, create: PersonCreateInput!, update: PersonUpdateInput!): Person!
@@ -2210,6 +2217,7 @@ type Mutation {
   upsertModel(where: ModelWhereUniqueInput!, create: ModelCreateInput!, update: ModelUpdateInput!): Model!
   upsertProd(where: ProdWhereUniqueInput!, create: ProdCreateInput!, update: ProdUpdateInput!): Prod!
   upsertStatus(where: StatusWhereUniqueInput!, create: StatusCreateInput!, update: StatusUpdateInput!): Status!
+  upsertTel(where: TelWhereUniqueInput!, create: TelCreateInput!, update: TelUpdateInput!): Tel!
   upsertDoc(where: DocWhereUniqueInput!, create: DocCreateInput!, update: DocUpdateInput!): Doc!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyPersons(data: PersonUpdateManyMutationInput!, where: PersonWhereInput): BatchPayload!
@@ -2222,6 +2230,7 @@ type Mutation {
   updateManyModels(data: ModelUpdateManyMutationInput!, where: ModelWhereInput): BatchPayload!
   updateManyProds(data: ProdUpdateManyMutationInput!, where: ProdWhereInput): BatchPayload!
   updateManyStatuses(data: StatusUpdateManyMutationInput!, where: StatusWhereInput): BatchPayload!
+  updateManyTels(data: TelUpdateManyMutationInput!, where: TelWhereInput): BatchPayload!
   updateManyDocs(data: DocUpdateManyMutationInput!, where: DocWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyPersons(where: PersonWhereInput): BatchPayload!
@@ -2234,6 +2243,7 @@ type Mutation {
   deleteManyModels(where: ModelWhereInput): BatchPayload!
   deleteManyProds(where: ProdWhereInput): BatchPayload!
   deleteManyStatuses(where: StatusWhereInput): BatchPayload!
+  deleteManyTels(where: TelWhereInput): BatchPayload!
   deleteManyDocs(where: DocWhereInput): BatchPayload!
 }
 
@@ -3258,6 +3268,7 @@ type Person implements Node {
   mName: String
   regName: String
   user: User
+  tels(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tel!]
 }
 
 """A connection to a list of items."""
@@ -3276,6 +3287,7 @@ input PersonCreateInput {
   mName: String
   regName: String
   user: UserCreateOneWithoutPersonInput
+  tels: TelCreateManyInput
 }
 
 input PersonCreateOneWithoutUserInput {
@@ -3288,6 +3300,7 @@ input PersonCreateWithoutUserInput {
   lName: String
   mName: String
   regName: String
+  tels: TelCreateManyInput
 }
 
 """An edge in a connection."""
@@ -3369,6 +3382,7 @@ input PersonUpdateInput {
   mName: String
   regName: String
   user: UserUpdateOneWithoutPersonInput
+  tels: TelUpdateManyInput
 }
 
 input PersonUpdateManyMutationInput {
@@ -3392,6 +3406,7 @@ input PersonUpdateWithoutUserDataInput {
   lName: String
   mName: String
   regName: String
+  tels: TelUpdateManyInput
 }
 
 input PersonUpsertWithoutUserInput {
@@ -3609,6 +3624,9 @@ input PersonWhereInput {
   """All values not ending with the given string."""
   regName_not_ends_with: String
   user: UserWhereInput
+  tels_every: TelWhereInput
+  tels_some: TelWhereInput
+  tels_none: TelWhereInput
 }
 
 input PersonWhereUniqueInput {
@@ -4198,6 +4216,7 @@ type Query {
   models(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Model]!
   prods(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Prod]!
   statuses(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Status]!
+  tels(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tel]!
   docs(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Doc]!
   user(where: UserWhereUniqueInput!): User
   person(where: PersonWhereUniqueInput!): Person
@@ -4210,6 +4229,7 @@ type Query {
   model(where: ModelWhereUniqueInput!): Model
   prod(where: ProdWhereUniqueInput!): Prod
   status(where: StatusWhereUniqueInput!): Status
+  tel(where: TelWhereUniqueInput!): Tel
   doc(where: DocWhereUniqueInput!): Doc
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   personsConnection(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PersonConnection!
@@ -4222,6 +4242,7 @@ type Query {
   modelsConnection(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ModelConnection!
   prodsConnection(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProdConnection!
   statusesConnection(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StatusConnection!
+  telsConnection(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TelConnection!
   docsConnection(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DocConnection!
 
   """Fetches an object given its ID"""
@@ -4571,12 +4592,313 @@ type Subscription {
   model(where: ModelSubscriptionWhereInput): ModelSubscriptionPayload
   prod(where: ProdSubscriptionWhereInput): ProdSubscriptionPayload
   status(where: StatusSubscriptionWhereInput): StatusSubscriptionPayload
+  tel(where: TelSubscriptionWhereInput): TelSubscriptionPayload
   doc(where: DocSubscriptionWhereInput): DocSubscriptionPayload
+}
+
+type Tel implements Node {
+  id: ID!
+  number: String!
+  type: TelType
+  note: String
+  default: Boolean
+}
+
+"""A connection to a list of items."""
+type TelConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [TelEdge]!
+  aggregate: AggregateTel!
+}
+
+input TelCreateInput {
+  number: String!
+  type: TelType
+  note: String
+  default: Boolean
+}
+
+input TelCreateManyInput {
+  create: [TelCreateInput!]
+  connect: [TelWhereUniqueInput!]
+}
+
+"""An edge in a connection."""
+type TelEdge {
+  """The item at the end of the edge."""
+  node: Tel!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum TelOrderByInput {
+  id_ASC
+  id_DESC
+  number_ASC
+  number_DESC
+  type_ASC
+  type_DESC
+  note_ASC
+  note_DESC
+  default_ASC
+  default_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type TelPreviousValues {
+  id: ID!
+  number: String!
+  type: TelType
+  note: String
+  default: Boolean
+}
+
+type TelSubscriptionPayload {
+  mutation: MutationType!
+  node: Tel
+  updatedFields: [String!]
+  previousValues: TelPreviousValues
+}
+
+input TelSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [TelSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [TelSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [TelSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: TelWhereInput
+}
+
+enum TelType {
+  WORK
+  MOBILE
+  OTHER
+}
+
+input TelUpdateDataInput {
+  number: String
+  type: TelType
+  note: String
+  default: Boolean
+}
+
+input TelUpdateInput {
+  number: String
+  type: TelType
+  note: String
+  default: Boolean
+}
+
+input TelUpdateManyInput {
+  create: [TelCreateInput!]
+  connect: [TelWhereUniqueInput!]
+  disconnect: [TelWhereUniqueInput!]
+  delete: [TelWhereUniqueInput!]
+  update: [TelUpdateWithWhereUniqueNestedInput!]
+  upsert: [TelUpsertWithWhereUniqueNestedInput!]
+}
+
+input TelUpdateManyMutationInput {
+  number: String
+  type: TelType
+  note: String
+  default: Boolean
+}
+
+input TelUpdateWithWhereUniqueNestedInput {
+  where: TelWhereUniqueInput!
+  data: TelUpdateDataInput!
+}
+
+input TelUpsertWithWhereUniqueNestedInput {
+  where: TelWhereUniqueInput!
+  update: TelUpdateDataInput!
+  create: TelCreateInput!
+}
+
+input TelWhereInput {
+  """Logical AND on all given filters."""
+  AND: [TelWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [TelWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [TelWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  number: String
+
+  """All values that are not equal to given value."""
+  number_not: String
+
+  """All values that are contained in given list."""
+  number_in: [String!]
+
+  """All values that are not contained in given list."""
+  number_not_in: [String!]
+
+  """All values less than the given value."""
+  number_lt: String
+
+  """All values less than or equal the given value."""
+  number_lte: String
+
+  """All values greater than the given value."""
+  number_gt: String
+
+  """All values greater than or equal the given value."""
+  number_gte: String
+
+  """All values containing the given string."""
+  number_contains: String
+
+  """All values not containing the given string."""
+  number_not_contains: String
+
+  """All values starting with the given string."""
+  number_starts_with: String
+
+  """All values not starting with the given string."""
+  number_not_starts_with: String
+
+  """All values ending with the given string."""
+  number_ends_with: String
+
+  """All values not ending with the given string."""
+  number_not_ends_with: String
+  type: TelType
+
+  """All values that are not equal to given value."""
+  type_not: TelType
+
+  """All values that are contained in given list."""
+  type_in: [TelType!]
+
+  """All values that are not contained in given list."""
+  type_not_in: [TelType!]
+  note: String
+
+  """All values that are not equal to given value."""
+  note_not: String
+
+  """All values that are contained in given list."""
+  note_in: [String!]
+
+  """All values that are not contained in given list."""
+  note_not_in: [String!]
+
+  """All values less than the given value."""
+  note_lt: String
+
+  """All values less than or equal the given value."""
+  note_lte: String
+
+  """All values greater than the given value."""
+  note_gt: String
+
+  """All values greater than or equal the given value."""
+  note_gte: String
+
+  """All values containing the given string."""
+  note_contains: String
+
+  """All values not containing the given string."""
+  note_not_contains: String
+
+  """All values starting with the given string."""
+  note_starts_with: String
+
+  """All values not starting with the given string."""
+  note_not_starts_with: String
+
+  """All values ending with the given string."""
+  note_ends_with: String
+
+  """All values not ending with the given string."""
+  note_not_ends_with: String
+  default: Boolean
+
+  """All values that are not equal to given value."""
+  default_not: Boolean
+}
+
+input TelWhereUniqueInput {
+  id: ID
 }
 
 type User implements Node {
   id: ID!
   email: String!
+  confirmed: Boolean
   password: String!
   person: Person
   role: UserRole
@@ -4595,6 +4917,7 @@ type UserConnection {
 
 input UserCreateInput {
   email: String!
+  confirmed: Boolean
   password: String!
   role: UserRole
   person: PersonCreateOneWithoutUserInput
@@ -4613,6 +4936,7 @@ input UserCreateOneWithoutPersonInput {
 
 input UserCreateWithoutEventsInput {
   email: String!
+  confirmed: Boolean
   password: String!
   role: UserRole
   person: PersonCreateOneWithoutUserInput
@@ -4620,6 +4944,7 @@ input UserCreateWithoutEventsInput {
 
 input UserCreateWithoutPersonInput {
   email: String!
+  confirmed: Boolean
   password: String!
   role: UserRole
   events: EventCreateManyWithoutUserInput
@@ -4639,6 +4964,8 @@ enum UserOrderByInput {
   id_DESC
   email_ASC
   email_DESC
+  confirmed_ASC
+  confirmed_DESC
   password_ASC
   password_DESC
   role_ASC
@@ -4652,6 +4979,7 @@ enum UserOrderByInput {
 type UserPreviousValues {
   id: ID!
   email: String!
+  confirmed: Boolean
   password: String!
   role: UserRole
 }
@@ -4701,6 +5029,7 @@ input UserSubscriptionWhereInput {
 
 input UserUpdateInput {
   email: String
+  confirmed: Boolean
   password: String
   role: UserRole
   person: PersonUpdateOneWithoutUserInput
@@ -4709,6 +5038,7 @@ input UserUpdateInput {
 
 input UserUpdateManyMutationInput {
   email: String
+  confirmed: Boolean
   password: String
   role: UserRole
 }
@@ -4733,6 +5063,7 @@ input UserUpdateOneWithoutPersonInput {
 
 input UserUpdateWithoutEventsDataInput {
   email: String
+  confirmed: Boolean
   password: String
   role: UserRole
   person: PersonUpdateOneWithoutUserInput
@@ -4740,6 +5071,7 @@ input UserUpdateWithoutEventsDataInput {
 
 input UserUpdateWithoutPersonDataInput {
   email: String
+  confirmed: Boolean
   password: String
   role: UserRole
   events: EventUpdateManyWithoutUserInput
@@ -4844,6 +5176,10 @@ input UserWhereInput {
 
   """All values not ending with the given string."""
   email_not_ends_with: String
+  confirmed: Boolean
+
+  """All values that are not equal to given value."""
+  confirmed_not: Boolean
   password: String
 
   """All values that are not equal to given value."""

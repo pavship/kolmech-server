@@ -1,14 +1,36 @@
 const { GraphQLClient  } = require('graphql-request')
+const jwt = require('jsonwebtoken')
+const { reportToDeveloper } = require('../utils/mail')
 
 const client = new GraphQLClient( 
-    process.env.GQ_ENDPOINT, 
+	process.env.GQ_ENDPOINT, 
 	{ headers: { Authorization: `Bearer ${process.env.GQ_TOKEN}` } }
 )
 
 const Query = {
 	me(_, __, ctx, info) {
-        const { userId, db } = ctx
-        return db.query.user({ where: { id: userId } }, info)
+		const { userId, db } = ctx
+		return db.query.user({ where: { id: userId } }, info)
+	},
+	
+	async confirmEmail(_, { token }, ctx, info) {
+		try {
+			const { userId } = jwt.verify( token, process.env.APP_SECRET)
+			const updatedUser = await ctx.db.mutation.updateUser({
+				where: {
+					id: userId
+				},
+				data: {
+					confirmed: true
+				}
+			})
+			return {
+				email: updatedUser.email
+			}
+		} catch (err) {
+			reportToDeveloper(err)
+			throw err
+		}
 	},
 
 	enquiries(_, __, ctx, info) {
@@ -36,21 +58,7 @@ const Query = {
 	},
     
 	async models(_, __, ctx, info) {
-        return ctx.db.query.models({ orderBy: 'name_ASC' }, info)
-        // try {
-        //     const models = await client.request(`{
-        //         allModels {
-        //             id
-        //             article
-        //             name
-        //         }
-        //     }`)
-        //     // console.log('models > ', models)
-        //     return models.allModels
-            
-        // } catch (err) {
-        //     console.log('err > ', err)
-        // }
+		return ctx.db.query.models({ orderBy: 'name_ASC' }, info)
 	},
 
 	modelProds(_, { modelId }, ctx, info) {

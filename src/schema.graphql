@@ -2,6 +2,7 @@
 
 type Query {
   me: User
+  confirmEmail(token: String!): AuthPayload
   enquiries: [Enquiry!]!
   enquiry (id: ID!): Enquiry
   order (id: ID!): Order
@@ -14,7 +15,7 @@ type Query {
 }
 
 type Mutation {
-  signup(email: String!, password: String!, fName: String, lName: String, mName: String, regName: String): AuthPayload!
+  signup(email: String!, password: String!, fName: String, lName: String, mName: String, regName: String, tel: String, country: String): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
   createEnquiry(dateLocal: String!, orgId: ID!, modelId: ID!, qty: Int!): Enquiry
   signupAndCreateEnquiry(orgId: ID!, regName: String!, email: String!, tel: String!, country: String!, modelName: String!, qty: Int!, period: String!, deadlineDateLocal: String, htmlText: String, orgId: ID!, files: [FileLinkCreateInput!]!, hasAgreedToRules: Boolean!, hasAgreedToSearch3rdParty: Boolean): Enquiry
@@ -39,6 +40,8 @@ type Subscription {
 
 type AuthPayload {
   token: String!
+  email: String
+  person: Person
 }
 
 type MoveProdPayload {

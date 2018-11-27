@@ -1,6 +1,7 @@
 type User {
 	id: ID! @unique
 	email: String! @unique
+	confirmed: Boolean
 	password: String!
 	person: Person
 	role: UserRole
@@ -14,6 +15,15 @@ type Person {
 	mName: String
 	regName: String
 	user: User
+	tels: [Tel!]!
+}
+
+type Tel {
+	id: ID! @unique
+	number: String!
+	type: TelType
+	note: String
+	default: Boolean
 }
 
 type Org {
@@ -119,6 +129,12 @@ type Prod {
   number: Int
   progress: Float
   year: Int
+}
+
+enum TelType {
+  WORK
+  MOBILE
+  OTHER
 }
 
 enum DeptType {

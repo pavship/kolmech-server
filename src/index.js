@@ -23,4 +23,6 @@ const server = new GraphQLServer({
 	})
 })
 
+// server.express.get('/confirm/:token', confirmEmail)
+
 server.start({ tracing: false }, () => console.log('Server is running on http://localhost:4000'))

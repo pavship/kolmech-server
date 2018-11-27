@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { parseOrThrow, parseFullname } = require('../../utils/format')
+const { parseOrThrow, parseFullname, parsePhone } = require('../../utils/format')
+const nodemailer = require('nodemailer')
+const { serverTransporter } = require('../../utils/mail')
 
 const auth = {
 	async signup(_, {
@@ -9,7 +11,9 @@ const auth = {
 		fName: fNameArg,
 		lName: lNameArg,
 		mName: mNameArg,
-		regName
+		regName,
+		tel: telInput,
+		country
 	}, ctx, info) {
 		let fName = fNameArg
 		let lName = lNameArg
@@ -21,11 +25,18 @@ const auth = {
 			mName = mNameArg || mNameDerived
 			console.log('fNameDerived, lNameDerived, mNameDerived > ', fNameDerived, lNameDerived, mNameDerived)
 		}
-		if (!fName) throw new Error('Не найдено имени для создания записи пользователя')
+		if (!fName) throw new Error('Введите Ваше полное имя для регистрации')
+		let tel = ''
+		if (telInput) {
+			if (!country) throw new Error('Не указан код страны телефона')
+			tel = parseOrThrow(parsePhone, telInput, { country })
+			console.log('tel > ', tel)
+		}
 		const passwordHash = await bcrypt.hash(password, 10)
 		const user = await ctx.db.mutation.createUser({
-			data: { 
-				email, 
+			data: {
+				email,
+				confirmed: false,
 				password: passwordHash,
 				person: {
 					create: {
@@ -33,17 +44,54 @@ const auth = {
 						...lName && { lName },
 						...mName && { mName },
 						...regName && { regName },
+						...(tel && {
+							tels: {
+								create: {
+									number: tel,
+									default: true
+								}
+							}
+						})
 					}
 				}
 			}
 		})
+		// TODO Send email confirmation link, thus check the email address exists
+		const confirmationToken = jwt.sign(
+			{ userId: user.id },
+			process.env.APP_SECRET
+		)
+		const confirmationUrl = 'http://localhost:3003/confirm/' + confirmationToken
+		// let transporter = nodemailer.createTransport({
+		// 	service: '"Yandex"', // no need to set host or port etc.
+		// 	auth: {
+		// 			user: 'pavship.dev@yandex.ru',
+		// 			pass: process.env.EMAIL_PASS,
+		// 	}
+		// })
+		let mailOptions = {
+			from: '"honingovanie.ru" <pavship.dev@yandex.ru>', // sender address
+			to: 'pavship.developer@tutamail.com', // list of receivers
+			subject: 'Подтвердите email @', // Subject line
+			// text: 'Hello world?', // plain text body
+			html: `<p>Пожалуйста подтвердите свой email, нажав на <a href="${confirmationUrl}">эту ссылку</a>.`
+		}
+		serverTransporter.sendMail(mailOptions, (error, info) => {
+			if (error) {
+				console.log(error)
+				// In case email is invalid, reject with explanatory error message
+				throw new Error('Не удалось отправить почту на указанный email')
+			}
+			console.log('Message sent: %s', info.messageId);
+		})
+		const token = jwt.sign(
+			{ userId: user.id },
+			process.env.APP_SECRET,
+			{ expiresIn: '15h' }
+		)
 		return {
-			token: jwt.sign(
-				{ userId: user.id },
-				process.env.APP_SECRET,
-				{ expiresIn: '15h' }
-			),
-			// user,
+			token,
+			person: user.person
 		}
 	},
 
@@ -62,15 +110,23 @@ const auth = {
 				{ userId: user.id },
 				process.env.APP_SECRET,
 				{ expiresIn: '15h' }
-			),
-			// user: {
-			// 	email: user.email,
-			// 	person: {
-			// 			fName: user.person.fName
-			// 	}
-			// }
+			)
 		}
 	},
 }
 
-module.exports = { auth }
+const confirmEmail = async (req, res) => {
+	const { token } = req.params
+	const { userId } = jwt.verify( token, process.env.APP_SECRET)
+	await ctx.db.mutation.updateUser({
+		where: {
+			id: userId
+		},
+		data: {
+			confirmed: true
+		}
+	})
+	return res.redirect('http://localhost:3001/')
+}
+
+module.exports = { auth, confirmEmail }

@@ -1,6 +1,11 @@
 const jwt = require('jsonwebtoken')
 
-const unrestrictedOperations = ['Login', 'CreateOrg', 'SignupAndCreateEnquiry']
+const unrestrictedOperations = [
+	'Login',
+	'CreateOrg',
+	'SignupAndCreateEnquiry',
+	'ConfirmEmail'
+]
 
 function getUserId(ctx) {
 	// console.log('Object.keys(request) > ', Object.keys(request))
@@ -35,6 +40,20 @@ function getUserId(ctx) {
 	// throw new Error({id: '1', name: 'df', inn: '23'})
 }
 
+const confirmEmail = async (req, res) => {
+	const { token } = req.params
+	const { userId } = jwt.verify( token, APP_SECRET)
+	await ctx.db.mutation.updateUser({
+		where: {
+			id: userId
+		},
+		data: {
+			confirmed: true
+		}
+	})
+	return res.redirect('http://localhost:3001/')
+}
+
 class AuthError extends Error {
 	constructor() {
 		super('Not authorized')
@@ -43,5 +62,6 @@ class AuthError extends Error {
 
 module.exports = {
 	getUserId,
-	AuthError
+	AuthError,
+	confirmEmail
 }
