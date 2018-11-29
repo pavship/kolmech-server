@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Wed Nov 28 2018 18:04:38 GMT+0300 (RTZ 2 (зима))
+# timestamp: Thu Nov 29 2018 17:01:44 GMT+0300 (RTZ 2 (зима))
 
 type AggregateDept {
   count: Int!
@@ -3582,7 +3582,7 @@ type PageInfo {
 
 type Person implements Node {
   id: ID!
-  fName: String!
+  fName: String
   lName: String
   mName: String
   regName: String
@@ -3604,7 +3604,7 @@ type PersonConnection {
 }
 
 input PersonCreateInput {
-  fName: String!
+  fName: String
   lName: String
   mName: String
   regName: String
@@ -3626,7 +3626,7 @@ input PersonCreateOneWithoutUserInput {
 }
 
 input PersonCreateWithoutEmployeesInput {
-  fName: String!
+  fName: String
   lName: String
   mName: String
   regName: String
@@ -3637,7 +3637,7 @@ input PersonCreateWithoutEmployeesInput {
 }
 
 input PersonCreateWithoutUserInput {
-  fName: String!
+  fName: String
   lName: String
   mName: String
   regName: String
@@ -3679,7 +3679,7 @@ enum PersonOrderByInput {
 
 type PersonPreviousValues {
   id: ID!
-  fName: String!
+  fName: String
   lName: String
   mName: String
   regName: String
@@ -5032,6 +5032,7 @@ type Tel implements Node {
   id: ID!
   number: String!
   type: TelType
+  country: String
   note: String
   default: Boolean
 }
@@ -5049,6 +5050,7 @@ type TelConnection {
 input TelCreateInput {
   number: String!
   type: TelType
+  country: String
   note: String
   default: Boolean
 }
@@ -5074,6 +5076,8 @@ enum TelOrderByInput {
   number_DESC
   type_ASC
   type_DESC
+  country_ASC
+  country_DESC
   note_ASC
   note_DESC
   default_ASC
@@ -5088,6 +5092,7 @@ type TelPreviousValues {
   id: ID!
   number: String!
   type: TelType
+  country: String
   note: String
   default: Boolean
 }
@@ -5140,6 +5145,7 @@ enum TelType {
 input TelUpdateDataInput {
   number: String
   type: TelType
+  country: String
   note: String
   default: Boolean
 }
@@ -5147,6 +5153,7 @@ input TelUpdateDataInput {
 input TelUpdateInput {
   number: String
   type: TelType
+  country: String
   note: String
   default: Boolean
 }
@@ -5163,6 +5170,7 @@ input TelUpdateManyInput {
 input TelUpdateManyMutationInput {
   number: String
   type: TelType
+  country: String
   note: String
   default: Boolean
 }
@@ -5277,6 +5285,46 @@ input TelWhereInput {
 
   """All values that are not contained in given list."""
   type_not_in: [TelType!]
+  country: String
+
+  """All values that are not equal to given value."""
+  country_not: String
+
+  """All values that are contained in given list."""
+  country_in: [String!]
+
+  """All values that are not contained in given list."""
+  country_not_in: [String!]
+
+  """All values less than the given value."""
+  country_lt: String
+
+  """All values less than or equal the given value."""
+  country_lte: String
+
+  """All values greater than the given value."""
+  country_gt: String
+
+  """All values greater than or equal the given value."""
+  country_gte: String
+
+  """All values containing the given string."""
+  country_contains: String
+
+  """All values not containing the given string."""
+  country_not_contains: String
+
+  """All values starting with the given string."""
+  country_starts_with: String
+
+  """All values not starting with the given string."""
+  country_not_starts_with: String
+
+  """All values ending with the given string."""
+  country_ends_with: String
+
+  """All values not ending with the given string."""
+  country_not_ends_with: String
   note: String
 
   """All values that are not equal to given value."""

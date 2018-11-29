@@ -1,8 +1,11 @@
+const { tel: { upsertTel } } = require('./tel')
+
 const person = {
 	async upsertPerson(_, { input }, ctx, info) {
     const { userId, db } = ctx
     const {
-      id,
+			id,
+			tels,
       ...planeInput
     } = input
     const {
@@ -12,18 +15,30 @@ const person = {
 		// if (id) {
     //   const personExists = await db.exists.Person({ id: person.id })
     //   if (!personExists) throw new Error(`Личность отсутствует в базе`)
-    // }
-		return db.mutation.upsertPerson({
+		// }
+		console.log('input > ', input)
+		console.log('id > ', id)
+		console.log('planeInput > ', planeInput)
+		const upsertedPerson = db.mutation.upsertPerson({
 			where: {
 				id: id || 'new'
 			},
 			create: {
-				...planeInput,
+				...planeInput
 			},
 			update: {
 				...planeInput,
 			}
-		}, info)
+		}, '{ id }')
+		if (tels) {
+			await Promise.all(tels.map((tel, i) => {
+				// first added tel is the default one
+				if (!id && i === 0) tel.default = true
+				if (!tel.id) tel.personId = upsertedPerson.id
+				return upsertTel(_, { input: tel }, ctx, '{ id }')
+			}))
+		}
+		return db.query.person({ where: {id: upsertedPerson.id}}, info)
   }
 }
 

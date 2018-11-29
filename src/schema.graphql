@@ -27,8 +27,9 @@ type Mutation {
   deleteOrg(id: ID!): Org
   deleteAllOrgs: BatchPayload!
   upsertOrder(id: ID, enquiryId: ID, dateLocal: String!, qty: Int, amount: Float): Order
+  upsertTel(input: TelInput!): Tel
   reserveProds(orderId: ID!, prodIds: [ID!]!): Order
-  upsertPerson(input: PersonCreateInput!): Person
+  upsertPerson(input: PersonInput!): Person
   upsertProd(input: ProdInput!): Prod
   upsertEmployee(input: EmployeeInput!): Employee
   moveProds(to: ID!, prodIds: [ID!]!): MoveProdPayload!
@@ -80,5 +81,26 @@ input EmployeeInput {
   id: ID
   orgId: ID
   position: String
-  person: PersonCreateInput
+  person: PersonInput
+}
+
+input PersonInput {
+  id: ID
+	fName: String
+	lName: String
+	mName: String
+	regName: String
+	regNameChecked: Boolean
+	htmlNote: String
+	tels: [TelInput!]
+}
+
+input TelInput {
+  id: ID
+  personId: ID
+	number: String
+	type: TelType
+	country: String
+	note: String
+	default: Boolean
 }

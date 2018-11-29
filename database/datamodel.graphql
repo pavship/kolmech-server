@@ -10,7 +10,7 @@ type User {
 
 type Person {
 	id: ID! @unique
-	fName: String!
+	fName: String
 	lName: String
 	mName: String
 	regName: String
@@ -25,6 +25,7 @@ type Tel {
 	id: ID! @unique
 	number: String!
 	type: TelType
+	country: String
 	note: String
 	default: Boolean
 }
