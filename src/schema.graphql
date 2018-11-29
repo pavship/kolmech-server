@@ -7,6 +7,7 @@ type Query {
   enquiry (id: ID!): Enquiry
   order (id: ID!): Order
   orgs: [Org!]!
+  orgEmployees (orgId: ID!): [Employee!]!
   depts: [Dept!]!
   statuses: [Status!]!
   models: [Model!]!
@@ -27,7 +28,9 @@ type Mutation {
   deleteAllOrgs: BatchPayload!
   upsertOrder(id: ID, enquiryId: ID, dateLocal: String!, qty: Int, amount: Float): Order
   reserveProds(orderId: ID!, prodIds: [ID!]!): Order
+  upsertPerson(input: PersonCreateInput!): Person
   upsertProd(input: ProdInput!): Prod
+  upsertEmployee(input: EmployeeInput!): Employee
   moveProds(to: ID!, prodIds: [ID!]!): MoveProdPayload!
   importModels: BatchPayload!
   seedEnquiryStatuses: BatchPayload!
@@ -71,4 +74,11 @@ input ProdInput {
   year: Int
   deptId: ID
   modelId: ID
+}
+
+input EmployeeInput {
+  id: ID
+  orgId: ID
+  position: String
+  person: PersonCreateInput
 }

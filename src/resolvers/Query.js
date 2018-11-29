@@ -48,6 +48,10 @@ const Query = {
 	orgs(_, __, ctx, info) {
 		return ctx.db.query.orgs({ orderBy: 'name_ASC' }, info)
 	},
+
+	orgEmployees(_, { orgId }, ctx, info) {
+		return ctx.db.query.employees({ where: { org: { id: orgId } } }, info)
+	},
         
 	depts(_, __, ctx, info) {
 		return ctx.db.query.depts({ orderBy: 'type_ASC' }, info)

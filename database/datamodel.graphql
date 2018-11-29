@@ -14,8 +14,11 @@ type Person {
 	lName: String
 	mName: String
 	regName: String
-	user: User
+	regNameChecked: Boolean
 	tels: [Tel!]!
+	htmlNote: String
+	user: User
+	employees: [Employee!]!
 }
 
 type Tel {
@@ -32,8 +35,16 @@ type Org {
 	moedeloId: String
 	name: String!
 	legalAddress: String
+	employees: [Employee!]!
 	enquiries: [Enquiry!]! @relation(name: "OrgEnquiries")
 	orders: [Order!]! @relation(name: "OrgOrders")
+}
+
+type Employee {
+	id: ID! @unique
+	person: Person!
+	org: Org!
+	position: String
 }
 
 type Dept {

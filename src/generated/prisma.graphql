@@ -1,11 +1,15 @@
 # source: http://localhost:4466
-# timestamp: Sat Nov 24 2018 22:55:23 GMT+0300 (RTZ 2 (зима))
+# timestamp: Wed Nov 28 2018 18:04:38 GMT+0300 (RTZ 2 (зима))
 
 type AggregateDept {
   count: Int!
 }
 
 type AggregateDoc {
+  count: Int!
+}
+
+type AggregateEmployee {
   count: Int!
 }
 
@@ -615,6 +619,270 @@ input DocWhereInput {
 }
 
 input DocWhereUniqueInput {
+  id: ID
+}
+
+type Employee implements Node {
+  id: ID!
+  person: Person!
+  org: Org!
+  position: String
+}
+
+"""A connection to a list of items."""
+type EmployeeConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [EmployeeEdge]!
+  aggregate: AggregateEmployee!
+}
+
+input EmployeeCreateInput {
+  position: String
+  person: PersonCreateOneWithoutEmployeesInput!
+  org: OrgCreateOneWithoutEmployeesInput!
+}
+
+input EmployeeCreateManyWithoutOrgInput {
+  create: [EmployeeCreateWithoutOrgInput!]
+  connect: [EmployeeWhereUniqueInput!]
+}
+
+input EmployeeCreateManyWithoutPersonInput {
+  create: [EmployeeCreateWithoutPersonInput!]
+  connect: [EmployeeWhereUniqueInput!]
+}
+
+input EmployeeCreateWithoutOrgInput {
+  position: String
+  person: PersonCreateOneWithoutEmployeesInput!
+}
+
+input EmployeeCreateWithoutPersonInput {
+  position: String
+  org: OrgCreateOneWithoutEmployeesInput!
+}
+
+"""An edge in a connection."""
+type EmployeeEdge {
+  """The item at the end of the edge."""
+  node: Employee!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum EmployeeOrderByInput {
+  id_ASC
+  id_DESC
+  position_ASC
+  position_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type EmployeePreviousValues {
+  id: ID!
+  position: String
+}
+
+type EmployeeSubscriptionPayload {
+  mutation: MutationType!
+  node: Employee
+  updatedFields: [String!]
+  previousValues: EmployeePreviousValues
+}
+
+input EmployeeSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [EmployeeSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [EmployeeSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [EmployeeSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: EmployeeWhereInput
+}
+
+input EmployeeUpdateInput {
+  position: String
+  person: PersonUpdateOneRequiredWithoutEmployeesInput
+  org: OrgUpdateOneRequiredWithoutEmployeesInput
+}
+
+input EmployeeUpdateManyMutationInput {
+  position: String
+}
+
+input EmployeeUpdateManyWithoutOrgInput {
+  create: [EmployeeCreateWithoutOrgInput!]
+  connect: [EmployeeWhereUniqueInput!]
+  disconnect: [EmployeeWhereUniqueInput!]
+  delete: [EmployeeWhereUniqueInput!]
+  update: [EmployeeUpdateWithWhereUniqueWithoutOrgInput!]
+  upsert: [EmployeeUpsertWithWhereUniqueWithoutOrgInput!]
+}
+
+input EmployeeUpdateManyWithoutPersonInput {
+  create: [EmployeeCreateWithoutPersonInput!]
+  connect: [EmployeeWhereUniqueInput!]
+  disconnect: [EmployeeWhereUniqueInput!]
+  delete: [EmployeeWhereUniqueInput!]
+  update: [EmployeeUpdateWithWhereUniqueWithoutPersonInput!]
+  upsert: [EmployeeUpsertWithWhereUniqueWithoutPersonInput!]
+}
+
+input EmployeeUpdateWithoutOrgDataInput {
+  position: String
+  person: PersonUpdateOneRequiredWithoutEmployeesInput
+}
+
+input EmployeeUpdateWithoutPersonDataInput {
+  position: String
+  org: OrgUpdateOneRequiredWithoutEmployeesInput
+}
+
+input EmployeeUpdateWithWhereUniqueWithoutOrgInput {
+  where: EmployeeWhereUniqueInput!
+  data: EmployeeUpdateWithoutOrgDataInput!
+}
+
+input EmployeeUpdateWithWhereUniqueWithoutPersonInput {
+  where: EmployeeWhereUniqueInput!
+  data: EmployeeUpdateWithoutPersonDataInput!
+}
+
+input EmployeeUpsertWithWhereUniqueWithoutOrgInput {
+  where: EmployeeWhereUniqueInput!
+  update: EmployeeUpdateWithoutOrgDataInput!
+  create: EmployeeCreateWithoutOrgInput!
+}
+
+input EmployeeUpsertWithWhereUniqueWithoutPersonInput {
+  where: EmployeeWhereUniqueInput!
+  update: EmployeeUpdateWithoutPersonDataInput!
+  create: EmployeeCreateWithoutPersonInput!
+}
+
+input EmployeeWhereInput {
+  """Logical AND on all given filters."""
+  AND: [EmployeeWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [EmployeeWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [EmployeeWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  position: String
+
+  """All values that are not equal to given value."""
+  position_not: String
+
+  """All values that are contained in given list."""
+  position_in: [String!]
+
+  """All values that are not contained in given list."""
+  position_not_in: [String!]
+
+  """All values less than the given value."""
+  position_lt: String
+
+  """All values less than or equal the given value."""
+  position_lte: String
+
+  """All values greater than the given value."""
+  position_gt: String
+
+  """All values greater than or equal the given value."""
+  position_gte: String
+
+  """All values containing the given string."""
+  position_contains: String
+
+  """All values not containing the given string."""
+  position_not_contains: String
+
+  """All values starting with the given string."""
+  position_starts_with: String
+
+  """All values not starting with the given string."""
+  position_not_starts_with: String
+
+  """All values ending with the given string."""
+  position_ends_with: String
+
+  """All values not ending with the given string."""
+  position_not_ends_with: String
+  person: PersonWhereInput
+  org: OrgWhereInput
+}
+
+input EmployeeWhereUniqueInput {
   id: ID
 }
 
@@ -2170,6 +2438,7 @@ type Mutation {
   createUser(data: UserCreateInput!): User!
   createPerson(data: PersonCreateInput!): Person!
   createOrg(data: OrgCreateInput!): Org!
+  createEmployee(data: EmployeeCreateInput!): Employee!
   createDept(data: DeptCreateInput!): Dept!
   createEnquiry(data: EnquiryCreateInput!): Enquiry!
   createFileLink(data: FileLinkCreateInput!): FileLink!
@@ -2183,6 +2452,7 @@ type Mutation {
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updatePerson(data: PersonUpdateInput!, where: PersonWhereUniqueInput!): Person
   updateOrg(data: OrgUpdateInput!, where: OrgWhereUniqueInput!): Org
+  updateEmployee(data: EmployeeUpdateInput!, where: EmployeeWhereUniqueInput!): Employee
   updateDept(data: DeptUpdateInput!, where: DeptWhereUniqueInput!): Dept
   updateEnquiry(data: EnquiryUpdateInput!, where: EnquiryWhereUniqueInput!): Enquiry
   updateFileLink(data: FileLinkUpdateInput!, where: FileLinkWhereUniqueInput!): FileLink
@@ -2196,6 +2466,7 @@ type Mutation {
   deleteUser(where: UserWhereUniqueInput!): User
   deletePerson(where: PersonWhereUniqueInput!): Person
   deleteOrg(where: OrgWhereUniqueInput!): Org
+  deleteEmployee(where: EmployeeWhereUniqueInput!): Employee
   deleteDept(where: DeptWhereUniqueInput!): Dept
   deleteEnquiry(where: EnquiryWhereUniqueInput!): Enquiry
   deleteFileLink(where: FileLinkWhereUniqueInput!): FileLink
@@ -2209,6 +2480,7 @@ type Mutation {
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertPerson(where: PersonWhereUniqueInput!, create: PersonCreateInput!, update: PersonUpdateInput!): Person!
   upsertOrg(where: OrgWhereUniqueInput!, create: OrgCreateInput!, update: OrgUpdateInput!): Org!
+  upsertEmployee(where: EmployeeWhereUniqueInput!, create: EmployeeCreateInput!, update: EmployeeUpdateInput!): Employee!
   upsertDept(where: DeptWhereUniqueInput!, create: DeptCreateInput!, update: DeptUpdateInput!): Dept!
   upsertEnquiry(where: EnquiryWhereUniqueInput!, create: EnquiryCreateInput!, update: EnquiryUpdateInput!): Enquiry!
   upsertFileLink(where: FileLinkWhereUniqueInput!, create: FileLinkCreateInput!, update: FileLinkUpdateInput!): FileLink!
@@ -2222,6 +2494,7 @@ type Mutation {
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyPersons(data: PersonUpdateManyMutationInput!, where: PersonWhereInput): BatchPayload!
   updateManyOrgs(data: OrgUpdateManyMutationInput!, where: OrgWhereInput): BatchPayload!
+  updateManyEmployees(data: EmployeeUpdateManyMutationInput!, where: EmployeeWhereInput): BatchPayload!
   updateManyDepts(data: DeptUpdateManyMutationInput!, where: DeptWhereInput): BatchPayload!
   updateManyEnquiries(data: EnquiryUpdateManyMutationInput!, where: EnquiryWhereInput): BatchPayload!
   updateManyFileLinks(data: FileLinkUpdateManyMutationInput!, where: FileLinkWhereInput): BatchPayload!
@@ -2235,6 +2508,7 @@ type Mutation {
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyPersons(where: PersonWhereInput): BatchPayload!
   deleteManyOrgs(where: OrgWhereInput): BatchPayload!
+  deleteManyEmployees(where: EmployeeWhereInput): BatchPayload!
   deleteManyDepts(where: DeptWhereInput): BatchPayload!
   deleteManyEnquiries(where: EnquiryWhereInput): BatchPayload!
   deleteManyFileLinks(where: FileLinkWhereInput): BatchPayload!
@@ -2842,6 +3116,7 @@ type Org implements Node {
   moedeloId: String
   name: String!
   legalAddress: String
+  employees(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Employee!]
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry!]
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order!]
 }
@@ -2861,8 +3136,14 @@ input OrgCreateInput {
   moedeloId: String
   name: String!
   legalAddress: String
+  employees: EmployeeCreateManyWithoutOrgInput
   enquiries: EnquiryCreateManyWithoutOrgInput
   orders: OrderCreateManyWithoutOrgInput
+}
+
+input OrgCreateOneWithoutEmployeesInput {
+  create: OrgCreateWithoutEmployeesInput
+  connect: OrgWhereUniqueInput
 }
 
 input OrgCreateOneWithoutEnquiriesInput {
@@ -2875,11 +3156,21 @@ input OrgCreateOneWithoutOrdersInput {
   connect: OrgWhereUniqueInput
 }
 
+input OrgCreateWithoutEmployeesInput {
+  inn: String
+  moedeloId: String
+  name: String!
+  legalAddress: String
+  enquiries: EnquiryCreateManyWithoutOrgInput
+  orders: OrderCreateManyWithoutOrgInput
+}
+
 input OrgCreateWithoutEnquiriesInput {
   inn: String
   moedeloId: String
   name: String!
   legalAddress: String
+  employees: EmployeeCreateManyWithoutOrgInput
   orders: OrderCreateManyWithoutOrgInput
 }
 
@@ -2888,6 +3179,7 @@ input OrgCreateWithoutOrdersInput {
   moedeloId: String
   name: String!
   legalAddress: String
+  employees: EmployeeCreateManyWithoutOrgInput
   enquiries: EnquiryCreateManyWithoutOrgInput
 }
 
@@ -2969,6 +3261,7 @@ input OrgUpdateInput {
   moedeloId: String
   name: String
   legalAddress: String
+  employees: EmployeeUpdateManyWithoutOrgInput
   enquiries: EnquiryUpdateManyWithoutOrgInput
   orders: OrderUpdateManyWithoutOrgInput
 }
@@ -2978,6 +3271,13 @@ input OrgUpdateManyMutationInput {
   moedeloId: String
   name: String
   legalAddress: String
+}
+
+input OrgUpdateOneRequiredWithoutEmployeesInput {
+  create: OrgCreateWithoutEmployeesInput
+  connect: OrgWhereUniqueInput
+  update: OrgUpdateWithoutEmployeesDataInput
+  upsert: OrgUpsertWithoutEmployeesInput
 }
 
 input OrgUpdateOneWithoutEnquiriesInput {
@@ -2998,11 +3298,21 @@ input OrgUpdateOneWithoutOrdersInput {
   upsert: OrgUpsertWithoutOrdersInput
 }
 
+input OrgUpdateWithoutEmployeesDataInput {
+  inn: String
+  moedeloId: String
+  name: String
+  legalAddress: String
+  enquiries: EnquiryUpdateManyWithoutOrgInput
+  orders: OrderUpdateManyWithoutOrgInput
+}
+
 input OrgUpdateWithoutEnquiriesDataInput {
   inn: String
   moedeloId: String
   name: String
   legalAddress: String
+  employees: EmployeeUpdateManyWithoutOrgInput
   orders: OrderUpdateManyWithoutOrgInput
 }
 
@@ -3011,7 +3321,13 @@ input OrgUpdateWithoutOrdersDataInput {
   moedeloId: String
   name: String
   legalAddress: String
+  employees: EmployeeUpdateManyWithoutOrgInput
   enquiries: EnquiryUpdateManyWithoutOrgInput
+}
+
+input OrgUpsertWithoutEmployeesInput {
+  update: OrgUpdateWithoutEmployeesDataInput!
+  create: OrgCreateWithoutEmployeesInput!
 }
 
 input OrgUpsertWithoutEnquiriesInput {
@@ -3233,6 +3549,9 @@ input OrgWhereInput {
 
   """All values not ending with the given string."""
   legalAddress_not_ends_with: String
+  employees_every: EmployeeWhereInput
+  employees_some: EmployeeWhereInput
+  employees_none: EmployeeWhereInput
   enquiries_every: EnquiryWhereInput
   enquiries_some: EnquiryWhereInput
   enquiries_none: EnquiryWhereInput
@@ -3267,8 +3586,11 @@ type Person implements Node {
   lName: String
   mName: String
   regName: String
-  user: User
+  regNameChecked: Boolean
   tels(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tel!]
+  htmlNote: String
+  user: User
+  employees(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Employee!]
 }
 
 """A connection to a list of items."""
@@ -3286,8 +3608,16 @@ input PersonCreateInput {
   lName: String
   mName: String
   regName: String
-  user: UserCreateOneWithoutPersonInput
+  regNameChecked: Boolean
+  htmlNote: String
   tels: TelCreateManyInput
+  user: UserCreateOneWithoutPersonInput
+  employees: EmployeeCreateManyWithoutPersonInput
+}
+
+input PersonCreateOneWithoutEmployeesInput {
+  create: PersonCreateWithoutEmployeesInput
+  connect: PersonWhereUniqueInput
 }
 
 input PersonCreateOneWithoutUserInput {
@@ -3295,12 +3625,26 @@ input PersonCreateOneWithoutUserInput {
   connect: PersonWhereUniqueInput
 }
 
+input PersonCreateWithoutEmployeesInput {
+  fName: String!
+  lName: String
+  mName: String
+  regName: String
+  regNameChecked: Boolean
+  htmlNote: String
+  tels: TelCreateManyInput
+  user: UserCreateOneWithoutPersonInput
+}
+
 input PersonCreateWithoutUserInput {
   fName: String!
   lName: String
   mName: String
   regName: String
+  regNameChecked: Boolean
+  htmlNote: String
   tels: TelCreateManyInput
+  employees: EmployeeCreateManyWithoutPersonInput
 }
 
 """An edge in a connection."""
@@ -3323,6 +3667,10 @@ enum PersonOrderByInput {
   mName_DESC
   regName_ASC
   regName_DESC
+  regNameChecked_ASC
+  regNameChecked_DESC
+  htmlNote_ASC
+  htmlNote_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -3335,6 +3683,8 @@ type PersonPreviousValues {
   lName: String
   mName: String
   regName: String
+  regNameChecked: Boolean
+  htmlNote: String
 }
 
 type PersonSubscriptionPayload {
@@ -3381,8 +3731,11 @@ input PersonUpdateInput {
   lName: String
   mName: String
   regName: String
-  user: UserUpdateOneWithoutPersonInput
+  regNameChecked: Boolean
+  htmlNote: String
   tels: TelUpdateManyInput
+  user: UserUpdateOneWithoutPersonInput
+  employees: EmployeeUpdateManyWithoutPersonInput
 }
 
 input PersonUpdateManyMutationInput {
@@ -3390,6 +3743,15 @@ input PersonUpdateManyMutationInput {
   lName: String
   mName: String
   regName: String
+  regNameChecked: Boolean
+  htmlNote: String
+}
+
+input PersonUpdateOneRequiredWithoutEmployeesInput {
+  create: PersonCreateWithoutEmployeesInput
+  connect: PersonWhereUniqueInput
+  update: PersonUpdateWithoutEmployeesDataInput
+  upsert: PersonUpsertWithoutEmployeesInput
 }
 
 input PersonUpdateOneWithoutUserInput {
@@ -3401,12 +3763,31 @@ input PersonUpdateOneWithoutUserInput {
   upsert: PersonUpsertWithoutUserInput
 }
 
+input PersonUpdateWithoutEmployeesDataInput {
+  fName: String
+  lName: String
+  mName: String
+  regName: String
+  regNameChecked: Boolean
+  htmlNote: String
+  tels: TelUpdateManyInput
+  user: UserUpdateOneWithoutPersonInput
+}
+
 input PersonUpdateWithoutUserDataInput {
   fName: String
   lName: String
   mName: String
   regName: String
+  regNameChecked: Boolean
+  htmlNote: String
   tels: TelUpdateManyInput
+  employees: EmployeeUpdateManyWithoutPersonInput
+}
+
+input PersonUpsertWithoutEmployeesInput {
+  update: PersonUpdateWithoutEmployeesDataInput!
+  create: PersonCreateWithoutEmployeesInput!
 }
 
 input PersonUpsertWithoutUserInput {
@@ -3623,10 +4004,57 @@ input PersonWhereInput {
 
   """All values not ending with the given string."""
   regName_not_ends_with: String
-  user: UserWhereInput
+  regNameChecked: Boolean
+
+  """All values that are not equal to given value."""
+  regNameChecked_not: Boolean
+  htmlNote: String
+
+  """All values that are not equal to given value."""
+  htmlNote_not: String
+
+  """All values that are contained in given list."""
+  htmlNote_in: [String!]
+
+  """All values that are not contained in given list."""
+  htmlNote_not_in: [String!]
+
+  """All values less than the given value."""
+  htmlNote_lt: String
+
+  """All values less than or equal the given value."""
+  htmlNote_lte: String
+
+  """All values greater than the given value."""
+  htmlNote_gt: String
+
+  """All values greater than or equal the given value."""
+  htmlNote_gte: String
+
+  """All values containing the given string."""
+  htmlNote_contains: String
+
+  """All values not containing the given string."""
+  htmlNote_not_contains: String
+
+  """All values starting with the given string."""
+  htmlNote_starts_with: String
+
+  """All values not starting with the given string."""
+  htmlNote_not_starts_with: String
+
+  """All values ending with the given string."""
+  htmlNote_ends_with: String
+
+  """All values not ending with the given string."""
+  htmlNote_not_ends_with: String
   tels_every: TelWhereInput
   tels_some: TelWhereInput
   tels_none: TelWhereInput
+  user: UserWhereInput
+  employees_every: EmployeeWhereInput
+  employees_some: EmployeeWhereInput
+  employees_none: EmployeeWhereInput
 }
 
 input PersonWhereUniqueInput {
@@ -4208,6 +4636,7 @@ type Query {
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   persons(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Person]!
   orgs(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Org]!
+  employees(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Employee]!
   depts(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Dept]!
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry]!
   fileLinks(where: FileLinkWhereInput, orderBy: FileLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [FileLink]!
@@ -4221,6 +4650,7 @@ type Query {
   user(where: UserWhereUniqueInput!): User
   person(where: PersonWhereUniqueInput!): Person
   org(where: OrgWhereUniqueInput!): Org
+  employee(where: EmployeeWhereUniqueInput!): Employee
   dept(where: DeptWhereUniqueInput!): Dept
   enquiry(where: EnquiryWhereUniqueInput!): Enquiry
   fileLink(where: FileLinkWhereUniqueInput!): FileLink
@@ -4234,6 +4664,7 @@ type Query {
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   personsConnection(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PersonConnection!
   orgsConnection(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgConnection!
+  employeesConnection(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EmployeeConnection!
   deptsConnection(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DeptConnection!
   enquiriesConnection(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EnquiryConnection!
   fileLinksConnection(where: FileLinkWhereInput, orderBy: FileLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileLinkConnection!
@@ -4584,6 +5015,7 @@ type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   person(where: PersonSubscriptionWhereInput): PersonSubscriptionPayload
   org(where: OrgSubscriptionWhereInput): OrgSubscriptionPayload
+  employee(where: EmployeeSubscriptionWhereInput): EmployeeSubscriptionPayload
   dept(where: DeptSubscriptionWhereInput): DeptSubscriptionPayload
   enquiry(where: EnquirySubscriptionWhereInput): EnquirySubscriptionPayload
   fileLink(where: FileLinkSubscriptionWhereInput): FileLinkSubscriptionPayload
