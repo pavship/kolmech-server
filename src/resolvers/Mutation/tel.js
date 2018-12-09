@@ -1,3 +1,5 @@
+const { parseOrThrow, parsePhone } = require('../../utils/format')
+
 const tel = {
 	async upsertTel(_, { input }, ctx, info) {
     const { userId, db } = ctx
@@ -10,7 +12,7 @@ const tel = {
 			number: numberInput,
 			country
     } = planeInput
-		if (!id && !number) throw new Error('Не указан номер телефона')
+		if (!id && !numberInput) throw new Error('Не указан номер телефона')
 		if (personId) {
       const personExists = await db.exists.Person({ id: personId })
       if (!personExists) throw new Error(`Личность для привязки телефона отсутствует в базе`)
@@ -19,7 +21,8 @@ const tel = {
 		if (numberInput) {
 			if (!country) throw new Error('Не указан код страны телефона')
 			number = parseOrThrow(parsePhone, numberInput, { country })
-			console.log('number > ', number)
+			// console.log('number > ', number)
+			planeInput.number = number
 		}
 		if (!id) return db.mutation.createTel({
 			data: {
