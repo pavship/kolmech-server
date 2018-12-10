@@ -20,7 +20,8 @@ const employee = {
 		console.log('input > ', JSON.stringify(input, null, 2))
 		console.log('validated > ', JSON.stringify(validated, null, 2))
 		const createObj = await makeCreateObject(validated, 'employee', ctx)
-		console.log('createObj > ', JSON.stringify(createObj, null, 2))
+    console.log('createObj > ', JSON.stringify(createObj, null, 2))
+    if (!input.id) return db.mutation.createEmployee(createObj, info)
 		// const {
     //   id,
     //   orgId,

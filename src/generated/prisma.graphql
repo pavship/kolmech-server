@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Sun Dec 09 2018 21:44:10 GMT+0300 (RTZ 2 (зима))
+# timestamp: Mon Dec 10 2018 14:35:29 GMT+0300 (RTZ 2 (зима))
 
 type AggregateDept {
   count: Int!
@@ -624,9 +624,9 @@ input DocWhereUniqueInput {
 
 type Employee implements Node {
   id: ID!
-  person: Person!
-  org: Org!
   position: String
+  person: Person
+  org: Org!
 }
 
 """A connection to a list of items."""
@@ -641,7 +641,7 @@ type EmployeeConnection {
 
 input EmployeeCreateInput {
   position: String
-  person: PersonCreateOneWithoutEmployeesInput!
+  person: PersonCreateOneWithoutEmployeesInput
   org: OrgCreateOneWithoutEmployeesInput!
 }
 
@@ -657,7 +657,7 @@ input EmployeeCreateManyWithoutPersonInput {
 
 input EmployeeCreateWithoutOrgInput {
   position: String
-  person: PersonCreateOneWithoutEmployeesInput!
+  person: PersonCreateOneWithoutEmployeesInput
 }
 
 input EmployeeCreateWithoutPersonInput {
@@ -731,7 +731,7 @@ input EmployeeSubscriptionWhereInput {
 
 input EmployeeUpdateInput {
   position: String
-  person: PersonUpdateOneRequiredWithoutEmployeesInput
+  person: PersonUpdateOneWithoutEmployeesInput
   org: OrgUpdateOneRequiredWithoutEmployeesInput
 }
 
@@ -759,7 +759,7 @@ input EmployeeUpdateManyWithoutPersonInput {
 
 input EmployeeUpdateWithoutOrgDataInput {
   position: String
-  person: PersonUpdateOneRequiredWithoutEmployeesInput
+  person: PersonUpdateOneWithoutEmployeesInput
 }
 
 input EmployeeUpdateWithoutPersonDataInput {
@@ -2437,9 +2437,9 @@ input ModelWhereUniqueInput {
 type Mutation {
   createUser(data: UserCreateInput!): User!
   createPerson(data: PersonCreateInput!): Person!
+  createEmployee(data: EmployeeCreateInput!): Employee!
   createTel(data: TelCreateInput!): Tel!
   createOrg(data: OrgCreateInput!): Org!
-  createEmployee(data: EmployeeCreateInput!): Employee!
   createDept(data: DeptCreateInput!): Dept!
   createEnquiry(data: EnquiryCreateInput!): Enquiry!
   createFileLink(data: FileLinkCreateInput!): FileLink!
@@ -2451,9 +2451,9 @@ type Mutation {
   createDoc(data: DocCreateInput!): Doc!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updatePerson(data: PersonUpdateInput!, where: PersonWhereUniqueInput!): Person
+  updateEmployee(data: EmployeeUpdateInput!, where: EmployeeWhereUniqueInput!): Employee
   updateTel(data: TelUpdateInput!, where: TelWhereUniqueInput!): Tel
   updateOrg(data: OrgUpdateInput!, where: OrgWhereUniqueInput!): Org
-  updateEmployee(data: EmployeeUpdateInput!, where: EmployeeWhereUniqueInput!): Employee
   updateDept(data: DeptUpdateInput!, where: DeptWhereUniqueInput!): Dept
   updateEnquiry(data: EnquiryUpdateInput!, where: EnquiryWhereUniqueInput!): Enquiry
   updateFileLink(data: FileLinkUpdateInput!, where: FileLinkWhereUniqueInput!): FileLink
@@ -2465,9 +2465,9 @@ type Mutation {
   updateDoc(data: DocUpdateInput!, where: DocWhereUniqueInput!): Doc
   deleteUser(where: UserWhereUniqueInput!): User
   deletePerson(where: PersonWhereUniqueInput!): Person
+  deleteEmployee(where: EmployeeWhereUniqueInput!): Employee
   deleteTel(where: TelWhereUniqueInput!): Tel
   deleteOrg(where: OrgWhereUniqueInput!): Org
-  deleteEmployee(where: EmployeeWhereUniqueInput!): Employee
   deleteDept(where: DeptWhereUniqueInput!): Dept
   deleteEnquiry(where: EnquiryWhereUniqueInput!): Enquiry
   deleteFileLink(where: FileLinkWhereUniqueInput!): FileLink
@@ -2479,9 +2479,9 @@ type Mutation {
   deleteDoc(where: DocWhereUniqueInput!): Doc
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertPerson(where: PersonWhereUniqueInput!, create: PersonCreateInput!, update: PersonUpdateInput!): Person!
+  upsertEmployee(where: EmployeeWhereUniqueInput!, create: EmployeeCreateInput!, update: EmployeeUpdateInput!): Employee!
   upsertTel(where: TelWhereUniqueInput!, create: TelCreateInput!, update: TelUpdateInput!): Tel!
   upsertOrg(where: OrgWhereUniqueInput!, create: OrgCreateInput!, update: OrgUpdateInput!): Org!
-  upsertEmployee(where: EmployeeWhereUniqueInput!, create: EmployeeCreateInput!, update: EmployeeUpdateInput!): Employee!
   upsertDept(where: DeptWhereUniqueInput!, create: DeptCreateInput!, update: DeptUpdateInput!): Dept!
   upsertEnquiry(where: EnquiryWhereUniqueInput!, create: EnquiryCreateInput!, update: EnquiryUpdateInput!): Enquiry!
   upsertFileLink(where: FileLinkWhereUniqueInput!, create: FileLinkCreateInput!, update: FileLinkUpdateInput!): FileLink!
@@ -2493,9 +2493,9 @@ type Mutation {
   upsertDoc(where: DocWhereUniqueInput!, create: DocCreateInput!, update: DocUpdateInput!): Doc!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyPersons(data: PersonUpdateManyMutationInput!, where: PersonWhereInput): BatchPayload!
+  updateManyEmployees(data: EmployeeUpdateManyMutationInput!, where: EmployeeWhereInput): BatchPayload!
   updateManyTels(data: TelUpdateManyMutationInput!, where: TelWhereInput): BatchPayload!
   updateManyOrgs(data: OrgUpdateManyMutationInput!, where: OrgWhereInput): BatchPayload!
-  updateManyEmployees(data: EmployeeUpdateManyMutationInput!, where: EmployeeWhereInput): BatchPayload!
   updateManyDepts(data: DeptUpdateManyMutationInput!, where: DeptWhereInput): BatchPayload!
   updateManyEnquiries(data: EnquiryUpdateManyMutationInput!, where: EnquiryWhereInput): BatchPayload!
   updateManyFileLinks(data: FileLinkUpdateManyMutationInput!, where: FileLinkWhereInput): BatchPayload!
@@ -2507,9 +2507,9 @@ type Mutation {
   updateManyDocs(data: DocUpdateManyMutationInput!, where: DocWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyPersons(where: PersonWhereInput): BatchPayload!
+  deleteManyEmployees(where: EmployeeWhereInput): BatchPayload!
   deleteManyTels(where: TelWhereInput): BatchPayload!
   deleteManyOrgs(where: OrgWhereInput): BatchPayload!
-  deleteManyEmployees(where: EmployeeWhereInput): BatchPayload!
   deleteManyDepts(where: DeptWhereInput): BatchPayload!
   deleteManyEnquiries(where: EnquiryWhereInput): BatchPayload!
   deleteManyFileLinks(where: FileLinkWhereInput): BatchPayload!
@@ -3587,8 +3587,8 @@ type Person implements Node {
   mName: String
   regName: String
   regNameChecked: Boolean
-  tels(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tel!]
   htmlNote: String
+  tels(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tel!]
   user: User
   employees(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Employee!]
 }
@@ -3763,9 +3763,11 @@ input PersonUpdateManyMutationInput {
   htmlNote: String
 }
 
-input PersonUpdateOneRequiredWithoutEmployeesInput {
+input PersonUpdateOneWithoutEmployeesInput {
   create: PersonCreateWithoutEmployeesInput
   connect: PersonWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
   update: PersonUpdateWithoutEmployeesDataInput
   upsert: PersonUpsertWithoutEmployeesInput
 }
@@ -4676,9 +4678,9 @@ input ProdWhereUniqueInput {
 type Query {
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   persons(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Person]!
+  employees(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Employee]!
   tels(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tel]!
   orgs(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Org]!
-  employees(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Employee]!
   depts(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Dept]!
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry]!
   fileLinks(where: FileLinkWhereInput, orderBy: FileLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [FileLink]!
@@ -4690,9 +4692,9 @@ type Query {
   docs(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Doc]!
   user(where: UserWhereUniqueInput!): User
   person(where: PersonWhereUniqueInput!): Person
+  employee(where: EmployeeWhereUniqueInput!): Employee
   tel(where: TelWhereUniqueInput!): Tel
   org(where: OrgWhereUniqueInput!): Org
-  employee(where: EmployeeWhereUniqueInput!): Employee
   dept(where: DeptWhereUniqueInput!): Dept
   enquiry(where: EnquiryWhereUniqueInput!): Enquiry
   fileLink(where: FileLinkWhereUniqueInput!): FileLink
@@ -4704,9 +4706,9 @@ type Query {
   doc(where: DocWhereUniqueInput!): Doc
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   personsConnection(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PersonConnection!
+  employeesConnection(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EmployeeConnection!
   telsConnection(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TelConnection!
   orgsConnection(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgConnection!
-  employeesConnection(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EmployeeConnection!
   deptsConnection(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DeptConnection!
   enquiriesConnection(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EnquiryConnection!
   fileLinksConnection(where: FileLinkWhereInput, orderBy: FileLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileLinkConnection!
@@ -5055,9 +5057,9 @@ input StatusWhereUniqueInput {
 type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   person(where: PersonSubscriptionWhereInput): PersonSubscriptionPayload
+  employee(where: EmployeeSubscriptionWhereInput): EmployeeSubscriptionPayload
   tel(where: TelSubscriptionWhereInput): TelSubscriptionPayload
   org(where: OrgSubscriptionWhereInput): OrgSubscriptionPayload
-  employee(where: EmployeeSubscriptionWhereInput): EmployeeSubscriptionPayload
   dept(where: DeptSubscriptionWhereInput): DeptSubscriptionPayload
   enquiry(where: EnquirySubscriptionWhereInput): EnquirySubscriptionPayload
   fileLink(where: FileLinkSubscriptionWhereInput): FileLinkSubscriptionPayload
@@ -5433,8 +5435,8 @@ type User implements Node {
   email: String!
   confirmed: Boolean
   password: String!
-  person: Person
   role: UserRole
+  person: Person
   events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
 }
 

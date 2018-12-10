@@ -3,8 +3,8 @@ type User {
 	email: String! @unique
 	confirmed: Boolean
 	password: String!
-	person: Person
 	role: UserRole
+	person: Person @relation(name: "PersonUser")
 	events: [Event!]! @relation(name: "EventByUser")
 }
 
@@ -15,10 +15,17 @@ type Person {
 	mName: String
 	regName: String
 	regNameChecked: Boolean
-	tels: [Tel!]!
 	htmlNote: String
-	user: User
+	tels: [Tel!]! @relation(name: "PersonTels", onDelete: CASCADE)
+	user: User @relation(name: "PersonUser", onDelete: CASCADE)
 	employees: [Employee!]!
+}
+
+type Employee {
+	id: ID! @unique
+	position: String
+	person: Person
+	org: Org!
 }
 
 type Tel {
@@ -28,7 +35,7 @@ type Tel {
 	country: String
 	note: String
 	default: Boolean
-	person: Person
+	person: Person @relation(name: "PersonTels")
 }
 
 type Org {
@@ -40,13 +47,6 @@ type Org {
 	employees: [Employee!]!
 	enquiries: [Enquiry!]! @relation(name: "OrgEnquiries")
 	orders: [Order!]! @relation(name: "OrgOrders")
-}
-
-type Employee {
-	id: ID! @unique
-	person: Person!
-	org: Org!
-	position: String
 }
 
 type Dept {
