@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Thu Nov 29 2018 17:01:44 GMT+0300 (RTZ 2 (зима))
+# timestamp: Sun Dec 09 2018 21:44:10 GMT+0300 (RTZ 2 (зима))
 
 type AggregateDept {
   count: Int!
@@ -2437,6 +2437,7 @@ input ModelWhereUniqueInput {
 type Mutation {
   createUser(data: UserCreateInput!): User!
   createPerson(data: PersonCreateInput!): Person!
+  createTel(data: TelCreateInput!): Tel!
   createOrg(data: OrgCreateInput!): Org!
   createEmployee(data: EmployeeCreateInput!): Employee!
   createDept(data: DeptCreateInput!): Dept!
@@ -2447,10 +2448,10 @@ type Mutation {
   createModel(data: ModelCreateInput!): Model!
   createProd(data: ProdCreateInput!): Prod!
   createStatus(data: StatusCreateInput!): Status!
-  createTel(data: TelCreateInput!): Tel!
   createDoc(data: DocCreateInput!): Doc!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updatePerson(data: PersonUpdateInput!, where: PersonWhereUniqueInput!): Person
+  updateTel(data: TelUpdateInput!, where: TelWhereUniqueInput!): Tel
   updateOrg(data: OrgUpdateInput!, where: OrgWhereUniqueInput!): Org
   updateEmployee(data: EmployeeUpdateInput!, where: EmployeeWhereUniqueInput!): Employee
   updateDept(data: DeptUpdateInput!, where: DeptWhereUniqueInput!): Dept
@@ -2461,10 +2462,10 @@ type Mutation {
   updateModel(data: ModelUpdateInput!, where: ModelWhereUniqueInput!): Model
   updateProd(data: ProdUpdateInput!, where: ProdWhereUniqueInput!): Prod
   updateStatus(data: StatusUpdateInput!, where: StatusWhereUniqueInput!): Status
-  updateTel(data: TelUpdateInput!, where: TelWhereUniqueInput!): Tel
   updateDoc(data: DocUpdateInput!, where: DocWhereUniqueInput!): Doc
   deleteUser(where: UserWhereUniqueInput!): User
   deletePerson(where: PersonWhereUniqueInput!): Person
+  deleteTel(where: TelWhereUniqueInput!): Tel
   deleteOrg(where: OrgWhereUniqueInput!): Org
   deleteEmployee(where: EmployeeWhereUniqueInput!): Employee
   deleteDept(where: DeptWhereUniqueInput!): Dept
@@ -2475,10 +2476,10 @@ type Mutation {
   deleteModel(where: ModelWhereUniqueInput!): Model
   deleteProd(where: ProdWhereUniqueInput!): Prod
   deleteStatus(where: StatusWhereUniqueInput!): Status
-  deleteTel(where: TelWhereUniqueInput!): Tel
   deleteDoc(where: DocWhereUniqueInput!): Doc
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertPerson(where: PersonWhereUniqueInput!, create: PersonCreateInput!, update: PersonUpdateInput!): Person!
+  upsertTel(where: TelWhereUniqueInput!, create: TelCreateInput!, update: TelUpdateInput!): Tel!
   upsertOrg(where: OrgWhereUniqueInput!, create: OrgCreateInput!, update: OrgUpdateInput!): Org!
   upsertEmployee(where: EmployeeWhereUniqueInput!, create: EmployeeCreateInput!, update: EmployeeUpdateInput!): Employee!
   upsertDept(where: DeptWhereUniqueInput!, create: DeptCreateInput!, update: DeptUpdateInput!): Dept!
@@ -2489,10 +2490,10 @@ type Mutation {
   upsertModel(where: ModelWhereUniqueInput!, create: ModelCreateInput!, update: ModelUpdateInput!): Model!
   upsertProd(where: ProdWhereUniqueInput!, create: ProdCreateInput!, update: ProdUpdateInput!): Prod!
   upsertStatus(where: StatusWhereUniqueInput!, create: StatusCreateInput!, update: StatusUpdateInput!): Status!
-  upsertTel(where: TelWhereUniqueInput!, create: TelCreateInput!, update: TelUpdateInput!): Tel!
   upsertDoc(where: DocWhereUniqueInput!, create: DocCreateInput!, update: DocUpdateInput!): Doc!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyPersons(data: PersonUpdateManyMutationInput!, where: PersonWhereInput): BatchPayload!
+  updateManyTels(data: TelUpdateManyMutationInput!, where: TelWhereInput): BatchPayload!
   updateManyOrgs(data: OrgUpdateManyMutationInput!, where: OrgWhereInput): BatchPayload!
   updateManyEmployees(data: EmployeeUpdateManyMutationInput!, where: EmployeeWhereInput): BatchPayload!
   updateManyDepts(data: DeptUpdateManyMutationInput!, where: DeptWhereInput): BatchPayload!
@@ -2503,10 +2504,10 @@ type Mutation {
   updateManyModels(data: ModelUpdateManyMutationInput!, where: ModelWhereInput): BatchPayload!
   updateManyProds(data: ProdUpdateManyMutationInput!, where: ProdWhereInput): BatchPayload!
   updateManyStatuses(data: StatusUpdateManyMutationInput!, where: StatusWhereInput): BatchPayload!
-  updateManyTels(data: TelUpdateManyMutationInput!, where: TelWhereInput): BatchPayload!
   updateManyDocs(data: DocUpdateManyMutationInput!, where: DocWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyPersons(where: PersonWhereInput): BatchPayload!
+  deleteManyTels(where: TelWhereInput): BatchPayload!
   deleteManyOrgs(where: OrgWhereInput): BatchPayload!
   deleteManyEmployees(where: EmployeeWhereInput): BatchPayload!
   deleteManyDepts(where: DeptWhereInput): BatchPayload!
@@ -2517,7 +2518,6 @@ type Mutation {
   deleteManyModels(where: ModelWhereInput): BatchPayload!
   deleteManyProds(where: ProdWhereInput): BatchPayload!
   deleteManyStatuses(where: StatusWhereInput): BatchPayload!
-  deleteManyTels(where: TelWhereInput): BatchPayload!
   deleteManyDocs(where: DocWhereInput): BatchPayload!
 }
 
@@ -3610,13 +3610,18 @@ input PersonCreateInput {
   regName: String
   regNameChecked: Boolean
   htmlNote: String
-  tels: TelCreateManyInput
+  tels: TelCreateManyWithoutPersonInput
   user: UserCreateOneWithoutPersonInput
   employees: EmployeeCreateManyWithoutPersonInput
 }
 
 input PersonCreateOneWithoutEmployeesInput {
   create: PersonCreateWithoutEmployeesInput
+  connect: PersonWhereUniqueInput
+}
+
+input PersonCreateOneWithoutTelsInput {
+  create: PersonCreateWithoutTelsInput
   connect: PersonWhereUniqueInput
 }
 
@@ -3632,8 +3637,19 @@ input PersonCreateWithoutEmployeesInput {
   regName: String
   regNameChecked: Boolean
   htmlNote: String
-  tels: TelCreateManyInput
+  tels: TelCreateManyWithoutPersonInput
   user: UserCreateOneWithoutPersonInput
+}
+
+input PersonCreateWithoutTelsInput {
+  fName: String
+  lName: String
+  mName: String
+  regName: String
+  regNameChecked: Boolean
+  htmlNote: String
+  user: UserCreateOneWithoutPersonInput
+  employees: EmployeeCreateManyWithoutPersonInput
 }
 
 input PersonCreateWithoutUserInput {
@@ -3643,7 +3659,7 @@ input PersonCreateWithoutUserInput {
   regName: String
   regNameChecked: Boolean
   htmlNote: String
-  tels: TelCreateManyInput
+  tels: TelCreateManyWithoutPersonInput
   employees: EmployeeCreateManyWithoutPersonInput
 }
 
@@ -3733,7 +3749,7 @@ input PersonUpdateInput {
   regName: String
   regNameChecked: Boolean
   htmlNote: String
-  tels: TelUpdateManyInput
+  tels: TelUpdateManyWithoutPersonInput
   user: UserUpdateOneWithoutPersonInput
   employees: EmployeeUpdateManyWithoutPersonInput
 }
@@ -3754,6 +3770,15 @@ input PersonUpdateOneRequiredWithoutEmployeesInput {
   upsert: PersonUpsertWithoutEmployeesInput
 }
 
+input PersonUpdateOneWithoutTelsInput {
+  create: PersonCreateWithoutTelsInput
+  connect: PersonWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: PersonUpdateWithoutTelsDataInput
+  upsert: PersonUpsertWithoutTelsInput
+}
+
 input PersonUpdateOneWithoutUserInput {
   create: PersonCreateWithoutUserInput
   connect: PersonWhereUniqueInput
@@ -3770,8 +3795,19 @@ input PersonUpdateWithoutEmployeesDataInput {
   regName: String
   regNameChecked: Boolean
   htmlNote: String
-  tels: TelUpdateManyInput
+  tels: TelUpdateManyWithoutPersonInput
   user: UserUpdateOneWithoutPersonInput
+}
+
+input PersonUpdateWithoutTelsDataInput {
+  fName: String
+  lName: String
+  mName: String
+  regName: String
+  regNameChecked: Boolean
+  htmlNote: String
+  user: UserUpdateOneWithoutPersonInput
+  employees: EmployeeUpdateManyWithoutPersonInput
 }
 
 input PersonUpdateWithoutUserDataInput {
@@ -3781,13 +3817,18 @@ input PersonUpdateWithoutUserDataInput {
   regName: String
   regNameChecked: Boolean
   htmlNote: String
-  tels: TelUpdateManyInput
+  tels: TelUpdateManyWithoutPersonInput
   employees: EmployeeUpdateManyWithoutPersonInput
 }
 
 input PersonUpsertWithoutEmployeesInput {
   update: PersonUpdateWithoutEmployeesDataInput!
   create: PersonCreateWithoutEmployeesInput!
+}
+
+input PersonUpsertWithoutTelsInput {
+  update: PersonUpdateWithoutTelsDataInput!
+  create: PersonCreateWithoutTelsInput!
 }
 
 input PersonUpsertWithoutUserInput {
@@ -4635,6 +4676,7 @@ input ProdWhereUniqueInput {
 type Query {
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   persons(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Person]!
+  tels(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tel]!
   orgs(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Org]!
   employees(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Employee]!
   depts(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Dept]!
@@ -4645,10 +4687,10 @@ type Query {
   models(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Model]!
   prods(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Prod]!
   statuses(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Status]!
-  tels(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tel]!
   docs(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Doc]!
   user(where: UserWhereUniqueInput!): User
   person(where: PersonWhereUniqueInput!): Person
+  tel(where: TelWhereUniqueInput!): Tel
   org(where: OrgWhereUniqueInput!): Org
   employee(where: EmployeeWhereUniqueInput!): Employee
   dept(where: DeptWhereUniqueInput!): Dept
@@ -4659,10 +4701,10 @@ type Query {
   model(where: ModelWhereUniqueInput!): Model
   prod(where: ProdWhereUniqueInput!): Prod
   status(where: StatusWhereUniqueInput!): Status
-  tel(where: TelWhereUniqueInput!): Tel
   doc(where: DocWhereUniqueInput!): Doc
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   personsConnection(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PersonConnection!
+  telsConnection(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TelConnection!
   orgsConnection(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgConnection!
   employeesConnection(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EmployeeConnection!
   deptsConnection(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DeptConnection!
@@ -4673,7 +4715,6 @@ type Query {
   modelsConnection(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ModelConnection!
   prodsConnection(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProdConnection!
   statusesConnection(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StatusConnection!
-  telsConnection(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TelConnection!
   docsConnection(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DocConnection!
 
   """Fetches an object given its ID"""
@@ -5014,6 +5055,7 @@ input StatusWhereUniqueInput {
 type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   person(where: PersonSubscriptionWhereInput): PersonSubscriptionPayload
+  tel(where: TelSubscriptionWhereInput): TelSubscriptionPayload
   org(where: OrgSubscriptionWhereInput): OrgSubscriptionPayload
   employee(where: EmployeeSubscriptionWhereInput): EmployeeSubscriptionPayload
   dept(where: DeptSubscriptionWhereInput): DeptSubscriptionPayload
@@ -5024,7 +5066,6 @@ type Subscription {
   model(where: ModelSubscriptionWhereInput): ModelSubscriptionPayload
   prod(where: ProdSubscriptionWhereInput): ProdSubscriptionPayload
   status(where: StatusSubscriptionWhereInput): StatusSubscriptionPayload
-  tel(where: TelSubscriptionWhereInput): TelSubscriptionPayload
   doc(where: DocSubscriptionWhereInput): DocSubscriptionPayload
 }
 
@@ -5035,6 +5076,7 @@ type Tel implements Node {
   country: String
   note: String
   default: Boolean
+  person: Person
 }
 
 """A connection to a list of items."""
@@ -5053,11 +5095,20 @@ input TelCreateInput {
   country: String
   note: String
   default: Boolean
+  person: PersonCreateOneWithoutTelsInput
 }
 
-input TelCreateManyInput {
-  create: [TelCreateInput!]
+input TelCreateManyWithoutPersonInput {
+  create: [TelCreateWithoutPersonInput!]
   connect: [TelWhereUniqueInput!]
+}
+
+input TelCreateWithoutPersonInput {
+  number: String!
+  type: TelType
+  country: String
+  note: String
+  default: Boolean
 }
 
 """An edge in a connection."""
@@ -5142,29 +5193,13 @@ enum TelType {
   OTHER
 }
 
-input TelUpdateDataInput {
-  number: String
-  type: TelType
-  country: String
-  note: String
-  default: Boolean
-}
-
 input TelUpdateInput {
   number: String
   type: TelType
   country: String
   note: String
   default: Boolean
-}
-
-input TelUpdateManyInput {
-  create: [TelCreateInput!]
-  connect: [TelWhereUniqueInput!]
-  disconnect: [TelWhereUniqueInput!]
-  delete: [TelWhereUniqueInput!]
-  update: [TelUpdateWithWhereUniqueNestedInput!]
-  upsert: [TelUpsertWithWhereUniqueNestedInput!]
+  person: PersonUpdateOneWithoutTelsInput
 }
 
 input TelUpdateManyMutationInput {
@@ -5175,15 +5210,32 @@ input TelUpdateManyMutationInput {
   default: Boolean
 }
 
-input TelUpdateWithWhereUniqueNestedInput {
-  where: TelWhereUniqueInput!
-  data: TelUpdateDataInput!
+input TelUpdateManyWithoutPersonInput {
+  create: [TelCreateWithoutPersonInput!]
+  connect: [TelWhereUniqueInput!]
+  disconnect: [TelWhereUniqueInput!]
+  delete: [TelWhereUniqueInput!]
+  update: [TelUpdateWithWhereUniqueWithoutPersonInput!]
+  upsert: [TelUpsertWithWhereUniqueWithoutPersonInput!]
 }
 
-input TelUpsertWithWhereUniqueNestedInput {
+input TelUpdateWithoutPersonDataInput {
+  number: String
+  type: TelType
+  country: String
+  note: String
+  default: Boolean
+}
+
+input TelUpdateWithWhereUniqueWithoutPersonInput {
   where: TelWhereUniqueInput!
-  update: TelUpdateDataInput!
-  create: TelCreateInput!
+  data: TelUpdateWithoutPersonDataInput!
+}
+
+input TelUpsertWithWhereUniqueWithoutPersonInput {
+  where: TelWhereUniqueInput!
+  update: TelUpdateWithoutPersonDataInput!
+  create: TelCreateWithoutPersonInput!
 }
 
 input TelWhereInput {
@@ -5369,6 +5421,7 @@ input TelWhereInput {
 
   """All values that are not equal to given value."""
   default_not: Boolean
+  person: PersonWhereInput
 }
 
 input TelWhereUniqueInput {

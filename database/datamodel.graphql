@@ -28,6 +28,7 @@ type Tel {
 	country: String
 	note: String
 	default: Boolean
+	person: Person
 }
 
 type Org {

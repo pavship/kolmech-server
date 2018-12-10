@@ -2,6 +2,7 @@ const { lazy, object, string } = require('yup')
 
 const { person: { upsertPerson } } = require('./person')
 const { validationSchema } = require('../../schema/employee')
+const { makeCreateObject } = require('../utils')
 
 const employee = {
 	async upsertEmployee(_, { input }, ctx, info) {
@@ -18,6 +19,8 @@ const employee = {
 		}
 		console.log('input > ', JSON.stringify(input, null, 2))
 		console.log('validated > ', JSON.stringify(validated, null, 2))
+		const createObj = await makeCreateObject(validated, 'employee', ctx)
+		console.log('createObj > ', JSON.stringify(createObj, null, 2))
 		// const {
     //   id,
     //   orgId,
