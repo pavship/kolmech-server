@@ -1,12 +1,16 @@
 const { lazy, object, string } = require('yup')
-const { validationSchema: personValidationSchema } = require('./person')
 
-const validationSchema = (emp) => object().shape({
-  orgId: lazy(() => emp && emp.id
-    ? string()
-    : string().matches(/^[a-z0-9]{25}$/).required()
-  ),
-  person: personValidationSchema(emp && emp.person)
+const { validationSchema: personValidationSchema } = require('./person')
+const { idValidationType } = require('./commonTypes')
+
+const validationSchema = object().shape({
+  id: idValidationType.notRequired(),
+  orgId: idValidationType
+		.when('id', (id, schema) => id
+			? schema.notRequired()
+			: schema.required()
+		),
+  person: personValidationSchema
 })
 
 const formikSchema = {

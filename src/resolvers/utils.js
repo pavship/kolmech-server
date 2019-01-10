@@ -1,8 +1,9 @@
-const makeCreateObject = async (input, typeName, ctx) => {
-  return {
-    data: await handleObj(input, typeName, ctx)
-  }
-}
+const { cloneDeep } = require('lodash')
+
+const generateMutationObject = async (input, typeName, ctx) => ({
+  ...input.id && { where: { id: input.id } },
+  data: await handleObj(input, typeName, ctx)
+})
 
 const formikSchema = {
   person: {
@@ -19,6 +20,8 @@ const formikSchema = {
 const handleObj = async (obj = {}, objTypeName, ctx) => {
   const result = {}
   await Promise.all(Object.keys(obj).map(async (k) => {
+    // skip 'id' field
+    if (k === 'id') return
     const type = typeof obj[k]
     // NOTE array objects are expected to be called as plural -> <TypeName>s
     if (type === 'object' && Array.isArray(obj[k])) {
@@ -45,11 +48,14 @@ const handleObj = async (obj = {}, objTypeName, ctx) => {
 }
 
 const handleArr = async (arr, typeName, parentTypeName, parentId, ctx) => {
-  let prevArr = null
+  console.log('new arr > ', arr)
+  const arrIds = arr.map(r => r.id)
+  // console.log('arrIds > ', arrIds)
   let toDelete = []
+  let toUpdate = []
   // if parent object exists, get prevArr and compare with new arr
   if (parentId) {
-    prevArr = await ctx.db.query[typeName]({ 
+    const prevArr = await ctx.db.query[typeName]({ 
       where: {
         [parentTypeName]: {
           id: parentId
@@ -57,24 +63,56 @@ const handleArr = async (arr, typeName, parentTypeName, parentId, ctx) => {
       }
     }, '{ id }')
     console.log('prevArr > ', prevArr)
-    // TODO delete records with ids absent in new arr
-    toDelete = prevArr.filter(r => !arr.map(r => r.id).includes(r.id))
-    if (typeName === 'tels')
-    // delete tels with erased numbers
+    // exceptions' array
+    const deleteInsteadUpdateIds = []
+    for (let { id } of prevArr) {
+      const newVal = cloneDeep(arr.find(r => r.id === id))
+      // assign toDelete record if it's not found in the new arr
+      if (!newVal) toDelete.push({ id })
+        // assign toUpdate record if it's found in the new arr and has any props except 'id'
+        else if (Object.keys(newVal).length > 1) toUpdate.push({
+          where: { id },
+          data: await handleObj(newVal, typeName.slice(0, -1), ctx)
+        })
+      // exceptions
+      if (typeName === 'tels' && newVal && newVal.number === '')
+        deleteInsteadUpdateIds.push(newVal.id)
+    }
+    // prevArr.forEach(({ id }) => {
+    //   const newVal = cloneDeep(arr.find(r => r.id === id))
+    //   // assign toDelete record if it's not found in the new arr
+    //   if (!newVal) toDelete.push({ id })
+    //     // assign toUpdate record if it's found in the new arr and has any props except 'id'
+    //     else if (Object.keys(newVal).length > 1) toUpdate.push({
+    //       where: { id },
+    //       data: await handleObj(newVal, typeName.slice(0, -1), ctx)
+    //     })
+    //   // exceptions
+    //   if (typeName === 'tels' && newVal && newVal.number === '')
+    //     deleteInsteadUpdateIds.push(newVal.id)
+    // })
+    console.log('deleteInsteadUpdateIds > ', deleteInsteadUpdateIds)
+    // handle exceptions
+    console.log('toUpdate > ', toUpdate)
+    if (deleteInsteadUpdateIds.length) {
+      toUpdate = toUpdate.filter(r => !deleteInsteadUpdateIds.includes(r.where.id))
       toDelete = [
         ...toDelete,
-        ...arr.map(({ id }) => ({ id })).filter(r => r.id && !r.number)
+        ...prevArr.filter(r => deleteInsteadUpdateIds.includes(r.id))
       ]
+    }
   }
   console.log('toDelete > ', toDelete)
+  console.log('toUpdate > ', toUpdate)
   // all records without ids are saved into db
   let toCreate = arr.filter(r => !r.id)
   if (typeName === 'tels')
-    // filter out tels with empty numbers
+    // not creating tels with empty numbers
       toCreate = toCreate.filter(r => !!r.number)
   console.log('toCreate > ', toCreate)
   const result = {
     ...toDelete.length && { delete: toDelete },
+    ...toUpdate.length && { update: toUpdate },
     ...toCreate.length && { create: toCreate },
   }
   return Object.keys(result).length
@@ -83,5 +121,5 @@ const handleArr = async (arr, typeName, parentTypeName, parentId, ctx) => {
 }
 
 module.exports = { 
-  makeCreateObject
+  generateMutationObject
 }

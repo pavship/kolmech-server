@@ -2,12 +2,12 @@ const { lazy, object, string } = require('yup')
 
 const { person: { upsertPerson } } = require('./person')
 const { validationSchema } = require('../../schema/employee')
-const { makeCreateObject } = require('../utils')
+const { generateMutationObject } = require('../utils')
 
 const employee = {
 	async upsertEmployee(_, { input }, ctx, info) {
 		const { userId, db } = ctx
-		const validated = await validationSchema(input).validate(input)
+		const validated = await validationSchema.validate(input)
 		const commented = {
 			// TODO (if needed): following comment is how array of errors can be handled
 			// source: https://www.youtube.com/watch?v=JMLTlMAejX4
@@ -19,9 +19,11 @@ const employee = {
 		}
 		console.log('input > ', JSON.stringify(input, null, 2))
 		console.log('validated > ', JSON.stringify(validated, null, 2))
-		const createObj = await makeCreateObject(validated, 'employee', ctx)
-    console.log('createObj > ', JSON.stringify(createObj, null, 2))
-    if (!input.id) return db.mutation.createEmployee(createObj, info)
+    const mutationObj = await generateMutationObject(validated, 'employee', ctx)
+    console.log('mutationObj > ', JSON.stringify(mutationObj, null, 2))
+    if (!input.id) return db.mutation.createEmployee(mutationObj, info)
+      else return db.mutation.updateEmployee(mutationObj, info)
+
 		// const {
     //   id,
     //   orgId,
