@@ -1,4 +1,4 @@
-const { lazy, object, string } = require('yup')
+const { object } = require('yup')
 
 const { validationSchema: personValidationSchema } = require('./person')
 const { idValidationType } = require('./commonTypes')
@@ -43,6 +43,6 @@ const listSchema = {
   }
 }
 
-module.exports = { 
+module.exports = {
 	validationSchema
 }

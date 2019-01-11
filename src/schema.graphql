@@ -32,6 +32,7 @@ type Mutation {
   upsertPerson(input: PersonInput!): Person
   upsertProd(input: ProdInput!): Prod
   upsertEmployee(input: EmployeeInput!): Employee
+  upsertModel(input: ModelInput!): Model
   moveProds(to: ID!, prodIds: [ID!]!): MoveProdPayload!
   importModels: BatchPayload!
   seedEnquiryStatuses: BatchPayload!
@@ -103,4 +104,11 @@ input TelInput {
 	country: String
 	note: String
 	default: Boolean
+}
+
+input ModelInput {
+  id: ID
+  orgId: ID
+  name: String
+  article: String
 }

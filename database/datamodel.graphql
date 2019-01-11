@@ -47,6 +47,7 @@ type Org {
 	employees: [Employee!]!
 	enquiries: [Enquiry!]! @relation(name: "OrgEnquiries")
 	orders: [Order!]! @relation(name: "OrgOrders")
+	models: [Model!]!
 }
 
 type Dept {
@@ -123,6 +124,7 @@ type Model {
 	id: ID! @unique
 	article: String
 	name: String! @unique
+	org: Org
 	enquiries: [Enquiry!]! @relation(name: "EnquiryModel")
 	orders: [Order!]! @relation(name: "ModelOrders")
   prods: [Prod!]! @relation(name: "ModelProds")

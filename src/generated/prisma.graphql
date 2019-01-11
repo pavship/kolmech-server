@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Mon Dec 10 2018 14:35:29 GMT+0300 (RTZ 2 (зима))
+# timestamp: Fri Jan 11 2019 03:09:19 GMT+0300 (RTZ 2 (зима))
 
 type AggregateDept {
   count: Int!
@@ -2089,6 +2089,7 @@ type Model implements Node {
   id: ID!
   article: String
   name: String!
+  org: Org
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry!]
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order!]
   prods(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Prod!]
@@ -2107,9 +2108,15 @@ type ModelConnection {
 input ModelCreateInput {
   article: String
   name: String!
+  org: OrgCreateOneWithoutModelsInput
   enquiries: EnquiryCreateManyWithoutModelInput
   orders: OrderCreateManyWithoutModelInput
   prods: ProdCreateManyWithoutModelInput
+}
+
+input ModelCreateManyWithoutOrgInput {
+  create: [ModelCreateWithoutOrgInput!]
+  connect: [ModelWhereUniqueInput!]
 }
 
 input ModelCreateOneWithoutEnquiriesInput {
@@ -2130,6 +2137,7 @@ input ModelCreateOneWithoutProdsInput {
 input ModelCreateWithoutEnquiriesInput {
   article: String
   name: String!
+  org: OrgCreateOneWithoutModelsInput
   orders: OrderCreateManyWithoutModelInput
   prods: ProdCreateManyWithoutModelInput
 }
@@ -2137,13 +2145,23 @@ input ModelCreateWithoutEnquiriesInput {
 input ModelCreateWithoutOrdersInput {
   article: String
   name: String!
+  org: OrgCreateOneWithoutModelsInput
   enquiries: EnquiryCreateManyWithoutModelInput
+  prods: ProdCreateManyWithoutModelInput
+}
+
+input ModelCreateWithoutOrgInput {
+  article: String
+  name: String!
+  enquiries: EnquiryCreateManyWithoutModelInput
+  orders: OrderCreateManyWithoutModelInput
   prods: ProdCreateManyWithoutModelInput
 }
 
 input ModelCreateWithoutProdsInput {
   article: String
   name: String!
+  org: OrgCreateOneWithoutModelsInput
   enquiries: EnquiryCreateManyWithoutModelInput
   orders: OrderCreateManyWithoutModelInput
 }
@@ -2218,6 +2236,7 @@ input ModelSubscriptionWhereInput {
 input ModelUpdateInput {
   article: String
   name: String
+  org: OrgUpdateOneWithoutModelsInput
   enquiries: EnquiryUpdateManyWithoutModelInput
   orders: OrderUpdateManyWithoutModelInput
   prods: ProdUpdateManyWithoutModelInput
@@ -2226,6 +2245,15 @@ input ModelUpdateInput {
 input ModelUpdateManyMutationInput {
   article: String
   name: String
+}
+
+input ModelUpdateManyWithoutOrgInput {
+  create: [ModelCreateWithoutOrgInput!]
+  connect: [ModelWhereUniqueInput!]
+  disconnect: [ModelWhereUniqueInput!]
+  delete: [ModelWhereUniqueInput!]
+  update: [ModelUpdateWithWhereUniqueWithoutOrgInput!]
+  upsert: [ModelUpsertWithWhereUniqueWithoutOrgInput!]
 }
 
 input ModelUpdateOneRequiredWithoutProdsInput {
@@ -2256,6 +2284,7 @@ input ModelUpdateOneWithoutOrdersInput {
 input ModelUpdateWithoutEnquiriesDataInput {
   article: String
   name: String
+  org: OrgUpdateOneWithoutModelsInput
   orders: OrderUpdateManyWithoutModelInput
   prods: ProdUpdateManyWithoutModelInput
 }
@@ -2263,15 +2292,30 @@ input ModelUpdateWithoutEnquiriesDataInput {
 input ModelUpdateWithoutOrdersDataInput {
   article: String
   name: String
+  org: OrgUpdateOneWithoutModelsInput
   enquiries: EnquiryUpdateManyWithoutModelInput
+  prods: ProdUpdateManyWithoutModelInput
+}
+
+input ModelUpdateWithoutOrgDataInput {
+  article: String
+  name: String
+  enquiries: EnquiryUpdateManyWithoutModelInput
+  orders: OrderUpdateManyWithoutModelInput
   prods: ProdUpdateManyWithoutModelInput
 }
 
 input ModelUpdateWithoutProdsDataInput {
   article: String
   name: String
+  org: OrgUpdateOneWithoutModelsInput
   enquiries: EnquiryUpdateManyWithoutModelInput
   orders: OrderUpdateManyWithoutModelInput
+}
+
+input ModelUpdateWithWhereUniqueWithoutOrgInput {
+  where: ModelWhereUniqueInput!
+  data: ModelUpdateWithoutOrgDataInput!
 }
 
 input ModelUpsertWithoutEnquiriesInput {
@@ -2287,6 +2331,12 @@ input ModelUpsertWithoutOrdersInput {
 input ModelUpsertWithoutProdsInput {
   update: ModelUpdateWithoutProdsDataInput!
   create: ModelCreateWithoutProdsInput!
+}
+
+input ModelUpsertWithWhereUniqueWithoutOrgInput {
+  where: ModelWhereUniqueInput!
+  update: ModelUpdateWithoutOrgDataInput!
+  create: ModelCreateWithoutOrgInput!
 }
 
 input ModelWhereInput {
@@ -2418,6 +2468,7 @@ input ModelWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
+  org: OrgWhereInput
   enquiries_every: EnquiryWhereInput
   enquiries_some: EnquiryWhereInput
   enquiries_none: EnquiryWhereInput
@@ -3119,6 +3170,7 @@ type Org implements Node {
   employees(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Employee!]
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry!]
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order!]
+  models(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Model!]
 }
 
 """A connection to a list of items."""
@@ -3139,6 +3191,7 @@ input OrgCreateInput {
   employees: EmployeeCreateManyWithoutOrgInput
   enquiries: EnquiryCreateManyWithoutOrgInput
   orders: OrderCreateManyWithoutOrgInput
+  models: ModelCreateManyWithoutOrgInput
 }
 
 input OrgCreateOneWithoutEmployeesInput {
@@ -3148,6 +3201,11 @@ input OrgCreateOneWithoutEmployeesInput {
 
 input OrgCreateOneWithoutEnquiriesInput {
   create: OrgCreateWithoutEnquiriesInput
+  connect: OrgWhereUniqueInput
+}
+
+input OrgCreateOneWithoutModelsInput {
+  create: OrgCreateWithoutModelsInput
   connect: OrgWhereUniqueInput
 }
 
@@ -3163,6 +3221,7 @@ input OrgCreateWithoutEmployeesInput {
   legalAddress: String
   enquiries: EnquiryCreateManyWithoutOrgInput
   orders: OrderCreateManyWithoutOrgInput
+  models: ModelCreateManyWithoutOrgInput
 }
 
 input OrgCreateWithoutEnquiriesInput {
@@ -3171,6 +3230,17 @@ input OrgCreateWithoutEnquiriesInput {
   name: String!
   legalAddress: String
   employees: EmployeeCreateManyWithoutOrgInput
+  orders: OrderCreateManyWithoutOrgInput
+  models: ModelCreateManyWithoutOrgInput
+}
+
+input OrgCreateWithoutModelsInput {
+  inn: String
+  moedeloId: String
+  name: String!
+  legalAddress: String
+  employees: EmployeeCreateManyWithoutOrgInput
+  enquiries: EnquiryCreateManyWithoutOrgInput
   orders: OrderCreateManyWithoutOrgInput
 }
 
@@ -3181,6 +3251,7 @@ input OrgCreateWithoutOrdersInput {
   legalAddress: String
   employees: EmployeeCreateManyWithoutOrgInput
   enquiries: EnquiryCreateManyWithoutOrgInput
+  models: ModelCreateManyWithoutOrgInput
 }
 
 """An edge in a connection."""
@@ -3264,6 +3335,7 @@ input OrgUpdateInput {
   employees: EmployeeUpdateManyWithoutOrgInput
   enquiries: EnquiryUpdateManyWithoutOrgInput
   orders: OrderUpdateManyWithoutOrgInput
+  models: ModelUpdateManyWithoutOrgInput
 }
 
 input OrgUpdateManyMutationInput {
@@ -3289,6 +3361,15 @@ input OrgUpdateOneWithoutEnquiriesInput {
   upsert: OrgUpsertWithoutEnquiriesInput
 }
 
+input OrgUpdateOneWithoutModelsInput {
+  create: OrgCreateWithoutModelsInput
+  connect: OrgWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: OrgUpdateWithoutModelsDataInput
+  upsert: OrgUpsertWithoutModelsInput
+}
+
 input OrgUpdateOneWithoutOrdersInput {
   create: OrgCreateWithoutOrdersInput
   connect: OrgWhereUniqueInput
@@ -3305,6 +3386,7 @@ input OrgUpdateWithoutEmployeesDataInput {
   legalAddress: String
   enquiries: EnquiryUpdateManyWithoutOrgInput
   orders: OrderUpdateManyWithoutOrgInput
+  models: ModelUpdateManyWithoutOrgInput
 }
 
 input OrgUpdateWithoutEnquiriesDataInput {
@@ -3313,6 +3395,17 @@ input OrgUpdateWithoutEnquiriesDataInput {
   name: String
   legalAddress: String
   employees: EmployeeUpdateManyWithoutOrgInput
+  orders: OrderUpdateManyWithoutOrgInput
+  models: ModelUpdateManyWithoutOrgInput
+}
+
+input OrgUpdateWithoutModelsDataInput {
+  inn: String
+  moedeloId: String
+  name: String
+  legalAddress: String
+  employees: EmployeeUpdateManyWithoutOrgInput
+  enquiries: EnquiryUpdateManyWithoutOrgInput
   orders: OrderUpdateManyWithoutOrgInput
 }
 
@@ -3323,6 +3416,7 @@ input OrgUpdateWithoutOrdersDataInput {
   legalAddress: String
   employees: EmployeeUpdateManyWithoutOrgInput
   enquiries: EnquiryUpdateManyWithoutOrgInput
+  models: ModelUpdateManyWithoutOrgInput
 }
 
 input OrgUpsertWithoutEmployeesInput {
@@ -3333,6 +3427,11 @@ input OrgUpsertWithoutEmployeesInput {
 input OrgUpsertWithoutEnquiriesInput {
   update: OrgUpdateWithoutEnquiriesDataInput!
   create: OrgCreateWithoutEnquiriesInput!
+}
+
+input OrgUpsertWithoutModelsInput {
+  update: OrgUpdateWithoutModelsDataInput!
+  create: OrgCreateWithoutModelsInput!
 }
 
 input OrgUpsertWithoutOrdersInput {
@@ -3558,6 +3657,9 @@ input OrgWhereInput {
   orders_every: OrderWhereInput
   orders_some: OrderWhereInput
   orders_none: OrderWhereInput
+  models_every: ModelWhereInput
+  models_some: ModelWhereInput
+  models_none: ModelWhereInput
 }
 
 input OrgWhereUniqueInput {
