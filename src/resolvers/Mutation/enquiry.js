@@ -121,13 +121,12 @@ const enquiry = {
 				}
 			},
 		}, info )
-		if (orgId || modelId) {
-			await db.mutation.updateManyOrders({
-				where: {
-					enquiry: {
-						id
-					}
-				},
+		// if org or model changed, find and update all related orders
+		if (!(orgId || modelId)) return updatedEnquiry
+		const orders = await db.query.orders({ where: { enquiry: { id } } }, '{ id }')
+		await Promise.all(orders.map(({ id }) => {
+			db.mutation.updateOrder({
+				where: { id },
 				data: {
 					...orgId && {
 						org: {
@@ -144,8 +143,31 @@ const enquiry = {
 						}
 					}
 				}
-			}, '{ count }')
-		}
+			}, '{ id }')
+		}))
+		// await db.mutation.updateManyOrders({
+		// 	where: {
+		// 		enquiry: {
+		// 			id
+		// 		}
+		// 	},
+		// 	data: {
+		// 		...orgId && {
+		// 			org: {
+		// 				connect: {
+		// 					id: orgId
+		// 				}
+		// 			}
+		// 		},
+		// 		...modelId && {
+		// 			model: {
+		// 				connect: {
+		// 					id: modelId
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// }, '{ count }')
 		return updatedEnquiry
 	},
 

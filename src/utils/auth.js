@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 
 const unrestrictedOperations = [
+	// 'IntrospectionQuery',
 	'Login',
 	'CreateOrg',
 	'SignupAndCreateEnquiry',
