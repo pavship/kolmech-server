@@ -30,6 +30,10 @@ const prod = {
       if (!deptExists) { throw new Error(`Участок не найден в базе`) }
       const modelExists = await db.exists.Model({ id: modelId })
       if (!modelExists) { throw new Error(`Модель не найдена в базе`) }
+      // check the fullnumber is unique for this model
+      const fullnumberIsBusy = await db.exists.Prod({ model: { id: modelId }, fullnumber: planeInput.fullnumber })
+      console.log('fullnumberIsBusy > ', fullnumberIsBusy)
+      if (fullnumberIsBusy) { throw new Error(`Изделие этой модели с таким номером уже имеется в базе`) }
     }
 		return db.mutation.upsertProd({
 			where: {

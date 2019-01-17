@@ -91,7 +91,8 @@ type Event {
 
 type Order {
 	id: ID! @unique
-	num: Int
+	num: Int # represents sequential number of this org orders
+	fullnum: String # in format <enquiry.num>-<num>
 	dateLocal: String
 	qty: Int
 	amount: Float

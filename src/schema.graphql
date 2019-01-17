@@ -37,6 +37,7 @@ type Mutation {
   importModels: BatchPayload!
   seedEnquiryStatuses: BatchPayload!
   connectEnquiriesToDocsAndStatus: BatchPayload!
+  populateOrderFullnums: BatchPayload
 }
 
 type Subscription {

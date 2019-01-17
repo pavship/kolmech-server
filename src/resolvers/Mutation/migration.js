@@ -181,6 +181,27 @@ const migration = {
 			console.log(err)
 			return null
 		}
+	},
+
+	// 2019-01-12 I desided to store order's fullnumber of format "<enquiry.num>-<order.num>" in the fullnumber field
+	async populateOrderFullnums(_, __, ctx, info) {
+		try {
+			const { db } = ctx
+			const orders = await db.query.orders({}, '{ id num enquiry { id num }}')
+			// 1. Write string fullnumber into temporary column
+			const updated = await Promise.all(orders.map(({ id, num, enquiry }) =>
+				db.mutation.updateOrder({ 
+					where: { id },
+					data: {
+						fullnum: enquiry.num + '-' + num
+					}
+				})
+			))
+			return { count: updated.length }
+		} catch (err) {
+			console.log(err)
+			return null
+		}
 	}
 
 }

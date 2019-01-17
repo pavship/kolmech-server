@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Fri Jan 11 2019 03:09:19 GMT+0300 (RTZ 2 (зима))
+# timestamp: Sat Jan 12 2019 23:57:30 GMT+0300 (RTZ 2 (зима))
 
 type AggregateDept {
   count: Int!
@@ -2587,6 +2587,7 @@ interface Node {
 type Order implements Node {
   id: ID!
   num: Int
+  fullnum: String
   dateLocal: String
   qty: Int
   amount: Float
@@ -2610,6 +2611,7 @@ type OrderConnection {
 
 input OrderCreateInput {
   num: Int
+  fullnum: String
   dateLocal: String
   qty: Int
   amount: Float
@@ -2648,6 +2650,7 @@ input OrderCreateOneWithoutProdsInput {
 
 input OrderCreateWithoutEnquiryInput {
   num: Int
+  fullnum: String
   dateLocal: String
   qty: Int
   amount: Float
@@ -2660,6 +2663,7 @@ input OrderCreateWithoutEnquiryInput {
 
 input OrderCreateWithoutEventsInput {
   num: Int
+  fullnum: String
   dateLocal: String
   qty: Int
   amount: Float
@@ -2672,6 +2676,7 @@ input OrderCreateWithoutEventsInput {
 
 input OrderCreateWithoutModelInput {
   num: Int
+  fullnum: String
   dateLocal: String
   qty: Int
   amount: Float
@@ -2684,6 +2689,7 @@ input OrderCreateWithoutModelInput {
 
 input OrderCreateWithoutOrgInput {
   num: Int
+  fullnum: String
   dateLocal: String
   qty: Int
   amount: Float
@@ -2696,6 +2702,7 @@ input OrderCreateWithoutOrgInput {
 
 input OrderCreateWithoutProdsInput {
   num: Int
+  fullnum: String
   dateLocal: String
   qty: Int
   amount: Float
@@ -2720,6 +2727,8 @@ enum OrderOrderByInput {
   id_DESC
   num_ASC
   num_DESC
+  fullnum_ASC
+  fullnum_DESC
   dateLocal_ASC
   dateLocal_DESC
   qty_ASC
@@ -2737,6 +2746,7 @@ enum OrderOrderByInput {
 type OrderPreviousValues {
   id: ID!
   num: Int
+  fullnum: String
   dateLocal: String
   qty: Int
   amount: Float
@@ -2784,6 +2794,7 @@ input OrderSubscriptionWhereInput {
 
 input OrderUpdateInput {
   num: Int
+  fullnum: String
   dateLocal: String
   qty: Int
   amount: Float
@@ -2797,6 +2808,7 @@ input OrderUpdateInput {
 
 input OrderUpdateManyMutationInput {
   num: Int
+  fullnum: String
   dateLocal: String
   qty: Int
   amount: Float
@@ -2850,6 +2862,7 @@ input OrderUpdateOneWithoutProdsInput {
 
 input OrderUpdateWithoutEnquiryDataInput {
   num: Int
+  fullnum: String
   dateLocal: String
   qty: Int
   amount: Float
@@ -2862,6 +2875,7 @@ input OrderUpdateWithoutEnquiryDataInput {
 
 input OrderUpdateWithoutEventsDataInput {
   num: Int
+  fullnum: String
   dateLocal: String
   qty: Int
   amount: Float
@@ -2874,6 +2888,7 @@ input OrderUpdateWithoutEventsDataInput {
 
 input OrderUpdateWithoutModelDataInput {
   num: Int
+  fullnum: String
   dateLocal: String
   qty: Int
   amount: Float
@@ -2886,6 +2901,7 @@ input OrderUpdateWithoutModelDataInput {
 
 input OrderUpdateWithoutOrgDataInput {
   num: Int
+  fullnum: String
   dateLocal: String
   qty: Int
   amount: Float
@@ -2898,6 +2914,7 @@ input OrderUpdateWithoutOrgDataInput {
 
 input OrderUpdateWithoutProdsDataInput {
   num: Int
+  fullnum: String
   dateLocal: String
   qty: Int
   amount: Float
@@ -3022,6 +3039,46 @@ input OrderWhereInput {
 
   """All values greater than or equal the given value."""
   num_gte: Int
+  fullnum: String
+
+  """All values that are not equal to given value."""
+  fullnum_not: String
+
+  """All values that are contained in given list."""
+  fullnum_in: [String!]
+
+  """All values that are not contained in given list."""
+  fullnum_not_in: [String!]
+
+  """All values less than the given value."""
+  fullnum_lt: String
+
+  """All values less than or equal the given value."""
+  fullnum_lte: String
+
+  """All values greater than the given value."""
+  fullnum_gt: String
+
+  """All values greater than or equal the given value."""
+  fullnum_gte: String
+
+  """All values containing the given string."""
+  fullnum_contains: String
+
+  """All values not containing the given string."""
+  fullnum_not_contains: String
+
+  """All values starting with the given string."""
+  fullnum_starts_with: String
+
+  """All values not starting with the given string."""
+  fullnum_not_starts_with: String
+
+  """All values ending with the given string."""
+  fullnum_ends_with: String
+
+  """All values not ending with the given string."""
+  fullnum_not_ends_with: String
   dateLocal: String
 
   """All values that are not equal to given value."""

@@ -6,16 +6,17 @@ const order = {
 		let orgId = ''
 		let modelId = ''
 		let num = 0
+		let fullnum = ''
 		// if new
-		console.log('id > ', id || 'new')
 		if (!id) {
-			const enquiry = await db.query.enquiry({ where: { id: enquiryId } }, '{ id org { id } model { id } }')
+			const enquiry = await db.query.enquiry({ where: { id: enquiryId } }, '{ id num org { id } model { id } }')
 			if (!enquiry) throw new Error(`Заявка не найдена в базе`)
 			orgId = enquiry.org.id
 			modelId = enquiry.model.id
 			// Automatically assign incremented counter number for the new order of corresponding org
 			const lastOrgOrder = await db.query.orders({where: { org: { id: orgId }}, last: 1 }, '{ num }')
 			num = (!lastOrgOrder[0] || !lastOrgOrder[0].num) ? 1 : lastOrgOrder[0].num + 1
+			fullnum = enquiry.num + '-' + num
 		}
 		return db.mutation.upsertOrder({
 			where: {
@@ -23,6 +24,7 @@ const order = {
 			},
 			create: {
 				num,
+				fullnum,
 				dateLocal,
 				qty,
 				amount,
