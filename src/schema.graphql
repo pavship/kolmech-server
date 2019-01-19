@@ -10,6 +10,7 @@ type Query {
   orgEmployees (orgId: ID!): [Employee!]!
   depts: [Dept!]!
   statuses: [Status!]!
+  model (id: ID!): Model
   models: [Model!]!
   modelProds(modelId: ID!): [Prod!]!
   deptProds(deptId: ID!): [Prod!]!

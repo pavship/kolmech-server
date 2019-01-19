@@ -60,7 +60,11 @@ const Query = {
 	statuses(_, __, ctx, info) {
 		return ctx.db.query.statuses({ orderBy: 'stage_ASC' }, info)
 	},
-    
+        
+	model(_, { id }, ctx, info) {
+		return ctx.db.query.model({ where: { id } }, info)
+	},
+
 	async models(_, __, ctx, info) {
 		return ctx.db.query.models({ orderBy: 'name_ASC' }, info)
 	},
