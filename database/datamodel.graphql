@@ -147,6 +147,14 @@ type Prod {
   year: Int
 }
 
+type File {
+	id: ID! @unique
+	path: String @unique
+	filename: String
+	mimetype: String
+	encoding: String
+}
+
 enum TelType {
   WORK
   MOBILE

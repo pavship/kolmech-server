@@ -1,4 +1,6 @@
 # import User from "./generated/prisma.graphql"
+# this is needed for upload to work
+scalar Upload
 
 type Query {
   me: User
@@ -17,26 +19,33 @@ type Query {
 }
 
 type Mutation {
+  # auth
   signup(email: String!, password: String!, fName: String, lName: String, mName: String, regName: String, tel: String, country: String): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
-  createEnquiry(dateLocal: String!, orgId: ID!, modelId: ID!, qty: Int!): Enquiry
+  # public
   signupAndCreateEnquiry(orgId: ID!, regName: String!, email: String!, tel: String!, country: String!, modelName: String!, qty: Int!, period: String!, deadlineDateLocal: String, htmlText: String, orgId: ID!, files: [FileLinkCreateInput!]!, hasAgreedToRules: Boolean!, hasAgreedToSearch3rdParty: Boolean): Enquiry
-  updateEnquiry(input: EnquiryInput!): Enquiry
-  deleteAllEnquiries: BatchPayload!
+  # other
+  createEnquiry(dateLocal: String!, orgId: ID!, modelId: ID!, qty: Int!): Enquiry
   createEnquiryEvent(enquiryId: ID!, htmlText: String, statusId: ID, doc: DocCreateInput): Event
   createOrg(inn: String!): Org
-  deleteOrg(id: ID!): Org
+  deleteAllEnquiries: BatchPayload!
   deleteAllOrgs: BatchPayload!
-  upsertOrder(id: ID, enquiryId: ID, dateLocal: String!, qty: Int, amount: Float): Order
-  upsertTel(input: TelInput!): Tel
+  deleteOrg(id: ID!): Org
+  moveProds(to: ID!, prodIds: [ID!]!): MoveProdPayload!
   reserveProds(orderId: ID!, prodIds: [ID!]!): Order
-  upsertPerson(input: PersonInput!): Person
-  upsertProd(input: ProdInput!): Prod
+  seedEnquiryStatuses: BatchPayload!
+  updateEnquiry(input: EnquiryInput!): Enquiry
   upsertEmployee(input: EmployeeInput!): Employee
   upsertModel(input: ModelInput!): Model
-  moveProds(to: ID!, prodIds: [ID!]!): MoveProdPayload!
+  upsertOrder(id: ID, enquiryId: ID, dateLocal: String!, qty: Int, amount: Float): Order
+  upsertPerson(input: PersonInput!): Person
+  upsertProd(input: ProdInput!): Prod
+  upsertTel(input: TelInput!): Tel
+  # file handling
+  singleUpload (file: Upload!): File
+  multipleUpload (files: [Upload!]!): [File!]!
+  # db migration scripts:
   importModels: BatchPayload!
-  seedEnquiryStatuses: BatchPayload!
   connectEnquiriesToDocsAndStatus: BatchPayload!
   populateOrderFullnums: BatchPayload
 }
