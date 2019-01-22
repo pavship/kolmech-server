@@ -75,7 +75,7 @@ const prod = {
     const { userId, db } = ctx
     const deptExists = await db.exists.Dept({ id: to })
     if (!deptExists) { throw new Error(`Участок не найден в базе`) }
-    const prods = await ctx.db.query.prods({
+    const prods = await db.query.prods({
       where: {
         id_in: prodIds
       }
@@ -84,7 +84,7 @@ const prod = {
       throw new Error(`Не все изделия найдены в базе. Перемещение не производилось.`)
     }
     const updatedProds = await Promise.all(prodIds.map(id => {
-      return ctx.db.mutation.updateProd({
+      return db.mutation.updateProd({
         where: { id },
         data: {
           dept: {

@@ -129,6 +129,13 @@ type Model {
 	enquiries: [Enquiry!]! @relation(name: "EnquiryModel")
 	orders: [Order!]! @relation(name: "ModelOrders")
   prods: [Prod!]! @relation(name: "ModelProds")
+  drawings: [Drawing!]! @relation(name: "ModelDrawings" onDelete: CASCADE)
+}
+
+type Drawing{
+	id: ID! @unique
+	file: File @relation(name: "DrawingFile" onDelete: CASCADE)
+	model: Model  @relation(name: "ModelDrawings")
 }
 
 type Prod {
@@ -153,6 +160,7 @@ type File {
 	filename: String
 	mimetype: String
 	encoding: String
+	drawing: Drawing @relation(name: "DrawingFile")
 }
 
 enum TelType {

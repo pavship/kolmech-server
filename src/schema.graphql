@@ -25,6 +25,7 @@ type Mutation {
   # public
   signupAndCreateEnquiry(orgId: ID!, regName: String!, email: String!, tel: String!, country: String!, modelName: String!, qty: Int!, period: String!, deadlineDateLocal: String, htmlText: String, orgId: ID!, files: [FileLinkCreateInput!]!, hasAgreedToRules: Boolean!, hasAgreedToSearch3rdParty: Boolean): Enquiry
   # other
+  createDrawings(modelId: ID!, files: [Upload!]!): [Drawing!]!
   createEnquiry(dateLocal: String!, orgId: ID!, modelId: ID!, qty: Int!): Enquiry
   createEnquiryEvent(enquiryId: ID!, htmlText: String, statusId: ID, doc: DocCreateInput): Event
   createOrg(inn: String!): Org

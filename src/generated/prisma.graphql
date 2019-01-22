@@ -1,11 +1,15 @@
 # source: http://localhost:4466
-# timestamp: Mon Jan 21 2019 00:40:39 GMT+0300 (GMT+03:00)
+# timestamp: Tue Jan 22 2019 17:48:05 GMT+0300 (GMT+03:00)
 
 type AggregateDept {
   count: Int!
 }
 
 type AggregateDoc {
+  count: Int!
+}
+
+type AggregateDrawing {
   count: Int!
 }
 
@@ -623,6 +627,210 @@ input DocWhereInput {
 }
 
 input DocWhereUniqueInput {
+  id: ID
+}
+
+type Drawing implements Node {
+  id: ID!
+  file: File
+  model: Model
+}
+
+"""A connection to a list of items."""
+type DrawingConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [DrawingEdge]!
+  aggregate: AggregateDrawing!
+}
+
+input DrawingCreateInput {
+  file: FileCreateOneWithoutDrawingInput
+  model: ModelCreateOneWithoutDrawingsInput
+}
+
+input DrawingCreateManyWithoutModelInput {
+  create: [DrawingCreateWithoutModelInput!]
+  connect: [DrawingWhereUniqueInput!]
+}
+
+input DrawingCreateOneWithoutFileInput {
+  create: DrawingCreateWithoutFileInput
+  connect: DrawingWhereUniqueInput
+}
+
+input DrawingCreateWithoutFileInput {
+  model: ModelCreateOneWithoutDrawingsInput
+}
+
+input DrawingCreateWithoutModelInput {
+  file: FileCreateOneWithoutDrawingInput
+}
+
+"""An edge in a connection."""
+type DrawingEdge {
+  """The item at the end of the edge."""
+  node: Drawing!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum DrawingOrderByInput {
+  id_ASC
+  id_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type DrawingPreviousValues {
+  id: ID!
+}
+
+type DrawingSubscriptionPayload {
+  mutation: MutationType!
+  node: Drawing
+  updatedFields: [String!]
+  previousValues: DrawingPreviousValues
+}
+
+input DrawingSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [DrawingSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [DrawingSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [DrawingSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: DrawingWhereInput
+}
+
+input DrawingUpdateInput {
+  file: FileUpdateOneWithoutDrawingInput
+  model: ModelUpdateOneWithoutDrawingsInput
+}
+
+input DrawingUpdateManyWithoutModelInput {
+  create: [DrawingCreateWithoutModelInput!]
+  connect: [DrawingWhereUniqueInput!]
+  disconnect: [DrawingWhereUniqueInput!]
+  delete: [DrawingWhereUniqueInput!]
+  update: [DrawingUpdateWithWhereUniqueWithoutModelInput!]
+  upsert: [DrawingUpsertWithWhereUniqueWithoutModelInput!]
+}
+
+input DrawingUpdateOneWithoutFileInput {
+  create: DrawingCreateWithoutFileInput
+  connect: DrawingWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: DrawingUpdateWithoutFileDataInput
+  upsert: DrawingUpsertWithoutFileInput
+}
+
+input DrawingUpdateWithoutFileDataInput {
+  model: ModelUpdateOneWithoutDrawingsInput
+}
+
+input DrawingUpdateWithoutModelDataInput {
+  file: FileUpdateOneWithoutDrawingInput
+}
+
+input DrawingUpdateWithWhereUniqueWithoutModelInput {
+  where: DrawingWhereUniqueInput!
+  data: DrawingUpdateWithoutModelDataInput!
+}
+
+input DrawingUpsertWithoutFileInput {
+  update: DrawingUpdateWithoutFileDataInput!
+  create: DrawingCreateWithoutFileInput!
+}
+
+input DrawingUpsertWithWhereUniqueWithoutModelInput {
+  where: DrawingWhereUniqueInput!
+  update: DrawingUpdateWithoutModelDataInput!
+  create: DrawingCreateWithoutModelInput!
+}
+
+input DrawingWhereInput {
+  """Logical AND on all given filters."""
+  AND: [DrawingWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [DrawingWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [DrawingWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  file: FileWhereInput
+  model: ModelWhereInput
+}
+
+input DrawingWhereUniqueInput {
   id: ID
 }
 
@@ -1856,6 +2064,7 @@ type File implements Node {
   filename: String
   mimetype: String
   encoding: String
+  drawing: Drawing
 }
 
 """A connection to a list of items."""
@@ -1869,6 +2078,19 @@ type FileConnection {
 }
 
 input FileCreateInput {
+  path: String
+  filename: String
+  mimetype: String
+  encoding: String
+  drawing: DrawingCreateOneWithoutFileInput
+}
+
+input FileCreateOneWithoutDrawingInput {
+  create: FileCreateWithoutDrawingInput
+  connect: FileWhereUniqueInput
+}
+
+input FileCreateWithoutDrawingInput {
   path: String
   filename: String
   mimetype: String
@@ -2186,6 +2408,7 @@ input FileUpdateInput {
   filename: String
   mimetype: String
   encoding: String
+  drawing: DrawingUpdateOneWithoutFileInput
 }
 
 input FileUpdateManyMutationInput {
@@ -2193,6 +2416,27 @@ input FileUpdateManyMutationInput {
   filename: String
   mimetype: String
   encoding: String
+}
+
+input FileUpdateOneWithoutDrawingInput {
+  create: FileCreateWithoutDrawingInput
+  connect: FileWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: FileUpdateWithoutDrawingDataInput
+  upsert: FileUpsertWithoutDrawingInput
+}
+
+input FileUpdateWithoutDrawingDataInput {
+  path: String
+  filename: String
+  mimetype: String
+  encoding: String
+}
+
+input FileUpsertWithoutDrawingInput {
+  update: FileUpdateWithoutDrawingDataInput!
+  create: FileCreateWithoutDrawingInput!
 }
 
 input FileWhereInput {
@@ -2404,6 +2648,7 @@ input FileWhereInput {
 
   """All values not ending with the given string."""
   encoding_not_ends_with: String
+  drawing: DrawingWhereInput
 }
 
 input FileWhereUniqueInput {
@@ -2425,6 +2670,7 @@ type Model implements Node {
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry!]
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order!]
   prods(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Prod!]
+  drawings(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Drawing!]
 }
 
 """A connection to a list of items."""
@@ -2444,11 +2690,17 @@ input ModelCreateInput {
   enquiries: EnquiryCreateManyWithoutModelInput
   orders: OrderCreateManyWithoutModelInput
   prods: ProdCreateManyWithoutModelInput
+  drawings: DrawingCreateManyWithoutModelInput
 }
 
 input ModelCreateManyWithoutOrgInput {
   create: [ModelCreateWithoutOrgInput!]
   connect: [ModelWhereUniqueInput!]
+}
+
+input ModelCreateOneWithoutDrawingsInput {
+  create: ModelCreateWithoutDrawingsInput
+  connect: ModelWhereUniqueInput
 }
 
 input ModelCreateOneWithoutEnquiriesInput {
@@ -2466,12 +2718,22 @@ input ModelCreateOneWithoutProdsInput {
   connect: ModelWhereUniqueInput
 }
 
+input ModelCreateWithoutDrawingsInput {
+  article: String
+  name: String!
+  org: OrgCreateOneWithoutModelsInput
+  enquiries: EnquiryCreateManyWithoutModelInput
+  orders: OrderCreateManyWithoutModelInput
+  prods: ProdCreateManyWithoutModelInput
+}
+
 input ModelCreateWithoutEnquiriesInput {
   article: String
   name: String!
   org: OrgCreateOneWithoutModelsInput
   orders: OrderCreateManyWithoutModelInput
   prods: ProdCreateManyWithoutModelInput
+  drawings: DrawingCreateManyWithoutModelInput
 }
 
 input ModelCreateWithoutOrdersInput {
@@ -2480,6 +2742,7 @@ input ModelCreateWithoutOrdersInput {
   org: OrgCreateOneWithoutModelsInput
   enquiries: EnquiryCreateManyWithoutModelInput
   prods: ProdCreateManyWithoutModelInput
+  drawings: DrawingCreateManyWithoutModelInput
 }
 
 input ModelCreateWithoutOrgInput {
@@ -2488,6 +2751,7 @@ input ModelCreateWithoutOrgInput {
   enquiries: EnquiryCreateManyWithoutModelInput
   orders: OrderCreateManyWithoutModelInput
   prods: ProdCreateManyWithoutModelInput
+  drawings: DrawingCreateManyWithoutModelInput
 }
 
 input ModelCreateWithoutProdsInput {
@@ -2496,6 +2760,7 @@ input ModelCreateWithoutProdsInput {
   org: OrgCreateOneWithoutModelsInput
   enquiries: EnquiryCreateManyWithoutModelInput
   orders: OrderCreateManyWithoutModelInput
+  drawings: DrawingCreateManyWithoutModelInput
 }
 
 """An edge in a connection."""
@@ -2572,6 +2837,7 @@ input ModelUpdateInput {
   enquiries: EnquiryUpdateManyWithoutModelInput
   orders: OrderUpdateManyWithoutModelInput
   prods: ProdUpdateManyWithoutModelInput
+  drawings: DrawingUpdateManyWithoutModelInput
 }
 
 input ModelUpdateManyMutationInput {
@@ -2595,6 +2861,15 @@ input ModelUpdateOneRequiredWithoutProdsInput {
   upsert: ModelUpsertWithoutProdsInput
 }
 
+input ModelUpdateOneWithoutDrawingsInput {
+  create: ModelCreateWithoutDrawingsInput
+  connect: ModelWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: ModelUpdateWithoutDrawingsDataInput
+  upsert: ModelUpsertWithoutDrawingsInput
+}
+
 input ModelUpdateOneWithoutEnquiriesInput {
   create: ModelCreateWithoutEnquiriesInput
   connect: ModelWhereUniqueInput
@@ -2613,12 +2888,22 @@ input ModelUpdateOneWithoutOrdersInput {
   upsert: ModelUpsertWithoutOrdersInput
 }
 
+input ModelUpdateWithoutDrawingsDataInput {
+  article: String
+  name: String
+  org: OrgUpdateOneWithoutModelsInput
+  enquiries: EnquiryUpdateManyWithoutModelInput
+  orders: OrderUpdateManyWithoutModelInput
+  prods: ProdUpdateManyWithoutModelInput
+}
+
 input ModelUpdateWithoutEnquiriesDataInput {
   article: String
   name: String
   org: OrgUpdateOneWithoutModelsInput
   orders: OrderUpdateManyWithoutModelInput
   prods: ProdUpdateManyWithoutModelInput
+  drawings: DrawingUpdateManyWithoutModelInput
 }
 
 input ModelUpdateWithoutOrdersDataInput {
@@ -2627,6 +2912,7 @@ input ModelUpdateWithoutOrdersDataInput {
   org: OrgUpdateOneWithoutModelsInput
   enquiries: EnquiryUpdateManyWithoutModelInput
   prods: ProdUpdateManyWithoutModelInput
+  drawings: DrawingUpdateManyWithoutModelInput
 }
 
 input ModelUpdateWithoutOrgDataInput {
@@ -2635,6 +2921,7 @@ input ModelUpdateWithoutOrgDataInput {
   enquiries: EnquiryUpdateManyWithoutModelInput
   orders: OrderUpdateManyWithoutModelInput
   prods: ProdUpdateManyWithoutModelInput
+  drawings: DrawingUpdateManyWithoutModelInput
 }
 
 input ModelUpdateWithoutProdsDataInput {
@@ -2643,11 +2930,17 @@ input ModelUpdateWithoutProdsDataInput {
   org: OrgUpdateOneWithoutModelsInput
   enquiries: EnquiryUpdateManyWithoutModelInput
   orders: OrderUpdateManyWithoutModelInput
+  drawings: DrawingUpdateManyWithoutModelInput
 }
 
 input ModelUpdateWithWhereUniqueWithoutOrgInput {
   where: ModelWhereUniqueInput!
   data: ModelUpdateWithoutOrgDataInput!
+}
+
+input ModelUpsertWithoutDrawingsInput {
+  update: ModelUpdateWithoutDrawingsDataInput!
+  create: ModelCreateWithoutDrawingsInput!
 }
 
 input ModelUpsertWithoutEnquiriesInput {
@@ -2810,6 +3103,9 @@ input ModelWhereInput {
   prods_every: ProdWhereInput
   prods_some: ProdWhereInput
   prods_none: ProdWhereInput
+  drawings_every: DrawingWhereInput
+  drawings_some: DrawingWhereInput
+  drawings_none: DrawingWhereInput
 }
 
 input ModelWhereUniqueInput {
@@ -2829,6 +3125,7 @@ type Mutation {
   createEvent(data: EventCreateInput!): Event!
   createOrder(data: OrderCreateInput!): Order!
   createModel(data: ModelCreateInput!): Model!
+  createDrawing(data: DrawingCreateInput!): Drawing!
   createProd(data: ProdCreateInput!): Prod!
   createFile(data: FileCreateInput!): File!
   createStatus(data: StatusCreateInput!): Status!
@@ -2844,6 +3141,7 @@ type Mutation {
   updateEvent(data: EventUpdateInput!, where: EventWhereUniqueInput!): Event
   updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
   updateModel(data: ModelUpdateInput!, where: ModelWhereUniqueInput!): Model
+  updateDrawing(data: DrawingUpdateInput!, where: DrawingWhereUniqueInput!): Drawing
   updateProd(data: ProdUpdateInput!, where: ProdWhereUniqueInput!): Prod
   updateFile(data: FileUpdateInput!, where: FileWhereUniqueInput!): File
   updateStatus(data: StatusUpdateInput!, where: StatusWhereUniqueInput!): Status
@@ -2859,6 +3157,7 @@ type Mutation {
   deleteEvent(where: EventWhereUniqueInput!): Event
   deleteOrder(where: OrderWhereUniqueInput!): Order
   deleteModel(where: ModelWhereUniqueInput!): Model
+  deleteDrawing(where: DrawingWhereUniqueInput!): Drawing
   deleteProd(where: ProdWhereUniqueInput!): Prod
   deleteFile(where: FileWhereUniqueInput!): File
   deleteStatus(where: StatusWhereUniqueInput!): Status
@@ -2874,6 +3173,7 @@ type Mutation {
   upsertEvent(where: EventWhereUniqueInput!, create: EventCreateInput!, update: EventUpdateInput!): Event!
   upsertOrder(where: OrderWhereUniqueInput!, create: OrderCreateInput!, update: OrderUpdateInput!): Order!
   upsertModel(where: ModelWhereUniqueInput!, create: ModelCreateInput!, update: ModelUpdateInput!): Model!
+  upsertDrawing(where: DrawingWhereUniqueInput!, create: DrawingCreateInput!, update: DrawingUpdateInput!): Drawing!
   upsertProd(where: ProdWhereUniqueInput!, create: ProdCreateInput!, update: ProdUpdateInput!): Prod!
   upsertFile(where: FileWhereUniqueInput!, create: FileCreateInput!, update: FileUpdateInput!): File!
   upsertStatus(where: StatusWhereUniqueInput!, create: StatusCreateInput!, update: StatusUpdateInput!): Status!
@@ -2904,6 +3204,7 @@ type Mutation {
   deleteManyEvents(where: EventWhereInput): BatchPayload!
   deleteManyOrders(where: OrderWhereInput): BatchPayload!
   deleteManyModels(where: ModelWhereInput): BatchPayload!
+  deleteManyDrawings(where: DrawingWhereInput): BatchPayload!
   deleteManyProds(where: ProdWhereInput): BatchPayload!
   deleteManyFiles(where: FileWhereInput): BatchPayload!
   deleteManyStatuses(where: StatusWhereInput): BatchPayload!
@@ -5184,6 +5485,7 @@ type Query {
   events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event]!
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
   models(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Model]!
+  drawings(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Drawing]!
   prods(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Prod]!
   files(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [File]!
   statuses(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Status]!
@@ -5199,6 +5501,7 @@ type Query {
   event(where: EventWhereUniqueInput!): Event
   order(where: OrderWhereUniqueInput!): Order
   model(where: ModelWhereUniqueInput!): Model
+  drawing(where: DrawingWhereUniqueInput!): Drawing
   prod(where: ProdWhereUniqueInput!): Prod
   file(where: FileWhereUniqueInput!): File
   status(where: StatusWhereUniqueInput!): Status
@@ -5214,6 +5517,7 @@ type Query {
   eventsConnection(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EventConnection!
   ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
   modelsConnection(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ModelConnection!
+  drawingsConnection(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DrawingConnection!
   prodsConnection(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProdConnection!
   filesConnection(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
   statusesConnection(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StatusConnection!
@@ -5566,6 +5870,7 @@ type Subscription {
   event(where: EventSubscriptionWhereInput): EventSubscriptionPayload
   order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
   model(where: ModelSubscriptionWhereInput): ModelSubscriptionPayload
+  drawing(where: DrawingSubscriptionWhereInput): DrawingSubscriptionPayload
   prod(where: ProdSubscriptionWhereInput): ProdSubscriptionPayload
   file(where: FileSubscriptionWhereInput): FileSubscriptionPayload
   status(where: StatusSubscriptionWhereInput): StatusSubscriptionPayload
