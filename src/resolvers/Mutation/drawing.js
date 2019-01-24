@@ -1,4 +1,4 @@
-const { upload } = require('./file')
+const { upload, removeUpload } = require('./file')
 
 const drawing = {
 	async createDrawings(_, { modelId, files }, ctx, info) {
@@ -21,6 +21,16 @@ const drawing = {
         }
       }, info)
     ))
+  },
+  async deleteDrawings(_, { ids }, ctx, info) {
+    const { userId, db } = ctx
+    const drawings = await db.query.drawings({ where: { id_in: ids }}, '{ id file { path } }')
+    await Promise.all(drawings.map(({ file: { path } }) => removeUpload(path)))
+    const deleted = Promise.all(drawings.map(({ id }) => 
+      db.mutation.deleteDrawing({ where: { id } }), '{ id }'))
+    console.log('deleted > ', deleted)
+    // return db.mutation.deleteManyDrawings({ where: { id_in: ids } })
+    return {count: 0}
   }
 }
 

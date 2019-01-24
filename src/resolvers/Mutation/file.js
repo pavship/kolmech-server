@@ -1,4 +1,4 @@
-const { createWriteStream } = require('fs')
+const { createWriteStream, promises: fsp } = require('fs')
 
 const storeUpload = async ({ stream, path }) => {
   return new Promise((resolve, reject) =>
@@ -7,6 +7,10 @@ const storeUpload = async ({ stream, path }) => {
       .on('finish', resolve)
       .on('error', reject),
   )
+}
+
+const removeUpload = path => {
+  return fsp.unlink(path)
 }
 
 const createFile = async ({ filename, mimetype, encoding }, ctx) => {
@@ -38,4 +42,4 @@ const file = {
   },
 }
 
-module.exports = { file, upload }
+module.exports = { file, upload, removeUpload }
