@@ -30,11 +30,6 @@ const upload = async ( file, ctx ) => {
   const { stream, filename, mimetype, encoding } = await file
   const { id, path } = await createFile({ filename, mimetype, encoding }, ctx)
   await storeUpload({ stream, path })
-  // image processing
-  if (mimetype.startsWith('image/')) {
-    
-  }
-  // createMinifiedImage: 'w720'
   return { id, path, filename, mimetype, encoding }
 }
 
