@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Tue Jan 22 2019 17:48:05 GMT+0300 (GMT+03:00)
+# timestamp: Tue Jan 29 2019 19:18:44 GMT+0300 (GMT+03:00)
 
 type AggregateDept {
   count: Int!
@@ -632,7 +632,7 @@ input DocWhereUniqueInput {
 
 type Drawing implements Node {
   id: ID!
-  file: File
+  files(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [File!]
   model: Model
 }
 
@@ -647,7 +647,7 @@ type DrawingConnection {
 }
 
 input DrawingCreateInput {
-  file: FileCreateOneWithoutDrawingInput
+  files: FileCreateManyWithoutDrawingInput
   model: ModelCreateOneWithoutDrawingsInput
 }
 
@@ -656,17 +656,17 @@ input DrawingCreateManyWithoutModelInput {
   connect: [DrawingWhereUniqueInput!]
 }
 
-input DrawingCreateOneWithoutFileInput {
-  create: DrawingCreateWithoutFileInput
+input DrawingCreateOneWithoutFilesInput {
+  create: DrawingCreateWithoutFilesInput
   connect: DrawingWhereUniqueInput
 }
 
-input DrawingCreateWithoutFileInput {
+input DrawingCreateWithoutFilesInput {
   model: ModelCreateOneWithoutDrawingsInput
 }
 
 input DrawingCreateWithoutModelInput {
-  file: FileCreateOneWithoutDrawingInput
+  files: FileCreateManyWithoutDrawingInput
 }
 
 """An edge in a connection."""
@@ -731,7 +731,7 @@ input DrawingSubscriptionWhereInput {
 }
 
 input DrawingUpdateInput {
-  file: FileUpdateOneWithoutDrawingInput
+  files: FileUpdateManyWithoutDrawingInput
   model: ModelUpdateOneWithoutDrawingsInput
 }
 
@@ -744,21 +744,21 @@ input DrawingUpdateManyWithoutModelInput {
   upsert: [DrawingUpsertWithWhereUniqueWithoutModelInput!]
 }
 
-input DrawingUpdateOneWithoutFileInput {
-  create: DrawingCreateWithoutFileInput
+input DrawingUpdateOneWithoutFilesInput {
+  create: DrawingCreateWithoutFilesInput
   connect: DrawingWhereUniqueInput
   disconnect: Boolean
   delete: Boolean
-  update: DrawingUpdateWithoutFileDataInput
-  upsert: DrawingUpsertWithoutFileInput
+  update: DrawingUpdateWithoutFilesDataInput
+  upsert: DrawingUpsertWithoutFilesInput
 }
 
-input DrawingUpdateWithoutFileDataInput {
+input DrawingUpdateWithoutFilesDataInput {
   model: ModelUpdateOneWithoutDrawingsInput
 }
 
 input DrawingUpdateWithoutModelDataInput {
-  file: FileUpdateOneWithoutDrawingInput
+  files: FileUpdateManyWithoutDrawingInput
 }
 
 input DrawingUpdateWithWhereUniqueWithoutModelInput {
@@ -766,9 +766,9 @@ input DrawingUpdateWithWhereUniqueWithoutModelInput {
   data: DrawingUpdateWithoutModelDataInput!
 }
 
-input DrawingUpsertWithoutFileInput {
-  update: DrawingUpdateWithoutFileDataInput!
-  create: DrawingCreateWithoutFileInput!
+input DrawingUpsertWithoutFilesInput {
+  update: DrawingUpdateWithoutFilesDataInput!
+  create: DrawingCreateWithoutFilesInput!
 }
 
 input DrawingUpsertWithWhereUniqueWithoutModelInput {
@@ -826,7 +826,9 @@ input DrawingWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
-  file: FileWhereInput
+  files_every: FileWhereInput
+  files_some: FileWhereInput
+  files_none: FileWhereInput
   model: ModelWhereInput
 }
 
@@ -2064,6 +2066,10 @@ type File implements Node {
   filename: String
   mimetype: String
   encoding: String
+  size: Int
+  isOri: Boolean
+  width: Int
+  height: Int
   drawing: Drawing
 }
 
@@ -2082,12 +2088,16 @@ input FileCreateInput {
   filename: String
   mimetype: String
   encoding: String
-  drawing: DrawingCreateOneWithoutFileInput
+  size: Int
+  isOri: Boolean
+  width: Int
+  height: Int
+  drawing: DrawingCreateOneWithoutFilesInput
 }
 
-input FileCreateOneWithoutDrawingInput {
-  create: FileCreateWithoutDrawingInput
-  connect: FileWhereUniqueInput
+input FileCreateManyWithoutDrawingInput {
+  create: [FileCreateWithoutDrawingInput!]
+  connect: [FileWhereUniqueInput!]
 }
 
 input FileCreateWithoutDrawingInput {
@@ -2095,6 +2105,10 @@ input FileCreateWithoutDrawingInput {
   filename: String
   mimetype: String
   encoding: String
+  size: Int
+  isOri: Boolean
+  width: Int
+  height: Int
 }
 
 """An edge in a connection."""
@@ -2350,6 +2364,14 @@ enum FileOrderByInput {
   mimetype_DESC
   encoding_ASC
   encoding_DESC
+  size_ASC
+  size_DESC
+  isOri_ASC
+  isOri_DESC
+  width_ASC
+  width_DESC
+  height_ASC
+  height_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -2362,6 +2384,10 @@ type FilePreviousValues {
   filename: String
   mimetype: String
   encoding: String
+  size: Int
+  isOri: Boolean
+  width: Int
+  height: Int
 }
 
 type FileSubscriptionPayload {
@@ -2408,7 +2434,11 @@ input FileUpdateInput {
   filename: String
   mimetype: String
   encoding: String
-  drawing: DrawingUpdateOneWithoutFileInput
+  size: Int
+  isOri: Boolean
+  width: Int
+  height: Int
+  drawing: DrawingUpdateOneWithoutFilesInput
 }
 
 input FileUpdateManyMutationInput {
@@ -2416,15 +2446,19 @@ input FileUpdateManyMutationInput {
   filename: String
   mimetype: String
   encoding: String
+  size: Int
+  isOri: Boolean
+  width: Int
+  height: Int
 }
 
-input FileUpdateOneWithoutDrawingInput {
-  create: FileCreateWithoutDrawingInput
-  connect: FileWhereUniqueInput
-  disconnect: Boolean
-  delete: Boolean
-  update: FileUpdateWithoutDrawingDataInput
-  upsert: FileUpsertWithoutDrawingInput
+input FileUpdateManyWithoutDrawingInput {
+  create: [FileCreateWithoutDrawingInput!]
+  connect: [FileWhereUniqueInput!]
+  disconnect: [FileWhereUniqueInput!]
+  delete: [FileWhereUniqueInput!]
+  update: [FileUpdateWithWhereUniqueWithoutDrawingInput!]
+  upsert: [FileUpsertWithWhereUniqueWithoutDrawingInput!]
 }
 
 input FileUpdateWithoutDrawingDataInput {
@@ -2432,9 +2466,19 @@ input FileUpdateWithoutDrawingDataInput {
   filename: String
   mimetype: String
   encoding: String
+  size: Int
+  isOri: Boolean
+  width: Int
+  height: Int
 }
 
-input FileUpsertWithoutDrawingInput {
+input FileUpdateWithWhereUniqueWithoutDrawingInput {
+  where: FileWhereUniqueInput!
+  data: FileUpdateWithoutDrawingDataInput!
+}
+
+input FileUpsertWithWhereUniqueWithoutDrawingInput {
+  where: FileWhereUniqueInput!
   update: FileUpdateWithoutDrawingDataInput!
   create: FileCreateWithoutDrawingInput!
 }
@@ -2648,6 +2692,76 @@ input FileWhereInput {
 
   """All values not ending with the given string."""
   encoding_not_ends_with: String
+  size: Int
+
+  """All values that are not equal to given value."""
+  size_not: Int
+
+  """All values that are contained in given list."""
+  size_in: [Int!]
+
+  """All values that are not contained in given list."""
+  size_not_in: [Int!]
+
+  """All values less than the given value."""
+  size_lt: Int
+
+  """All values less than or equal the given value."""
+  size_lte: Int
+
+  """All values greater than the given value."""
+  size_gt: Int
+
+  """All values greater than or equal the given value."""
+  size_gte: Int
+  isOri: Boolean
+
+  """All values that are not equal to given value."""
+  isOri_not: Boolean
+  width: Int
+
+  """All values that are not equal to given value."""
+  width_not: Int
+
+  """All values that are contained in given list."""
+  width_in: [Int!]
+
+  """All values that are not contained in given list."""
+  width_not_in: [Int!]
+
+  """All values less than the given value."""
+  width_lt: Int
+
+  """All values less than or equal the given value."""
+  width_lte: Int
+
+  """All values greater than the given value."""
+  width_gt: Int
+
+  """All values greater than or equal the given value."""
+  width_gte: Int
+  height: Int
+
+  """All values that are not equal to given value."""
+  height_not: Int
+
+  """All values that are contained in given list."""
+  height_in: [Int!]
+
+  """All values that are not contained in given list."""
+  height_not_in: [Int!]
+
+  """All values less than the given value."""
+  height_lt: Int
+
+  """All values less than or equal the given value."""
+  height_lte: Int
+
+  """All values greater than the given value."""
+  height_gt: Int
+
+  """All values greater than or equal the given value."""
+  height_gte: Int
   drawing: DrawingWhereInput
 }
 

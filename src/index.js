@@ -2,6 +2,7 @@ const { GraphQLServer } = require('graphql-yoga')
 const { Prisma } = require('prisma-binding')
 const resolvers = require('./resolvers')
 const { getUserId } = require('./utils/auth')
+const express = require('express')
 
 const db = new Prisma({
   typeDefs: 'src/generated/prisma.graphql', // the auto-generated GraphQL schema of the Prisma API
@@ -18,11 +19,14 @@ const server = new GraphQLServer({
 	resolvers,
 	context: req => ({
 		...req,
+		url: req.request.protocol + '://' + req.request.get('host'),
 		userId: getUserId(req),
 		db
 	})
 })
 
 // server.express.get('/confirm/:token', confirmEmail)
+
+server.express.use('/uploads', express.static('uploads'))
 
 server.start({ tracing: false }, () => console.log('Server is running on http://localhost:4000'))

@@ -1,4 +1,4 @@
-const { upload, removeUpload } = require('./file')
+const { upload, uploadImgFile, removeUpload } = require('./file')
 
 // const process
 
@@ -23,39 +23,38 @@ const drawing = {
     //     }
     //   }, info)
     // ))
-    await Promise.all(files.map(async file => {
-      const receivedFile = await file
-      console.log('receivedFile > ', receivedFile)
-      const { id } = await upload(file, ctx, { createMinifiedImage: 'w720' })
-      // const [{ id }] = await Promise.all([
-      //   upload(file, ctx, { image: 'w720' })
-      // ])
-      // return db.mutation.createDrawing({
-      //   data: {
-      //     model: {
-      //       connect: {
-      //         id: modelId
-      //       }
-      //     },
-      //     file: {
-      //       connect: {
-      //         id
-      //       }
-      //     }
-      //   }
-      // }, info)
+    return Promise.all(files.map(async file => {
+      const imageFiles = await uploadImgFile(file, ctx, { 
+        toFormat: 'png',
+        sizes: ['w792']
+      })
+      return db.mutation.createDrawing({
+        data: {
+          model: {
+            connect: {
+              id: modelId
+            }
+          },
+          files: {
+            connect: imageFiles
+          }
+        }
+      }, info)
     }))
-    return null
+    // return []
   },
   async deleteDrawings(_, { ids }, ctx, info) {
     const { userId, db } = ctx
-    const drawings = await db.query.drawings({ where: { id_in: ids }}, '{ id file { path } }')
-    await Promise.all(drawings.map(({ file: { path } }) => removeUpload(path)))
-    const deleted = Promise.all(drawings.map(({ id }) => 
+    const drawings = await db.query.drawings({ where: { id_in: ids }}, '{ id files { path } }')
+    await Promise.all(
+      drawings.map(
+        ({ files }) => files.map(
+          ({ path }) => removeUpload(path)))
+      .reduce((res, fns) => res = [...res, ...fns], [])
+    )
+    const deleted = await Promise.all(drawings.map(({ id }) => 
       db.mutation.deleteDrawing({ where: { id } }), '{ id }'))
-    console.log('deleted > ', deleted)
-    // return db.mutation.deleteManyDrawings({ where: { id_in: ids } })
-    return {count: 0}
+    return { count: deleted.length }
   }
 }
 

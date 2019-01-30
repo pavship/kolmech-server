@@ -134,7 +134,7 @@ type Model {
 
 type Drawing{
 	id: ID! @unique
-	file: File @relation(name: "DrawingFile" onDelete: CASCADE)
+	files: [File!]! @relation(name: "DrawingFiles" onDelete: CASCADE)
 	model: Model  @relation(name: "ModelDrawings")
 }
 
@@ -160,7 +160,11 @@ type File {
 	filename: String
 	mimetype: String
 	encoding: String
-	drawing: Drawing @relation(name: "DrawingFile")
+	size: Int       # file size in bytes. Int can represent numbers up to 2,147,483,647
+	isOri: Boolean	# used for images
+	width: Int			# used for images
+	height: Int			# used for images
+	drawing: Drawing @relation(name: "DrawingFiles")
 }
 
 enum TelType {
