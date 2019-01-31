@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Tue Jan 29 2019 19:18:44 GMT+0300 (GMT+03:00)
+# timestamp: Thu Jan 31 2019 02:54:25 GMT+0300 (GMT+03:00)
 
 type AggregateDept {
   count: Int!
@@ -632,6 +632,7 @@ input DocWhereUniqueInput {
 
 type Drawing implements Node {
   id: ID!
+  sortOrder: Int
   files(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [File!]
   model: Model
 }
@@ -647,6 +648,7 @@ type DrawingConnection {
 }
 
 input DrawingCreateInput {
+  sortOrder: Int
   files: FileCreateManyWithoutDrawingInput
   model: ModelCreateOneWithoutDrawingsInput
 }
@@ -662,10 +664,12 @@ input DrawingCreateOneWithoutFilesInput {
 }
 
 input DrawingCreateWithoutFilesInput {
+  sortOrder: Int
   model: ModelCreateOneWithoutDrawingsInput
 }
 
 input DrawingCreateWithoutModelInput {
+  sortOrder: Int
   files: FileCreateManyWithoutDrawingInput
 }
 
@@ -681,6 +685,8 @@ type DrawingEdge {
 enum DrawingOrderByInput {
   id_ASC
   id_DESC
+  sortOrder_ASC
+  sortOrder_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -689,6 +695,7 @@ enum DrawingOrderByInput {
 
 type DrawingPreviousValues {
   id: ID!
+  sortOrder: Int
 }
 
 type DrawingSubscriptionPayload {
@@ -731,8 +738,13 @@ input DrawingSubscriptionWhereInput {
 }
 
 input DrawingUpdateInput {
+  sortOrder: Int
   files: FileUpdateManyWithoutDrawingInput
   model: ModelUpdateOneWithoutDrawingsInput
+}
+
+input DrawingUpdateManyMutationInput {
+  sortOrder: Int
 }
 
 input DrawingUpdateManyWithoutModelInput {
@@ -754,10 +766,12 @@ input DrawingUpdateOneWithoutFilesInput {
 }
 
 input DrawingUpdateWithoutFilesDataInput {
+  sortOrder: Int
   model: ModelUpdateOneWithoutDrawingsInput
 }
 
 input DrawingUpdateWithoutModelDataInput {
+  sortOrder: Int
   files: FileUpdateManyWithoutDrawingInput
 }
 
@@ -826,6 +840,28 @@ input DrawingWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  sortOrder: Int
+
+  """All values that are not equal to given value."""
+  sortOrder_not: Int
+
+  """All values that are contained in given list."""
+  sortOrder_in: [Int!]
+
+  """All values that are not contained in given list."""
+  sortOrder_not_in: [Int!]
+
+  """All values less than the given value."""
+  sortOrder_lt: Int
+
+  """All values less than or equal the given value."""
+  sortOrder_lte: Int
+
+  """All values greater than the given value."""
+  sortOrder_gt: Int
+
+  """All values greater than or equal the given value."""
+  sortOrder_gte: Int
   files_every: FileWhereInput
   files_some: FileWhereInput
   files_none: FileWhereInput
@@ -2067,9 +2103,9 @@ type File implements Node {
   mimetype: String
   encoding: String
   size: Int
-  isOri: Boolean
   width: Int
   height: Int
+  imgFor: ImgFor
   drawing: Drawing
 }
 
@@ -2089,9 +2125,9 @@ input FileCreateInput {
   mimetype: String
   encoding: String
   size: Int
-  isOri: Boolean
   width: Int
   height: Int
+  imgFor: ImgFor
   drawing: DrawingCreateOneWithoutFilesInput
 }
 
@@ -2106,9 +2142,9 @@ input FileCreateWithoutDrawingInput {
   mimetype: String
   encoding: String
   size: Int
-  isOri: Boolean
   width: Int
   height: Int
+  imgFor: ImgFor
 }
 
 """An edge in a connection."""
@@ -2366,12 +2402,12 @@ enum FileOrderByInput {
   encoding_DESC
   size_ASC
   size_DESC
-  isOri_ASC
-  isOri_DESC
   width_ASC
   width_DESC
   height_ASC
   height_DESC
+  imgFor_ASC
+  imgFor_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -2385,9 +2421,9 @@ type FilePreviousValues {
   mimetype: String
   encoding: String
   size: Int
-  isOri: Boolean
   width: Int
   height: Int
+  imgFor: ImgFor
 }
 
 type FileSubscriptionPayload {
@@ -2435,9 +2471,9 @@ input FileUpdateInput {
   mimetype: String
   encoding: String
   size: Int
-  isOri: Boolean
   width: Int
   height: Int
+  imgFor: ImgFor
   drawing: DrawingUpdateOneWithoutFilesInput
 }
 
@@ -2447,9 +2483,9 @@ input FileUpdateManyMutationInput {
   mimetype: String
   encoding: String
   size: Int
-  isOri: Boolean
   width: Int
   height: Int
+  imgFor: ImgFor
 }
 
 input FileUpdateManyWithoutDrawingInput {
@@ -2467,9 +2503,9 @@ input FileUpdateWithoutDrawingDataInput {
   mimetype: String
   encoding: String
   size: Int
-  isOri: Boolean
   width: Int
   height: Int
+  imgFor: ImgFor
 }
 
 input FileUpdateWithWhereUniqueWithoutDrawingInput {
@@ -2714,10 +2750,6 @@ input FileWhereInput {
 
   """All values greater than or equal the given value."""
   size_gte: Int
-  isOri: Boolean
-
-  """All values that are not equal to given value."""
-  isOri_not: Boolean
   width: Int
 
   """All values that are not equal to given value."""
@@ -2762,12 +2794,27 @@ input FileWhereInput {
 
   """All values greater than or equal the given value."""
   height_gte: Int
+  imgFor: ImgFor
+
+  """All values that are not equal to given value."""
+  imgFor_not: ImgFor
+
+  """All values that are contained in given list."""
+  imgFor_in: [ImgFor!]
+
+  """All values that are not contained in given list."""
+  imgFor_not_in: [ImgFor!]
   drawing: DrawingWhereInput
 }
 
 input FileWhereUniqueInput {
   id: ID
   path: String
+}
+
+enum ImgFor {
+  ORIGINAL
+  FEED_W792
 }
 
 """
@@ -3303,6 +3350,7 @@ type Mutation {
   updateManyEvents(data: EventUpdateManyMutationInput!, where: EventWhereInput): BatchPayload!
   updateManyOrders(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
   updateManyModels(data: ModelUpdateManyMutationInput!, where: ModelWhereInput): BatchPayload!
+  updateManyDrawings(data: DrawingUpdateManyMutationInput!, where: DrawingWhereInput): BatchPayload!
   updateManyProds(data: ProdUpdateManyMutationInput!, where: ProdWhereInput): BatchPayload!
   updateManyFiles(data: FileUpdateManyMutationInput!, where: FileWhereInput): BatchPayload!
   updateManyStatuses(data: StatusUpdateManyMutationInput!, where: StatusWhereInput): BatchPayload!

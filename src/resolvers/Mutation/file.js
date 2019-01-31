@@ -72,21 +72,21 @@ const uploadImgFile = async ( file, ctx, minificationConfig ) => {
   sharp.cache(false)
   const {
     toFormat,
-    sizes  //: ['w792']
+    verions
   } = minificationConfig
   const { id, path: oriPath, filename, encoding } = await upload(file, ctx, { extension: 'getFromMime' })
   const { size } = await fsp.stat(oriPath)
   const { width, height } = await sharp(oriPath).metadata()
-  await upsertFile({ id, size, width, height, isOri: true }, ctx)
-  const minifiedImgs = await Promise.all(sizes.map(async s => {
+  await upsertFile({ id, size, width, height, imgFor: 'ORIGINAL' }, ctx)
+  const minifiedImgs = await Promise.all(verions.map(async ({ imgFor, toSize }) => {
     const { id } = await upsertFile({ filename, mimetype: `image/${toFormat}`, encoding }, ctx, { createBlank: true })
     const extension = getExtension(toFormat)
     const path = `uploads/${id}${'.' + extension}`
     await sharp(oriPath)
       .limitInputPixels(1000000000)
       .resize({
-        width: 792,
-        height: 1,
+        ...toSize,
+        // height: 1,
         fit: sharp.fit.outside,
         // withoutEnlargement: true
       })
@@ -95,7 +95,7 @@ const uploadImgFile = async ( file, ctx, minificationConfig ) => {
       .toFile(path)
     const { size } = await fsp.stat(path)
     const { width, height } = await sharp(path).metadata()
-    await upsertFile({ id, size, width, height }, ctx, { extension })
+    await upsertFile({ id, size, width, height, imgFor }, ctx, { extension })
     return { id }
   }))
   return [{ id }, ...minifiedImgs]

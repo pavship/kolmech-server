@@ -134,8 +134,9 @@ type Model {
 
 type Drawing{
 	id: ID! @unique
+	sortOrder: Int						# display order of model's drawings collection
 	files: [File!]! @relation(name: "DrawingFiles" onDelete: CASCADE)
-	model: Model  @relation(name: "ModelDrawings")
+	model: Model @relation(name: "ModelDrawings")
 }
 
 type Prod {
@@ -160,10 +161,10 @@ type File {
 	filename: String
 	mimetype: String
 	encoding: String
-	size: Int       # file size in bytes. Int can represent numbers up to 2,147,483,647
-	isOri: Boolean	# used for images
-	width: Int			# used for images
-	height: Int			# used for images
+	size: Int       			# file size in bytes. Int can represent numbers up to 2,147,483,647
+	width: Int						# used for images
+	height: Int						# used for images
+	imgFor: ImgFor				# used in frontend to pick the right image size
 	drawing: Drawing @relation(name: "DrawingFiles")
 }
 
@@ -193,4 +194,9 @@ enum DocType {
 
 enum UserRole {
 	INACTIVE
+}
+
+enum ImgFor {
+	ORIGINAL
+	FEED_W792
 }

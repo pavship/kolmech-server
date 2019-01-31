@@ -5,31 +5,21 @@ const { upload, uploadImgFile, removeUpload } = require('./file')
 const drawing = {
 	async createDrawings(_, { modelId, files }, ctx, info) {
     const { userId, db } = ctx
-    // console.log('modelId, files > ', modelId, files)
-    // const uploadedFiles = await Promise.all(files.map(file => upload(file, ctx)))
-    // return Promise.all(uploadedFiles.map(({ id }) =>
-    //   db.mutation.createDrawing({
-    //     data: {
-    //       model: {
-    //         connect: {
-    //           id: modelId
-    //         }
-    //       },
-    //       file: {
-    //         connect: {
-    //           id
-    //         }
-    //       }
-    //     }
-    //   }, info)
-    // ))
-    return Promise.all(files.map(async file => {
+    const modelDrawings = await db.query.drawings({ where: { model: { id: modelId } } }, '{ sortOrder }')
+    const lastOrderNumber = modelDrawings.length ? Math.max(...modelDrawings.map(drw => drw.sortOrder)) : 0
+    return Promise.all(files.map(async (file, i) => {
       const imageFiles = await uploadImgFile(file, ctx, { 
         toFormat: 'png',
-        sizes: ['w792']
+        verions: [{
+          imgFor: 'FEED_W792',
+          toSize: {
+            width: 792
+          }
+        }]
       })
       return db.mutation.createDrawing({
         data: {
+          sortOrder: lastOrderNumber + 1 + i,   // add drawings to the end of collection
           model: {
             connect: {
               id: modelId
