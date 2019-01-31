@@ -6,7 +6,7 @@ const drawing = {
 	async createDrawings(_, { modelId, files }, ctx, info) {
     const { userId, db } = ctx
     const modelDrawings = await db.query.drawings({ where: { model: { id: modelId } } }, '{ sortOrder }')
-    const lastOrderNumber = modelDrawings.length ? Math.max(...modelDrawings.map(drw => drw.sortOrder)) : 0
+    const nextOrderNumber = modelDrawings.length ? Math.max(...modelDrawings.map(drw => drw.sortOrder)) + 1 : 0
     return Promise.all(files.map(async (file, i) => {
       const imageFiles = await uploadImgFile(file, ctx, { 
         toFormat: 'png',
@@ -19,7 +19,7 @@ const drawing = {
       })
       return db.mutation.createDrawing({
         data: {
-          sortOrder: lastOrderNumber + 1 + i,   // add drawings to the end of collection
+          sortOrder: nextOrderNumber + i,   // add drawings to the end of collection
           model: {
             connect: {
               id: modelId
@@ -31,7 +31,6 @@ const drawing = {
         }
       }, info)
     }))
-    // return []
   },
   async deleteDrawings(_, { ids }, ctx, info) {
     const { userId, db } = ctx
@@ -45,6 +44,15 @@ const drawing = {
     const deleted = await Promise.all(drawings.map(({ id }) => 
       db.mutation.deleteDrawing({ where: { id } }), '{ id }'))
     return { count: deleted.length }
+  },
+  async setDrawingsSortOrder(_, { ids }, ctx, info) {
+    const { userId, db } = ctx
+    const updated = await Promise.all(ids.map(( id , i) => 
+      db.mutation.updateDrawing({
+        where: { id },
+        data: { sortOrder: i }
+      }), '{ id }'))
+    return { count: updated.length }
   }
 }
 
