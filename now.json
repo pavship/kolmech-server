@@ -8,7 +8,10 @@
 		"MOEDELO_SECRET": "@moe-delo-secret",
 		"GQ_TOKEN": "@gq-token",
 		"GQ_ENDPOINT": "@gq-endpoint",
-		"EMAIL_PASS": "@email-pass"
+		"EMAIL_PASS": "@email-pass",
+		"AMO_DOMAIN": "@amo-domain",
+		"AMO_LOGIN": "@amo-login",
+		"AMO_HASH": "@amo-hash"
 	},
 	"alias": "now-advanced.now.sh",
 	"name": "now-advanced"

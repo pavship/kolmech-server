@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Fri Feb 22 2019 01:46:28 GMT+0300 (GMT+03:00)
+# timestamp: Sat Feb 23 2019 01:28:57 GMT+0300 (GMT+03:00)
 
 type AggregateArticle {
   count: Int!
@@ -5109,10 +5109,12 @@ input PaymentWhereUniqueInput {
 
 type Person implements Node {
   id: ID!
+  amoId: Int!
   fName: String
   lName: String
   mName: String
   regName: String
+  amoName: String
   regNameChecked: Boolean
   htmlNote: String
   tels(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tel!]
@@ -5131,10 +5133,12 @@ type PersonConnection {
 }
 
 input PersonCreateInput {
+  amoId: Int!
   fName: String
   lName: String
   mName: String
   regName: String
+  amoName: String
   regNameChecked: Boolean
   htmlNote: String
   tels: TelCreateManyWithoutPersonInput
@@ -5158,10 +5162,12 @@ input PersonCreateOneWithoutUserInput {
 }
 
 input PersonCreateWithoutEmployeesInput {
+  amoId: Int!
   fName: String
   lName: String
   mName: String
   regName: String
+  amoName: String
   regNameChecked: Boolean
   htmlNote: String
   tels: TelCreateManyWithoutPersonInput
@@ -5169,10 +5175,12 @@ input PersonCreateWithoutEmployeesInput {
 }
 
 input PersonCreateWithoutTelsInput {
+  amoId: Int!
   fName: String
   lName: String
   mName: String
   regName: String
+  amoName: String
   regNameChecked: Boolean
   htmlNote: String
   user: UserCreateOneWithoutPersonInput
@@ -5180,10 +5188,12 @@ input PersonCreateWithoutTelsInput {
 }
 
 input PersonCreateWithoutUserInput {
+  amoId: Int!
   fName: String
   lName: String
   mName: String
   regName: String
+  amoName: String
   regNameChecked: Boolean
   htmlNote: String
   tels: TelCreateManyWithoutPersonInput
@@ -5202,6 +5212,8 @@ type PersonEdge {
 enum PersonOrderByInput {
   id_ASC
   id_DESC
+  amoId_ASC
+  amoId_DESC
   fName_ASC
   fName_DESC
   lName_ASC
@@ -5210,6 +5222,8 @@ enum PersonOrderByInput {
   mName_DESC
   regName_ASC
   regName_DESC
+  amoName_ASC
+  amoName_DESC
   regNameChecked_ASC
   regNameChecked_DESC
   htmlNote_ASC
@@ -5222,10 +5236,12 @@ enum PersonOrderByInput {
 
 type PersonPreviousValues {
   id: ID!
+  amoId: Int!
   fName: String
   lName: String
   mName: String
   regName: String
+  amoName: String
   regNameChecked: Boolean
   htmlNote: String
 }
@@ -5270,10 +5286,12 @@ input PersonSubscriptionWhereInput {
 }
 
 input PersonUpdateInput {
+  amoId: Int
   fName: String
   lName: String
   mName: String
   regName: String
+  amoName: String
   regNameChecked: Boolean
   htmlNote: String
   tels: TelUpdateManyWithoutPersonInput
@@ -5282,10 +5300,12 @@ input PersonUpdateInput {
 }
 
 input PersonUpdateManyMutationInput {
+  amoId: Int
   fName: String
   lName: String
   mName: String
   regName: String
+  amoName: String
   regNameChecked: Boolean
   htmlNote: String
 }
@@ -5318,10 +5338,12 @@ input PersonUpdateOneWithoutUserInput {
 }
 
 input PersonUpdateWithoutEmployeesDataInput {
+  amoId: Int
   fName: String
   lName: String
   mName: String
   regName: String
+  amoName: String
   regNameChecked: Boolean
   htmlNote: String
   tels: TelUpdateManyWithoutPersonInput
@@ -5329,10 +5351,12 @@ input PersonUpdateWithoutEmployeesDataInput {
 }
 
 input PersonUpdateWithoutTelsDataInput {
+  amoId: Int
   fName: String
   lName: String
   mName: String
   regName: String
+  amoName: String
   regNameChecked: Boolean
   htmlNote: String
   user: UserUpdateOneWithoutPersonInput
@@ -5340,10 +5364,12 @@ input PersonUpdateWithoutTelsDataInput {
 }
 
 input PersonUpdateWithoutUserDataInput {
+  amoId: Int
   fName: String
   lName: String
   mName: String
   regName: String
+  amoName: String
   regNameChecked: Boolean
   htmlNote: String
   tels: TelUpdateManyWithoutPersonInput
@@ -5414,6 +5440,28 @@ input PersonWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  amoId: Int
+
+  """All values that are not equal to given value."""
+  amoId_not: Int
+
+  """All values that are contained in given list."""
+  amoId_in: [Int!]
+
+  """All values that are not contained in given list."""
+  amoId_not_in: [Int!]
+
+  """All values less than the given value."""
+  amoId_lt: Int
+
+  """All values less than or equal the given value."""
+  amoId_lte: Int
+
+  """All values greater than the given value."""
+  amoId_gt: Int
+
+  """All values greater than or equal the given value."""
+  amoId_gte: Int
   fName: String
 
   """All values that are not equal to given value."""
@@ -5574,6 +5622,46 @@ input PersonWhereInput {
 
   """All values not ending with the given string."""
   regName_not_ends_with: String
+  amoName: String
+
+  """All values that are not equal to given value."""
+  amoName_not: String
+
+  """All values that are contained in given list."""
+  amoName_in: [String!]
+
+  """All values that are not contained in given list."""
+  amoName_not_in: [String!]
+
+  """All values less than the given value."""
+  amoName_lt: String
+
+  """All values less than or equal the given value."""
+  amoName_lte: String
+
+  """All values greater than the given value."""
+  amoName_gt: String
+
+  """All values greater than or equal the given value."""
+  amoName_gte: String
+
+  """All values containing the given string."""
+  amoName_contains: String
+
+  """All values not containing the given string."""
+  amoName_not_contains: String
+
+  """All values starting with the given string."""
+  amoName_starts_with: String
+
+  """All values not starting with the given string."""
+  amoName_not_starts_with: String
+
+  """All values ending with the given string."""
+  amoName_ends_with: String
+
+  """All values not ending with the given string."""
+  amoName_not_ends_with: String
   regNameChecked: Boolean
 
   """All values that are not equal to given value."""
@@ -5629,6 +5717,7 @@ input PersonWhereInput {
 
 input PersonWhereUniqueInput {
   id: ID
+  amoId: Int
 }
 
 type Prod implements Node {

@@ -33,6 +33,10 @@ const Query = {
 		}
 	},
 
+	persons(_, __, ctx, info) {
+		return ctx.db.query.persons({ orderBy: 'amoName_ASC' }, info)
+	},
+
 	articles(_, __, ctx, info) {
 		return ctx.db.query.articles({ orderBy: 'rusName_ASC' }, info)
 	},

@@ -16,6 +16,7 @@ type Query {
   order (id: ID!): Order
   orgs: [Org!]!
   orgEmployees (orgId: ID!): [Employee!]!
+  persons: [Person!]!
   payments: [Payment!]!
   statuses: [Status!]!
 }
@@ -39,6 +40,7 @@ type Mutation {
   reserveProds(orderId: ID!, prodIds: [ID!]!): Order
   seedEnquiryStatuses: BatchPayload!
   setDrawingsSortOrder(ids: [ID!]!): BatchPayload!
+  syncWithAmoContacts: BatchPayload!
   updateEnquiry(input: EnquiryInput!): Enquiry
   upsertEmployee(input: EmployeeInput!): Employee
   upsertModel(input: ModelInput!): Model
