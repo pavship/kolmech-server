@@ -3,19 +3,21 @@
 scalar Upload
 
 type Query {
-  me: User
+  articles: [Article!]!
+  depts: [Dept!]!
+  deptProds(deptId: ID!): [Prod!]!
   confirmEmail(token: String!): AuthPayload
   enquiries: [Enquiry!]!
   enquiry (id: ID!): Enquiry
-  order (id: ID!): Order
-  orgs: [Org!]!
-  orgEmployees (orgId: ID!): [Employee!]!
-  depts: [Dept!]!
-  statuses: [Status!]!
+  me: User
   model (id: ID!): Model
   models: [Model!]!
   modelProds(modelId: ID!): [Prod!]!
-  deptProds(deptId: ID!): [Prod!]!
+  order (id: ID!): Order
+  orgs: [Org!]!
+  orgEmployees (orgId: ID!): [Employee!]!
+  payments: [Payment!]!
+  statuses: [Status!]!
 }
 
 type Mutation {
@@ -41,6 +43,7 @@ type Mutation {
   upsertEmployee(input: EmployeeInput!): Employee
   upsertModel(input: ModelInput!): Model
   upsertOrder(id: ID, enquiryId: ID, dateLocal: String!, qty: Int, amount: Float): Order
+  upsertPayment(input: PaymentInput!): Payment
   upsertPerson(input: PersonInput!): Person
   upsertProd(input: ProdInput!): Prod
   upsertTel(input: TelInput!): Tel
@@ -51,6 +54,7 @@ type Mutation {
   importModels: BatchPayload!
   connectEnquiriesToDocsAndStatus: BatchPayload!
   populateOrderFullnums: BatchPayload
+  populatePaymentArticles: BatchPayload
 }
 
 type Subscription {
@@ -68,13 +72,46 @@ type MoveProdPayload {
   to: ID!
 }
 
+input EmployeeInput {
+  id: ID
+  orgId: ID
+  position: String
+  person: PersonInput
+}
+
 input EnquiryInput {
-  id: ID!
-  dateLocal: String
+  id: ID
   orgId: ID
   modelId: ID
+  dateLocal: String
   qty: Int
   htmlNote: String
+}
+
+input ModelInput {
+  id: ID
+  orgId: ID
+  name: String
+  article: String
+}
+
+input PaymentInput {
+  id: ID
+	articleId: ID
+  dateLocal: String
+	amount: Float
+	purpose: String
+}
+
+input PersonInput {
+  id: ID
+	fName: String
+	lName: String
+	mName: String
+	regName: String
+	regNameChecked: Boolean
+	htmlNote: String
+	tels: [TelInput!]
 }
 
 input ProdInput {
@@ -92,24 +129,6 @@ input ProdInput {
   modelId: ID
 }
 
-input EmployeeInput {
-  id: ID
-  orgId: ID
-  position: String
-  person: PersonInput
-}
-
-input PersonInput {
-  id: ID
-	fName: String
-	lName: String
-	mName: String
-	regName: String
-	regNameChecked: Boolean
-	htmlNote: String
-	tels: [TelInput!]
-}
-
 input TelInput {
   id: ID
   personId: ID
@@ -118,11 +137,4 @@ input TelInput {
 	country: String
 	note: String
 	default: Boolean
-}
-
-input ModelInput {
-  id: ID
-  orgId: ID
-  name: String
-  article: String
 }

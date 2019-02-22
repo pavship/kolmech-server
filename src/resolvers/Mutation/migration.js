@@ -202,6 +202,24 @@ const migration = {
 			console.log(err)
 			return null
 		}
+	},
+
+	async populatePaymentArticles(_, __, ctx, info) {
+		const articles = [
+			{ name: 'lend', rusName: 'Займ (Выдача)', isLoan: true},
+			{ name: 'loan', rusName: 'Займ (Получение)', isLoan: true, isIncome: true},
+			{ name: 'salary', rusName: 'ЗП'},
+			{ name: 'hh', rusName: 'Подбор персонала'},
+			{ name: 'training', rusName: 'Обучение персонала'},
+			{ name: 'maintainance', rusName: 'ТО Оборудования'},
+			{ name: 'repair', rusName: 'Ремонт оборудования'},
+		]
+		const created = await Promise.all(articles.map(({ name, rusName, isLoan, isIncome }) =>
+			ctx.db.mutation.createArticle({ 
+				data: { name, rusName, isLoan, isIncome }
+			})
+		))
+		return { count: created.length }
 	}
 
 }

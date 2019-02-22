@@ -33,6 +33,10 @@ const Query = {
 		}
 	},
 
+	articles(_, __, ctx, info) {
+		return ctx.db.query.articles({ orderBy: 'rusName_ASC' }, info)
+	},
+	
 	enquiries(_, __, ctx, info) {
 		return ctx.db.query.enquiries({ orderBy: 'num_DESC' }, info)
 	},
@@ -59,6 +63,10 @@ const Query = {
 	
 	statuses(_, __, ctx, info) {
 		return ctx.db.query.statuses({ orderBy: 'stage_ASC' }, info)
+	},
+
+	payments(_, __, ctx, info) {
+		return ctx.db.query.payments({ orderBy: 'id_DESC' }, info)
 	},
         
 	model(_, { id }, ctx, info) {

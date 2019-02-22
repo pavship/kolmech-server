@@ -1,5 +1,9 @@
 # source: http://localhost:4466
-# timestamp: Thu Jan 31 2019 02:54:25 GMT+0300 (GMT+03:00)
+# timestamp: Fri Feb 22 2019 01:46:28 GMT+0300 (GMT+03:00)
+
+type AggregateArticle {
+  count: Int!
+}
 
 type AggregateDept {
   count: Int!
@@ -45,6 +49,10 @@ type AggregateOrg {
   count: Int!
 }
 
+type AggregatePayment {
+  count: Int!
+}
+
 type AggregatePerson {
   count: Int!
 }
@@ -63,6 +71,287 @@ type AggregateTel {
 
 type AggregateUser {
   count: Int!
+}
+
+type Article implements Node {
+  id: ID!
+  name: String
+  rusName: String
+  isIncome: Boolean
+  isLoan: Boolean
+}
+
+"""A connection to a list of items."""
+type ArticleConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ArticleEdge]!
+  aggregate: AggregateArticle!
+}
+
+input ArticleCreateInput {
+  name: String
+  rusName: String
+  isIncome: Boolean
+  isLoan: Boolean
+}
+
+input ArticleCreateOneInput {
+  create: ArticleCreateInput
+  connect: ArticleWhereUniqueInput
+}
+
+"""An edge in a connection."""
+type ArticleEdge {
+  """The item at the end of the edge."""
+  node: Article!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum ArticleOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  rusName_ASC
+  rusName_DESC
+  isIncome_ASC
+  isIncome_DESC
+  isLoan_ASC
+  isLoan_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type ArticlePreviousValues {
+  id: ID!
+  name: String
+  rusName: String
+  isIncome: Boolean
+  isLoan: Boolean
+}
+
+type ArticleSubscriptionPayload {
+  mutation: MutationType!
+  node: Article
+  updatedFields: [String!]
+  previousValues: ArticlePreviousValues
+}
+
+input ArticleSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ArticleSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ArticleSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ArticleSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ArticleWhereInput
+}
+
+input ArticleUpdateDataInput {
+  name: String
+  rusName: String
+  isIncome: Boolean
+  isLoan: Boolean
+}
+
+input ArticleUpdateInput {
+  name: String
+  rusName: String
+  isIncome: Boolean
+  isLoan: Boolean
+}
+
+input ArticleUpdateManyMutationInput {
+  name: String
+  rusName: String
+  isIncome: Boolean
+  isLoan: Boolean
+}
+
+input ArticleUpdateOneInput {
+  create: ArticleCreateInput
+  connect: ArticleWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: ArticleUpdateDataInput
+  upsert: ArticleUpsertNestedInput
+}
+
+input ArticleUpsertNestedInput {
+  update: ArticleUpdateDataInput!
+  create: ArticleCreateInput!
+}
+
+input ArticleWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ArticleWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ArticleWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ArticleWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  rusName: String
+
+  """All values that are not equal to given value."""
+  rusName_not: String
+
+  """All values that are contained in given list."""
+  rusName_in: [String!]
+
+  """All values that are not contained in given list."""
+  rusName_not_in: [String!]
+
+  """All values less than the given value."""
+  rusName_lt: String
+
+  """All values less than or equal the given value."""
+  rusName_lte: String
+
+  """All values greater than the given value."""
+  rusName_gt: String
+
+  """All values greater than or equal the given value."""
+  rusName_gte: String
+
+  """All values containing the given string."""
+  rusName_contains: String
+
+  """All values not containing the given string."""
+  rusName_not_contains: String
+
+  """All values starting with the given string."""
+  rusName_starts_with: String
+
+  """All values not starting with the given string."""
+  rusName_not_starts_with: String
+
+  """All values ending with the given string."""
+  rusName_ends_with: String
+
+  """All values not ending with the given string."""
+  rusName_not_ends_with: String
+  isIncome: Boolean
+
+  """All values that are not equal to given value."""
+  isIncome_not: Boolean
+  isLoan: Boolean
+
+  """All values that are not equal to given value."""
+  isLoan_not: Boolean
+}
+
+input ArticleWhereUniqueInput {
+  id: ID
 }
 
 type BatchPayload {
@@ -3289,6 +3578,8 @@ type Mutation {
   createDrawing(data: DrawingCreateInput!): Drawing!
   createProd(data: ProdCreateInput!): Prod!
   createFile(data: FileCreateInput!): File!
+  createPayment(data: PaymentCreateInput!): Payment!
+  createArticle(data: ArticleCreateInput!): Article!
   createStatus(data: StatusCreateInput!): Status!
   createDoc(data: DocCreateInput!): Doc!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
@@ -3305,6 +3596,8 @@ type Mutation {
   updateDrawing(data: DrawingUpdateInput!, where: DrawingWhereUniqueInput!): Drawing
   updateProd(data: ProdUpdateInput!, where: ProdWhereUniqueInput!): Prod
   updateFile(data: FileUpdateInput!, where: FileWhereUniqueInput!): File
+  updatePayment(data: PaymentUpdateInput!, where: PaymentWhereUniqueInput!): Payment
+  updateArticle(data: ArticleUpdateInput!, where: ArticleWhereUniqueInput!): Article
   updateStatus(data: StatusUpdateInput!, where: StatusWhereUniqueInput!): Status
   updateDoc(data: DocUpdateInput!, where: DocWhereUniqueInput!): Doc
   deleteUser(where: UserWhereUniqueInput!): User
@@ -3321,6 +3614,8 @@ type Mutation {
   deleteDrawing(where: DrawingWhereUniqueInput!): Drawing
   deleteProd(where: ProdWhereUniqueInput!): Prod
   deleteFile(where: FileWhereUniqueInput!): File
+  deletePayment(where: PaymentWhereUniqueInput!): Payment
+  deleteArticle(where: ArticleWhereUniqueInput!): Article
   deleteStatus(where: StatusWhereUniqueInput!): Status
   deleteDoc(where: DocWhereUniqueInput!): Doc
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
@@ -3337,6 +3632,8 @@ type Mutation {
   upsertDrawing(where: DrawingWhereUniqueInput!, create: DrawingCreateInput!, update: DrawingUpdateInput!): Drawing!
   upsertProd(where: ProdWhereUniqueInput!, create: ProdCreateInput!, update: ProdUpdateInput!): Prod!
   upsertFile(where: FileWhereUniqueInput!, create: FileCreateInput!, update: FileUpdateInput!): File!
+  upsertPayment(where: PaymentWhereUniqueInput!, create: PaymentCreateInput!, update: PaymentUpdateInput!): Payment!
+  upsertArticle(where: ArticleWhereUniqueInput!, create: ArticleCreateInput!, update: ArticleUpdateInput!): Article!
   upsertStatus(where: StatusWhereUniqueInput!, create: StatusCreateInput!, update: StatusUpdateInput!): Status!
   upsertDoc(where: DocWhereUniqueInput!, create: DocCreateInput!, update: DocUpdateInput!): Doc!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
@@ -3353,6 +3650,8 @@ type Mutation {
   updateManyDrawings(data: DrawingUpdateManyMutationInput!, where: DrawingWhereInput): BatchPayload!
   updateManyProds(data: ProdUpdateManyMutationInput!, where: ProdWhereInput): BatchPayload!
   updateManyFiles(data: FileUpdateManyMutationInput!, where: FileWhereInput): BatchPayload!
+  updateManyPayments(data: PaymentUpdateManyMutationInput!, where: PaymentWhereInput): BatchPayload!
+  updateManyArticles(data: ArticleUpdateManyMutationInput!, where: ArticleWhereInput): BatchPayload!
   updateManyStatuses(data: StatusUpdateManyMutationInput!, where: StatusWhereInput): BatchPayload!
   updateManyDocs(data: DocUpdateManyMutationInput!, where: DocWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
@@ -3369,6 +3668,8 @@ type Mutation {
   deleteManyDrawings(where: DrawingWhereInput): BatchPayload!
   deleteManyProds(where: ProdWhereInput): BatchPayload!
   deleteManyFiles(where: FileWhereInput): BatchPayload!
+  deleteManyPayments(where: PaymentWhereInput): BatchPayload!
+  deleteManyArticles(where: ArticleWhereInput): BatchPayload!
   deleteManyStatuses(where: StatusWhereInput): BatchPayload!
   deleteManyDocs(where: DocWhereInput): BatchPayload!
 }
@@ -4540,6 +4841,272 @@ type PageInfo {
   endCursor: String
 }
 
+type Payment implements Node {
+  id: ID!
+  dateLocal: String
+  amount: Float
+  purpose: String
+  article: Article
+}
+
+"""A connection to a list of items."""
+type PaymentConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [PaymentEdge]!
+  aggregate: AggregatePayment!
+}
+
+input PaymentCreateInput {
+  dateLocal: String
+  amount: Float
+  purpose: String
+  article: ArticleCreateOneInput
+}
+
+"""An edge in a connection."""
+type PaymentEdge {
+  """The item at the end of the edge."""
+  node: Payment!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum PaymentOrderByInput {
+  id_ASC
+  id_DESC
+  dateLocal_ASC
+  dateLocal_DESC
+  amount_ASC
+  amount_DESC
+  purpose_ASC
+  purpose_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type PaymentPreviousValues {
+  id: ID!
+  dateLocal: String
+  amount: Float
+  purpose: String
+}
+
+type PaymentSubscriptionPayload {
+  mutation: MutationType!
+  node: Payment
+  updatedFields: [String!]
+  previousValues: PaymentPreviousValues
+}
+
+input PaymentSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [PaymentSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [PaymentSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [PaymentSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: PaymentWhereInput
+}
+
+input PaymentUpdateInput {
+  dateLocal: String
+  amount: Float
+  purpose: String
+  article: ArticleUpdateOneInput
+}
+
+input PaymentUpdateManyMutationInput {
+  dateLocal: String
+  amount: Float
+  purpose: String
+}
+
+input PaymentWhereInput {
+  """Logical AND on all given filters."""
+  AND: [PaymentWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [PaymentWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [PaymentWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  dateLocal: String
+
+  """All values that are not equal to given value."""
+  dateLocal_not: String
+
+  """All values that are contained in given list."""
+  dateLocal_in: [String!]
+
+  """All values that are not contained in given list."""
+  dateLocal_not_in: [String!]
+
+  """All values less than the given value."""
+  dateLocal_lt: String
+
+  """All values less than or equal the given value."""
+  dateLocal_lte: String
+
+  """All values greater than the given value."""
+  dateLocal_gt: String
+
+  """All values greater than or equal the given value."""
+  dateLocal_gte: String
+
+  """All values containing the given string."""
+  dateLocal_contains: String
+
+  """All values not containing the given string."""
+  dateLocal_not_contains: String
+
+  """All values starting with the given string."""
+  dateLocal_starts_with: String
+
+  """All values not starting with the given string."""
+  dateLocal_not_starts_with: String
+
+  """All values ending with the given string."""
+  dateLocal_ends_with: String
+
+  """All values not ending with the given string."""
+  dateLocal_not_ends_with: String
+  amount: Float
+
+  """All values that are not equal to given value."""
+  amount_not: Float
+
+  """All values that are contained in given list."""
+  amount_in: [Float!]
+
+  """All values that are not contained in given list."""
+  amount_not_in: [Float!]
+
+  """All values less than the given value."""
+  amount_lt: Float
+
+  """All values less than or equal the given value."""
+  amount_lte: Float
+
+  """All values greater than the given value."""
+  amount_gt: Float
+
+  """All values greater than or equal the given value."""
+  amount_gte: Float
+  purpose: String
+
+  """All values that are not equal to given value."""
+  purpose_not: String
+
+  """All values that are contained in given list."""
+  purpose_in: [String!]
+
+  """All values that are not contained in given list."""
+  purpose_not_in: [String!]
+
+  """All values less than the given value."""
+  purpose_lt: String
+
+  """All values less than or equal the given value."""
+  purpose_lte: String
+
+  """All values greater than the given value."""
+  purpose_gt: String
+
+  """All values greater than or equal the given value."""
+  purpose_gte: String
+
+  """All values containing the given string."""
+  purpose_contains: String
+
+  """All values not containing the given string."""
+  purpose_not_contains: String
+
+  """All values starting with the given string."""
+  purpose_starts_with: String
+
+  """All values not starting with the given string."""
+  purpose_not_starts_with: String
+
+  """All values ending with the given string."""
+  purpose_ends_with: String
+
+  """All values not ending with the given string."""
+  purpose_not_ends_with: String
+  article: ArticleWhereInput
+}
+
+input PaymentWhereUniqueInput {
+  id: ID
+}
+
 type Person implements Node {
   id: ID!
   fName: String
@@ -5650,6 +6217,8 @@ type Query {
   drawings(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Drawing]!
   prods(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Prod]!
   files(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [File]!
+  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment]!
+  articles(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Article]!
   statuses(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Status]!
   docs(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Doc]!
   user(where: UserWhereUniqueInput!): User
@@ -5666,6 +6235,8 @@ type Query {
   drawing(where: DrawingWhereUniqueInput!): Drawing
   prod(where: ProdWhereUniqueInput!): Prod
   file(where: FileWhereUniqueInput!): File
+  payment(where: PaymentWhereUniqueInput!): Payment
+  article(where: ArticleWhereUniqueInput!): Article
   status(where: StatusWhereUniqueInput!): Status
   doc(where: DocWhereUniqueInput!): Doc
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
@@ -5682,6 +6253,8 @@ type Query {
   drawingsConnection(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DrawingConnection!
   prodsConnection(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProdConnection!
   filesConnection(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
+  paymentsConnection(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentConnection!
+  articlesConnection(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ArticleConnection!
   statusesConnection(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StatusConnection!
   docsConnection(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DocConnection!
 
@@ -6035,6 +6608,8 @@ type Subscription {
   drawing(where: DrawingSubscriptionWhereInput): DrawingSubscriptionPayload
   prod(where: ProdSubscriptionWhereInput): ProdSubscriptionPayload
   file(where: FileSubscriptionWhereInput): FileSubscriptionPayload
+  payment(where: PaymentSubscriptionWhereInput): PaymentSubscriptionPayload
+  article(where: ArticleSubscriptionWhereInput): ArticleSubscriptionPayload
   status(where: StatusSubscriptionWhereInput): StatusSubscriptionPayload
   doc(where: DocSubscriptionWhereInput): DocSubscriptionPayload
 }

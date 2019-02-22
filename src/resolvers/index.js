@@ -7,6 +7,7 @@ const { enquiry } = require('./Mutation/enquiry')
 const { file } = require('./Mutation/file')
 const { org } = require('./Mutation/org')
 const { order } = require('./Mutation/order')
+const { payment } = require('./Mutation/payment')
 const { person } = require('./Mutation/person')
 const { prod } = require('./Mutation/prod')
 const { tel } = require('./Mutation/tel')
@@ -26,6 +27,7 @@ module.exports = {
     ...file,
     ...org,
     ...order,
+    ...payment,
     ...person,
     ...prod,
     ...tel,

@@ -1,4 +1,3 @@
-const { person: { upsertPerson } } = require('./person')
 const { validationSchema } = require('../../schema/employee')
 const { generateMutationObject } = require('../utils')
 

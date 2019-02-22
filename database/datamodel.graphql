@@ -168,6 +168,22 @@ type File {
 	drawing: Drawing @relation(name: "DrawingFiles")
 }
 
+type Payment {
+	id: ID! @unique
+	dateLocal: String
+	amount: Float
+	purpose: String
+	article: Article
+}
+
+type Article {
+	id: ID! @unique
+	name: String
+	rusName: String
+	isIncome: Boolean
+	isLoan: Boolean
+}
+
 enum TelType {
   WORK
   MOBILE

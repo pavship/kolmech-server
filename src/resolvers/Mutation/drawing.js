@@ -8,7 +8,7 @@ const drawing = {
     const modelDrawings = await db.query.drawings({ where: { model: { id: modelId } } }, '{ sortOrder }')
     const nextOrderNumber = modelDrawings.length ? Math.max(...modelDrawings.map(drw => drw.sortOrder)) + 1 : 0
     return Promise.all(files.map(async (file, i) => {
-      const imageFiles = await uploadImgFile(file, ctx, { 
+      const imageFiles = await uploadImgFile(file, ctx, {
         toFormat: 'png',
         verions: [{
           imgFor: 'FEED_W792',
