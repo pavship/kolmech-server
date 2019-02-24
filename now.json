@@ -11,7 +11,11 @@
 		"EMAIL_PASS": "@email-pass",
 		"AMO_DOMAIN": "@amo-domain",
 		"AMO_LOGIN": "@amo-login",
-		"AMO_HASH": "@amo-hash"
+		"AMO_HASH": "@amo-hash",
+		"DIRECTOR_NAME": "@director-name",
+		"SENIOR_MANAGER_NAME": "@senior-manager-name",
+		"DIRECTOR_USER_ID": "@director-user-id",
+		"SENIOR_MANAGER_USER_ID": "@senior-manager-user-id"
 	},
 	"alias": "now-advanced.now.sh",
 	"name": "now-advanced"

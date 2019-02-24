@@ -1,3 +1,17 @@
+type Account {				# payment account including bank accounts and cashboxes
+	id: ID! @unique
+	name: String
+	payments: [Payment!]!
+}
+
+type Article {				# payment articles
+	id: ID! @unique
+	name: String
+	rusName: String
+	isIncome: Boolean
+	isLoan: Boolean
+}
+
 type User {
 	id: ID! @unique
 	email: String! @unique
@@ -6,22 +20,9 @@ type User {
 	role: UserRole
 	person: Person @relation(name: "PersonUser")
 	events: [Event!]! @relation(name: "EventByUser")
-}
-
-type Person {
-	id: ID! @unique
-	amoId: Int @unique
-	fName: String
-	lName: String
-	mName: String
-	regName: String
-	amoName: String
-	regNameChecked: Boolean
-	htmlNote: String
-	tels: [Tel!]! @relation(name: "PersonTels", onDelete: CASCADE)
-	user: User @relation(name: "PersonUser", onDelete: CASCADE)
-	employees: [Employee!]!
-	payments: [Payment!]!
+	account: Account				# default payment account
+	createdPayments: [Payment!]! @relation(name: "PaymentsCreatedByUser")
+	updatedPayments: [Payment!]! @relation(name: "PaymentsUpdatedByUser")
 }
 
 type Employee {
@@ -142,6 +143,35 @@ type Drawing{
 	model: Model @relation(name: "ModelDrawings")
 }
 
+type Payment {
+	id: ID! @unique
+	createdAt: DateTime!
+	dateLocal: DateTime! @unique
+	amount: Float
+	purpose: String
+	article: Article
+	createdBy: User @relation(name: "PaymentsCreatedByUser")
+	updatedBy: User @relation(name: "PaymentsUpdatedByUser")
+	account: Account
+	person: Person
+}
+
+type Person {
+	id: ID! @unique
+	amoId: Int @unique
+	fName: String
+	lName: String
+	mName: String
+	regName: String
+	amoName: String
+	regNameChecked: Boolean
+	htmlNote: String
+	tels: [Tel!]! @relation(name: "PersonTels", onDelete: CASCADE)
+	user: User @relation(name: "PersonUser")
+	employees: [Employee!]!
+	payments: [Payment!]!
+}
+
 type Prod {
   id: ID! @unique
   dept: Dept! @relation(name: "DeptProds")
@@ -169,24 +199,6 @@ type File {
 	height: Int						# used for images
 	imgFor: ImgFor				# used in frontend to pick the right image size
 	drawing: Drawing @relation(name: "DrawingFiles")
-}
-
-type Payment {
-	id: ID! @unique
-	createdAt: DateTime!
-	dateLocal: DateTime! @unique
-	amount: Float
-	purpose: String
-	article: Article
-	person: Person
-}
-
-type Article {
-	id: ID! @unique
-	name: String
-	rusName: String
-	isIncome: Boolean
-	isLoan: Boolean
 }
 
 enum TelType {

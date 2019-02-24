@@ -1,8 +1,17 @@
 const { cloneDeep } = require('lodash')
+const { isValidDate } = require('../utils/dates')
 
-const generateMutationObject = async (input, typeName, ctx) => ({
+const generateMutationObject = async (input, typeName, ctx, { includeUser } = {}) => console.log('includeUser > ', includeUser) || ({
   ...input.id && { where: { id: input.id } },
-  data: await handleObj(input, typeName, ctx)
+  data: {
+    ...await handleObj(input, typeName, ctx),
+    // ...input.id && !!includeUser && { updatedBy: { connect: { id: ctx.userId } } }
+    ...!!includeUser && (
+        input.id  ? { updatedBy: { connect: { id: ctx.userId } } } :
+        !input.id ? { createdBy: { connect: { id: ctx.userId } } } :
+        false
+      )
+  }
 })
 
 const formikSchema = {
@@ -27,6 +36,9 @@ const handleObj = async (obj = {}, objTypeName, ctx) => {
     if (type === 'object' && Array.isArray(obj[k])) {
       const handledArr = await handleArr(obj[k], k, objTypeName, obj.id, ctx)
       return handledArr && (result[k] = handledArr)
+    }
+    if (type === 'object' && isValidDate(obj[k])) {
+      return result[k] = obj[k]
     }
     if (type === 'object') {
       const method = obj[k].id ? 'update' : 'create'

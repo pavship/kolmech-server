@@ -42,6 +42,10 @@ const Query = {
 		}, orderBy: 'amoName_ASC' }, info)
 	},
 
+	accounts(_, __, ctx, info) {
+		return ctx.db.query.accounts({ orderBy: 'name_ASC' }, info)
+	},
+
 	articles(_, __, ctx, info) {
 		return ctx.db.query.articles({ orderBy: 'rusName_ASC' }, info)
 	},

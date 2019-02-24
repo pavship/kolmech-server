@@ -3,6 +3,7 @@
 scalar Upload
 
 type Query {
+  accounts: [Account!]!
   articles: [Article!]!
   depts: [Dept!]!
   deptProds(deptId: ID!): [Prod!]!
@@ -57,6 +58,7 @@ type Mutation {
   connectEnquiriesToDocsAndStatus: BatchPayload!
   populateOrderFullnums: BatchPayload
   populatePaymentArticles: BatchPayload
+  populatePaymentAccounts: BatchPayload
 }
 
 type Subscription {

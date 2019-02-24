@@ -1,5 +1,252 @@
 # source: http://localhost:4466
-# timestamp: Sun Feb 24 2019 14:40:33 GMT+0300 (GMT+03:00)
+# timestamp: Sun Feb 24 2019 21:28:16 GMT+0300 (GMT+03:00)
+
+type Account implements Node {
+  id: ID!
+  name: String
+  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
+}
+
+"""A connection to a list of items."""
+type AccountConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [AccountEdge]!
+  aggregate: AggregateAccount!
+}
+
+input AccountCreateInput {
+  name: String
+  payments: PaymentCreateManyWithoutAccountInput
+}
+
+input AccountCreateOneInput {
+  create: AccountCreateInput
+  connect: AccountWhereUniqueInput
+}
+
+input AccountCreateOneWithoutPaymentsInput {
+  create: AccountCreateWithoutPaymentsInput
+  connect: AccountWhereUniqueInput
+}
+
+input AccountCreateWithoutPaymentsInput {
+  name: String
+}
+
+"""An edge in a connection."""
+type AccountEdge {
+  """The item at the end of the edge."""
+  node: Account!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum AccountOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type AccountPreviousValues {
+  id: ID!
+  name: String
+}
+
+type AccountSubscriptionPayload {
+  mutation: MutationType!
+  node: Account
+  updatedFields: [String!]
+  previousValues: AccountPreviousValues
+}
+
+input AccountSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [AccountSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [AccountSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [AccountSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: AccountWhereInput
+}
+
+input AccountUpdateDataInput {
+  name: String
+  payments: PaymentUpdateManyWithoutAccountInput
+}
+
+input AccountUpdateInput {
+  name: String
+  payments: PaymentUpdateManyWithoutAccountInput
+}
+
+input AccountUpdateManyMutationInput {
+  name: String
+}
+
+input AccountUpdateOneInput {
+  create: AccountCreateInput
+  connect: AccountWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: AccountUpdateDataInput
+  upsert: AccountUpsertNestedInput
+}
+
+input AccountUpdateOneWithoutPaymentsInput {
+  create: AccountCreateWithoutPaymentsInput
+  connect: AccountWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: AccountUpdateWithoutPaymentsDataInput
+  upsert: AccountUpsertWithoutPaymentsInput
+}
+
+input AccountUpdateWithoutPaymentsDataInput {
+  name: String
+}
+
+input AccountUpsertNestedInput {
+  update: AccountUpdateDataInput!
+  create: AccountCreateInput!
+}
+
+input AccountUpsertWithoutPaymentsInput {
+  update: AccountUpdateWithoutPaymentsDataInput!
+  create: AccountCreateWithoutPaymentsInput!
+}
+
+input AccountWhereInput {
+  """Logical AND on all given filters."""
+  AND: [AccountWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [AccountWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [AccountWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  payments_every: PaymentWhereInput
+  payments_some: PaymentWhereInput
+  payments_none: PaymentWhereInput
+}
+
+input AccountWhereUniqueInput {
+  id: ID
+}
+
+type AggregateAccount {
+  count: Int!
+}
 
 type AggregateArticle {
   count: Int!
@@ -3567,7 +3814,6 @@ input ModelWhereUniqueInput {
 
 type Mutation {
   createUser(data: UserCreateInput!): User!
-  createPerson(data: PersonCreateInput!): Person!
   createEmployee(data: EmployeeCreateInput!): Employee!
   createTel(data: TelCreateInput!): Tel!
   createOrg(data: OrgCreateInput!): Org!
@@ -3578,14 +3824,15 @@ type Mutation {
   createOrder(data: OrderCreateInput!): Order!
   createModel(data: ModelCreateInput!): Model!
   createDrawing(data: DrawingCreateInput!): Drawing!
+  createPayment(data: PaymentCreateInput!): Payment!
+  createPerson(data: PersonCreateInput!): Person!
   createProd(data: ProdCreateInput!): Prod!
   createFile(data: FileCreateInput!): File!
-  createPayment(data: PaymentCreateInput!): Payment!
   createArticle(data: ArticleCreateInput!): Article!
   createStatus(data: StatusCreateInput!): Status!
+  createAccount(data: AccountCreateInput!): Account!
   createDoc(data: DocCreateInput!): Doc!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
-  updatePerson(data: PersonUpdateInput!, where: PersonWhereUniqueInput!): Person
   updateEmployee(data: EmployeeUpdateInput!, where: EmployeeWhereUniqueInput!): Employee
   updateTel(data: TelUpdateInput!, where: TelWhereUniqueInput!): Tel
   updateOrg(data: OrgUpdateInput!, where: OrgWhereUniqueInput!): Org
@@ -3596,14 +3843,15 @@ type Mutation {
   updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
   updateModel(data: ModelUpdateInput!, where: ModelWhereUniqueInput!): Model
   updateDrawing(data: DrawingUpdateInput!, where: DrawingWhereUniqueInput!): Drawing
+  updatePayment(data: PaymentUpdateInput!, where: PaymentWhereUniqueInput!): Payment
+  updatePerson(data: PersonUpdateInput!, where: PersonWhereUniqueInput!): Person
   updateProd(data: ProdUpdateInput!, where: ProdWhereUniqueInput!): Prod
   updateFile(data: FileUpdateInput!, where: FileWhereUniqueInput!): File
-  updatePayment(data: PaymentUpdateInput!, where: PaymentWhereUniqueInput!): Payment
   updateArticle(data: ArticleUpdateInput!, where: ArticleWhereUniqueInput!): Article
   updateStatus(data: StatusUpdateInput!, where: StatusWhereUniqueInput!): Status
+  updateAccount(data: AccountUpdateInput!, where: AccountWhereUniqueInput!): Account
   updateDoc(data: DocUpdateInput!, where: DocWhereUniqueInput!): Doc
   deleteUser(where: UserWhereUniqueInput!): User
-  deletePerson(where: PersonWhereUniqueInput!): Person
   deleteEmployee(where: EmployeeWhereUniqueInput!): Employee
   deleteTel(where: TelWhereUniqueInput!): Tel
   deleteOrg(where: OrgWhereUniqueInput!): Org
@@ -3614,14 +3862,15 @@ type Mutation {
   deleteOrder(where: OrderWhereUniqueInput!): Order
   deleteModel(where: ModelWhereUniqueInput!): Model
   deleteDrawing(where: DrawingWhereUniqueInput!): Drawing
+  deletePayment(where: PaymentWhereUniqueInput!): Payment
+  deletePerson(where: PersonWhereUniqueInput!): Person
   deleteProd(where: ProdWhereUniqueInput!): Prod
   deleteFile(where: FileWhereUniqueInput!): File
-  deletePayment(where: PaymentWhereUniqueInput!): Payment
   deleteArticle(where: ArticleWhereUniqueInput!): Article
   deleteStatus(where: StatusWhereUniqueInput!): Status
+  deleteAccount(where: AccountWhereUniqueInput!): Account
   deleteDoc(where: DocWhereUniqueInput!): Doc
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
-  upsertPerson(where: PersonWhereUniqueInput!, create: PersonCreateInput!, update: PersonUpdateInput!): Person!
   upsertEmployee(where: EmployeeWhereUniqueInput!, create: EmployeeCreateInput!, update: EmployeeUpdateInput!): Employee!
   upsertTel(where: TelWhereUniqueInput!, create: TelCreateInput!, update: TelUpdateInput!): Tel!
   upsertOrg(where: OrgWhereUniqueInput!, create: OrgCreateInput!, update: OrgUpdateInput!): Org!
@@ -3632,14 +3881,15 @@ type Mutation {
   upsertOrder(where: OrderWhereUniqueInput!, create: OrderCreateInput!, update: OrderUpdateInput!): Order!
   upsertModel(where: ModelWhereUniqueInput!, create: ModelCreateInput!, update: ModelUpdateInput!): Model!
   upsertDrawing(where: DrawingWhereUniqueInput!, create: DrawingCreateInput!, update: DrawingUpdateInput!): Drawing!
+  upsertPayment(where: PaymentWhereUniqueInput!, create: PaymentCreateInput!, update: PaymentUpdateInput!): Payment!
+  upsertPerson(where: PersonWhereUniqueInput!, create: PersonCreateInput!, update: PersonUpdateInput!): Person!
   upsertProd(where: ProdWhereUniqueInput!, create: ProdCreateInput!, update: ProdUpdateInput!): Prod!
   upsertFile(where: FileWhereUniqueInput!, create: FileCreateInput!, update: FileUpdateInput!): File!
-  upsertPayment(where: PaymentWhereUniqueInput!, create: PaymentCreateInput!, update: PaymentUpdateInput!): Payment!
   upsertArticle(where: ArticleWhereUniqueInput!, create: ArticleCreateInput!, update: ArticleUpdateInput!): Article!
   upsertStatus(where: StatusWhereUniqueInput!, create: StatusCreateInput!, update: StatusUpdateInput!): Status!
+  upsertAccount(where: AccountWhereUniqueInput!, create: AccountCreateInput!, update: AccountUpdateInput!): Account!
   upsertDoc(where: DocWhereUniqueInput!, create: DocCreateInput!, update: DocUpdateInput!): Doc!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
-  updateManyPersons(data: PersonUpdateManyMutationInput!, where: PersonWhereInput): BatchPayload!
   updateManyEmployees(data: EmployeeUpdateManyMutationInput!, where: EmployeeWhereInput): BatchPayload!
   updateManyTels(data: TelUpdateManyMutationInput!, where: TelWhereInput): BatchPayload!
   updateManyOrgs(data: OrgUpdateManyMutationInput!, where: OrgWhereInput): BatchPayload!
@@ -3650,14 +3900,15 @@ type Mutation {
   updateManyOrders(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
   updateManyModels(data: ModelUpdateManyMutationInput!, where: ModelWhereInput): BatchPayload!
   updateManyDrawings(data: DrawingUpdateManyMutationInput!, where: DrawingWhereInput): BatchPayload!
+  updateManyPayments(data: PaymentUpdateManyMutationInput!, where: PaymentWhereInput): BatchPayload!
+  updateManyPersons(data: PersonUpdateManyMutationInput!, where: PersonWhereInput): BatchPayload!
   updateManyProds(data: ProdUpdateManyMutationInput!, where: ProdWhereInput): BatchPayload!
   updateManyFiles(data: FileUpdateManyMutationInput!, where: FileWhereInput): BatchPayload!
-  updateManyPayments(data: PaymentUpdateManyMutationInput!, where: PaymentWhereInput): BatchPayload!
   updateManyArticles(data: ArticleUpdateManyMutationInput!, where: ArticleWhereInput): BatchPayload!
   updateManyStatuses(data: StatusUpdateManyMutationInput!, where: StatusWhereInput): BatchPayload!
+  updateManyAccounts(data: AccountUpdateManyMutationInput!, where: AccountWhereInput): BatchPayload!
   updateManyDocs(data: DocUpdateManyMutationInput!, where: DocWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
-  deleteManyPersons(where: PersonWhereInput): BatchPayload!
   deleteManyEmployees(where: EmployeeWhereInput): BatchPayload!
   deleteManyTels(where: TelWhereInput): BatchPayload!
   deleteManyOrgs(where: OrgWhereInput): BatchPayload!
@@ -3668,11 +3919,13 @@ type Mutation {
   deleteManyOrders(where: OrderWhereInput): BatchPayload!
   deleteManyModels(where: ModelWhereInput): BatchPayload!
   deleteManyDrawings(where: DrawingWhereInput): BatchPayload!
+  deleteManyPayments(where: PaymentWhereInput): BatchPayload!
+  deleteManyPersons(where: PersonWhereInput): BatchPayload!
   deleteManyProds(where: ProdWhereInput): BatchPayload!
   deleteManyFiles(where: FileWhereInput): BatchPayload!
-  deleteManyPayments(where: PaymentWhereInput): BatchPayload!
   deleteManyArticles(where: ArticleWhereInput): BatchPayload!
   deleteManyStatuses(where: StatusWhereInput): BatchPayload!
+  deleteManyAccounts(where: AccountWhereInput): BatchPayload!
   deleteManyDocs(where: DocWhereInput): BatchPayload!
 }
 
@@ -4850,6 +5103,9 @@ type Payment implements Node {
   amount: Float
   purpose: String
   article: Article
+  createdBy: User
+  updatedBy: User
+  account: Account
   person: Person
 }
 
@@ -4868,7 +5124,20 @@ input PaymentCreateInput {
   amount: Float
   purpose: String
   article: ArticleCreateOneInput
+  createdBy: UserCreateOneWithoutCreatedPaymentsInput
+  updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
+  account: AccountCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
+}
+
+input PaymentCreateManyWithoutAccountInput {
+  create: [PaymentCreateWithoutAccountInput!]
+  connect: [PaymentWhereUniqueInput!]
+}
+
+input PaymentCreateManyWithoutCreatedByInput {
+  create: [PaymentCreateWithoutCreatedByInput!]
+  connect: [PaymentWhereUniqueInput!]
 }
 
 input PaymentCreateManyWithoutPersonInput {
@@ -4876,11 +5145,49 @@ input PaymentCreateManyWithoutPersonInput {
   connect: [PaymentWhereUniqueInput!]
 }
 
+input PaymentCreateManyWithoutUpdatedByInput {
+  create: [PaymentCreateWithoutUpdatedByInput!]
+  connect: [PaymentWhereUniqueInput!]
+}
+
+input PaymentCreateWithoutAccountInput {
+  dateLocal: DateTime!
+  amount: Float
+  purpose: String
+  article: ArticleCreateOneInput
+  createdBy: UserCreateOneWithoutCreatedPaymentsInput
+  updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
+  person: PersonCreateOneWithoutPaymentsInput
+}
+
+input PaymentCreateWithoutCreatedByInput {
+  dateLocal: DateTime!
+  amount: Float
+  purpose: String
+  article: ArticleCreateOneInput
+  updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
+  account: AccountCreateOneWithoutPaymentsInput
+  person: PersonCreateOneWithoutPaymentsInput
+}
+
 input PaymentCreateWithoutPersonInput {
   dateLocal: DateTime!
   amount: Float
   purpose: String
   article: ArticleCreateOneInput
+  createdBy: UserCreateOneWithoutCreatedPaymentsInput
+  updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
+  account: AccountCreateOneWithoutPaymentsInput
+}
+
+input PaymentCreateWithoutUpdatedByInput {
+  dateLocal: DateTime!
+  amount: Float
+  purpose: String
+  article: ArticleCreateOneInput
+  createdBy: UserCreateOneWithoutCreatedPaymentsInput
+  account: AccountCreateOneWithoutPaymentsInput
+  person: PersonCreateOneWithoutPaymentsInput
 }
 
 """An edge in a connection."""
@@ -4959,6 +5266,9 @@ input PaymentUpdateInput {
   amount: Float
   purpose: String
   article: ArticleUpdateOneInput
+  createdBy: UserUpdateOneWithoutCreatedPaymentsInput
+  updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
+  account: AccountUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
 }
 
@@ -4966,6 +5276,24 @@ input PaymentUpdateManyMutationInput {
   dateLocal: DateTime
   amount: Float
   purpose: String
+}
+
+input PaymentUpdateManyWithoutAccountInput {
+  create: [PaymentCreateWithoutAccountInput!]
+  connect: [PaymentWhereUniqueInput!]
+  disconnect: [PaymentWhereUniqueInput!]
+  delete: [PaymentWhereUniqueInput!]
+  update: [PaymentUpdateWithWhereUniqueWithoutAccountInput!]
+  upsert: [PaymentUpsertWithWhereUniqueWithoutAccountInput!]
+}
+
+input PaymentUpdateManyWithoutCreatedByInput {
+  create: [PaymentCreateWithoutCreatedByInput!]
+  connect: [PaymentWhereUniqueInput!]
+  disconnect: [PaymentWhereUniqueInput!]
+  delete: [PaymentWhereUniqueInput!]
+  update: [PaymentUpdateWithWhereUniqueWithoutCreatedByInput!]
+  upsert: [PaymentUpsertWithWhereUniqueWithoutCreatedByInput!]
 }
 
 input PaymentUpdateManyWithoutPersonInput {
@@ -4977,11 +5305,63 @@ input PaymentUpdateManyWithoutPersonInput {
   upsert: [PaymentUpsertWithWhereUniqueWithoutPersonInput!]
 }
 
+input PaymentUpdateManyWithoutUpdatedByInput {
+  create: [PaymentCreateWithoutUpdatedByInput!]
+  connect: [PaymentWhereUniqueInput!]
+  disconnect: [PaymentWhereUniqueInput!]
+  delete: [PaymentWhereUniqueInput!]
+  update: [PaymentUpdateWithWhereUniqueWithoutUpdatedByInput!]
+  upsert: [PaymentUpsertWithWhereUniqueWithoutUpdatedByInput!]
+}
+
+input PaymentUpdateWithoutAccountDataInput {
+  dateLocal: DateTime
+  amount: Float
+  purpose: String
+  article: ArticleUpdateOneInput
+  createdBy: UserUpdateOneWithoutCreatedPaymentsInput
+  updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
+  person: PersonUpdateOneWithoutPaymentsInput
+}
+
+input PaymentUpdateWithoutCreatedByDataInput {
+  dateLocal: DateTime
+  amount: Float
+  purpose: String
+  article: ArticleUpdateOneInput
+  updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
+  account: AccountUpdateOneWithoutPaymentsInput
+  person: PersonUpdateOneWithoutPaymentsInput
+}
+
 input PaymentUpdateWithoutPersonDataInput {
   dateLocal: DateTime
   amount: Float
   purpose: String
   article: ArticleUpdateOneInput
+  createdBy: UserUpdateOneWithoutCreatedPaymentsInput
+  updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
+  account: AccountUpdateOneWithoutPaymentsInput
+}
+
+input PaymentUpdateWithoutUpdatedByDataInput {
+  dateLocal: DateTime
+  amount: Float
+  purpose: String
+  article: ArticleUpdateOneInput
+  createdBy: UserUpdateOneWithoutCreatedPaymentsInput
+  account: AccountUpdateOneWithoutPaymentsInput
+  person: PersonUpdateOneWithoutPaymentsInput
+}
+
+input PaymentUpdateWithWhereUniqueWithoutAccountInput {
+  where: PaymentWhereUniqueInput!
+  data: PaymentUpdateWithoutAccountDataInput!
+}
+
+input PaymentUpdateWithWhereUniqueWithoutCreatedByInput {
+  where: PaymentWhereUniqueInput!
+  data: PaymentUpdateWithoutCreatedByDataInput!
 }
 
 input PaymentUpdateWithWhereUniqueWithoutPersonInput {
@@ -4989,10 +5369,33 @@ input PaymentUpdateWithWhereUniqueWithoutPersonInput {
   data: PaymentUpdateWithoutPersonDataInput!
 }
 
+input PaymentUpdateWithWhereUniqueWithoutUpdatedByInput {
+  where: PaymentWhereUniqueInput!
+  data: PaymentUpdateWithoutUpdatedByDataInput!
+}
+
+input PaymentUpsertWithWhereUniqueWithoutAccountInput {
+  where: PaymentWhereUniqueInput!
+  update: PaymentUpdateWithoutAccountDataInput!
+  create: PaymentCreateWithoutAccountInput!
+}
+
+input PaymentUpsertWithWhereUniqueWithoutCreatedByInput {
+  where: PaymentWhereUniqueInput!
+  update: PaymentUpdateWithoutCreatedByDataInput!
+  create: PaymentCreateWithoutCreatedByInput!
+}
+
 input PaymentUpsertWithWhereUniqueWithoutPersonInput {
   where: PaymentWhereUniqueInput!
   update: PaymentUpdateWithoutPersonDataInput!
   create: PaymentCreateWithoutPersonInput!
+}
+
+input PaymentUpsertWithWhereUniqueWithoutUpdatedByInput {
+  where: PaymentWhereUniqueInput!
+  update: PaymentUpdateWithoutUpdatedByDataInput!
+  create: PaymentCreateWithoutUpdatedByInput!
 }
 
 input PaymentWhereInput {
@@ -5151,6 +5554,9 @@ input PaymentWhereInput {
   """All values not ending with the given string."""
   purpose_not_ends_with: String
   article: ArticleWhereInput
+  createdBy: UserWhereInput
+  updatedBy: UserWhereInput
+  account: AccountWhereInput
   person: PersonWhereInput
 }
 
@@ -6404,7 +6810,6 @@ input ProdWhereUniqueInput {
 
 type Query {
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
-  persons(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Person]!
   employees(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Employee]!
   tels(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tel]!
   orgs(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Org]!
@@ -6415,14 +6820,15 @@ type Query {
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
   models(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Model]!
   drawings(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Drawing]!
+  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment]!
+  persons(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Person]!
   prods(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Prod]!
   files(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [File]!
-  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment]!
   articles(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Article]!
   statuses(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Status]!
+  accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account]!
   docs(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Doc]!
   user(where: UserWhereUniqueInput!): User
-  person(where: PersonWhereUniqueInput!): Person
   employee(where: EmployeeWhereUniqueInput!): Employee
   tel(where: TelWhereUniqueInput!): Tel
   org(where: OrgWhereUniqueInput!): Org
@@ -6433,14 +6839,15 @@ type Query {
   order(where: OrderWhereUniqueInput!): Order
   model(where: ModelWhereUniqueInput!): Model
   drawing(where: DrawingWhereUniqueInput!): Drawing
+  payment(where: PaymentWhereUniqueInput!): Payment
+  person(where: PersonWhereUniqueInput!): Person
   prod(where: ProdWhereUniqueInput!): Prod
   file(where: FileWhereUniqueInput!): File
-  payment(where: PaymentWhereUniqueInput!): Payment
   article(where: ArticleWhereUniqueInput!): Article
   status(where: StatusWhereUniqueInput!): Status
+  account(where: AccountWhereUniqueInput!): Account
   doc(where: DocWhereUniqueInput!): Doc
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
-  personsConnection(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PersonConnection!
   employeesConnection(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EmployeeConnection!
   telsConnection(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TelConnection!
   orgsConnection(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgConnection!
@@ -6451,11 +6858,13 @@ type Query {
   ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
   modelsConnection(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ModelConnection!
   drawingsConnection(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DrawingConnection!
+  paymentsConnection(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentConnection!
+  personsConnection(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PersonConnection!
   prodsConnection(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProdConnection!
   filesConnection(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
-  paymentsConnection(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentConnection!
   articlesConnection(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ArticleConnection!
   statusesConnection(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StatusConnection!
+  accountsConnection(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AccountConnection!
   docsConnection(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DocConnection!
 
   """Fetches an object given its ID"""
@@ -6795,7 +7204,6 @@ input StatusWhereUniqueInput {
 
 type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
-  person(where: PersonSubscriptionWhereInput): PersonSubscriptionPayload
   employee(where: EmployeeSubscriptionWhereInput): EmployeeSubscriptionPayload
   tel(where: TelSubscriptionWhereInput): TelSubscriptionPayload
   org(where: OrgSubscriptionWhereInput): OrgSubscriptionPayload
@@ -6806,11 +7214,13 @@ type Subscription {
   order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
   model(where: ModelSubscriptionWhereInput): ModelSubscriptionPayload
   drawing(where: DrawingSubscriptionWhereInput): DrawingSubscriptionPayload
+  payment(where: PaymentSubscriptionWhereInput): PaymentSubscriptionPayload
+  person(where: PersonSubscriptionWhereInput): PersonSubscriptionPayload
   prod(where: ProdSubscriptionWhereInput): ProdSubscriptionPayload
   file(where: FileSubscriptionWhereInput): FileSubscriptionPayload
-  payment(where: PaymentSubscriptionWhereInput): PaymentSubscriptionPayload
   article(where: ArticleSubscriptionWhereInput): ArticleSubscriptionPayload
   status(where: StatusSubscriptionWhereInput): StatusSubscriptionPayload
+  account(where: AccountSubscriptionWhereInput): AccountSubscriptionPayload
   doc(where: DocSubscriptionWhereInput): DocSubscriptionPayload
 }
 
@@ -7181,6 +7591,9 @@ type User implements Node {
   role: UserRole
   person: Person
   events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
+  account: Account
+  createdPayments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
+  updatedPayments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
 }
 
 """A connection to a list of items."""
@@ -7200,6 +7613,14 @@ input UserCreateInput {
   role: UserRole
   person: PersonCreateOneWithoutUserInput
   events: EventCreateManyWithoutUserInput
+  account: AccountCreateOneInput
+  createdPayments: PaymentCreateManyWithoutCreatedByInput
+  updatedPayments: PaymentCreateManyWithoutUpdatedByInput
+}
+
+input UserCreateOneWithoutCreatedPaymentsInput {
+  create: UserCreateWithoutCreatedPaymentsInput
+  connect: UserWhereUniqueInput
 }
 
 input UserCreateOneWithoutEventsInput {
@@ -7212,12 +7633,31 @@ input UserCreateOneWithoutPersonInput {
   connect: UserWhereUniqueInput
 }
 
+input UserCreateOneWithoutUpdatedPaymentsInput {
+  create: UserCreateWithoutUpdatedPaymentsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutCreatedPaymentsInput {
+  email: String!
+  confirmed: Boolean
+  password: String!
+  role: UserRole
+  person: PersonCreateOneWithoutUserInput
+  events: EventCreateManyWithoutUserInput
+  account: AccountCreateOneInput
+  updatedPayments: PaymentCreateManyWithoutUpdatedByInput
+}
+
 input UserCreateWithoutEventsInput {
   email: String!
   confirmed: Boolean
   password: String!
   role: UserRole
   person: PersonCreateOneWithoutUserInput
+  account: AccountCreateOneInput
+  createdPayments: PaymentCreateManyWithoutCreatedByInput
+  updatedPayments: PaymentCreateManyWithoutUpdatedByInput
 }
 
 input UserCreateWithoutPersonInput {
@@ -7226,6 +7666,20 @@ input UserCreateWithoutPersonInput {
   password: String!
   role: UserRole
   events: EventCreateManyWithoutUserInput
+  account: AccountCreateOneInput
+  createdPayments: PaymentCreateManyWithoutCreatedByInput
+  updatedPayments: PaymentCreateManyWithoutUpdatedByInput
+}
+
+input UserCreateWithoutUpdatedPaymentsInput {
+  email: String!
+  confirmed: Boolean
+  password: String!
+  role: UserRole
+  person: PersonCreateOneWithoutUserInput
+  events: EventCreateManyWithoutUserInput
+  account: AccountCreateOneInput
+  createdPayments: PaymentCreateManyWithoutCreatedByInput
 }
 
 """An edge in a connection."""
@@ -7312,6 +7766,9 @@ input UserUpdateInput {
   role: UserRole
   person: PersonUpdateOneWithoutUserInput
   events: EventUpdateManyWithoutUserInput
+  account: AccountUpdateOneInput
+  createdPayments: PaymentUpdateManyWithoutCreatedByInput
+  updatedPayments: PaymentUpdateManyWithoutUpdatedByInput
 }
 
 input UserUpdateManyMutationInput {
@@ -7319,6 +7776,15 @@ input UserUpdateManyMutationInput {
   confirmed: Boolean
   password: String
   role: UserRole
+}
+
+input UserUpdateOneWithoutCreatedPaymentsInput {
+  create: UserCreateWithoutCreatedPaymentsInput
+  connect: UserWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: UserUpdateWithoutCreatedPaymentsDataInput
+  upsert: UserUpsertWithoutCreatedPaymentsInput
 }
 
 input UserUpdateOneWithoutEventsInput {
@@ -7339,12 +7805,35 @@ input UserUpdateOneWithoutPersonInput {
   upsert: UserUpsertWithoutPersonInput
 }
 
+input UserUpdateOneWithoutUpdatedPaymentsInput {
+  create: UserCreateWithoutUpdatedPaymentsInput
+  connect: UserWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: UserUpdateWithoutUpdatedPaymentsDataInput
+  upsert: UserUpsertWithoutUpdatedPaymentsInput
+}
+
+input UserUpdateWithoutCreatedPaymentsDataInput {
+  email: String
+  confirmed: Boolean
+  password: String
+  role: UserRole
+  person: PersonUpdateOneWithoutUserInput
+  events: EventUpdateManyWithoutUserInput
+  account: AccountUpdateOneInput
+  updatedPayments: PaymentUpdateManyWithoutUpdatedByInput
+}
+
 input UserUpdateWithoutEventsDataInput {
   email: String
   confirmed: Boolean
   password: String
   role: UserRole
   person: PersonUpdateOneWithoutUserInput
+  account: AccountUpdateOneInput
+  createdPayments: PaymentUpdateManyWithoutCreatedByInput
+  updatedPayments: PaymentUpdateManyWithoutUpdatedByInput
 }
 
 input UserUpdateWithoutPersonDataInput {
@@ -7353,6 +7842,25 @@ input UserUpdateWithoutPersonDataInput {
   password: String
   role: UserRole
   events: EventUpdateManyWithoutUserInput
+  account: AccountUpdateOneInput
+  createdPayments: PaymentUpdateManyWithoutCreatedByInput
+  updatedPayments: PaymentUpdateManyWithoutUpdatedByInput
+}
+
+input UserUpdateWithoutUpdatedPaymentsDataInput {
+  email: String
+  confirmed: Boolean
+  password: String
+  role: UserRole
+  person: PersonUpdateOneWithoutUserInput
+  events: EventUpdateManyWithoutUserInput
+  account: AccountUpdateOneInput
+  createdPayments: PaymentUpdateManyWithoutCreatedByInput
+}
+
+input UserUpsertWithoutCreatedPaymentsInput {
+  update: UserUpdateWithoutCreatedPaymentsDataInput!
+  create: UserCreateWithoutCreatedPaymentsInput!
 }
 
 input UserUpsertWithoutEventsInput {
@@ -7363,6 +7871,11 @@ input UserUpsertWithoutEventsInput {
 input UserUpsertWithoutPersonInput {
   update: UserUpdateWithoutPersonDataInput!
   create: UserCreateWithoutPersonInput!
+}
+
+input UserUpsertWithoutUpdatedPaymentsInput {
+  update: UserUpdateWithoutUpdatedPaymentsDataInput!
+  create: UserCreateWithoutUpdatedPaymentsInput!
 }
 
 input UserWhereInput {
@@ -7512,6 +8025,13 @@ input UserWhereInput {
   events_every: EventWhereInput
   events_some: EventWhereInput
   events_none: EventWhereInput
+  account: AccountWhereInput
+  createdPayments_every: PaymentWhereInput
+  createdPayments_some: PaymentWhereInput
+  createdPayments_none: PaymentWhereInput
+  updatedPayments_every: PaymentWhereInput
+  updatedPayments_some: PaymentWhereInput
+  updatedPayments_none: PaymentWhereInput
 }
 
 input UserWhereUniqueInput {

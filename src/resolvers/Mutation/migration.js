@@ -218,10 +218,36 @@ const migration = {
 		const existingNames = existing.map(a => a.name)
 		const toCreate = articles.filter(a => !existingNames.includes(a.name))
 		const created = await Promise.all(toCreate.map(({ name, rusName, isLoan, isIncome }) =>
-			ctx.db.mutation.createArticle({ 
+			ctx.db.mutation.createArticle({
 				data: { name, rusName, isLoan, isIncome }
 			})
 		))
+		return { count: created.length }
+	},
+
+	async populatePaymentAccounts(_, __, ctx, info) {
+		const smLName = process.env.SENIOR_MANAGER_NAME.split(' ')[1]
+		const directorName = process.env.DIRECTOR_NAME.split(' ')[1]
+		const accounts = [
+			{ name: smLName},
+			{ name: directorName},
+		]
+		const existing = await ctx.db.query.accounts({}, '{ id name }')
+		const existingNames = existing.map(a => a.name)
+		const toCreate = accounts.filter(a => !existingNames.includes(a.name))
+		const created = await Promise.all(toCreate.map(({ name }) =>
+			ctx.db.mutation.createAccount({
+				data: { name }
+			}, '{ id name }')
+		))
+		const allAccounts = [...existing, ...created]
+		// assign default accounts to users
+		await ctx.db.mutation.updateUser({where: { id: process.env.SENIOR_MANAGER_USER_ID },
+			data: { account: { connect: {id: allAccounts.find(a => a.name === smLName).id}} }
+		})
+		await ctx.db.mutation.updateUser({where: { id: process.env.DIRECTOR_USER_ID },
+			data: { account: { connect: {id: allAccounts.find(a => a.name === directorName).id}} }
+		})
 		return { count: created.length }
 	}
 
