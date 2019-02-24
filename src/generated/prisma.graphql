@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Sun Feb 24 2019 09:59:11 GMT+0300 (GMT+03:00)
+# timestamp: Sun Feb 24 2019 14:40:33 GMT+0300 (GMT+03:00)
 
 type AggregateArticle {
   count: Int!
@@ -358,6 +358,8 @@ type BatchPayload {
   """The number of nodes that have been affected by the Batch operation."""
   count: Long!
 }
+
+scalar DateTime
 
 type Dept implements Node {
   id: ID!
@@ -4843,7 +4845,8 @@ type PageInfo {
 
 type Payment implements Node {
   id: ID!
-  dateLocal: String
+  createdAt: DateTime!
+  dateLocal: DateTime!
   amount: Float
   purpose: String
   article: Article
@@ -4861,7 +4864,7 @@ type PaymentConnection {
 }
 
 input PaymentCreateInput {
-  dateLocal: String
+  dateLocal: DateTime!
   amount: Float
   purpose: String
   article: ArticleCreateOneInput
@@ -4874,7 +4877,7 @@ input PaymentCreateManyWithoutPersonInput {
 }
 
 input PaymentCreateWithoutPersonInput {
-  dateLocal: String
+  dateLocal: DateTime!
   amount: Float
   purpose: String
   article: ArticleCreateOneInput
@@ -4892,6 +4895,8 @@ type PaymentEdge {
 enum PaymentOrderByInput {
   id_ASC
   id_DESC
+  createdAt_ASC
+  createdAt_DESC
   dateLocal_ASC
   dateLocal_DESC
   amount_ASC
@@ -4900,13 +4905,12 @@ enum PaymentOrderByInput {
   purpose_DESC
   updatedAt_ASC
   updatedAt_DESC
-  createdAt_ASC
-  createdAt_DESC
 }
 
 type PaymentPreviousValues {
   id: ID!
-  dateLocal: String
+  createdAt: DateTime!
+  dateLocal: DateTime!
   amount: Float
   purpose: String
 }
@@ -4951,7 +4955,7 @@ input PaymentSubscriptionWhereInput {
 }
 
 input PaymentUpdateInput {
-  dateLocal: String
+  dateLocal: DateTime
   amount: Float
   purpose: String
   article: ArticleUpdateOneInput
@@ -4959,7 +4963,7 @@ input PaymentUpdateInput {
 }
 
 input PaymentUpdateManyMutationInput {
-  dateLocal: String
+  dateLocal: DateTime
   amount: Float
   purpose: String
 }
@@ -4974,7 +4978,7 @@ input PaymentUpdateManyWithoutPersonInput {
 }
 
 input PaymentUpdateWithoutPersonDataInput {
-  dateLocal: String
+  dateLocal: DateTime
   amount: Float
   purpose: String
   article: ArticleUpdateOneInput
@@ -5040,46 +5044,50 @@ input PaymentWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
-  dateLocal: String
+  createdAt: DateTime
 
   """All values that are not equal to given value."""
-  dateLocal_not: String
+  createdAt_not: DateTime
 
   """All values that are contained in given list."""
-  dateLocal_in: [String!]
+  createdAt_in: [DateTime!]
 
   """All values that are not contained in given list."""
-  dateLocal_not_in: [String!]
+  createdAt_not_in: [DateTime!]
 
   """All values less than the given value."""
-  dateLocal_lt: String
+  createdAt_lt: DateTime
 
   """All values less than or equal the given value."""
-  dateLocal_lte: String
+  createdAt_lte: DateTime
 
   """All values greater than the given value."""
-  dateLocal_gt: String
+  createdAt_gt: DateTime
 
   """All values greater than or equal the given value."""
-  dateLocal_gte: String
+  createdAt_gte: DateTime
+  dateLocal: DateTime
 
-  """All values containing the given string."""
-  dateLocal_contains: String
+  """All values that are not equal to given value."""
+  dateLocal_not: DateTime
 
-  """All values not containing the given string."""
-  dateLocal_not_contains: String
+  """All values that are contained in given list."""
+  dateLocal_in: [DateTime!]
 
-  """All values starting with the given string."""
-  dateLocal_starts_with: String
+  """All values that are not contained in given list."""
+  dateLocal_not_in: [DateTime!]
 
-  """All values not starting with the given string."""
-  dateLocal_not_starts_with: String
+  """All values less than the given value."""
+  dateLocal_lt: DateTime
 
-  """All values ending with the given string."""
-  dateLocal_ends_with: String
+  """All values less than or equal the given value."""
+  dateLocal_lte: DateTime
 
-  """All values not ending with the given string."""
-  dateLocal_not_ends_with: String
+  """All values greater than the given value."""
+  dateLocal_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  dateLocal_gte: DateTime
   amount: Float
 
   """All values that are not equal to given value."""
@@ -5148,6 +5156,7 @@ input PaymentWhereInput {
 
 input PaymentWhereUniqueInput {
   id: ID
+  dateLocal: DateTime
 }
 
 type Person implements Node {

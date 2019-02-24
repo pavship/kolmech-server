@@ -173,7 +173,8 @@ type File {
 
 type Payment {
 	id: ID! @unique
-	dateLocal: String
+	createdAt: DateTime!
+	dateLocal: DateTime! @unique
 	amount: Float
 	purpose: String
 	article: Article
