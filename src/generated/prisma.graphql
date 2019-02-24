@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Sat Feb 23 2019 01:28:57 GMT+0300 (GMT+03:00)
+# timestamp: Sun Feb 24 2019 09:59:11 GMT+0300 (GMT+03:00)
 
 type AggregateArticle {
   count: Int!
@@ -4847,6 +4847,7 @@ type Payment implements Node {
   amount: Float
   purpose: String
   article: Article
+  person: Person
 }
 
 """A connection to a list of items."""
@@ -4860,6 +4861,19 @@ type PaymentConnection {
 }
 
 input PaymentCreateInput {
+  dateLocal: String
+  amount: Float
+  purpose: String
+  article: ArticleCreateOneInput
+  person: PersonCreateOneWithoutPaymentsInput
+}
+
+input PaymentCreateManyWithoutPersonInput {
+  create: [PaymentCreateWithoutPersonInput!]
+  connect: [PaymentWhereUniqueInput!]
+}
+
+input PaymentCreateWithoutPersonInput {
   dateLocal: String
   amount: Float
   purpose: String
@@ -4941,12 +4955,40 @@ input PaymentUpdateInput {
   amount: Float
   purpose: String
   article: ArticleUpdateOneInput
+  person: PersonUpdateOneWithoutPaymentsInput
 }
 
 input PaymentUpdateManyMutationInput {
   dateLocal: String
   amount: Float
   purpose: String
+}
+
+input PaymentUpdateManyWithoutPersonInput {
+  create: [PaymentCreateWithoutPersonInput!]
+  connect: [PaymentWhereUniqueInput!]
+  disconnect: [PaymentWhereUniqueInput!]
+  delete: [PaymentWhereUniqueInput!]
+  update: [PaymentUpdateWithWhereUniqueWithoutPersonInput!]
+  upsert: [PaymentUpsertWithWhereUniqueWithoutPersonInput!]
+}
+
+input PaymentUpdateWithoutPersonDataInput {
+  dateLocal: String
+  amount: Float
+  purpose: String
+  article: ArticleUpdateOneInput
+}
+
+input PaymentUpdateWithWhereUniqueWithoutPersonInput {
+  where: PaymentWhereUniqueInput!
+  data: PaymentUpdateWithoutPersonDataInput!
+}
+
+input PaymentUpsertWithWhereUniqueWithoutPersonInput {
+  where: PaymentWhereUniqueInput!
+  update: PaymentUpdateWithoutPersonDataInput!
+  create: PaymentCreateWithoutPersonInput!
 }
 
 input PaymentWhereInput {
@@ -5101,6 +5143,7 @@ input PaymentWhereInput {
   """All values not ending with the given string."""
   purpose_not_ends_with: String
   article: ArticleWhereInput
+  person: PersonWhereInput
 }
 
 input PaymentWhereUniqueInput {
@@ -5109,7 +5152,7 @@ input PaymentWhereUniqueInput {
 
 type Person implements Node {
   id: ID!
-  amoId: Int!
+  amoId: Int
   fName: String
   lName: String
   mName: String
@@ -5120,6 +5163,7 @@ type Person implements Node {
   tels(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tel!]
   user: User
   employees(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Employee!]
+  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
 }
 
 """A connection to a list of items."""
@@ -5133,7 +5177,7 @@ type PersonConnection {
 }
 
 input PersonCreateInput {
-  amoId: Int!
+  amoId: Int
   fName: String
   lName: String
   mName: String
@@ -5144,10 +5188,16 @@ input PersonCreateInput {
   tels: TelCreateManyWithoutPersonInput
   user: UserCreateOneWithoutPersonInput
   employees: EmployeeCreateManyWithoutPersonInput
+  payments: PaymentCreateManyWithoutPersonInput
 }
 
 input PersonCreateOneWithoutEmployeesInput {
   create: PersonCreateWithoutEmployeesInput
+  connect: PersonWhereUniqueInput
+}
+
+input PersonCreateOneWithoutPaymentsInput {
+  create: PersonCreateWithoutPaymentsInput
   connect: PersonWhereUniqueInput
 }
 
@@ -5162,7 +5212,7 @@ input PersonCreateOneWithoutUserInput {
 }
 
 input PersonCreateWithoutEmployeesInput {
-  amoId: Int!
+  amoId: Int
   fName: String
   lName: String
   mName: String
@@ -5172,10 +5222,25 @@ input PersonCreateWithoutEmployeesInput {
   htmlNote: String
   tels: TelCreateManyWithoutPersonInput
   user: UserCreateOneWithoutPersonInput
+  payments: PaymentCreateManyWithoutPersonInput
+}
+
+input PersonCreateWithoutPaymentsInput {
+  amoId: Int
+  fName: String
+  lName: String
+  mName: String
+  regName: String
+  amoName: String
+  regNameChecked: Boolean
+  htmlNote: String
+  tels: TelCreateManyWithoutPersonInput
+  user: UserCreateOneWithoutPersonInput
+  employees: EmployeeCreateManyWithoutPersonInput
 }
 
 input PersonCreateWithoutTelsInput {
-  amoId: Int!
+  amoId: Int
   fName: String
   lName: String
   mName: String
@@ -5185,10 +5250,11 @@ input PersonCreateWithoutTelsInput {
   htmlNote: String
   user: UserCreateOneWithoutPersonInput
   employees: EmployeeCreateManyWithoutPersonInput
+  payments: PaymentCreateManyWithoutPersonInput
 }
 
 input PersonCreateWithoutUserInput {
-  amoId: Int!
+  amoId: Int
   fName: String
   lName: String
   mName: String
@@ -5198,6 +5264,7 @@ input PersonCreateWithoutUserInput {
   htmlNote: String
   tels: TelCreateManyWithoutPersonInput
   employees: EmployeeCreateManyWithoutPersonInput
+  payments: PaymentCreateManyWithoutPersonInput
 }
 
 """An edge in a connection."""
@@ -5236,7 +5303,7 @@ enum PersonOrderByInput {
 
 type PersonPreviousValues {
   id: ID!
-  amoId: Int!
+  amoId: Int
   fName: String
   lName: String
   mName: String
@@ -5297,6 +5364,7 @@ input PersonUpdateInput {
   tels: TelUpdateManyWithoutPersonInput
   user: UserUpdateOneWithoutPersonInput
   employees: EmployeeUpdateManyWithoutPersonInput
+  payments: PaymentUpdateManyWithoutPersonInput
 }
 
 input PersonUpdateManyMutationInput {
@@ -5317,6 +5385,15 @@ input PersonUpdateOneWithoutEmployeesInput {
   delete: Boolean
   update: PersonUpdateWithoutEmployeesDataInput
   upsert: PersonUpsertWithoutEmployeesInput
+}
+
+input PersonUpdateOneWithoutPaymentsInput {
+  create: PersonCreateWithoutPaymentsInput
+  connect: PersonWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: PersonUpdateWithoutPaymentsDataInput
+  upsert: PersonUpsertWithoutPaymentsInput
 }
 
 input PersonUpdateOneWithoutTelsInput {
@@ -5348,6 +5425,21 @@ input PersonUpdateWithoutEmployeesDataInput {
   htmlNote: String
   tels: TelUpdateManyWithoutPersonInput
   user: UserUpdateOneWithoutPersonInput
+  payments: PaymentUpdateManyWithoutPersonInput
+}
+
+input PersonUpdateWithoutPaymentsDataInput {
+  amoId: Int
+  fName: String
+  lName: String
+  mName: String
+  regName: String
+  amoName: String
+  regNameChecked: Boolean
+  htmlNote: String
+  tels: TelUpdateManyWithoutPersonInput
+  user: UserUpdateOneWithoutPersonInput
+  employees: EmployeeUpdateManyWithoutPersonInput
 }
 
 input PersonUpdateWithoutTelsDataInput {
@@ -5361,6 +5453,7 @@ input PersonUpdateWithoutTelsDataInput {
   htmlNote: String
   user: UserUpdateOneWithoutPersonInput
   employees: EmployeeUpdateManyWithoutPersonInput
+  payments: PaymentUpdateManyWithoutPersonInput
 }
 
 input PersonUpdateWithoutUserDataInput {
@@ -5374,11 +5467,17 @@ input PersonUpdateWithoutUserDataInput {
   htmlNote: String
   tels: TelUpdateManyWithoutPersonInput
   employees: EmployeeUpdateManyWithoutPersonInput
+  payments: PaymentUpdateManyWithoutPersonInput
 }
 
 input PersonUpsertWithoutEmployeesInput {
   update: PersonUpdateWithoutEmployeesDataInput!
   create: PersonCreateWithoutEmployeesInput!
+}
+
+input PersonUpsertWithoutPaymentsInput {
+  update: PersonUpdateWithoutPaymentsDataInput!
+  create: PersonCreateWithoutPaymentsInput!
 }
 
 input PersonUpsertWithoutTelsInput {
@@ -5713,6 +5812,9 @@ input PersonWhereInput {
   employees_every: EmployeeWhereInput
   employees_some: EmployeeWhereInput
   employees_none: EmployeeWhereInput
+  payments_every: PaymentWhereInput
+  payments_some: PaymentWhereInput
+  payments_none: PaymentWhereInput
 }
 
 input PersonWhereUniqueInput {

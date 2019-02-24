@@ -34,7 +34,12 @@ const Query = {
 	},
 
 	persons(_, __, ctx, info) {
-		return ctx.db.query.persons({ orderBy: 'amoName_ASC' }, info)
+		return ctx.db.query.persons({ where: {
+			id_not_in: [
+				'cjm85kntr00f009385au7tolq', //Admin
+				'cjnfcpohm0d4h0724cmtoe8sj', //Server
+			]
+		}, orderBy: 'amoName_ASC' }, info)
 	},
 
 	articles(_, __, ctx, info) {

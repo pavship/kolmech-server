@@ -214,7 +214,10 @@ const migration = {
 			{ name: 'maintainance', rusName: 'ТО Оборудования'},
 			{ name: 'repair', rusName: 'Ремонт оборудования'},
 		]
-		const created = await Promise.all(articles.map(({ name, rusName, isLoan, isIncome }) =>
+		const existing = await ctx.db.query.articles({}, '{ id name }')
+		const existingNames = existing.map(a => a.name)
+		const toCreate = articles.filter(a => !existingNames.includes(a.name))
+		const created = await Promise.all(toCreate.map(({ name, rusName, isLoan, isIncome }) =>
 			ctx.db.mutation.createArticle({ 
 				data: { name, rusName, isLoan, isIncome }
 			})

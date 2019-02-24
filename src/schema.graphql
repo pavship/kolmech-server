@@ -100,6 +100,7 @@ input ModelInput {
 input PaymentInput {
   id: ID
 	articleId: ID
+	personId: ID
   dateLocal: String
 	amount: Float
 	purpose: String

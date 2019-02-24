@@ -10,7 +10,7 @@ type User {
 
 type Person {
 	id: ID! @unique
-	amoId: Int! @unique
+	amoId: Int @unique
 	fName: String
 	lName: String
 	mName: String
@@ -21,6 +21,7 @@ type Person {
 	tels: [Tel!]! @relation(name: "PersonTels", onDelete: CASCADE)
 	user: User @relation(name: "PersonUser", onDelete: CASCADE)
 	employees: [Employee!]!
+	payments: [Payment!]!
 }
 
 type Employee {
@@ -176,6 +177,7 @@ type Payment {
 	amount: Float
 	purpose: String
 	article: Article
+	person: Person
 }
 
 type Article {
