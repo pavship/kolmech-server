@@ -1,11 +1,10 @@
 const { cloneDeep } = require('lodash')
 const { isValidDate } = require('../utils/dates')
 
-const generateMutationObject = async (input, typeName, ctx, { includeUser } = {}) => console.log('includeUser > ', includeUser) || ({
+const generateMutationObject = async (input, typeName, ctx, { includeUser } = {}) => ({
   ...input.id && { where: { id: input.id } },
   data: {
     ...await handleObj(input, typeName, ctx),
-    // ...input.id && !!includeUser && { updatedBy: { connect: { id: ctx.userId } } }
     ...!!includeUser && (
         input.id  ? { updatedBy: { connect: { id: ctx.userId } } } :
         !input.id ? { createdBy: { connect: { id: ctx.userId } } } :
@@ -13,18 +12,6 @@ const generateMutationObject = async (input, typeName, ctx, { includeUser } = {}
       )
   }
 })
-
-const formikSchema = {
-  person: {
-    lName: '',
-    fName: '',
-    mName: '',
-    tels: [{
-      number: '',
-      country: 'rus',
-    }]
-  }
-}
 
 const handleObj = async (obj = {}, objTypeName, ctx) => {
   const result = {}
@@ -60,7 +47,7 @@ const handleObj = async (obj = {}, objTypeName, ctx) => {
 }
 
 const handleArr = async (arr, typeName, parentTypeName, parentId, ctx) => {
-  console.log('new arr > ', arr)
+  // console.log('new arr > ', arr)
   const arrIds = arr.map(r => r.id)
   // console.log('arrIds > ', arrIds)
   let toDelete = []
@@ -74,7 +61,7 @@ const handleArr = async (arr, typeName, parentTypeName, parentId, ctx) => {
         }
       }
     }, '{ id }')
-    console.log('prevArr > ', prevArr)
+    // console.log('prevArr > ', prevArr)
     // exceptions' array
     const deleteInsteadUpdateIds = []
     for (let { id } of prevArr) {
@@ -103,9 +90,9 @@ const handleArr = async (arr, typeName, parentTypeName, parentId, ctx) => {
     //   if (typeName === 'tels' && newVal && newVal.number === '')
     //     deleteInsteadUpdateIds.push(newVal.id)
     // })
-    console.log('deleteInsteadUpdateIds > ', deleteInsteadUpdateIds)
+    // console.log('deleteInsteadUpdateIds > ', deleteInsteadUpdateIds)
     // handle exceptions
-    console.log('toUpdate > ', toUpdate)
+    // console.log('toUpdate > ', toUpdate)
     if (deleteInsteadUpdateIds.length) {
       toUpdate = toUpdate.filter(r => !deleteInsteadUpdateIds.includes(r.where.id))
       toDelete = [
