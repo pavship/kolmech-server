@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Sun Feb 24 2019 21:28:16 GMT+0300 (GMT+03:00)
+# timestamp: Wed Feb 27 2019 01:39:24 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -272,6 +272,10 @@ type AggregateEnquiry {
   count: Int!
 }
 
+type AggregateEquipment {
+  count: Int!
+}
+
 type AggregateEvent {
   count: Int!
 }
@@ -326,6 +330,7 @@ type Article implements Node {
   rusName: String
   isIncome: Boolean
   isLoan: Boolean
+  relations: [String!]!
 }
 
 """A connection to a list of items."""
@@ -343,11 +348,16 @@ input ArticleCreateInput {
   rusName: String
   isIncome: Boolean
   isLoan: Boolean
+  relations: ArticleCreaterelationsInput
 }
 
 input ArticleCreateOneInput {
   create: ArticleCreateInput
   connect: ArticleWhereUniqueInput
+}
+
+input ArticleCreaterelationsInput {
+  set: [String!]
 }
 
 """An edge in a connection."""
@@ -382,6 +392,7 @@ type ArticlePreviousValues {
   rusName: String
   isIncome: Boolean
   isLoan: Boolean
+  relations: [String!]!
 }
 
 type ArticleSubscriptionPayload {
@@ -428,6 +439,7 @@ input ArticleUpdateDataInput {
   rusName: String
   isIncome: Boolean
   isLoan: Boolean
+  relations: ArticleUpdaterelationsInput
 }
 
 input ArticleUpdateInput {
@@ -435,6 +447,7 @@ input ArticleUpdateInput {
   rusName: String
   isIncome: Boolean
   isLoan: Boolean
+  relations: ArticleUpdaterelationsInput
 }
 
 input ArticleUpdateManyMutationInput {
@@ -442,6 +455,7 @@ input ArticleUpdateManyMutationInput {
   rusName: String
   isIncome: Boolean
   isLoan: Boolean
+  relations: ArticleUpdaterelationsInput
 }
 
 input ArticleUpdateOneInput {
@@ -451,6 +465,10 @@ input ArticleUpdateOneInput {
   delete: Boolean
   update: ArticleUpdateDataInput
   upsert: ArticleUpsertNestedInput
+}
+
+input ArticleUpdaterelationsInput {
+  set: [String!]
 }
 
 input ArticleUpsertNestedInput {
@@ -2222,6 +2240,225 @@ input EnquiryWhereUniqueInput {
   id: ID
 }
 
+type Equipment implements Node {
+  id: ID!
+  name: String
+  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
+}
+
+"""A connection to a list of items."""
+type EquipmentConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [EquipmentEdge]!
+  aggregate: AggregateEquipment!
+}
+
+input EquipmentCreateInput {
+  name: String
+  payments: PaymentCreateManyWithoutEquipmentInput
+}
+
+input EquipmentCreateOneWithoutPaymentsInput {
+  create: EquipmentCreateWithoutPaymentsInput
+  connect: EquipmentWhereUniqueInput
+}
+
+input EquipmentCreateWithoutPaymentsInput {
+  name: String
+}
+
+"""An edge in a connection."""
+type EquipmentEdge {
+  """The item at the end of the edge."""
+  node: Equipment!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum EquipmentOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type EquipmentPreviousValues {
+  id: ID!
+  name: String
+}
+
+type EquipmentSubscriptionPayload {
+  mutation: MutationType!
+  node: Equipment
+  updatedFields: [String!]
+  previousValues: EquipmentPreviousValues
+}
+
+input EquipmentSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [EquipmentSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [EquipmentSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [EquipmentSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: EquipmentWhereInput
+}
+
+input EquipmentUpdateInput {
+  name: String
+  payments: PaymentUpdateManyWithoutEquipmentInput
+}
+
+input EquipmentUpdateManyMutationInput {
+  name: String
+}
+
+input EquipmentUpdateOneWithoutPaymentsInput {
+  create: EquipmentCreateWithoutPaymentsInput
+  connect: EquipmentWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: EquipmentUpdateWithoutPaymentsDataInput
+  upsert: EquipmentUpsertWithoutPaymentsInput
+}
+
+input EquipmentUpdateWithoutPaymentsDataInput {
+  name: String
+}
+
+input EquipmentUpsertWithoutPaymentsInput {
+  update: EquipmentUpdateWithoutPaymentsDataInput!
+  create: EquipmentCreateWithoutPaymentsInput!
+}
+
+input EquipmentWhereInput {
+  """Logical AND on all given filters."""
+  AND: [EquipmentWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [EquipmentWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [EquipmentWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  payments_every: PaymentWhereInput
+  payments_some: PaymentWhereInput
+  payments_none: PaymentWhereInput
+}
+
+input EquipmentWhereUniqueInput {
+  id: ID
+}
+
 type Event implements Node {
   id: ID!
   user: User
@@ -3813,116 +4050,122 @@ input ModelWhereUniqueInput {
 }
 
 type Mutation {
-  createUser(data: UserCreateInput!): User!
+  createDrawing(data: DrawingCreateInput!): Drawing!
   createEmployee(data: EmployeeCreateInput!): Employee!
-  createTel(data: TelCreateInput!): Tel!
-  createOrg(data: OrgCreateInput!): Org!
+  createEquipment(data: EquipmentCreateInput!): Equipment!
   createDept(data: DeptCreateInput!): Dept!
   createEnquiry(data: EnquiryCreateInput!): Enquiry!
+  createFile(data: FileCreateInput!): File!
   createFileLink(data: FileLinkCreateInput!): FileLink!
   createEvent(data: EventCreateInput!): Event!
-  createOrder(data: OrderCreateInput!): Order!
   createModel(data: ModelCreateInput!): Model!
-  createDrawing(data: DrawingCreateInput!): Drawing!
+  createOrder(data: OrderCreateInput!): Order!
+  createOrg(data: OrgCreateInput!): Org!
+  createTel(data: TelCreateInput!): Tel!
   createPayment(data: PaymentCreateInput!): Payment!
   createPerson(data: PersonCreateInput!): Person!
   createProd(data: ProdCreateInput!): Prod!
-  createFile(data: FileCreateInput!): File!
+  createUser(data: UserCreateInput!): User!
   createArticle(data: ArticleCreateInput!): Article!
   createStatus(data: StatusCreateInput!): Status!
   createAccount(data: AccountCreateInput!): Account!
   createDoc(data: DocCreateInput!): Doc!
-  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  updateDrawing(data: DrawingUpdateInput!, where: DrawingWhereUniqueInput!): Drawing
   updateEmployee(data: EmployeeUpdateInput!, where: EmployeeWhereUniqueInput!): Employee
-  updateTel(data: TelUpdateInput!, where: TelWhereUniqueInput!): Tel
-  updateOrg(data: OrgUpdateInput!, where: OrgWhereUniqueInput!): Org
+  updateEquipment(data: EquipmentUpdateInput!, where: EquipmentWhereUniqueInput!): Equipment
   updateDept(data: DeptUpdateInput!, where: DeptWhereUniqueInput!): Dept
   updateEnquiry(data: EnquiryUpdateInput!, where: EnquiryWhereUniqueInput!): Enquiry
+  updateFile(data: FileUpdateInput!, where: FileWhereUniqueInput!): File
   updateFileLink(data: FileLinkUpdateInput!, where: FileLinkWhereUniqueInput!): FileLink
   updateEvent(data: EventUpdateInput!, where: EventWhereUniqueInput!): Event
-  updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
   updateModel(data: ModelUpdateInput!, where: ModelWhereUniqueInput!): Model
-  updateDrawing(data: DrawingUpdateInput!, where: DrawingWhereUniqueInput!): Drawing
+  updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
+  updateOrg(data: OrgUpdateInput!, where: OrgWhereUniqueInput!): Org
+  updateTel(data: TelUpdateInput!, where: TelWhereUniqueInput!): Tel
   updatePayment(data: PaymentUpdateInput!, where: PaymentWhereUniqueInput!): Payment
   updatePerson(data: PersonUpdateInput!, where: PersonWhereUniqueInput!): Person
   updateProd(data: ProdUpdateInput!, where: ProdWhereUniqueInput!): Prod
-  updateFile(data: FileUpdateInput!, where: FileWhereUniqueInput!): File
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateArticle(data: ArticleUpdateInput!, where: ArticleWhereUniqueInput!): Article
   updateStatus(data: StatusUpdateInput!, where: StatusWhereUniqueInput!): Status
   updateAccount(data: AccountUpdateInput!, where: AccountWhereUniqueInput!): Account
   updateDoc(data: DocUpdateInput!, where: DocWhereUniqueInput!): Doc
-  deleteUser(where: UserWhereUniqueInput!): User
+  deleteDrawing(where: DrawingWhereUniqueInput!): Drawing
   deleteEmployee(where: EmployeeWhereUniqueInput!): Employee
-  deleteTel(where: TelWhereUniqueInput!): Tel
-  deleteOrg(where: OrgWhereUniqueInput!): Org
+  deleteEquipment(where: EquipmentWhereUniqueInput!): Equipment
   deleteDept(where: DeptWhereUniqueInput!): Dept
   deleteEnquiry(where: EnquiryWhereUniqueInput!): Enquiry
+  deleteFile(where: FileWhereUniqueInput!): File
   deleteFileLink(where: FileLinkWhereUniqueInput!): FileLink
   deleteEvent(where: EventWhereUniqueInput!): Event
-  deleteOrder(where: OrderWhereUniqueInput!): Order
   deleteModel(where: ModelWhereUniqueInput!): Model
-  deleteDrawing(where: DrawingWhereUniqueInput!): Drawing
+  deleteOrder(where: OrderWhereUniqueInput!): Order
+  deleteOrg(where: OrgWhereUniqueInput!): Org
+  deleteTel(where: TelWhereUniqueInput!): Tel
   deletePayment(where: PaymentWhereUniqueInput!): Payment
   deletePerson(where: PersonWhereUniqueInput!): Person
   deleteProd(where: ProdWhereUniqueInput!): Prod
-  deleteFile(where: FileWhereUniqueInput!): File
+  deleteUser(where: UserWhereUniqueInput!): User
   deleteArticle(where: ArticleWhereUniqueInput!): Article
   deleteStatus(where: StatusWhereUniqueInput!): Status
   deleteAccount(where: AccountWhereUniqueInput!): Account
   deleteDoc(where: DocWhereUniqueInput!): Doc
-  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  upsertDrawing(where: DrawingWhereUniqueInput!, create: DrawingCreateInput!, update: DrawingUpdateInput!): Drawing!
   upsertEmployee(where: EmployeeWhereUniqueInput!, create: EmployeeCreateInput!, update: EmployeeUpdateInput!): Employee!
-  upsertTel(where: TelWhereUniqueInput!, create: TelCreateInput!, update: TelUpdateInput!): Tel!
-  upsertOrg(where: OrgWhereUniqueInput!, create: OrgCreateInput!, update: OrgUpdateInput!): Org!
+  upsertEquipment(where: EquipmentWhereUniqueInput!, create: EquipmentCreateInput!, update: EquipmentUpdateInput!): Equipment!
   upsertDept(where: DeptWhereUniqueInput!, create: DeptCreateInput!, update: DeptUpdateInput!): Dept!
   upsertEnquiry(where: EnquiryWhereUniqueInput!, create: EnquiryCreateInput!, update: EnquiryUpdateInput!): Enquiry!
+  upsertFile(where: FileWhereUniqueInput!, create: FileCreateInput!, update: FileUpdateInput!): File!
   upsertFileLink(where: FileLinkWhereUniqueInput!, create: FileLinkCreateInput!, update: FileLinkUpdateInput!): FileLink!
   upsertEvent(where: EventWhereUniqueInput!, create: EventCreateInput!, update: EventUpdateInput!): Event!
-  upsertOrder(where: OrderWhereUniqueInput!, create: OrderCreateInput!, update: OrderUpdateInput!): Order!
   upsertModel(where: ModelWhereUniqueInput!, create: ModelCreateInput!, update: ModelUpdateInput!): Model!
-  upsertDrawing(where: DrawingWhereUniqueInput!, create: DrawingCreateInput!, update: DrawingUpdateInput!): Drawing!
+  upsertOrder(where: OrderWhereUniqueInput!, create: OrderCreateInput!, update: OrderUpdateInput!): Order!
+  upsertOrg(where: OrgWhereUniqueInput!, create: OrgCreateInput!, update: OrgUpdateInput!): Org!
+  upsertTel(where: TelWhereUniqueInput!, create: TelCreateInput!, update: TelUpdateInput!): Tel!
   upsertPayment(where: PaymentWhereUniqueInput!, create: PaymentCreateInput!, update: PaymentUpdateInput!): Payment!
   upsertPerson(where: PersonWhereUniqueInput!, create: PersonCreateInput!, update: PersonUpdateInput!): Person!
   upsertProd(where: ProdWhereUniqueInput!, create: ProdCreateInput!, update: ProdUpdateInput!): Prod!
-  upsertFile(where: FileWhereUniqueInput!, create: FileCreateInput!, update: FileUpdateInput!): File!
+  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertArticle(where: ArticleWhereUniqueInput!, create: ArticleCreateInput!, update: ArticleUpdateInput!): Article!
   upsertStatus(where: StatusWhereUniqueInput!, create: StatusCreateInput!, update: StatusUpdateInput!): Status!
   upsertAccount(where: AccountWhereUniqueInput!, create: AccountCreateInput!, update: AccountUpdateInput!): Account!
   upsertDoc(where: DocWhereUniqueInput!, create: DocCreateInput!, update: DocUpdateInput!): Doc!
-  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  updateManyDrawings(data: DrawingUpdateManyMutationInput!, where: DrawingWhereInput): BatchPayload!
   updateManyEmployees(data: EmployeeUpdateManyMutationInput!, where: EmployeeWhereInput): BatchPayload!
-  updateManyTels(data: TelUpdateManyMutationInput!, where: TelWhereInput): BatchPayload!
-  updateManyOrgs(data: OrgUpdateManyMutationInput!, where: OrgWhereInput): BatchPayload!
+  updateManyEquipments(data: EquipmentUpdateManyMutationInput!, where: EquipmentWhereInput): BatchPayload!
   updateManyDepts(data: DeptUpdateManyMutationInput!, where: DeptWhereInput): BatchPayload!
   updateManyEnquiries(data: EnquiryUpdateManyMutationInput!, where: EnquiryWhereInput): BatchPayload!
+  updateManyFiles(data: FileUpdateManyMutationInput!, where: FileWhereInput): BatchPayload!
   updateManyFileLinks(data: FileLinkUpdateManyMutationInput!, where: FileLinkWhereInput): BatchPayload!
   updateManyEvents(data: EventUpdateManyMutationInput!, where: EventWhereInput): BatchPayload!
-  updateManyOrders(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
   updateManyModels(data: ModelUpdateManyMutationInput!, where: ModelWhereInput): BatchPayload!
-  updateManyDrawings(data: DrawingUpdateManyMutationInput!, where: DrawingWhereInput): BatchPayload!
+  updateManyOrders(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
+  updateManyOrgs(data: OrgUpdateManyMutationInput!, where: OrgWhereInput): BatchPayload!
+  updateManyTels(data: TelUpdateManyMutationInput!, where: TelWhereInput): BatchPayload!
   updateManyPayments(data: PaymentUpdateManyMutationInput!, where: PaymentWhereInput): BatchPayload!
   updateManyPersons(data: PersonUpdateManyMutationInput!, where: PersonWhereInput): BatchPayload!
   updateManyProds(data: ProdUpdateManyMutationInput!, where: ProdWhereInput): BatchPayload!
-  updateManyFiles(data: FileUpdateManyMutationInput!, where: FileWhereInput): BatchPayload!
+  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyArticles(data: ArticleUpdateManyMutationInput!, where: ArticleWhereInput): BatchPayload!
   updateManyStatuses(data: StatusUpdateManyMutationInput!, where: StatusWhereInput): BatchPayload!
   updateManyAccounts(data: AccountUpdateManyMutationInput!, where: AccountWhereInput): BatchPayload!
   updateManyDocs(data: DocUpdateManyMutationInput!, where: DocWhereInput): BatchPayload!
-  deleteManyUsers(where: UserWhereInput): BatchPayload!
+  deleteManyDrawings(where: DrawingWhereInput): BatchPayload!
   deleteManyEmployees(where: EmployeeWhereInput): BatchPayload!
-  deleteManyTels(where: TelWhereInput): BatchPayload!
-  deleteManyOrgs(where: OrgWhereInput): BatchPayload!
+  deleteManyEquipments(where: EquipmentWhereInput): BatchPayload!
   deleteManyDepts(where: DeptWhereInput): BatchPayload!
   deleteManyEnquiries(where: EnquiryWhereInput): BatchPayload!
+  deleteManyFiles(where: FileWhereInput): BatchPayload!
   deleteManyFileLinks(where: FileLinkWhereInput): BatchPayload!
   deleteManyEvents(where: EventWhereInput): BatchPayload!
-  deleteManyOrders(where: OrderWhereInput): BatchPayload!
   deleteManyModels(where: ModelWhereInput): BatchPayload!
-  deleteManyDrawings(where: DrawingWhereInput): BatchPayload!
+  deleteManyOrders(where: OrderWhereInput): BatchPayload!
+  deleteManyOrgs(where: OrgWhereInput): BatchPayload!
+  deleteManyTels(where: TelWhereInput): BatchPayload!
   deleteManyPayments(where: PaymentWhereInput): BatchPayload!
   deleteManyPersons(where: PersonWhereInput): BatchPayload!
   deleteManyProds(where: ProdWhereInput): BatchPayload!
-  deleteManyFiles(where: FileWhereInput): BatchPayload!
+  deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyArticles(where: ArticleWhereInput): BatchPayload!
   deleteManyStatuses(where: StatusWhereInput): BatchPayload!
   deleteManyAccounts(where: AccountWhereInput): BatchPayload!
@@ -5102,11 +5345,12 @@ type Payment implements Node {
   dateLocal: DateTime!
   amount: Float
   purpose: String
+  account: Account
   article: Article
+  equipment: Equipment
+  person: Person
   createdBy: User
   updatedBy: User
-  account: Account
-  person: Person
 }
 
 """A connection to a list of items."""
@@ -5123,11 +5367,12 @@ input PaymentCreateInput {
   dateLocal: DateTime!
   amount: Float
   purpose: String
+  account: AccountCreateOneWithoutPaymentsInput
   article: ArticleCreateOneInput
+  equipment: EquipmentCreateOneWithoutPaymentsInput
+  person: PersonCreateOneWithoutPaymentsInput
   createdBy: UserCreateOneWithoutCreatedPaymentsInput
   updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
-  account: AccountCreateOneWithoutPaymentsInput
-  person: PersonCreateOneWithoutPaymentsInput
 }
 
 input PaymentCreateManyWithoutAccountInput {
@@ -5137,6 +5382,11 @@ input PaymentCreateManyWithoutAccountInput {
 
 input PaymentCreateManyWithoutCreatedByInput {
   create: [PaymentCreateWithoutCreatedByInput!]
+  connect: [PaymentWhereUniqueInput!]
+}
+
+input PaymentCreateManyWithoutEquipmentInput {
+  create: [PaymentCreateWithoutEquipmentInput!]
   connect: [PaymentWhereUniqueInput!]
 }
 
@@ -5155,39 +5405,54 @@ input PaymentCreateWithoutAccountInput {
   amount: Float
   purpose: String
   article: ArticleCreateOneInput
+  equipment: EquipmentCreateOneWithoutPaymentsInput
+  person: PersonCreateOneWithoutPaymentsInput
   createdBy: UserCreateOneWithoutCreatedPaymentsInput
   updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
-  person: PersonCreateOneWithoutPaymentsInput
 }
 
 input PaymentCreateWithoutCreatedByInput {
   dateLocal: DateTime!
   amount: Float
   purpose: String
-  article: ArticleCreateOneInput
-  updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
   account: AccountCreateOneWithoutPaymentsInput
+  article: ArticleCreateOneInput
+  equipment: EquipmentCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
+  updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
+}
+
+input PaymentCreateWithoutEquipmentInput {
+  dateLocal: DateTime!
+  amount: Float
+  purpose: String
+  account: AccountCreateOneWithoutPaymentsInput
+  article: ArticleCreateOneInput
+  person: PersonCreateOneWithoutPaymentsInput
+  createdBy: UserCreateOneWithoutCreatedPaymentsInput
+  updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
 }
 
 input PaymentCreateWithoutPersonInput {
   dateLocal: DateTime!
   amount: Float
   purpose: String
+  account: AccountCreateOneWithoutPaymentsInput
   article: ArticleCreateOneInput
+  equipment: EquipmentCreateOneWithoutPaymentsInput
   createdBy: UserCreateOneWithoutCreatedPaymentsInput
   updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
-  account: AccountCreateOneWithoutPaymentsInput
 }
 
 input PaymentCreateWithoutUpdatedByInput {
   dateLocal: DateTime!
   amount: Float
   purpose: String
-  article: ArticleCreateOneInput
-  createdBy: UserCreateOneWithoutCreatedPaymentsInput
   account: AccountCreateOneWithoutPaymentsInput
+  article: ArticleCreateOneInput
+  equipment: EquipmentCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
+  createdBy: UserCreateOneWithoutCreatedPaymentsInput
 }
 
 """An edge in a connection."""
@@ -5265,11 +5530,12 @@ input PaymentUpdateInput {
   dateLocal: DateTime
   amount: Float
   purpose: String
+  account: AccountUpdateOneWithoutPaymentsInput
   article: ArticleUpdateOneInput
+  equipment: EquipmentUpdateOneWithoutPaymentsInput
+  person: PersonUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
   updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
-  account: AccountUpdateOneWithoutPaymentsInput
-  person: PersonUpdateOneWithoutPaymentsInput
 }
 
 input PaymentUpdateManyMutationInput {
@@ -5296,6 +5562,15 @@ input PaymentUpdateManyWithoutCreatedByInput {
   upsert: [PaymentUpsertWithWhereUniqueWithoutCreatedByInput!]
 }
 
+input PaymentUpdateManyWithoutEquipmentInput {
+  create: [PaymentCreateWithoutEquipmentInput!]
+  connect: [PaymentWhereUniqueInput!]
+  disconnect: [PaymentWhereUniqueInput!]
+  delete: [PaymentWhereUniqueInput!]
+  update: [PaymentUpdateWithWhereUniqueWithoutEquipmentInput!]
+  upsert: [PaymentUpsertWithWhereUniqueWithoutEquipmentInput!]
+}
+
 input PaymentUpdateManyWithoutPersonInput {
   create: [PaymentCreateWithoutPersonInput!]
   connect: [PaymentWhereUniqueInput!]
@@ -5319,39 +5594,54 @@ input PaymentUpdateWithoutAccountDataInput {
   amount: Float
   purpose: String
   article: ArticleUpdateOneInput
+  equipment: EquipmentUpdateOneWithoutPaymentsInput
+  person: PersonUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
   updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
-  person: PersonUpdateOneWithoutPaymentsInput
 }
 
 input PaymentUpdateWithoutCreatedByDataInput {
   dateLocal: DateTime
   amount: Float
   purpose: String
-  article: ArticleUpdateOneInput
-  updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
   account: AccountUpdateOneWithoutPaymentsInput
+  article: ArticleUpdateOneInput
+  equipment: EquipmentUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
+  updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
+}
+
+input PaymentUpdateWithoutEquipmentDataInput {
+  dateLocal: DateTime
+  amount: Float
+  purpose: String
+  account: AccountUpdateOneWithoutPaymentsInput
+  article: ArticleUpdateOneInput
+  person: PersonUpdateOneWithoutPaymentsInput
+  createdBy: UserUpdateOneWithoutCreatedPaymentsInput
+  updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
 }
 
 input PaymentUpdateWithoutPersonDataInput {
   dateLocal: DateTime
   amount: Float
   purpose: String
+  account: AccountUpdateOneWithoutPaymentsInput
   article: ArticleUpdateOneInput
+  equipment: EquipmentUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
   updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
-  account: AccountUpdateOneWithoutPaymentsInput
 }
 
 input PaymentUpdateWithoutUpdatedByDataInput {
   dateLocal: DateTime
   amount: Float
   purpose: String
-  article: ArticleUpdateOneInput
-  createdBy: UserUpdateOneWithoutCreatedPaymentsInput
   account: AccountUpdateOneWithoutPaymentsInput
+  article: ArticleUpdateOneInput
+  equipment: EquipmentUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
+  createdBy: UserUpdateOneWithoutCreatedPaymentsInput
 }
 
 input PaymentUpdateWithWhereUniqueWithoutAccountInput {
@@ -5362,6 +5652,11 @@ input PaymentUpdateWithWhereUniqueWithoutAccountInput {
 input PaymentUpdateWithWhereUniqueWithoutCreatedByInput {
   where: PaymentWhereUniqueInput!
   data: PaymentUpdateWithoutCreatedByDataInput!
+}
+
+input PaymentUpdateWithWhereUniqueWithoutEquipmentInput {
+  where: PaymentWhereUniqueInput!
+  data: PaymentUpdateWithoutEquipmentDataInput!
 }
 
 input PaymentUpdateWithWhereUniqueWithoutPersonInput {
@@ -5384,6 +5679,12 @@ input PaymentUpsertWithWhereUniqueWithoutCreatedByInput {
   where: PaymentWhereUniqueInput!
   update: PaymentUpdateWithoutCreatedByDataInput!
   create: PaymentCreateWithoutCreatedByInput!
+}
+
+input PaymentUpsertWithWhereUniqueWithoutEquipmentInput {
+  where: PaymentWhereUniqueInput!
+  update: PaymentUpdateWithoutEquipmentDataInput!
+  create: PaymentCreateWithoutEquipmentInput!
 }
 
 input PaymentUpsertWithWhereUniqueWithoutPersonInput {
@@ -5553,11 +5854,12 @@ input PaymentWhereInput {
 
   """All values not ending with the given string."""
   purpose_not_ends_with: String
+  account: AccountWhereInput
   article: ArticleWhereInput
+  equipment: EquipmentWhereInput
+  person: PersonWhereInput
   createdBy: UserWhereInput
   updatedBy: UserWhereInput
-  account: AccountWhereInput
-  person: PersonWhereInput
 }
 
 input PaymentWhereUniqueInput {
@@ -6809,59 +7111,62 @@ input ProdWhereUniqueInput {
 }
 
 type Query {
-  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  drawings(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Drawing]!
   employees(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Employee]!
-  tels(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tel]!
-  orgs(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Org]!
+  equipments(where: EquipmentWhereInput, orderBy: EquipmentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Equipment]!
   depts(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Dept]!
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry]!
+  files(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [File]!
   fileLinks(where: FileLinkWhereInput, orderBy: FileLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [FileLink]!
   events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event]!
-  orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
   models(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Model]!
-  drawings(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Drawing]!
+  orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
+  orgs(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Org]!
+  tels(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tel]!
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment]!
   persons(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Person]!
   prods(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Prod]!
-  files(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [File]!
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   articles(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Article]!
   statuses(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Status]!
   accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account]!
   docs(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Doc]!
-  user(where: UserWhereUniqueInput!): User
+  drawing(where: DrawingWhereUniqueInput!): Drawing
   employee(where: EmployeeWhereUniqueInput!): Employee
-  tel(where: TelWhereUniqueInput!): Tel
-  org(where: OrgWhereUniqueInput!): Org
+  equipment(where: EquipmentWhereUniqueInput!): Equipment
   dept(where: DeptWhereUniqueInput!): Dept
   enquiry(where: EnquiryWhereUniqueInput!): Enquiry
+  file(where: FileWhereUniqueInput!): File
   fileLink(where: FileLinkWhereUniqueInput!): FileLink
   event(where: EventWhereUniqueInput!): Event
-  order(where: OrderWhereUniqueInput!): Order
   model(where: ModelWhereUniqueInput!): Model
-  drawing(where: DrawingWhereUniqueInput!): Drawing
+  order(where: OrderWhereUniqueInput!): Order
+  org(where: OrgWhereUniqueInput!): Org
+  tel(where: TelWhereUniqueInput!): Tel
   payment(where: PaymentWhereUniqueInput!): Payment
   person(where: PersonWhereUniqueInput!): Person
   prod(where: ProdWhereUniqueInput!): Prod
-  file(where: FileWhereUniqueInput!): File
+  user(where: UserWhereUniqueInput!): User
   article(where: ArticleWhereUniqueInput!): Article
   status(where: StatusWhereUniqueInput!): Status
   account(where: AccountWhereUniqueInput!): Account
   doc(where: DocWhereUniqueInput!): Doc
-  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  drawingsConnection(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DrawingConnection!
   employeesConnection(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EmployeeConnection!
-  telsConnection(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TelConnection!
-  orgsConnection(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgConnection!
+  equipmentsConnection(where: EquipmentWhereInput, orderBy: EquipmentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EquipmentConnection!
   deptsConnection(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DeptConnection!
   enquiriesConnection(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EnquiryConnection!
+  filesConnection(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
   fileLinksConnection(where: FileLinkWhereInput, orderBy: FileLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileLinkConnection!
   eventsConnection(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EventConnection!
-  ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
   modelsConnection(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ModelConnection!
-  drawingsConnection(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DrawingConnection!
+  ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
+  orgsConnection(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgConnection!
+  telsConnection(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TelConnection!
   paymentsConnection(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentConnection!
   personsConnection(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PersonConnection!
   prodsConnection(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProdConnection!
-  filesConnection(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
+  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   articlesConnection(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ArticleConnection!
   statusesConnection(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StatusConnection!
   accountsConnection(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AccountConnection!
@@ -7203,21 +7508,22 @@ input StatusWhereUniqueInput {
 }
 
 type Subscription {
-  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+  drawing(where: DrawingSubscriptionWhereInput): DrawingSubscriptionPayload
   employee(where: EmployeeSubscriptionWhereInput): EmployeeSubscriptionPayload
-  tel(where: TelSubscriptionWhereInput): TelSubscriptionPayload
-  org(where: OrgSubscriptionWhereInput): OrgSubscriptionPayload
+  equipment(where: EquipmentSubscriptionWhereInput): EquipmentSubscriptionPayload
   dept(where: DeptSubscriptionWhereInput): DeptSubscriptionPayload
   enquiry(where: EnquirySubscriptionWhereInput): EnquirySubscriptionPayload
+  file(where: FileSubscriptionWhereInput): FileSubscriptionPayload
   fileLink(where: FileLinkSubscriptionWhereInput): FileLinkSubscriptionPayload
   event(where: EventSubscriptionWhereInput): EventSubscriptionPayload
-  order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
   model(where: ModelSubscriptionWhereInput): ModelSubscriptionPayload
-  drawing(where: DrawingSubscriptionWhereInput): DrawingSubscriptionPayload
+  order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
+  org(where: OrgSubscriptionWhereInput): OrgSubscriptionPayload
+  tel(where: TelSubscriptionWhereInput): TelSubscriptionPayload
   payment(where: PaymentSubscriptionWhereInput): PaymentSubscriptionPayload
   person(where: PersonSubscriptionWhereInput): PersonSubscriptionPayload
   prod(where: ProdSubscriptionWhereInput): ProdSubscriptionPayload
-  file(where: FileSubscriptionWhereInput): FileSubscriptionPayload
+  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   article(where: ArticleSubscriptionWhereInput): ArticleSubscriptionPayload
   status(where: StatusSubscriptionWhereInput): StatusSubscriptionPayload
   account(where: AccountSubscriptionWhereInput): AccountSubscriptionPayload

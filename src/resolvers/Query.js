@@ -57,6 +57,14 @@ const Query = {
 	enquiry(_, { id }, ctx, info) {
 		return ctx.db.query.enquiry({ where: { id } }, info)
 	},
+
+	equipment(_, __, ctx, info) {
+		return ctx.db.query.equipment({ where: { id } }, info)
+	},
+	
+	equipments(_, __, ctx, info) {
+		return ctx.db.query.equipments({}, info)
+	},
         
 	order(_, { id }, ctx, info) {
 		return ctx.db.query.order({ where: { id } }, info)

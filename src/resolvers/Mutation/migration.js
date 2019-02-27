@@ -211,18 +211,30 @@ const migration = {
 			{ name: 'salary', rusName: 'ЗП'},
 			{ name: 'hh', rusName: 'Подбор персонала'},
 			{ name: 'training', rusName: 'Обучение персонала'},
-			{ name: 'maintainance', rusName: 'ТО Оборудования'},
-			{ name: 'repair', rusName: 'Ремонт оборудования'},
+			{ name: 'maintainance', rusName: 'ТО Оборудования', relations: { set: ['EQUIPMENT'] }},
+			{ name: 'repair', rusName: 'Ремонт оборудования', relations: { set: ['EQUIPMENT'] }},
 		]
 		const existing = await ctx.db.query.articles({}, '{ id name }')
 		const existingNames = existing.map(a => a.name)
 		const toCreate = articles.filter(a => !existingNames.includes(a.name))
+		const toUpdate = articles
+			.filter(a => existingNames.includes(a.name))
+			.map(a => ({
+				...a,
+				id: existing.find(e => e.name === a.name).id
+			}))
 		const created = await Promise.all(toCreate.map(({ name, rusName, isLoan, isIncome }) =>
 			ctx.db.mutation.createArticle({
 				data: { name, rusName, isLoan, isIncome }
 			})
 		))
-		return { count: created.length }
+		const updated = await Promise.all(toUpdate.map(({ id, ...rest }) =>
+			ctx.db.mutation.updateArticle({
+				where: { id },
+				data: { ...rest }
+			})
+		))
+		return { count: created.length + updated.length }
 	},
 
 	async populatePaymentAccounts(_, __, ctx, info) {
@@ -249,7 +261,34 @@ const migration = {
 			data: { account: { connect: {id: allAccounts.find(a => a.name === directorName).id}} }
 		})
 		return { count: created.length }
-	}
+	},
+
+	async populateEquipment(_, __, ctx, info) {
+		const equipment = [
+			{ name: 'TOS SUI 63-80'},
+			{ name: 'Sunnen HTH-4000S'},
+			{ name: 'ГРФ'},
+		]
+		const existing = await ctx.db.query.equipments({}, '{ id name }')
+		const existingNames = existing.map(e => e.name)
+		const toCreate = equipment.filter(e => !existingNames.includes(e.name))
+		const toUpdate = equipment
+			.filter(e => existingNames.includes(e.name))
+			.map(e => ({
+				...e,
+				id: existing.find(exi => exi.name === e.name).id
+			}))
+		const created = await Promise.all(toCreate.map(e =>
+			ctx.db.mutation.createEquipment({ data: e })
+		))
+		const updated = await Promise.all(toUpdate.map(({ id, ...rest }) =>
+			ctx.db.mutation.updateEquipment({
+				where: { id },
+				data: { ...rest }
+			})
+		))
+		return { count: created.length + updated.length }
+	},
 
 }
 

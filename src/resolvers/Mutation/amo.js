@@ -9,20 +9,16 @@ const crm = new AmoCRM({
   }
 })
 
-crm.connect()
-
 const amo = {
   // async login
 	async syncWithAmoContacts(_, __, ctx, info) {
     try {
       const { userId, db } = ctx
-  
-      // const res = await crm.request.get( '/api/v2/leads' )
-  
+      await crm.connect()
       const res = await crm.request.get( '/api/v2/contacts' )
+      // console.log('res > ', res)
       const contacts = res._embedded.items.map(({ id, name }) => ({ id, name }))
       // console.log('contacts > ', JSON.stringify(contacts, null, 2))
-  
       const persons = await db.query.persons({
         where: {
           id_not_in: [
@@ -30,9 +26,7 @@ const amo = {
             'cjnfcpohm0d4h0724cmtoe8sj', //Server
           ]
         }
-      // }, '{ id amoId fName lName }')
       }, '{ amoId amoName }')
-  
       // assign amoIds to existing users 
       // just once for migration purpose
       // Then, every Person except Admin and Server has corresponding contact in AmoCRM
@@ -49,7 +43,6 @@ const amo = {
       //     }
       //   }, '{ id }')
       // }))
-  
       const handled = await Promise.all(contacts.map(({
         id: amoId,
         name: amoName
@@ -75,16 +68,13 @@ const amo = {
           amoId_in: toDelete.map(p => p.amoId)
         }
       })
-  
-      console.log('upserted > ', JSON.stringify(upserted, null, 2))
-      console.log('deleted > ', JSON.stringify(deleted, null, 2))
-  
-      // return { count: -1 }
+      // console.log('upserted > ', JSON.stringify(upserted, null, 2))
+      // console.log('deleted > ', JSON.stringify(deleted, null, 2))
       return { count: upserted.length + deleted.count }
-      
     } catch (err) {
       console.log('err > ', err)
-      throw new Error(err.message)
+      throw err
+      // throw new Error(err.message + ' ')
     }
   }
 }

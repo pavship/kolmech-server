@@ -10,19 +10,14 @@ type Article {				# payment articles
 	rusName: String
 	isIncome: Boolean
 	isLoan: Boolean
+	relations: [String!]!
 }
 
-type User {
+type Drawing{
 	id: ID! @unique
-	email: String! @unique
-	confirmed: Boolean
-	password: String!
-	role: UserRole
-	person: Person @relation(name: "PersonUser")
-	events: [Event!]! @relation(name: "EventByUser")
-	account: Account				# default payment account
-	createdPayments: [Payment!]! @relation(name: "PaymentsCreatedByUser")
-	updatedPayments: [Payment!]! @relation(name: "PaymentsUpdatedByUser")
+	sortOrder: Int						# display order of model's drawings collection
+	files: [File!]! @relation(name: "DrawingFiles" onDelete: CASCADE)
+	model: Model @relation(name: "ModelDrawings")
 }
 
 type Employee {
@@ -32,26 +27,10 @@ type Employee {
 	org: Org!
 }
 
-type Tel {
-	id: ID! @unique
-	number: String!
-	type: TelType
-	country: String
-	note: String
-	default: Boolean
-	person: Person @relation(name: "PersonTels")
-}
-
-type Org {
-	id: ID! @unique
-	inn: String @unique
-	moedeloId: String
-	name: String!
-	legalAddress: String
-	employees: [Employee!]!
-	enquiries: [Enquiry!]! @relation(name: "OrgEnquiries")
-	orders: [Order!]! @relation(name: "OrgOrders")
-	models: [Model!]!
+type Equipment {
+  id: ID! @unique
+	name: String
+	payments: [Payment!]!
 }
 
 type Dept {
@@ -59,6 +38,15 @@ type Dept {
   type: DeptType!
   name: String!
   prods: [Prod!]! @relation(name: "DeptProds")
+}
+
+type Doc {
+	id: ID! @unique
+	dateLocal: String
+	amount: Float
+	nds: Boolean
+	type: DocType
+	enquiry: Enquiry @relation(name: "EnquiryDocs")
 }
 
 type Enquiry {
@@ -73,6 +61,19 @@ type Enquiry {
 	orders: [Order!]!  @relation(name: "EnquiryOrders")
 	docs: [Doc!]! @relation(name: "EnquiryDocs" onDelete: CASCADE)
 	status: Status
+}
+
+type File {
+	id: ID! @unique
+	path: String @unique
+	filename: String
+	mimetype: String
+	encoding: String
+	size: Int       			# file size in bytes. Int can represent numbers up to 2,147,483,647
+	width: Int						# used for images
+	height: Int						# used for images
+	imgFor: ImgFor				# used in frontend to pick the right image size
+	drawing: Drawing @relation(name: "DrawingFiles")
 }
 
 type FileLink {
@@ -93,6 +94,17 @@ type Event {
 	doc: Doc @relation(name: "EventDoc" onDelete: CASCADE)
 }
 
+type Model {
+	id: ID! @unique
+	article: String
+	name: String! @unique
+	org: Org
+	enquiries: [Enquiry!]! @relation(name: "EnquiryModel")
+	orders: [Order!]! @relation(name: "ModelOrders")
+  prods: [Prod!]! @relation(name: "ModelProds")
+  drawings: [Drawing!]! @relation(name: "ModelDrawings" onDelete: CASCADE)
+}
+
 type Order {
 	id: ID! @unique
 	num: Int # represents sequential number of this org orders
@@ -108,6 +120,18 @@ type Order {
 	prods: [Prod!]! @relation(name: "OrderProds")
 }
 
+type Org {
+	id: ID! @unique
+	inn: String @unique
+	moedeloId: String
+	name: String!
+	legalAddress: String
+	employees: [Employee!]!
+	enquiries: [Enquiry!]! @relation(name: "OrgEnquiries")
+	orders: [Order!]! @relation(name: "OrgOrders")
+	models: [Model!]!
+}
+
 type Status {
 	id: ID! @unique
 	name: String! @unique
@@ -116,31 +140,14 @@ type Status {
 	next: [Status!]! @relation(name: "StatusLink")
 }
 
-type Doc {
+type Tel {
 	id: ID! @unique
-	dateLocal: String
-	amount: Float
-	nds: Boolean
-	type: DocType
-	enquiry: Enquiry @relation(name: "EnquiryDocs")
-}
-
-type Model {
-	id: ID! @unique
-	article: String
-	name: String! @unique
-	org: Org
-	enquiries: [Enquiry!]! @relation(name: "EnquiryModel")
-	orders: [Order!]! @relation(name: "ModelOrders")
-  prods: [Prod!]! @relation(name: "ModelProds")
-  drawings: [Drawing!]! @relation(name: "ModelDrawings" onDelete: CASCADE)
-}
-
-type Drawing{
-	id: ID! @unique
-	sortOrder: Int						# display order of model's drawings collection
-	files: [File!]! @relation(name: "DrawingFiles" onDelete: CASCADE)
-	model: Model @relation(name: "ModelDrawings")
+	number: String!
+	type: TelType
+	country: String
+	note: String
+	default: Boolean
+	person: Person @relation(name: "PersonTels")
 }
 
 type Payment {
@@ -149,11 +156,12 @@ type Payment {
 	dateLocal: DateTime! @unique
 	amount: Float
 	purpose: String
+	account: Account
 	article: Article
+	equipment: Equipment
+	person: Person
 	createdBy: User @relation(name: "PaymentsCreatedByUser")
 	updatedBy: User @relation(name: "PaymentsUpdatedByUser")
-	account: Account
-	person: Person
 }
 
 type Person {
@@ -188,17 +196,17 @@ type Prod {
   year: Int
 }
 
-type File {
+type User {
 	id: ID! @unique
-	path: String @unique
-	filename: String
-	mimetype: String
-	encoding: String
-	size: Int       			# file size in bytes. Int can represent numbers up to 2,147,483,647
-	width: Int						# used for images
-	height: Int						# used for images
-	imgFor: ImgFor				# used in frontend to pick the right image size
-	drawing: Drawing @relation(name: "DrawingFiles")
+	email: String! @unique
+	confirmed: Boolean
+	password: String!
+	role: UserRole
+	person: Person @relation(name: "PersonUser")
+	events: [Event!]! @relation(name: "EventByUser")
+	account: Account				# default payment account
+	createdPayments: [Payment!]! @relation(name: "PaymentsCreatedByUser")
+	updatedPayments: [Payment!]! @relation(name: "PaymentsUpdatedByUser")
 }
 
 enum TelType {

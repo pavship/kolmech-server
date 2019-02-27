@@ -10,6 +10,8 @@ type Query {
   confirmEmail(token: String!): AuthPayload
   enquiries: [Enquiry!]!
   enquiry (id: ID!): Enquiry
+  equipment (id: ID!): Equipment
+  equipments: [Equipment!]!
   me: User
   model (id: ID!): Model
   models: [Model!]!
@@ -56,6 +58,7 @@ type Mutation {
   # db migration scripts:
   importModels: BatchPayload!
   connectEnquiriesToDocsAndStatus: BatchPayload!
+  populateEquipment: BatchPayload
   populateOrderFullnums: BatchPayload
   populatePaymentArticles: BatchPayload
   populatePaymentAccounts: BatchPayload
@@ -102,6 +105,7 @@ input ModelInput {
 input PaymentInput {
   id: ID
 	articleId: ID
+	equipmentId: ID
 	personId: ID
   dateLocal: String
 	amount: Float
