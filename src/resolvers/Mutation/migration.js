@@ -211,6 +211,7 @@ const migration = {
 			{ name: 'salary', rusName: 'ЗП'},
 			{ name: 'hh', rusName: 'Подбор персонала'},
 			{ name: 'training', rusName: 'Обучение персонала'},
+			{ name: 'administrative', rusName: 'Административные расходы'},
 			{ name: 'maintainance', rusName: 'ТО Оборудования', relations: { set: ['EQUIPMENT'] }},
 			{ name: 'repair', rusName: 'Ремонт оборудования', relations: { set: ['EQUIPMENT'] }},
 		]
@@ -238,11 +239,20 @@ const migration = {
 	},
 
 	async populatePaymentAccounts(_, __, ctx, info) {
-		const smLName = process.env.SENIOR_MANAGER_NAME.split(' ')[1]
-		const directorName = process.env.DIRECTOR_NAME.split(' ')[1]
+		const { db } = ctx
+		const [ sm ] = await db.query.users({
+			where: { id: process.env.SENIOR_MANAGER_USER_ID }},
+			'{ id person { amoName } }'
+		)
+		const [ director ] = await db.query.users({
+			where: { id: process.env.DIRECTOR_USER_ID }},
+			'{ id person { amoName } }'
+		)
+		const smLName = sm.person.amoName.split(' ')[1]
+		const directorLName = director.person.amoName.split(' ')[1]
 		const accounts = [
 			{ name: smLName},
-			{ name: directorName},
+			{ name: directorLName},
 		]
 		const existing = await ctx.db.query.accounts({}, '{ id name }')
 		const existingNames = existing.map(a => a.name)
@@ -254,11 +264,11 @@ const migration = {
 		))
 		const allAccounts = [...existing, ...created]
 		// assign default accounts to users
-		await ctx.db.mutation.updateUser({where: { id: process.env.SENIOR_MANAGER_USER_ID },
+		await ctx.db.mutation.updateUser({where: { id: sm.id },
 			data: { account: { connect: {id: allAccounts.find(a => a.name === smLName).id}} }
 		})
-		await ctx.db.mutation.updateUser({where: { id: process.env.DIRECTOR_USER_ID },
-			data: { account: { connect: {id: allAccounts.find(a => a.name === directorName).id}} }
+		await ctx.db.mutation.updateUser({where: { id: director.id },
+			data: { account: { connect: {id: allAccounts.find(a => a.name === directorLName).id}} }
 		})
 		return { count: created.length }
 	},

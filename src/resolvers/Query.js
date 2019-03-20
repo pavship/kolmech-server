@@ -87,7 +87,7 @@ const Query = {
 	},
 
 	payments(_, __, ctx, info) {
-		return ctx.db.query.payments({ orderBy: 'id_DESC' }, info)
+		return ctx.db.query.payments({ orderBy: 'dateLocal_DESC' }, info)
 	},
         
 	model(_, { id }, ctx, info) {

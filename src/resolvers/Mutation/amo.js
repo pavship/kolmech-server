@@ -26,7 +26,7 @@ const amo = {
             'cjnfcpohm0d4h0724cmtoe8sj', //Server
           ]
         }
-      }, '{ amoId amoName }')
+      }, '{ id fName lName amoId amoName }')
       // assign amoIds to existing users 
       // just once for migration purpose
       // Then, every Person except Admin and Server has corresponding contact in AmoCRM
@@ -36,6 +36,7 @@ const amo = {
       //   lName
       // }) => {
       //   const contact = contacts.find(c => c.name === fName + ' ' + lName)
+      //   console.log('fName lName contact > ', fName, lName, contact)
       //   return db.mutation.updatePerson({ where: { id },
       //     data: {
       //       amoId: contact.id,
