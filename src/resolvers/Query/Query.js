@@ -1,9 +1,9 @@
 const { GraphQLClient  } = require('graphql-request')
 const jwt = require('jsonwebtoken')
-const { reportToDeveloper } = require('../utils/mail')
+const { reportToDeveloper } = require('../../utils/mail')
 
-const client = new GraphQLClient( 
-	process.env.GQ_ENDPOINT, 
+const client = new GraphQLClient(
+	process.env.GQ_ENDPOINT,
 	{ headers: { Authorization: `Bearer ${process.env.GQ_TOKEN}` } }
 )
 

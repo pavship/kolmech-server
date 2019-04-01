@@ -44,6 +44,7 @@ type Mutation {
   seedEnquiryStatuses: BatchPayload!
   setDrawingsSortOrder(ids: [ID!]!): BatchPayload!
   syncWithAmoContacts: BatchPayload!
+  syncWithTochkaPayments: BatchPayload!
   updateEnquiry(input: EnquiryInput!): Enquiry
   upsertEmployee(input: EmployeeInput!): Employee
   upsertModel(input: ModelInput!): Model

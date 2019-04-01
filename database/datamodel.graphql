@@ -1,16 +1,17 @@
 type Account {				# payment account including bank accounts and cashboxes
 	id: ID! @unique
 	name: String
+	number: String
 	payments: [Payment!]!
 }
 
-type Article {				# payment articles
+type Article {					# payment articles
 	id: ID! @unique
 	name: String
 	rusName: String
 	isIncome: Boolean
 	isLoan: Boolean
-	relations: [String!]!
+	relations: [String!]!	#serves to show related form fields
 }
 
 type Drawing{
@@ -129,6 +130,7 @@ type Org {
 	employees: [Employee!]!
 	enquiries: [Enquiry!]! @relation(name: "OrgEnquiries")
 	orders: [Order!]! @relation(name: "OrgOrders")
+	payments: [Payment!]!
 	models: [Model!]!
 }
 
@@ -152,13 +154,16 @@ type Tel {
 
 type Payment {
 	id: ID! @unique
-	createdAt: DateTime!
 	dateLocal: DateTime! @unique
+	createdAt: DateTime!
 	amount: Float
-	purpose: String
-	account: Account
 	article: Article
+	isIncome: Boolean		# only to specify bank payments
+	purpose: String
+	tochkaId: String
+	account: Account
 	equipment: Equipment
+	org: Org
 	person: Person
 	createdBy: User @relation(name: "PaymentsCreatedByUser")
 	updatedBy: User @relation(name: "PaymentsUpdatedByUser")

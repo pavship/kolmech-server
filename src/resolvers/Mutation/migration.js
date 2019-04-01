@@ -271,6 +271,11 @@ const migration = {
 			data: { account: { connect: {id: allAccounts.find(a => a.name === directorLName).id}} }
 		})
 		return { count: created.length }
+		// Playground query
+		// createAccount(data: {
+		// 	name: "Точка ИП",
+		// 	number: process.env.TOCHKA_ACCOUNT_CODE_IP
+		// }) { id }
 	},
 
 	async populateEquipment(_, __, ctx, info) {

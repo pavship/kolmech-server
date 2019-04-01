@@ -15,7 +15,10 @@
 		"DIRECTOR_NAME": "@director-name",
 		"SENIOR_MANAGER_NAME": "@senior-manager-name",
 		"DIRECTOR_USER_ID": "@director-user-id",
-		"SENIOR_MANAGER_USER_ID": "@senior-manager-user-id"
+		"SENIOR_MANAGER_USER_ID": "@senior-manager-user-id",
+		"TOCHKA_API_TOKEN": "@tochka-api-token",
+		"TOCHKA_ACCOUNT_CODE_IP": "@tochka-account-code-ip",
+		"TOCHKA_ACCOUNT_CODE_OOO": "@tochka-account-code-ooo"
 	},
 	"alias": "now-advanced.now.sh",
 	"name": "now-advanced"

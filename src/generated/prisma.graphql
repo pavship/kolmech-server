@@ -1,9 +1,10 @@
 # source: http://localhost:4466
-# timestamp: Wed Feb 27 2019 01:39:24 GMT+0300 (GMT+03:00)
+# timestamp: Mon Apr 01 2019 03:28:50 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
   name: String
+  number: String
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
 }
 
@@ -19,6 +20,7 @@ type AccountConnection {
 
 input AccountCreateInput {
   name: String
+  number: String
   payments: PaymentCreateManyWithoutAccountInput
 }
 
@@ -34,6 +36,7 @@ input AccountCreateOneWithoutPaymentsInput {
 
 input AccountCreateWithoutPaymentsInput {
   name: String
+  number: String
 }
 
 """An edge in a connection."""
@@ -50,6 +53,8 @@ enum AccountOrderByInput {
   id_DESC
   name_ASC
   name_DESC
+  number_ASC
+  number_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -59,6 +64,7 @@ enum AccountOrderByInput {
 type AccountPreviousValues {
   id: ID!
   name: String
+  number: String
 }
 
 type AccountSubscriptionPayload {
@@ -102,16 +108,19 @@ input AccountSubscriptionWhereInput {
 
 input AccountUpdateDataInput {
   name: String
+  number: String
   payments: PaymentUpdateManyWithoutAccountInput
 }
 
 input AccountUpdateInput {
   name: String
+  number: String
   payments: PaymentUpdateManyWithoutAccountInput
 }
 
 input AccountUpdateManyMutationInput {
   name: String
+  number: String
 }
 
 input AccountUpdateOneInput {
@@ -134,6 +143,7 @@ input AccountUpdateOneWithoutPaymentsInput {
 
 input AccountUpdateWithoutPaymentsDataInput {
   name: String
+  number: String
 }
 
 input AccountUpsertNestedInput {
@@ -235,6 +245,46 @@ input AccountWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
+  number: String
+
+  """All values that are not equal to given value."""
+  number_not: String
+
+  """All values that are contained in given list."""
+  number_in: [String!]
+
+  """All values that are not contained in given list."""
+  number_not_in: [String!]
+
+  """All values less than the given value."""
+  number_lt: String
+
+  """All values less than or equal the given value."""
+  number_lte: String
+
+  """All values greater than the given value."""
+  number_gt: String
+
+  """All values greater than or equal the given value."""
+  number_gte: String
+
+  """All values containing the given string."""
+  number_contains: String
+
+  """All values not containing the given string."""
+  number_not_contains: String
+
+  """All values starting with the given string."""
+  number_starts_with: String
+
+  """All values not starting with the given string."""
+  number_not_starts_with: String
+
+  """All values ending with the given string."""
+  number_ends_with: String
+
+  """All values not ending with the given string."""
+  number_not_ends_with: String
   payments_every: PaymentWhereInput
   payments_some: PaymentWhereInput
   payments_none: PaymentWhereInput
@@ -4827,6 +4877,7 @@ type Org implements Node {
   employees(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Employee!]
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry!]
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order!]
+  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
   models(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Model!]
 }
 
@@ -4848,6 +4899,7 @@ input OrgCreateInput {
   employees: EmployeeCreateManyWithoutOrgInput
   enquiries: EnquiryCreateManyWithoutOrgInput
   orders: OrderCreateManyWithoutOrgInput
+  payments: PaymentCreateManyWithoutOrgInput
   models: ModelCreateManyWithoutOrgInput
 }
 
@@ -4871,6 +4923,11 @@ input OrgCreateOneWithoutOrdersInput {
   connect: OrgWhereUniqueInput
 }
 
+input OrgCreateOneWithoutPaymentsInput {
+  create: OrgCreateWithoutPaymentsInput
+  connect: OrgWhereUniqueInput
+}
+
 input OrgCreateWithoutEmployeesInput {
   inn: String
   moedeloId: String
@@ -4878,6 +4935,7 @@ input OrgCreateWithoutEmployeesInput {
   legalAddress: String
   enquiries: EnquiryCreateManyWithoutOrgInput
   orders: OrderCreateManyWithoutOrgInput
+  payments: PaymentCreateManyWithoutOrgInput
   models: ModelCreateManyWithoutOrgInput
 }
 
@@ -4888,6 +4946,7 @@ input OrgCreateWithoutEnquiriesInput {
   legalAddress: String
   employees: EmployeeCreateManyWithoutOrgInput
   orders: OrderCreateManyWithoutOrgInput
+  payments: PaymentCreateManyWithoutOrgInput
   models: ModelCreateManyWithoutOrgInput
 }
 
@@ -4899,6 +4958,7 @@ input OrgCreateWithoutModelsInput {
   employees: EmployeeCreateManyWithoutOrgInput
   enquiries: EnquiryCreateManyWithoutOrgInput
   orders: OrderCreateManyWithoutOrgInput
+  payments: PaymentCreateManyWithoutOrgInput
 }
 
 input OrgCreateWithoutOrdersInput {
@@ -4908,6 +4968,18 @@ input OrgCreateWithoutOrdersInput {
   legalAddress: String
   employees: EmployeeCreateManyWithoutOrgInput
   enquiries: EnquiryCreateManyWithoutOrgInput
+  payments: PaymentCreateManyWithoutOrgInput
+  models: ModelCreateManyWithoutOrgInput
+}
+
+input OrgCreateWithoutPaymentsInput {
+  inn: String
+  moedeloId: String
+  name: String!
+  legalAddress: String
+  employees: EmployeeCreateManyWithoutOrgInput
+  enquiries: EnquiryCreateManyWithoutOrgInput
+  orders: OrderCreateManyWithoutOrgInput
   models: ModelCreateManyWithoutOrgInput
 }
 
@@ -4992,6 +5064,7 @@ input OrgUpdateInput {
   employees: EmployeeUpdateManyWithoutOrgInput
   enquiries: EnquiryUpdateManyWithoutOrgInput
   orders: OrderUpdateManyWithoutOrgInput
+  payments: PaymentUpdateManyWithoutOrgInput
   models: ModelUpdateManyWithoutOrgInput
 }
 
@@ -5036,6 +5109,15 @@ input OrgUpdateOneWithoutOrdersInput {
   upsert: OrgUpsertWithoutOrdersInput
 }
 
+input OrgUpdateOneWithoutPaymentsInput {
+  create: OrgCreateWithoutPaymentsInput
+  connect: OrgWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: OrgUpdateWithoutPaymentsDataInput
+  upsert: OrgUpsertWithoutPaymentsInput
+}
+
 input OrgUpdateWithoutEmployeesDataInput {
   inn: String
   moedeloId: String
@@ -5043,6 +5125,7 @@ input OrgUpdateWithoutEmployeesDataInput {
   legalAddress: String
   enquiries: EnquiryUpdateManyWithoutOrgInput
   orders: OrderUpdateManyWithoutOrgInput
+  payments: PaymentUpdateManyWithoutOrgInput
   models: ModelUpdateManyWithoutOrgInput
 }
 
@@ -5053,6 +5136,7 @@ input OrgUpdateWithoutEnquiriesDataInput {
   legalAddress: String
   employees: EmployeeUpdateManyWithoutOrgInput
   orders: OrderUpdateManyWithoutOrgInput
+  payments: PaymentUpdateManyWithoutOrgInput
   models: ModelUpdateManyWithoutOrgInput
 }
 
@@ -5064,6 +5148,7 @@ input OrgUpdateWithoutModelsDataInput {
   employees: EmployeeUpdateManyWithoutOrgInput
   enquiries: EnquiryUpdateManyWithoutOrgInput
   orders: OrderUpdateManyWithoutOrgInput
+  payments: PaymentUpdateManyWithoutOrgInput
 }
 
 input OrgUpdateWithoutOrdersDataInput {
@@ -5073,6 +5158,18 @@ input OrgUpdateWithoutOrdersDataInput {
   legalAddress: String
   employees: EmployeeUpdateManyWithoutOrgInput
   enquiries: EnquiryUpdateManyWithoutOrgInput
+  payments: PaymentUpdateManyWithoutOrgInput
+  models: ModelUpdateManyWithoutOrgInput
+}
+
+input OrgUpdateWithoutPaymentsDataInput {
+  inn: String
+  moedeloId: String
+  name: String
+  legalAddress: String
+  employees: EmployeeUpdateManyWithoutOrgInput
+  enquiries: EnquiryUpdateManyWithoutOrgInput
+  orders: OrderUpdateManyWithoutOrgInput
   models: ModelUpdateManyWithoutOrgInput
 }
 
@@ -5094,6 +5191,11 @@ input OrgUpsertWithoutModelsInput {
 input OrgUpsertWithoutOrdersInput {
   update: OrgUpdateWithoutOrdersDataInput!
   create: OrgCreateWithoutOrdersInput!
+}
+
+input OrgUpsertWithoutPaymentsInput {
+  update: OrgUpdateWithoutPaymentsDataInput!
+  create: OrgCreateWithoutPaymentsInput!
 }
 
 input OrgWhereInput {
@@ -5314,6 +5416,9 @@ input OrgWhereInput {
   orders_every: OrderWhereInput
   orders_some: OrderWhereInput
   orders_none: OrderWhereInput
+  payments_every: PaymentWhereInput
+  payments_some: PaymentWhereInput
+  payments_none: PaymentWhereInput
   models_every: ModelWhereInput
   models_some: ModelWhereInput
   models_none: ModelWhereInput
@@ -5341,13 +5446,16 @@ type PageInfo {
 
 type Payment implements Node {
   id: ID!
-  createdAt: DateTime!
   dateLocal: DateTime!
+  createdAt: DateTime!
   amount: Float
-  purpose: String
-  account: Account
   article: Article
+  isIncome: Boolean
+  purpose: String
+  tochkaId: String
+  account: Account
   equipment: Equipment
+  org: Org
   person: Person
   createdBy: User
   updatedBy: User
@@ -5366,10 +5474,13 @@ type PaymentConnection {
 input PaymentCreateInput {
   dateLocal: DateTime!
   amount: Float
+  isIncome: Boolean
   purpose: String
-  account: AccountCreateOneWithoutPaymentsInput
+  tochkaId: String
   article: ArticleCreateOneInput
+  account: AccountCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
+  org: OrgCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
   createdBy: UserCreateOneWithoutCreatedPaymentsInput
   updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
@@ -5390,6 +5501,11 @@ input PaymentCreateManyWithoutEquipmentInput {
   connect: [PaymentWhereUniqueInput!]
 }
 
+input PaymentCreateManyWithoutOrgInput {
+  create: [PaymentCreateWithoutOrgInput!]
+  connect: [PaymentWhereUniqueInput!]
+}
+
 input PaymentCreateManyWithoutPersonInput {
   create: [PaymentCreateWithoutPersonInput!]
   connect: [PaymentWhereUniqueInput!]
@@ -5403,9 +5519,12 @@ input PaymentCreateManyWithoutUpdatedByInput {
 input PaymentCreateWithoutAccountInput {
   dateLocal: DateTime!
   amount: Float
+  isIncome: Boolean
   purpose: String
+  tochkaId: String
   article: ArticleCreateOneInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
+  org: OrgCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
   createdBy: UserCreateOneWithoutCreatedPaymentsInput
   updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
@@ -5414,10 +5533,13 @@ input PaymentCreateWithoutAccountInput {
 input PaymentCreateWithoutCreatedByInput {
   dateLocal: DateTime!
   amount: Float
+  isIncome: Boolean
   purpose: String
-  account: AccountCreateOneWithoutPaymentsInput
+  tochkaId: String
   article: ArticleCreateOneInput
+  account: AccountCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
+  org: OrgCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
   updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
 }
@@ -5425,9 +5547,26 @@ input PaymentCreateWithoutCreatedByInput {
 input PaymentCreateWithoutEquipmentInput {
   dateLocal: DateTime!
   amount: Float
+  isIncome: Boolean
   purpose: String
-  account: AccountCreateOneWithoutPaymentsInput
+  tochkaId: String
   article: ArticleCreateOneInput
+  account: AccountCreateOneWithoutPaymentsInput
+  org: OrgCreateOneWithoutPaymentsInput
+  person: PersonCreateOneWithoutPaymentsInput
+  createdBy: UserCreateOneWithoutCreatedPaymentsInput
+  updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
+}
+
+input PaymentCreateWithoutOrgInput {
+  dateLocal: DateTime!
+  amount: Float
+  isIncome: Boolean
+  purpose: String
+  tochkaId: String
+  article: ArticleCreateOneInput
+  account: AccountCreateOneWithoutPaymentsInput
+  equipment: EquipmentCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
   createdBy: UserCreateOneWithoutCreatedPaymentsInput
   updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
@@ -5436,10 +5575,13 @@ input PaymentCreateWithoutEquipmentInput {
 input PaymentCreateWithoutPersonInput {
   dateLocal: DateTime!
   amount: Float
+  isIncome: Boolean
   purpose: String
-  account: AccountCreateOneWithoutPaymentsInput
+  tochkaId: String
   article: ArticleCreateOneInput
+  account: AccountCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
+  org: OrgCreateOneWithoutPaymentsInput
   createdBy: UserCreateOneWithoutCreatedPaymentsInput
   updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
 }
@@ -5447,10 +5589,13 @@ input PaymentCreateWithoutPersonInput {
 input PaymentCreateWithoutUpdatedByInput {
   dateLocal: DateTime!
   amount: Float
+  isIncome: Boolean
   purpose: String
-  account: AccountCreateOneWithoutPaymentsInput
+  tochkaId: String
   article: ArticleCreateOneInput
+  account: AccountCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
+  org: OrgCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
   createdBy: UserCreateOneWithoutCreatedPaymentsInput
 }
@@ -5467,24 +5612,30 @@ type PaymentEdge {
 enum PaymentOrderByInput {
   id_ASC
   id_DESC
-  createdAt_ASC
-  createdAt_DESC
   dateLocal_ASC
   dateLocal_DESC
+  createdAt_ASC
+  createdAt_DESC
   amount_ASC
   amount_DESC
+  isIncome_ASC
+  isIncome_DESC
   purpose_ASC
   purpose_DESC
+  tochkaId_ASC
+  tochkaId_DESC
   updatedAt_ASC
   updatedAt_DESC
 }
 
 type PaymentPreviousValues {
   id: ID!
-  createdAt: DateTime!
   dateLocal: DateTime!
+  createdAt: DateTime!
   amount: Float
+  isIncome: Boolean
   purpose: String
+  tochkaId: String
 }
 
 type PaymentSubscriptionPayload {
@@ -5529,10 +5680,13 @@ input PaymentSubscriptionWhereInput {
 input PaymentUpdateInput {
   dateLocal: DateTime
   amount: Float
+  isIncome: Boolean
   purpose: String
-  account: AccountUpdateOneWithoutPaymentsInput
+  tochkaId: String
   article: ArticleUpdateOneInput
+  account: AccountUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
+  org: OrgUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
   updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
@@ -5541,7 +5695,9 @@ input PaymentUpdateInput {
 input PaymentUpdateManyMutationInput {
   dateLocal: DateTime
   amount: Float
+  isIncome: Boolean
   purpose: String
+  tochkaId: String
 }
 
 input PaymentUpdateManyWithoutAccountInput {
@@ -5571,6 +5727,15 @@ input PaymentUpdateManyWithoutEquipmentInput {
   upsert: [PaymentUpsertWithWhereUniqueWithoutEquipmentInput!]
 }
 
+input PaymentUpdateManyWithoutOrgInput {
+  create: [PaymentCreateWithoutOrgInput!]
+  connect: [PaymentWhereUniqueInput!]
+  disconnect: [PaymentWhereUniqueInput!]
+  delete: [PaymentWhereUniqueInput!]
+  update: [PaymentUpdateWithWhereUniqueWithoutOrgInput!]
+  upsert: [PaymentUpsertWithWhereUniqueWithoutOrgInput!]
+}
+
 input PaymentUpdateManyWithoutPersonInput {
   create: [PaymentCreateWithoutPersonInput!]
   connect: [PaymentWhereUniqueInput!]
@@ -5592,9 +5757,12 @@ input PaymentUpdateManyWithoutUpdatedByInput {
 input PaymentUpdateWithoutAccountDataInput {
   dateLocal: DateTime
   amount: Float
+  isIncome: Boolean
   purpose: String
+  tochkaId: String
   article: ArticleUpdateOneInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
+  org: OrgUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
   updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
@@ -5603,10 +5771,13 @@ input PaymentUpdateWithoutAccountDataInput {
 input PaymentUpdateWithoutCreatedByDataInput {
   dateLocal: DateTime
   amount: Float
+  isIncome: Boolean
   purpose: String
-  account: AccountUpdateOneWithoutPaymentsInput
+  tochkaId: String
   article: ArticleUpdateOneInput
+  account: AccountUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
+  org: OrgUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
   updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
 }
@@ -5614,9 +5785,26 @@ input PaymentUpdateWithoutCreatedByDataInput {
 input PaymentUpdateWithoutEquipmentDataInput {
   dateLocal: DateTime
   amount: Float
+  isIncome: Boolean
   purpose: String
-  account: AccountUpdateOneWithoutPaymentsInput
+  tochkaId: String
   article: ArticleUpdateOneInput
+  account: AccountUpdateOneWithoutPaymentsInput
+  org: OrgUpdateOneWithoutPaymentsInput
+  person: PersonUpdateOneWithoutPaymentsInput
+  createdBy: UserUpdateOneWithoutCreatedPaymentsInput
+  updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
+}
+
+input PaymentUpdateWithoutOrgDataInput {
+  dateLocal: DateTime
+  amount: Float
+  isIncome: Boolean
+  purpose: String
+  tochkaId: String
+  article: ArticleUpdateOneInput
+  account: AccountUpdateOneWithoutPaymentsInput
+  equipment: EquipmentUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
   updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
@@ -5625,10 +5813,13 @@ input PaymentUpdateWithoutEquipmentDataInput {
 input PaymentUpdateWithoutPersonDataInput {
   dateLocal: DateTime
   amount: Float
+  isIncome: Boolean
   purpose: String
-  account: AccountUpdateOneWithoutPaymentsInput
+  tochkaId: String
   article: ArticleUpdateOneInput
+  account: AccountUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
+  org: OrgUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
   updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
 }
@@ -5636,10 +5827,13 @@ input PaymentUpdateWithoutPersonDataInput {
 input PaymentUpdateWithoutUpdatedByDataInput {
   dateLocal: DateTime
   amount: Float
+  isIncome: Boolean
   purpose: String
-  account: AccountUpdateOneWithoutPaymentsInput
+  tochkaId: String
   article: ArticleUpdateOneInput
+  account: AccountUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
+  org: OrgUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
 }
@@ -5657,6 +5851,11 @@ input PaymentUpdateWithWhereUniqueWithoutCreatedByInput {
 input PaymentUpdateWithWhereUniqueWithoutEquipmentInput {
   where: PaymentWhereUniqueInput!
   data: PaymentUpdateWithoutEquipmentDataInput!
+}
+
+input PaymentUpdateWithWhereUniqueWithoutOrgInput {
+  where: PaymentWhereUniqueInput!
+  data: PaymentUpdateWithoutOrgDataInput!
 }
 
 input PaymentUpdateWithWhereUniqueWithoutPersonInput {
@@ -5685,6 +5884,12 @@ input PaymentUpsertWithWhereUniqueWithoutEquipmentInput {
   where: PaymentWhereUniqueInput!
   update: PaymentUpdateWithoutEquipmentDataInput!
   create: PaymentCreateWithoutEquipmentInput!
+}
+
+input PaymentUpsertWithWhereUniqueWithoutOrgInput {
+  where: PaymentWhereUniqueInput!
+  update: PaymentUpdateWithoutOrgDataInput!
+  create: PaymentCreateWithoutOrgInput!
 }
 
 input PaymentUpsertWithWhereUniqueWithoutPersonInput {
@@ -5748,28 +5953,6 @@ input PaymentWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
-  createdAt: DateTime
-
-  """All values that are not equal to given value."""
-  createdAt_not: DateTime
-
-  """All values that are contained in given list."""
-  createdAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  createdAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  createdAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  createdAt_lte: DateTime
-
-  """All values greater than the given value."""
-  createdAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  createdAt_gte: DateTime
   dateLocal: DateTime
 
   """All values that are not equal to given value."""
@@ -5792,6 +5975,28 @@ input PaymentWhereInput {
 
   """All values greater than or equal the given value."""
   dateLocal_gte: DateTime
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
   amount: Float
 
   """All values that are not equal to given value."""
@@ -5814,6 +6019,10 @@ input PaymentWhereInput {
 
   """All values greater than or equal the given value."""
   amount_gte: Float
+  isIncome: Boolean
+
+  """All values that are not equal to given value."""
+  isIncome_not: Boolean
   purpose: String
 
   """All values that are not equal to given value."""
@@ -5854,9 +6063,50 @@ input PaymentWhereInput {
 
   """All values not ending with the given string."""
   purpose_not_ends_with: String
-  account: AccountWhereInput
+  tochkaId: String
+
+  """All values that are not equal to given value."""
+  tochkaId_not: String
+
+  """All values that are contained in given list."""
+  tochkaId_in: [String!]
+
+  """All values that are not contained in given list."""
+  tochkaId_not_in: [String!]
+
+  """All values less than the given value."""
+  tochkaId_lt: String
+
+  """All values less than or equal the given value."""
+  tochkaId_lte: String
+
+  """All values greater than the given value."""
+  tochkaId_gt: String
+
+  """All values greater than or equal the given value."""
+  tochkaId_gte: String
+
+  """All values containing the given string."""
+  tochkaId_contains: String
+
+  """All values not containing the given string."""
+  tochkaId_not_contains: String
+
+  """All values starting with the given string."""
+  tochkaId_starts_with: String
+
+  """All values not starting with the given string."""
+  tochkaId_not_starts_with: String
+
+  """All values ending with the given string."""
+  tochkaId_ends_with: String
+
+  """All values not ending with the given string."""
+  tochkaId_not_ends_with: String
   article: ArticleWhereInput
+  account: AccountWhereInput
   equipment: EquipmentWhereInput
+  org: OrgWhereInput
   person: PersonWhereInput
   createdBy: UserWhereInput
   updatedBy: UserWhereInput
