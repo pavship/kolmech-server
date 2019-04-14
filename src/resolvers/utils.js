@@ -101,14 +101,14 @@ const handleArr = async (arr, typeName, parentTypeName, parentId, ctx) => {
       ]
     }
   }
-  console.log('toDelete > ', toDelete)
-  console.log('toUpdate > ', toUpdate)
+  // console.log('toDelete > ', toDelete)
+  // console.log('toUpdate > ', toUpdate)
   // all records without ids are saved into db
   let toCreate = arr.filter(r => !r.id)
   if (typeName === 'tels')
     // not creating tels with empty numbers
       toCreate = toCreate.filter(r => !!r.number)
-  console.log('toCreate > ', toCreate)
+  // console.log('toCreate > ', toCreate)
   const result = {
     ...toDelete.length && { delete: toDelete },
     ...toUpdate.length && { update: toUpdate },

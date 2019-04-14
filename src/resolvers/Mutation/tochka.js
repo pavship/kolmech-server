@@ -33,10 +33,10 @@ const tochka = {
         method: 'GET',
         headers
       })
-      console.log('response > ', statementResponse)
-      console.log('statementResponse.headers > ', statementResponse.headers)
+      // console.log('response > ', statementResponse)
+      // console.log('statementResponse.headers > ', statementResponse.headers)
       const { payments: tochkaPayments } = await statementResponse.json()
-      console.log('tochkaPayments > ', JSON.stringify(tochkaPayments,null,2))
+      // console.log('tochkaPayments > ', JSON.stringify(tochkaPayments,null,2))
       // 3. count number of payments for each day and assign number (like 1,2,3,etc..) to each payment
       paymentDateCounter = {}
       const tochkaPaymentsAugmented = tochkaPayments.map(p => {

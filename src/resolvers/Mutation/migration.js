@@ -206,14 +206,17 @@ const migration = {
 
 	async populatePaymentArticles(_, __, ctx, info) {
 		const articles = [
+			{ name: 'administrative', rusName: 'Административные расходы'},
+			{ name: 'hh', rusName: 'Подбор персонала'},
 			{ name: 'lend', rusName: 'Займ (Выдача)', isLoan: true},
 			{ name: 'loan', rusName: 'Займ (Получение)', isLoan: true, isIncome: true},
-			{ name: 'salary', rusName: 'ЗП'},
-			{ name: 'hh', rusName: 'Подбор персонала'},
-			{ name: 'training', rusName: 'Обучение персонала'},
-			{ name: 'administrative', rusName: 'Административные расходы'},
 			{ name: 'maintainance', rusName: 'ТО Оборудования', relations: { set: ['EQUIPMENT'] }},
+			{ name: 'nonCoreRevenue', rusName: 'Выручка (Неосновная деятельность)', isIncome: true},
+			{ name: 'otherExpenses', rusName: 'Прочие расходы'},
 			{ name: 'repair', rusName: 'Ремонт оборудования', relations: { set: ['EQUIPMENT'] }},
+			{ name: 'revenue', rusName: 'Выручка (Основная деятельность)', isIncome: true},
+			{ name: 'salary', rusName: 'ЗП'},
+			{ name: 'training', rusName: 'Обучение персонала'},
 		]
 		const existing = await ctx.db.query.articles({}, '{ id name }')
 		const existingNames = existing.map(a => a.name)
