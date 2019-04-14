@@ -6,16 +6,20 @@ const payment = {
     try {
       const { userId, db } = ctx
       const validated = await validationSchema.validate(input)
-      // additionaly validate equipment field TODO implement this within in yup schema
-      const article = await db.query.article({ where: { id: validated.articleId }}, '{ relations }')
-      if (!!validated.equipmentId && !article.relations.includes('EQUIPMENT'))
-        throw new Error ('для указанной статьи поле Оборудование не применимо')
+      // additionaly validate equipment field TODO implement this within yup schema
+      if (validated.articleId) {
+        const article = await db.query.article({ where: { id: validated.articleId }}, '{ relations }')
+        if (!!validated.equipmentId && !article.relations.includes('EQUIPMENT'))
+          throw new Error ('для указанной статьи поле Оборудование не применимо')
+      }
       // console.log('input > ', JSON.stringify(input, null, 2))
       // console.log('validated > ', JSON.stringify(validated, null, 2))
-      // connect payment to this user's default account
-      validated.accountId = (await db.query.user({ 
-        where: { id: userId }
-      }, ' { account { id} }' )).account.id
+      // for new records, connect payment to this user's default account
+      if (!validated.id) {
+        validated.accountId = (await db.query.user({ 
+          where: { id: userId }
+        }, ' { account { id} }' )).account.id
+      }
       const mutationObj = await generateMutationObject(validated, 'payment', ctx, { includeUser: true })
       // console.log('mutationObj > ', JSON.stringify(mutationObj, null, 2))
       if (!input.id) return db.mutation.createPayment(mutationObj, info)

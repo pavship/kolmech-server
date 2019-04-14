@@ -156,6 +156,7 @@ type Payment {
 	id: ID! @unique
 	dateLocal: DateTime! @unique
 	createdAt: DateTime!
+	updatedAt: DateTime!
 	amount: Float
 	article: Article
 	isIncome: Boolean		# only to specify bank payments

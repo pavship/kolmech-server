@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Mon Apr 01 2019 03:28:50 GMT+0300 (GMT+03:00)
+# timestamp: Sun Apr 14 2019 17:44:22 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -5448,6 +5448,7 @@ type Payment implements Node {
   id: ID!
   dateLocal: DateTime!
   createdAt: DateTime!
+  updatedAt: DateTime!
   amount: Float
   article: Article
   isIncome: Boolean
@@ -5616,6 +5617,8 @@ enum PaymentOrderByInput {
   dateLocal_DESC
   createdAt_ASC
   createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
   amount_ASC
   amount_DESC
   isIncome_ASC
@@ -5624,14 +5627,13 @@ enum PaymentOrderByInput {
   purpose_DESC
   tochkaId_ASC
   tochkaId_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type PaymentPreviousValues {
   id: ID!
   dateLocal: DateTime!
   createdAt: DateTime!
+  updatedAt: DateTime!
   amount: Float
   isIncome: Boolean
   purpose: String
@@ -5997,6 +5999,28 @@ input PaymentWhereInput {
 
   """All values greater than or equal the given value."""
   createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
   amount: Float
 
   """All values that are not equal to given value."""
