@@ -1,39 +1,43 @@
-
 const axios = require('axios')
+const { toLocalISOString } = require('../../utils/dates')
+
+const headers = {
+  'Authorization': `Bearer ${process.env.TOCHKA_API_TOKEN}`,
+  'Host': 'enter.tochka.com',
+  'Accept': 'application/json',
+  'Content-Type': 'application/json'
+}
 
 const tochka = {
-  // async login
 	async syncWithTochkaPayments(_, __, ctx, info) {
+    // function settings
+    const mode = 'syncAll' // TODO add 'syncNew' mode
+    const requestUrl = 'https://enter.tochka.com/api/v1/statement'
     try {
       const { userId, db } = ctx
-      // const url = 'https://enter.tochka.com/api/v1/statement'
-      const url = 'https://enter.tochka.com/api/v1/statement/result/044525999.2019-03-31.2019-01-01.40802810301500021080'
-      // const url = 'https://enter.tochka.com/api/v1/organization/list'
-      const options = {
+      // 1. fetch request_id from tochka
+      const requestResponse = await fetch(requestUrl, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          account_code: process.env.TOCHKA_ACCOUNT_CODE_IP,
+          bank_code: '044525999',
+          date_start: '2019-01-01',
+          date_end: toLocalISOString(new Date).slice(0,10)
+        })
+      })
+      const { request_id } = await requestResponse.json()
+      // 2. fetch payments from tochka
+      const statementUrl = `https://enter.tochka.com/api/v1/statement/result/${request_id}`
+      const statementResponse = await fetch(statementUrl, {
         method: 'GET',
-        // mode: 'cors',
-        headers: {
-          'Authorization': `Bearer ${process.env.TOCHKA_API_TOKEN}`,
-          'Host': 'enter.tochka.com',
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        // body: JSON.stringify({
-        //   account_code: process.env.TOCHKA_ACCOUNT_CODE_IP,
-        //   bank_code: '044525999',
-        //   date_start: '2019-01-01',
-        //   date_end: '2019-03-31'
-        // })
-      }
-      const response = await fetch(url, options)
-      // const response = await axios({
-      //   method: 'get',
-      //   url: 'https://enter.tochka.com/api/v1/statement'
-      // })
-      // console.log('response > ', response)
-      // console.log('response.headers > ', response.headers)
-      const { payments: tochkaPayments } = await response.json()
-      // console.log('tochkaPayments > ', JSON.stringify(tochkaPayments,null,2))
+        headers
+      })
+      console.log('response > ', statementResponse)
+      console.log('statementResponse.headers > ', statementResponse.headers)
+      const { payments: tochkaPayments } = await statementResponse.json()
+      console.log('tochkaPayments > ', JSON.stringify(tochkaPayments,null,2))
+      // 3. count number of payments for each day and assign number (like 1,2,3,etc..) to each payment
       paymentDateCounter = {}
       const tochkaPaymentsAugmented = tochkaPayments.map(p => {
         const prevCount = paymentDateCounter[p.payment_date] || 0
@@ -41,14 +45,15 @@ const tochka = {
         paymentDateCounter[p.payment_date] = count
         return {
           ...p,
-          paymentDateCounter: count.toString()
+          paymentDateNumber: count.toString()
         }
       })
+      // 4. get all tochka payments from db
       const [ account ] = await db.query.accounts({
         where: {
           number: process.env.TOCHKA_ACCOUNT_CODE_IP
         }
-      })
+      }, '{ id }')
       const [ payments, orgs ] = await Promise.all([
         db.query.payments({
           where: {
@@ -59,11 +64,13 @@ const tochka = {
         }, '{ id dateLocal tochkaId }'),
         db.query.orgs({}, '{ id inn }')
       ])
+      // 5. write new payments to db
+      //    and also write new counterparties into Org db table
       const handled = await Promise.all(tochkaPaymentsAugmented.map(({
         payment_bank_system_id: tochkaId,
         payment_date,
         payment_amount,
-        paymentDateCounter,
+        paymentDateNumber,
         counterparty_inn: inn,
         counterparty_name,
         payment_purpose: purpose,
@@ -73,8 +80,8 @@ const tochka = {
         const org = orgs.find(o => o.inn === inn)
         if (!org) orgs.push({ inn })
         const dateLocal = (payment_date.split('.').reverse().join('-') + 'T00:00:00.000Z')
-          .slice(0,-paymentDateCounter.length - 1)
-          + paymentDateCounter + 'Z'
+          .slice(0,-paymentDateNumber.length - 1)
+          + paymentDateNumber + 'Z'
         return db.mutation.createPayment({
           data: {
             tochkaId,
@@ -109,13 +116,14 @@ const tochka = {
       const upserted = handled.filter(c => !!c) //filter out nulls
       // console.log('upserted > ', JSON.stringify(upserted, null, 2))
       return { count: upserted.length }
-      // return { count: 999 }
     } catch (err) {
       console.log('err > ', err)
       throw err
-      // throw new Error(err.message + ' ')
     }
-  }
+  },
+  // async tochkaOrgs (_, __, ctx, info) {
+  //   const url = 'https://enter.tochka.com/api/v1/organization/list'
+  // }
 }
 
 module.exports = {
