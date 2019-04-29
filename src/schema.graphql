@@ -31,6 +31,7 @@ type Mutation {
   # public
   signupAndCreateEnquiry(orgId: ID!, regName: String!, email: String!, tel: String!, country: String!, modelName: String!, qty: Int!, period: String!, deadlineDateLocal: String, htmlText: String, orgId: ID!, files: [FileLinkCreateInput!]!, hasAgreedToRules: Boolean!, hasAgreedToSearch3rdParty: Boolean): Enquiry
   # other
+  checkOrgs: [String]
   createDrawings(modelId: ID!, files: [Upload!]!): [Drawing!]!
   createEnquiry(dateLocal: String!, orgId: ID!, modelId: ID!, qty: Int!): Enquiry
   createEnquiryEvent(enquiryId: ID!, htmlText: String, statusId: ID, doc: DocCreateInput): Event
@@ -39,16 +40,19 @@ type Mutation {
   deleteAllOrgs: BatchPayload!
   deleteDrawings(ids: [ID!]!): BatchPayload!
   deleteOrg(id: ID!): Org
+  getMoeDeloOrgs: [Org!]
+  getTochkaPayments: [Payment!]
   moveProds(to: ID!, prodIds: [ID!]!): MoveProdPayload!
   reserveProds(orderId: ID!, prodIds: [ID!]!): Order
   seedEnquiryStatuses: BatchPayload!
   setDrawingsSortOrder(ids: [ID!]!): BatchPayload!
   syncWithAmoContacts: BatchPayload!
-  syncWithTochkaPayments: BatchPayload!
+  syncWithTochkaPayments: BatchPayload
   updateEnquiry(input: EnquiryInput!): Enquiry
   upsertEmployee(input: EmployeeInput!): Employee
   upsertModel(input: ModelInput!): Model
   upsertOrder(id: ID, enquiryId: ID, dateLocal: String!, qty: Int, amount: Float): Order
+  upsertOrgsByInn(inns: [String!]!): [Org!]!
   upsertPayment(input: PaymentInput!): Payment
   upsertPerson(input: PersonInput!): Person
   upsertProd(input: ProdInput!): Prod
