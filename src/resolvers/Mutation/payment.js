@@ -12,6 +12,8 @@ const payment = {
         if (!!validated.equipmentId && !article.relations.includes('EQUIPMENT'))
           throw new Error ('для указанной статьи поле Оборудование не применимо')
       }
+      if (validated.personId && validated.orgId)
+        throw new Error ('не допускается указывать одновременно два контрагента: ФЛ и Компанию')
       // console.log('input > ', JSON.stringify(input, null, 2))
       // console.log('validated > ', JSON.stringify(validated, null, 2))
       // for new records, connect payment to this user's default account

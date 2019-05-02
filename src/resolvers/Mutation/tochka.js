@@ -33,7 +33,7 @@ const fetchTochkaPayments = async () => {
 		if (statusText !== 'OK') throw new Error('Ошибка сервера Точка. Статус запроса fetchTochkaPayments: ' + statusText)
     const { payments } = await statementResponse.json()
     // console.log('tochkaPayments > ', JSON.stringify(payments,null,2))
-    console.log('tochkaPayments.length > ', payments.length)
+    // console.log('tochkaPayments.length > ', payments.length)
     return payments
 }
 
@@ -41,7 +41,7 @@ const formatTochkaPayments = async (_, payments, ctx, info) => {
   const inns = payments.map(({ counterparty_inn: inn }) => inn)
     .reduce((res, p) => [...res, ...res.includes(p) ? [] : [p]], [])
   const orgs = await upsertOrgsByInn(_, inns, ctx, info)
-  console.log('orgs > ', orgs)
+  // console.log('orgs > ', orgs)
   // count number of payments for each day to generate unique dateLocal
   paymentDateCounter = {}
   return payments.map(p => {
@@ -63,6 +63,7 @@ const formatTochkaPayments = async (_, payments, ctx, info) => {
 const tochka = {
   async getTochkaPayments(_, __, ctx, info) {
     const fetchedPayments = await fetchTochkaPayments()
+    // console.log('fetchedPayments > ', fetchedPayments)
     return await formatTochkaPayments(_, fetchedPayments, ctx, info)
   },
 	async syncWithTochkaPayments(_, __, ctx, info) {
@@ -72,10 +73,12 @@ const tochka = {
       where: { number: process.env.TOCHKA_ACCOUNT_CODE_IP }
     }, '{ id }'))[0].id
     const tochkaPayments = (await tochka.getTochkaPayments(_, __, ctx, info))
+    // console.log('tochkaPayments > ', tochkaPayments)
     const payments = await db.query.payments({
       where: { account: { id: accountId } }
     }, '{ id dateLocal tochkaId }')
     const tochkaIds = payments.map(({ tochkaId }) => tochkaId)
+    // const toCreate = tochkaPayments.map( p => {
     const toCreate = tochkaPayments.filter(p => !tochkaIds.includes(p.tochkaId)).map( p => {
       const orgId = p.orgId
       delete p.orgId
@@ -88,6 +91,10 @@ const tochka = {
         }
       }
     })
+    // const deleted = await db.mutation.deleteManyPayments({
+    //   where: { account: { id: accountId } }
+    // }, '{ count }')
+    // console.log('deleted > ', deleted)
     const { payments: accountPayments } = await db.mutation.updateAccount({
       where: { id: accountId },
       data: {

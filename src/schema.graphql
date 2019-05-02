@@ -112,6 +112,7 @@ input PaymentInput {
 	articleId: ID
 	equipmentId: ID
 	personId: ID
+	orgId: ID
   dateLocal: String
 	amount: Float
 	purpose: String

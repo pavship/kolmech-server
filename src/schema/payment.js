@@ -33,10 +33,14 @@ const validationSchema = object().shape({
     //     : schema.strip()
     //   ),
   personId: idValidationType
-    .when('id', (id, schema) => id
-      ? schema.notRequired()
-      : schema.required('выберите контрагента')
-    ),
+    .notRequired(),
+    // TODO I'm disappointed with yup. Schema definition rules are not semantic, need to change to something else!
+    // .when('id', (id, schema) => id
+    //   ? schema.notRequired()
+    //   : schema.required('выберите контрагента')
+    // ),
+  orgId: idValidationType
+    .notRequired(),
   purpose: string()
     .max(250, 'превышено максимальное число символов (250)')
     .notRequired(),
