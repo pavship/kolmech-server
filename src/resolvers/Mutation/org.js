@@ -47,16 +47,10 @@ const org = {
 				return orgs.length === 1
 					? []
 					: orgs.slice(1)
-					// .map(o => o.moedeloId)
 			})
 			.reduce((res, arr) => [...res, ...arr])
-		// console.log('toDelete > ', toDelete)
-		
-		// console.log('sortedOrgs > ', sortedOrgs)
-		// console.log('excessOrgs > ', excessOrgs)
 	},
 	async createOrg(_, { inn }, ctx, info) {
-		console.log('createOrg > ', inn)
 		const { userId, db } = ctx
 		// org found in db will be updated from MoeDelo server and then returned
 		const foundOrg = await db.query.org({ where: { inn } }, info)
@@ -66,9 +60,7 @@ const org = {
 		const existingOrg = orgs.find(o => o.inn === inn)
 		let createdOrg = null
 		if (!existingOrg) createdOrg = await createMoeDeloOrg(inn)
-		console.log('existingOrg , createdOrg > ', existingOrg , createdOrg)
 		const { moedeloId, name, legalAddress } = existingOrg || createdOrg
-		console.log('inn, moedeloId, name, legalAddress > ', inn, moedeloId, name, legalAddress)
 		if (foundOrg) return db.mutation.updateOrg({
 			where: { id: foundOrg.id },
 			data: {
@@ -95,8 +87,6 @@ const org = {
 				method: 'DELETE',
 				headers
 			})
-			// console.log('o.moedeloId > ', o.moedeloId)
-			// console.log('response > ', response)
 		}))
 		return ctx.db.mutation.deleteOrg({ where: { id } }, info)
 	},
@@ -111,8 +101,6 @@ const org = {
 				method: 'DELETE',
 				headers
 			})
-			// console.log('o.moedeloId > ', o.moedeloId)
-			// console.log('response > ', response)
 		}
 		return ctx.db.mutation.deleteManyOrgs({ where: { id_in: orgs.map(o => o.id) } }, info)
 	},
@@ -124,7 +112,6 @@ const org = {
 		const statusText = allOrgsResponse.statusText
 		if (statusText !== 'OK') throw new Error('Ошибка сервера МоеДело. Статус запроса: ' + statusText)
 		const { ResourceList: orgs } = await allOrgsResponse.json()
-		// console.log('got orgs > ', orgs.length || orgs)
 		return orgs.map(({
 			Id: moedeloId,
 			Inn: inn,
@@ -139,17 +126,13 @@ const org = {
 	},
 	async upsertOrgsByInn(_, inns, ctx, info) {
 		const { userId, db } = ctx
-		// console.log('inns > ', inns)
 		let moeDeloOrgs = await org.getMoeDeloOrgs(_, {}, ctx, '{ moedeloId inn name }')
-		// console.log('moeDeloOrgs > ', moeDeloOrgs)
 		const existedOrgs = moeDeloOrgs.filter(o => inns.includes(o.inn))
 		const createdOrgs = []
-		// console.log('inns.filter(inn => moeDeloOrgs.findIndex(o => o.inn === inn) === -1) > ', inns.filter(inn => moeDeloOrgs.findIndex(o => o.inn === inn) === -1))
 		for (let inn of inns.filter(inn => moeDeloOrgs.findIndex(o => o.inn === inn) === -1)) {
 			createdOrgs.push(await createMoeDeloOrg(inn))
 		}
 		moeDeloOrgs = [...existedOrgs, ...createdOrgs]
-		// console.log('moeDeloOrgs > ', moeDeloOrgs)
 		return await Promise.all(moeDeloOrgs.map(({
 			inn,
 			legalAddress,

@@ -32,8 +32,6 @@ const fetchTochkaPayments = async () => {
     const statusText = statementResponse.statusText
 		if (statusText !== 'OK') throw new Error('Ошибка сервера Точка. Статус запроса fetchTochkaPayments: ' + statusText)
     const { payments } = await statementResponse.json()
-    // console.log('tochkaPayments > ', JSON.stringify(payments,null,2))
-    // console.log('tochkaPayments.length > ', payments.length)
     return payments
 }
 
@@ -41,7 +39,6 @@ const formatTochkaPayments = async (_, payments, ctx, info) => {
   const inns = payments.map(({ counterparty_inn: inn }) => inn)
     .reduce((res, p) => [...res, ...res.includes(p) ? [] : [p]], [])
   const orgs = await upsertOrgsByInn(_, inns, ctx, info)
-  // console.log('orgs > ', orgs)
   // count number of payments for each day to generate unique dateLocal
   paymentDateCounter = {}
   return payments.map(p => {
@@ -63,7 +60,6 @@ const formatTochkaPayments = async (_, payments, ctx, info) => {
 const tochka = {
   async getTochkaPayments(_, __, ctx, info) {
     const fetchedPayments = await fetchTochkaPayments()
-    // console.log('fetchedPayments > ', fetchedPayments)
     return await formatTochkaPayments(_, fetchedPayments, ctx, info)
   },
 	async syncWithTochkaPayments(_, __, ctx, info) {
@@ -73,7 +69,6 @@ const tochka = {
       where: { number: process.env.TOCHKA_ACCOUNT_CODE_IP }
     }, '{ id }'))[0].id
     const tochkaPayments = (await tochka.getTochkaPayments(_, __, ctx, info))
-    // console.log('tochkaPayments > ', tochkaPayments)
     const payments = await db.query.payments({
       where: { account: { id: accountId } }
     }, '{ id dateLocal tochkaId }')
@@ -95,7 +90,7 @@ const tochka = {
     //   where: { account: { id: accountId } }
     // }, '{ count }')
     // console.log('deleted > ', deleted)
-    const { payments: accountPayments } = await db.mutation.updateAccount({
+    await db.mutation.updateAccount({
       where: { id: accountId },
       data: {
         payments: {
@@ -104,67 +99,6 @@ const tochka = {
       }
     }, '{ id }')
     return { count: toCreate.length }
-    // // 5. write new payments to db
-    // //    and also create missing counterparties' Orgs
-    // const handled = await Promise.all(tochkaPaymentsAugmented.map(async ({
-    //   payment_bank_system_id: tochkaId,
-    //   payment_amount,
-    //   dateLocal,
-    //   counterparty_inn: inn,
-    //   counterparty_name,
-    //   payment_purpose: purpose,
-    // }) => {
-    //   const payment = payments.find(p => p.tochkaId === tochkaId)
-    //   if (payment) return
-    //   // const moeDeloOrg = moeDeloOrgs.find(o => o.inn === inn)
-    //   const org = { moedeloId, name, legalAddress } = moeDeloOrgs.find(o => o.inn === inn)
-    //     ? orgs.find(o => o.moedeloId === moedeloId)
-    //       || await db.mutation.createOrg({
-    //         data: {
-    //           moedeloId,
-    //           name,
-    //           legalAddress
-    //         }
-    //       })
-    //     : await createOrg(_, { inn }, ctx, '{ id moedeloId inn name }')
-    //   // if (!org) orgs.push({ inn })
-    //   // const org = await createOrg(_, { inn }, ctx, '{ id moedeloId inn name }')
-    //   console.log('org > ', org)
-      // return db.mutation.createPayment({
-      //   data: {
-      //     tochkaId,
-      //     dateLocal,
-      //     amount: Math.abs(parseFloat(payment_amount)),
-      //     isIncome: parseFloat(payment_amount) > 0,
-      //     purpose,
-      //     account: {
-      //       connect: {
-      //         id: account.id
-      //       }
-      //     },
-      //     org: {
-      //       ...org 
-      //         ? {
-      //           connect: {
-      //             id: org.id
-      //           }
-      //         }
-      //         : {
-      //           create: {
-      //             inn,
-      //             name: counterparty_name
-      //               .replace('ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ','ООО')
-      //               .replace('Индивидуальный предприниматель','ИП')
-      //           }
-      //         }
-      //     }
-      //   }
-      // }, '{ id amount isIncome org { inn name } }')
-    // }))
-    // const upserted = handled.filter(c => !!c) //filter out nulls
-    // // console.log('upserted > ', JSON.stringify(upserted, null, 2))
-    // return { count: upserted.length }
-    // return { count: 0 }
   },
   // async tochkaOrgs (_, __, ctx, info) {
   //   const url = 'https://enter.tochka.com/api/v1/organization/list'

@@ -3,7 +3,6 @@ const cuid = require('cuid')
 const sharp = require('sharp')
 
 const storeUpload = async ( stream, path ) => {
-  console.log('storeUpload >')
   return new Promise((resolve, reject) =>
     stream
       .pipe(createWriteStream(path))
