@@ -17,6 +17,7 @@ type Article {					# payment articles
 type Deal {
 	id: ID! @unique
 	amoId: Int @unique
+	date: DateTime
 	name: String
 	status: DealStatus
 }
@@ -147,6 +148,12 @@ type Org {
 	orders: [Order!]! @relation(name: "OrgOrders")
 	payments: [Payment!]!
 	models: [Model!]!
+}
+
+type ServerData {
+	id: ID! @unique
+	amoExpiresAt: Int
+	amoCookie: String
 }
 
 type Status {

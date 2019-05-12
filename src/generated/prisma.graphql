@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Sun May 12 2019 05:12:56 GMT+0300 (GMT+03:00)
+# timestamp: Sun May 12 2019 12:08:39 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -370,6 +370,10 @@ type AggregateProd {
   count: Int!
 }
 
+type AggregateServerData {
+  count: Int!
+}
+
 type AggregateStatus {
   count: Int!
 }
@@ -687,6 +691,7 @@ scalar DateTime
 type Deal implements Node {
   id: ID!
   amoId: Int
+  date: DateTime
   name: String
   status: DealStatus
 }
@@ -703,6 +708,7 @@ type DealConnection {
 
 input DealCreateInput {
   amoId: Int
+  date: DateTime
   name: String
   status: DealStatusCreateOneInput
 }
@@ -721,6 +727,8 @@ enum DealOrderByInput {
   id_DESC
   amoId_ASC
   amoId_DESC
+  date_ASC
+  date_DESC
   name_ASC
   name_DESC
   updatedAt_ASC
@@ -732,6 +740,7 @@ enum DealOrderByInput {
 type DealPreviousValues {
   id: ID!
   amoId: Int
+  date: DateTime
   name: String
 }
 
@@ -1094,12 +1103,14 @@ input DealSubscriptionWhereInput {
 
 input DealUpdateInput {
   amoId: Int
+  date: DateTime
   name: String
   status: DealStatusUpdateOneInput
 }
 
 input DealUpdateManyMutationInput {
   amoId: Int
+  date: DateTime
   name: String
 }
 
@@ -1174,6 +1185,28 @@ input DealWhereInput {
 
   """All values greater than or equal the given value."""
   amoId_gte: Int
+  date: DateTime
+
+  """All values that are not equal to given value."""
+  date_not: DateTime
+
+  """All values that are contained in given list."""
+  date_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  date_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  date_lt: DateTime
+
+  """All values less than or equal the given value."""
+  date_lte: DateTime
+
+  """All values greater than the given value."""
+  date_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  date_gte: DateTime
   name: String
 
   """All values that are not equal to given value."""
@@ -4658,6 +4691,7 @@ type Mutation {
   createModel(data: ModelCreateInput!): Model!
   createOrder(data: OrderCreateInput!): Order!
   createOrg(data: OrgCreateInput!): Org!
+  createServerData(data: ServerDataCreateInput!): ServerData!
   createTel(data: TelCreateInput!): Tel!
   createPayment(data: PaymentCreateInput!): Payment!
   createPerson(data: PersonCreateInput!): Person!
@@ -4680,6 +4714,7 @@ type Mutation {
   updateModel(data: ModelUpdateInput!, where: ModelWhereUniqueInput!): Model
   updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
   updateOrg(data: OrgUpdateInput!, where: OrgWhereUniqueInput!): Org
+  updateServerData(data: ServerDataUpdateInput!, where: ServerDataWhereUniqueInput!): ServerData
   updateTel(data: TelUpdateInput!, where: TelWhereUniqueInput!): Tel
   updatePayment(data: PaymentUpdateInput!, where: PaymentWhereUniqueInput!): Payment
   updatePerson(data: PersonUpdateInput!, where: PersonWhereUniqueInput!): Person
@@ -4702,6 +4737,7 @@ type Mutation {
   deleteModel(where: ModelWhereUniqueInput!): Model
   deleteOrder(where: OrderWhereUniqueInput!): Order
   deleteOrg(where: OrgWhereUniqueInput!): Org
+  deleteServerData(where: ServerDataWhereUniqueInput!): ServerData
   deleteTel(where: TelWhereUniqueInput!): Tel
   deletePayment(where: PaymentWhereUniqueInput!): Payment
   deletePerson(where: PersonWhereUniqueInput!): Person
@@ -4724,6 +4760,7 @@ type Mutation {
   upsertModel(where: ModelWhereUniqueInput!, create: ModelCreateInput!, update: ModelUpdateInput!): Model!
   upsertOrder(where: OrderWhereUniqueInput!, create: OrderCreateInput!, update: OrderUpdateInput!): Order!
   upsertOrg(where: OrgWhereUniqueInput!, create: OrgCreateInput!, update: OrgUpdateInput!): Org!
+  upsertServerData(where: ServerDataWhereUniqueInput!, create: ServerDataCreateInput!, update: ServerDataUpdateInput!): ServerData!
   upsertTel(where: TelWhereUniqueInput!, create: TelCreateInput!, update: TelUpdateInput!): Tel!
   upsertPayment(where: PaymentWhereUniqueInput!, create: PaymentCreateInput!, update: PaymentUpdateInput!): Payment!
   upsertPerson(where: PersonWhereUniqueInput!, create: PersonCreateInput!, update: PersonUpdateInput!): Person!
@@ -4746,6 +4783,7 @@ type Mutation {
   updateManyModels(data: ModelUpdateManyMutationInput!, where: ModelWhereInput): BatchPayload!
   updateManyOrders(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
   updateManyOrgs(data: OrgUpdateManyMutationInput!, where: OrgWhereInput): BatchPayload!
+  updateManyServerDatas(data: ServerDataUpdateManyMutationInput!, where: ServerDataWhereInput): BatchPayload!
   updateManyTels(data: TelUpdateManyMutationInput!, where: TelWhereInput): BatchPayload!
   updateManyPayments(data: PaymentUpdateManyMutationInput!, where: PaymentWhereInput): BatchPayload!
   updateManyPersons(data: PersonUpdateManyMutationInput!, where: PersonWhereInput): BatchPayload!
@@ -4768,6 +4806,7 @@ type Mutation {
   deleteManyModels(where: ModelWhereInput): BatchPayload!
   deleteManyOrders(where: OrderWhereInput): BatchPayload!
   deleteManyOrgs(where: OrgWhereInput): BatchPayload!
+  deleteManyServerDatas(where: ServerDataWhereInput): BatchPayload!
   deleteManyTels(where: TelWhereInput): BatchPayload!
   deleteManyPayments(where: PaymentWhereInput): BatchPayload!
   deleteManyPersons(where: PersonWhereInput): BatchPayload!
@@ -7955,6 +7994,7 @@ type Query {
   models(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Model]!
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
   orgs(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Org]!
+  serverDatas(where: ServerDataWhereInput, orderBy: ServerDataOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ServerData]!
   tels(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tel]!
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment]!
   persons(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Person]!
@@ -7977,6 +8017,7 @@ type Query {
   model(where: ModelWhereUniqueInput!): Model
   order(where: OrderWhereUniqueInput!): Order
   org(where: OrgWhereUniqueInput!): Org
+  serverData(where: ServerDataWhereUniqueInput!): ServerData
   tel(where: TelWhereUniqueInput!): Tel
   payment(where: PaymentWhereUniqueInput!): Payment
   person(where: PersonWhereUniqueInput!): Person
@@ -7999,6 +8040,7 @@ type Query {
   modelsConnection(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ModelConnection!
   ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
   orgsConnection(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgConnection!
+  serverDatasConnection(where: ServerDataWhereInput, orderBy: ServerDataOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ServerDataConnection!
   telsConnection(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TelConnection!
   paymentsConnection(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentConnection!
   personsConnection(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PersonConnection!
@@ -8015,6 +8057,221 @@ type Query {
     """The ID of an object"""
     id: ID!
   ): Node
+}
+
+type ServerData implements Node {
+  id: ID!
+  amoExpiresAt: Int
+  amoCookie: String
+}
+
+"""A connection to a list of items."""
+type ServerDataConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ServerDataEdge]!
+  aggregate: AggregateServerData!
+}
+
+input ServerDataCreateInput {
+  amoExpiresAt: Int
+  amoCookie: String
+}
+
+"""An edge in a connection."""
+type ServerDataEdge {
+  """The item at the end of the edge."""
+  node: ServerData!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum ServerDataOrderByInput {
+  id_ASC
+  id_DESC
+  amoExpiresAt_ASC
+  amoExpiresAt_DESC
+  amoCookie_ASC
+  amoCookie_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type ServerDataPreviousValues {
+  id: ID!
+  amoExpiresAt: Int
+  amoCookie: String
+}
+
+type ServerDataSubscriptionPayload {
+  mutation: MutationType!
+  node: ServerData
+  updatedFields: [String!]
+  previousValues: ServerDataPreviousValues
+}
+
+input ServerDataSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ServerDataSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ServerDataSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ServerDataSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ServerDataWhereInput
+}
+
+input ServerDataUpdateInput {
+  amoExpiresAt: Int
+  amoCookie: String
+}
+
+input ServerDataUpdateManyMutationInput {
+  amoExpiresAt: Int
+  amoCookie: String
+}
+
+input ServerDataWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ServerDataWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ServerDataWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ServerDataWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  amoExpiresAt: Int
+
+  """All values that are not equal to given value."""
+  amoExpiresAt_not: Int
+
+  """All values that are contained in given list."""
+  amoExpiresAt_in: [Int!]
+
+  """All values that are not contained in given list."""
+  amoExpiresAt_not_in: [Int!]
+
+  """All values less than the given value."""
+  amoExpiresAt_lt: Int
+
+  """All values less than or equal the given value."""
+  amoExpiresAt_lte: Int
+
+  """All values greater than the given value."""
+  amoExpiresAt_gt: Int
+
+  """All values greater than or equal the given value."""
+  amoExpiresAt_gte: Int
+  amoCookie: String
+
+  """All values that are not equal to given value."""
+  amoCookie_not: String
+
+  """All values that are contained in given list."""
+  amoCookie_in: [String!]
+
+  """All values that are not contained in given list."""
+  amoCookie_not_in: [String!]
+
+  """All values less than the given value."""
+  amoCookie_lt: String
+
+  """All values less than or equal the given value."""
+  amoCookie_lte: String
+
+  """All values greater than the given value."""
+  amoCookie_gt: String
+
+  """All values greater than or equal the given value."""
+  amoCookie_gte: String
+
+  """All values containing the given string."""
+  amoCookie_contains: String
+
+  """All values not containing the given string."""
+  amoCookie_not_contains: String
+
+  """All values starting with the given string."""
+  amoCookie_starts_with: String
+
+  """All values not starting with the given string."""
+  amoCookie_not_starts_with: String
+
+  """All values ending with the given string."""
+  amoCookie_ends_with: String
+
+  """All values not ending with the given string."""
+  amoCookie_not_ends_with: String
+}
+
+input ServerDataWhereUniqueInput {
+  id: ID
 }
 
 type Status implements Node {
@@ -8358,6 +8615,7 @@ type Subscription {
   model(where: ModelSubscriptionWhereInput): ModelSubscriptionPayload
   order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
   org(where: OrgSubscriptionWhereInput): OrgSubscriptionPayload
+  serverData(where: ServerDataSubscriptionWhereInput): ServerDataSubscriptionPayload
   tel(where: TelSubscriptionWhereInput): TelSubscriptionPayload
   payment(where: PaymentSubscriptionWhereInput): PaymentSubscriptionPayload
   person(where: PersonSubscriptionWhereInput): PersonSubscriptionPayload

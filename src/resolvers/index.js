@@ -3,6 +3,7 @@ const { Query } = require('./Query/Query')
 const { Subscription } = require('./Subscription')
 const { amo } = require('./Mutation/amo')
 const { auth } = require('./Mutation/auth')
+const { deal } = require('./Mutation/deal')
 const { dealStatus } = require('./Mutation/dealStatus')
 const { drawing } = require('./Mutation/drawing')
 const { enquiry } = require('./Mutation/enquiry')
@@ -28,6 +29,7 @@ module.exports = {
   Mutation: {
     ...amo,
     ...auth,
+    ...deal,
     ...dealStatus,
     ...drawing,
     ...enquiry,

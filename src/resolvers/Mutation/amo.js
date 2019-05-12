@@ -1,4 +1,5 @@
 
+const axios = require('axios')
 const AmoCRM = require( 'amocrm-js' );
 
 const crm = new AmoCRM({
@@ -8,6 +9,43 @@ const crm = new AmoCRM({
     hash: process.env.AMO_HASH
   }
 })
+
+const baseURL = `https://${process.env.AMO_DOMAIN}.amocrm.ru`
+
+let Amo = null
+
+const amoConnect = async ctx => {
+  const { db } = ctx
+  let [{ id, amoExpiresAt, amoCookie}] = 
+    await db.query.serverDatas({}, '{ id amoExpiresAt, amoCookie }')
+  const isExpired = amoExpiresAt < Date.now()/1000
+  if (isExpired) {
+    const res = await axios.post(
+      baseURL + '/private/api/auth.php?type=json',
+      {
+        USER_LOGIN: process.env.AMO_LOGIN,
+        USER_HASH: process.env.AMO_HASH
+      }
+    )
+    if (res.statusText !== 'OK') throw new Error('Amo authorization request failed with res.statusText > ' , res.statusText)
+    amoExpiresAt = res.data.response.server_time + 14.5*60
+    amoCookie = res.headers['set-cookie']
+      .map(c => c.slice(0, c.indexOf(';')))
+      .join(';')
+    await db.mutation.updateServerData({
+      where: { id },
+      data: { amoExpiresAt, amoCookie }
+    })
+  }
+  if (Amo === null || isExpired)
+    Amo = axios.create({
+      baseURL,
+      headers: {
+        'cookie': amoCookie,
+      }
+    })
+  return Amo
+}
 
 const amo = {
   // async login
@@ -81,5 +119,6 @@ const amo = {
 }
 
 module.exports = { 
-	amo
+  amo,
+  amoConnect
 }

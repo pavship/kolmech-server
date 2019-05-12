@@ -5,6 +5,7 @@ scalar Upload
 type Query {
   accounts: [Account!]!
   articles: [Article!]!
+  deals: [Deal!]!
   depts: [Dept!]!
   deptProds(deptId: ID!): [Prod!]!
   confirmEmail(token: String!): AuthPayload
@@ -46,6 +47,7 @@ type Mutation {
   reserveProds(orderId: ID!, prodIds: [ID!]!): Order
   seedEnquiryStatuses: BatchPayload!
   setDrawingsSortOrder(ids: [ID!]!): BatchPayload!
+  syncDeals: BatchPayload
   syncDealStatuses: BatchPayload!
   syncWithAmoContacts: BatchPayload!
   syncWithTochkaPayments: BatchPayload
