@@ -207,6 +207,7 @@ const migration = {
 	async populatePaymentArticles(_, __, ctx, info) {
 		const articles = [
 			{ name: 'administrative', rusName: 'Административные расходы'},
+			{ name: 'commercial', rusName: 'Коммерческие расходы'},
 			{ name: 'hh', rusName: 'Подбор персонала'},
 			{ name: 'lend', rusName: 'Займ (Выдача)', isLoan: true},
 			{ name: 'loan', rusName: 'Займ (Получение)', isLoan: true, isIncome: true},
@@ -215,6 +216,8 @@ const migration = {
 			{ name: 'otherExpenses', rusName: 'Прочие расходы'},
 			{ name: 'repair', rusName: 'Ремонт оборудования', relations: { set: ['EQUIPMENT'] }},
 			{ name: 'revenue', rusName: 'Выручка (Основная деятельность)', isIncome: true},
+			{ name: 'tools', rusName: 'Оснастка/Инструмент', relations: { set: ['EQUIPMENT'] }},
+			{ name: 'transport', rusName: 'Транспорт'},
 			{ name: 'salary', rusName: 'ЗП'},
 			{ name: 'training', rusName: 'Обучение персонала'},
 		]
@@ -227,9 +230,9 @@ const migration = {
 				...a,
 				id: existing.find(e => e.name === a.name).id
 			}))
-		const created = await Promise.all(toCreate.map(({ name, rusName, isLoan, isIncome }) =>
+		const created = await Promise.all(toCreate.map(({ name, rusName, isLoan, isIncome, relations }) =>
 			ctx.db.mutation.createArticle({
-				data: { name, rusName, isLoan, isIncome }
+				data: { name, rusName, isLoan, isIncome, relations }
 			})
 		))
 		const updated = await Promise.all(toUpdate.map(({ id, ...rest }) =>

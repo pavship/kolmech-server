@@ -14,24 +14,19 @@ type Article {					# payment articles
 	relations: [String!]!	#serves to show related form fields
 }
 
-type Drawing{
+type Deal {
 	id: ID! @unique
-	sortOrder: Int						# display order of model's drawings collection
-	files: [File!]! @relation(name: "DrawingFiles" onDelete: CASCADE)
-	model: Model @relation(name: "ModelDrawings")
-}
-
-type Employee {
-	id: ID! @unique
-	position: String
-	person: Person
-	org: Org!
-}
-
-type Equipment {
-  id: ID! @unique
+	amoId: Int @unique
 	name: String
-	payments: [Payment!]!
+	status: DealStatus
+}
+
+type DealStatus {
+	id: ID! @unique
+	amoId: Int @unique
+	name: String
+	color: String
+	sort: Int
 }
 
 type Dept {
@@ -50,6 +45,20 @@ type Doc {
 	enquiry: Enquiry @relation(name: "EnquiryDocs")
 }
 
+type Drawing{
+	id: ID! @unique
+	sortOrder: Int						# display order of model's drawings collection
+	files: [File!]! @relation(name: "DrawingFiles" onDelete: CASCADE)
+	model: Model @relation(name: "ModelDrawings")
+}
+
+type Employee {
+	id: ID! @unique
+	position: String
+	person: Person
+	org: Org!
+}
+
 type Enquiry {
 	id: ID! @unique
 	num: Int!
@@ -62,6 +71,12 @@ type Enquiry {
 	orders: [Order!]!  @relation(name: "EnquiryOrders")
 	docs: [Doc!]! @relation(name: "EnquiryDocs" onDelete: CASCADE)
 	status: Status
+}
+
+type Equipment {
+  id: ID! @unique
+	name: String
+	payments: [Payment!]!
 }
 
 type File {

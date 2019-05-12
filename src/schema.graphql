@@ -46,6 +46,7 @@ type Mutation {
   reserveProds(orderId: ID!, prodIds: [ID!]!): Order
   seedEnquiryStatuses: BatchPayload!
   setDrawingsSortOrder(ids: [ID!]!): BatchPayload!
+  syncDealStatuses: BatchPayload!
   syncWithAmoContacts: BatchPayload!
   syncWithTochkaPayments: BatchPayload
   updateEnquiry(input: EnquiryInput!): Enquiry

@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Sun Apr 14 2019 17:44:22 GMT+0300 (GMT+03:00)
+# timestamp: Sun May 12 2019 05:12:56 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -299,6 +299,14 @@ type AggregateAccount {
 }
 
 type AggregateArticle {
+  count: Int!
+}
+
+type AggregateDeal {
+  count: Int!
+}
+
+type AggregateDealStatus {
   count: Int!
 }
 
@@ -675,6 +683,544 @@ type BatchPayload {
 }
 
 scalar DateTime
+
+type Deal implements Node {
+  id: ID!
+  amoId: Int
+  name: String
+  status: DealStatus
+}
+
+"""A connection to a list of items."""
+type DealConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [DealEdge]!
+  aggregate: AggregateDeal!
+}
+
+input DealCreateInput {
+  amoId: Int
+  name: String
+  status: DealStatusCreateOneInput
+}
+
+"""An edge in a connection."""
+type DealEdge {
+  """The item at the end of the edge."""
+  node: Deal!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum DealOrderByInput {
+  id_ASC
+  id_DESC
+  amoId_ASC
+  amoId_DESC
+  name_ASC
+  name_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type DealPreviousValues {
+  id: ID!
+  amoId: Int
+  name: String
+}
+
+type DealStatus implements Node {
+  id: ID!
+  amoId: Int
+  name: String
+  color: String
+  sort: Int
+}
+
+"""A connection to a list of items."""
+type DealStatusConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [DealStatusEdge]!
+  aggregate: AggregateDealStatus!
+}
+
+input DealStatusCreateInput {
+  amoId: Int
+  name: String
+  color: String
+  sort: Int
+}
+
+input DealStatusCreateOneInput {
+  create: DealStatusCreateInput
+  connect: DealStatusWhereUniqueInput
+}
+
+"""An edge in a connection."""
+type DealStatusEdge {
+  """The item at the end of the edge."""
+  node: DealStatus!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum DealStatusOrderByInput {
+  id_ASC
+  id_DESC
+  amoId_ASC
+  amoId_DESC
+  name_ASC
+  name_DESC
+  color_ASC
+  color_DESC
+  sort_ASC
+  sort_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type DealStatusPreviousValues {
+  id: ID!
+  amoId: Int
+  name: String
+  color: String
+  sort: Int
+}
+
+type DealStatusSubscriptionPayload {
+  mutation: MutationType!
+  node: DealStatus
+  updatedFields: [String!]
+  previousValues: DealStatusPreviousValues
+}
+
+input DealStatusSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [DealStatusSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [DealStatusSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [DealStatusSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: DealStatusWhereInput
+}
+
+input DealStatusUpdateDataInput {
+  amoId: Int
+  name: String
+  color: String
+  sort: Int
+}
+
+input DealStatusUpdateInput {
+  amoId: Int
+  name: String
+  color: String
+  sort: Int
+}
+
+input DealStatusUpdateManyMutationInput {
+  amoId: Int
+  name: String
+  color: String
+  sort: Int
+}
+
+input DealStatusUpdateOneInput {
+  create: DealStatusCreateInput
+  connect: DealStatusWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: DealStatusUpdateDataInput
+  upsert: DealStatusUpsertNestedInput
+}
+
+input DealStatusUpsertNestedInput {
+  update: DealStatusUpdateDataInput!
+  create: DealStatusCreateInput!
+}
+
+input DealStatusWhereInput {
+  """Logical AND on all given filters."""
+  AND: [DealStatusWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [DealStatusWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [DealStatusWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  amoId: Int
+
+  """All values that are not equal to given value."""
+  amoId_not: Int
+
+  """All values that are contained in given list."""
+  amoId_in: [Int!]
+
+  """All values that are not contained in given list."""
+  amoId_not_in: [Int!]
+
+  """All values less than the given value."""
+  amoId_lt: Int
+
+  """All values less than or equal the given value."""
+  amoId_lte: Int
+
+  """All values greater than the given value."""
+  amoId_gt: Int
+
+  """All values greater than or equal the given value."""
+  amoId_gte: Int
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  color: String
+
+  """All values that are not equal to given value."""
+  color_not: String
+
+  """All values that are contained in given list."""
+  color_in: [String!]
+
+  """All values that are not contained in given list."""
+  color_not_in: [String!]
+
+  """All values less than the given value."""
+  color_lt: String
+
+  """All values less than or equal the given value."""
+  color_lte: String
+
+  """All values greater than the given value."""
+  color_gt: String
+
+  """All values greater than or equal the given value."""
+  color_gte: String
+
+  """All values containing the given string."""
+  color_contains: String
+
+  """All values not containing the given string."""
+  color_not_contains: String
+
+  """All values starting with the given string."""
+  color_starts_with: String
+
+  """All values not starting with the given string."""
+  color_not_starts_with: String
+
+  """All values ending with the given string."""
+  color_ends_with: String
+
+  """All values not ending with the given string."""
+  color_not_ends_with: String
+  sort: Int
+
+  """All values that are not equal to given value."""
+  sort_not: Int
+
+  """All values that are contained in given list."""
+  sort_in: [Int!]
+
+  """All values that are not contained in given list."""
+  sort_not_in: [Int!]
+
+  """All values less than the given value."""
+  sort_lt: Int
+
+  """All values less than or equal the given value."""
+  sort_lte: Int
+
+  """All values greater than the given value."""
+  sort_gt: Int
+
+  """All values greater than or equal the given value."""
+  sort_gte: Int
+}
+
+input DealStatusWhereUniqueInput {
+  id: ID
+  amoId: Int
+}
+
+type DealSubscriptionPayload {
+  mutation: MutationType!
+  node: Deal
+  updatedFields: [String!]
+  previousValues: DealPreviousValues
+}
+
+input DealSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [DealSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [DealSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [DealSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: DealWhereInput
+}
+
+input DealUpdateInput {
+  amoId: Int
+  name: String
+  status: DealStatusUpdateOneInput
+}
+
+input DealUpdateManyMutationInput {
+  amoId: Int
+  name: String
+}
+
+input DealWhereInput {
+  """Logical AND on all given filters."""
+  AND: [DealWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [DealWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [DealWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  amoId: Int
+
+  """All values that are not equal to given value."""
+  amoId_not: Int
+
+  """All values that are contained in given list."""
+  amoId_in: [Int!]
+
+  """All values that are not contained in given list."""
+  amoId_not_in: [Int!]
+
+  """All values less than the given value."""
+  amoId_lt: Int
+
+  """All values less than or equal the given value."""
+  amoId_lte: Int
+
+  """All values greater than the given value."""
+  amoId_gt: Int
+
+  """All values greater than or equal the given value."""
+  amoId_gte: Int
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  status: DealStatusWhereInput
+}
+
+input DealWhereUniqueInput {
+  id: ID
+  amoId: Int
+}
 
 type Dept implements Node {
   id: ID!
@@ -4100,11 +4646,12 @@ input ModelWhereUniqueInput {
 }
 
 type Mutation {
+  createDeal(data: DealCreateInput!): Deal!
+  createDept(data: DeptCreateInput!): Dept!
   createDrawing(data: DrawingCreateInput!): Drawing!
   createEmployee(data: EmployeeCreateInput!): Employee!
-  createEquipment(data: EquipmentCreateInput!): Equipment!
-  createDept(data: DeptCreateInput!): Dept!
   createEnquiry(data: EnquiryCreateInput!): Enquiry!
+  createEquipment(data: EquipmentCreateInput!): Equipment!
   createFile(data: FileCreateInput!): File!
   createFileLink(data: FileLinkCreateInput!): FileLink!
   createEvent(data: EventCreateInput!): Event!
@@ -4120,11 +4667,13 @@ type Mutation {
   createStatus(data: StatusCreateInput!): Status!
   createAccount(data: AccountCreateInput!): Account!
   createDoc(data: DocCreateInput!): Doc!
+  createDealStatus(data: DealStatusCreateInput!): DealStatus!
+  updateDeal(data: DealUpdateInput!, where: DealWhereUniqueInput!): Deal
+  updateDept(data: DeptUpdateInput!, where: DeptWhereUniqueInput!): Dept
   updateDrawing(data: DrawingUpdateInput!, where: DrawingWhereUniqueInput!): Drawing
   updateEmployee(data: EmployeeUpdateInput!, where: EmployeeWhereUniqueInput!): Employee
-  updateEquipment(data: EquipmentUpdateInput!, where: EquipmentWhereUniqueInput!): Equipment
-  updateDept(data: DeptUpdateInput!, where: DeptWhereUniqueInput!): Dept
   updateEnquiry(data: EnquiryUpdateInput!, where: EnquiryWhereUniqueInput!): Enquiry
+  updateEquipment(data: EquipmentUpdateInput!, where: EquipmentWhereUniqueInput!): Equipment
   updateFile(data: FileUpdateInput!, where: FileWhereUniqueInput!): File
   updateFileLink(data: FileLinkUpdateInput!, where: FileLinkWhereUniqueInput!): FileLink
   updateEvent(data: EventUpdateInput!, where: EventWhereUniqueInput!): Event
@@ -4140,11 +4689,13 @@ type Mutation {
   updateStatus(data: StatusUpdateInput!, where: StatusWhereUniqueInput!): Status
   updateAccount(data: AccountUpdateInput!, where: AccountWhereUniqueInput!): Account
   updateDoc(data: DocUpdateInput!, where: DocWhereUniqueInput!): Doc
+  updateDealStatus(data: DealStatusUpdateInput!, where: DealStatusWhereUniqueInput!): DealStatus
+  deleteDeal(where: DealWhereUniqueInput!): Deal
+  deleteDept(where: DeptWhereUniqueInput!): Dept
   deleteDrawing(where: DrawingWhereUniqueInput!): Drawing
   deleteEmployee(where: EmployeeWhereUniqueInput!): Employee
-  deleteEquipment(where: EquipmentWhereUniqueInput!): Equipment
-  deleteDept(where: DeptWhereUniqueInput!): Dept
   deleteEnquiry(where: EnquiryWhereUniqueInput!): Enquiry
+  deleteEquipment(where: EquipmentWhereUniqueInput!): Equipment
   deleteFile(where: FileWhereUniqueInput!): File
   deleteFileLink(where: FileLinkWhereUniqueInput!): FileLink
   deleteEvent(where: EventWhereUniqueInput!): Event
@@ -4160,11 +4711,13 @@ type Mutation {
   deleteStatus(where: StatusWhereUniqueInput!): Status
   deleteAccount(where: AccountWhereUniqueInput!): Account
   deleteDoc(where: DocWhereUniqueInput!): Doc
+  deleteDealStatus(where: DealStatusWhereUniqueInput!): DealStatus
+  upsertDeal(where: DealWhereUniqueInput!, create: DealCreateInput!, update: DealUpdateInput!): Deal!
+  upsertDept(where: DeptWhereUniqueInput!, create: DeptCreateInput!, update: DeptUpdateInput!): Dept!
   upsertDrawing(where: DrawingWhereUniqueInput!, create: DrawingCreateInput!, update: DrawingUpdateInput!): Drawing!
   upsertEmployee(where: EmployeeWhereUniqueInput!, create: EmployeeCreateInput!, update: EmployeeUpdateInput!): Employee!
-  upsertEquipment(where: EquipmentWhereUniqueInput!, create: EquipmentCreateInput!, update: EquipmentUpdateInput!): Equipment!
-  upsertDept(where: DeptWhereUniqueInput!, create: DeptCreateInput!, update: DeptUpdateInput!): Dept!
   upsertEnquiry(where: EnquiryWhereUniqueInput!, create: EnquiryCreateInput!, update: EnquiryUpdateInput!): Enquiry!
+  upsertEquipment(where: EquipmentWhereUniqueInput!, create: EquipmentCreateInput!, update: EquipmentUpdateInput!): Equipment!
   upsertFile(where: FileWhereUniqueInput!, create: FileCreateInput!, update: FileUpdateInput!): File!
   upsertFileLink(where: FileLinkWhereUniqueInput!, create: FileLinkCreateInput!, update: FileLinkUpdateInput!): FileLink!
   upsertEvent(where: EventWhereUniqueInput!, create: EventCreateInput!, update: EventUpdateInput!): Event!
@@ -4180,11 +4733,13 @@ type Mutation {
   upsertStatus(where: StatusWhereUniqueInput!, create: StatusCreateInput!, update: StatusUpdateInput!): Status!
   upsertAccount(where: AccountWhereUniqueInput!, create: AccountCreateInput!, update: AccountUpdateInput!): Account!
   upsertDoc(where: DocWhereUniqueInput!, create: DocCreateInput!, update: DocUpdateInput!): Doc!
+  upsertDealStatus(where: DealStatusWhereUniqueInput!, create: DealStatusCreateInput!, update: DealStatusUpdateInput!): DealStatus!
+  updateManyDeals(data: DealUpdateManyMutationInput!, where: DealWhereInput): BatchPayload!
+  updateManyDepts(data: DeptUpdateManyMutationInput!, where: DeptWhereInput): BatchPayload!
   updateManyDrawings(data: DrawingUpdateManyMutationInput!, where: DrawingWhereInput): BatchPayload!
   updateManyEmployees(data: EmployeeUpdateManyMutationInput!, where: EmployeeWhereInput): BatchPayload!
-  updateManyEquipments(data: EquipmentUpdateManyMutationInput!, where: EquipmentWhereInput): BatchPayload!
-  updateManyDepts(data: DeptUpdateManyMutationInput!, where: DeptWhereInput): BatchPayload!
   updateManyEnquiries(data: EnquiryUpdateManyMutationInput!, where: EnquiryWhereInput): BatchPayload!
+  updateManyEquipments(data: EquipmentUpdateManyMutationInput!, where: EquipmentWhereInput): BatchPayload!
   updateManyFiles(data: FileUpdateManyMutationInput!, where: FileWhereInput): BatchPayload!
   updateManyFileLinks(data: FileLinkUpdateManyMutationInput!, where: FileLinkWhereInput): BatchPayload!
   updateManyEvents(data: EventUpdateManyMutationInput!, where: EventWhereInput): BatchPayload!
@@ -4200,11 +4755,13 @@ type Mutation {
   updateManyStatuses(data: StatusUpdateManyMutationInput!, where: StatusWhereInput): BatchPayload!
   updateManyAccounts(data: AccountUpdateManyMutationInput!, where: AccountWhereInput): BatchPayload!
   updateManyDocs(data: DocUpdateManyMutationInput!, where: DocWhereInput): BatchPayload!
+  updateManyDealStatuses(data: DealStatusUpdateManyMutationInput!, where: DealStatusWhereInput): BatchPayload!
+  deleteManyDeals(where: DealWhereInput): BatchPayload!
+  deleteManyDepts(where: DeptWhereInput): BatchPayload!
   deleteManyDrawings(where: DrawingWhereInput): BatchPayload!
   deleteManyEmployees(where: EmployeeWhereInput): BatchPayload!
-  deleteManyEquipments(where: EquipmentWhereInput): BatchPayload!
-  deleteManyDepts(where: DeptWhereInput): BatchPayload!
   deleteManyEnquiries(where: EnquiryWhereInput): BatchPayload!
+  deleteManyEquipments(where: EquipmentWhereInput): BatchPayload!
   deleteManyFiles(where: FileWhereInput): BatchPayload!
   deleteManyFileLinks(where: FileLinkWhereInput): BatchPayload!
   deleteManyEvents(where: EventWhereInput): BatchPayload!
@@ -4220,6 +4777,7 @@ type Mutation {
   deleteManyStatuses(where: StatusWhereInput): BatchPayload!
   deleteManyAccounts(where: AccountWhereInput): BatchPayload!
   deleteManyDocs(where: DocWhereInput): BatchPayload!
+  deleteManyDealStatuses(where: DealStatusWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -7385,11 +7943,12 @@ input ProdWhereUniqueInput {
 }
 
 type Query {
+  deals(where: DealWhereInput, orderBy: DealOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Deal]!
+  depts(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Dept]!
   drawings(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Drawing]!
   employees(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Employee]!
-  equipments(where: EquipmentWhereInput, orderBy: EquipmentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Equipment]!
-  depts(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Dept]!
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry]!
+  equipments(where: EquipmentWhereInput, orderBy: EquipmentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Equipment]!
   files(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [File]!
   fileLinks(where: FileLinkWhereInput, orderBy: FileLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [FileLink]!
   events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event]!
@@ -7405,11 +7964,13 @@ type Query {
   statuses(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Status]!
   accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account]!
   docs(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Doc]!
+  dealStatuses(where: DealStatusWhereInput, orderBy: DealStatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [DealStatus]!
+  deal(where: DealWhereUniqueInput!): Deal
+  dept(where: DeptWhereUniqueInput!): Dept
   drawing(where: DrawingWhereUniqueInput!): Drawing
   employee(where: EmployeeWhereUniqueInput!): Employee
-  equipment(where: EquipmentWhereUniqueInput!): Equipment
-  dept(where: DeptWhereUniqueInput!): Dept
   enquiry(where: EnquiryWhereUniqueInput!): Enquiry
+  equipment(where: EquipmentWhereUniqueInput!): Equipment
   file(where: FileWhereUniqueInput!): File
   fileLink(where: FileLinkWhereUniqueInput!): FileLink
   event(where: EventWhereUniqueInput!): Event
@@ -7425,11 +7986,13 @@ type Query {
   status(where: StatusWhereUniqueInput!): Status
   account(where: AccountWhereUniqueInput!): Account
   doc(where: DocWhereUniqueInput!): Doc
+  dealStatus(where: DealStatusWhereUniqueInput!): DealStatus
+  dealsConnection(where: DealWhereInput, orderBy: DealOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DealConnection!
+  deptsConnection(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DeptConnection!
   drawingsConnection(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DrawingConnection!
   employeesConnection(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EmployeeConnection!
-  equipmentsConnection(where: EquipmentWhereInput, orderBy: EquipmentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EquipmentConnection!
-  deptsConnection(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DeptConnection!
   enquiriesConnection(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EnquiryConnection!
+  equipmentsConnection(where: EquipmentWhereInput, orderBy: EquipmentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EquipmentConnection!
   filesConnection(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
   fileLinksConnection(where: FileLinkWhereInput, orderBy: FileLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileLinkConnection!
   eventsConnection(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EventConnection!
@@ -7445,6 +8008,7 @@ type Query {
   statusesConnection(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StatusConnection!
   accountsConnection(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AccountConnection!
   docsConnection(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DocConnection!
+  dealStatusesConnection(where: DealStatusWhereInput, orderBy: DealStatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DealStatusConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -7782,11 +8346,12 @@ input StatusWhereUniqueInput {
 }
 
 type Subscription {
+  deal(where: DealSubscriptionWhereInput): DealSubscriptionPayload
+  dept(where: DeptSubscriptionWhereInput): DeptSubscriptionPayload
   drawing(where: DrawingSubscriptionWhereInput): DrawingSubscriptionPayload
   employee(where: EmployeeSubscriptionWhereInput): EmployeeSubscriptionPayload
-  equipment(where: EquipmentSubscriptionWhereInput): EquipmentSubscriptionPayload
-  dept(where: DeptSubscriptionWhereInput): DeptSubscriptionPayload
   enquiry(where: EnquirySubscriptionWhereInput): EnquirySubscriptionPayload
+  equipment(where: EquipmentSubscriptionWhereInput): EquipmentSubscriptionPayload
   file(where: FileSubscriptionWhereInput): FileSubscriptionPayload
   fileLink(where: FileLinkSubscriptionWhereInput): FileLinkSubscriptionPayload
   event(where: EventSubscriptionWhereInput): EventSubscriptionPayload
@@ -7802,6 +8367,7 @@ type Subscription {
   status(where: StatusSubscriptionWhereInput): StatusSubscriptionPayload
   account(where: AccountSubscriptionWhereInput): AccountSubscriptionPayload
   doc(where: DocSubscriptionWhereInput): DocSubscriptionPayload
+  dealStatus(where: DealStatusSubscriptionWhereInput): DealStatusSubscriptionPayload
 }
 
 type Tel implements Node {

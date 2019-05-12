@@ -14,7 +14,8 @@ const validationSchema = object().shape({
       ? schema.notRequired()
       : schema.required('выберите основание платежа')
     ),
-  dateLocal: date('неверный формат даты')
+  // dateLocal: date('неверный формат даты')
+  dateLocal: string()
     .when('id', (id, schema) => id
       ? schema.notRequired()
       : schema.required('введите дату и время в формате ГГГГ-ММ-ДДTЧЧ:ММ'),

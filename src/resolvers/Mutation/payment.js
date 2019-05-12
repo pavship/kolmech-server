@@ -5,7 +5,9 @@ const payment = {
 	async upsertPayment(_, { input }, ctx, info) {
     try {
       const { userId, db } = ctx
+      console.log('input > ', input)
       const validated = await validationSchema.validate(input)
+      console.log('validated > ', validated)
       // additionaly validate equipment field TODO implement this within yup schema
       if (validated.articleId) {
         const article = await db.query.article({ where: { id: validated.articleId }}, '{ relations }')
@@ -21,6 +23,7 @@ const payment = {
         }, ' { account { id} }' )).account.id
       }
       const mutationObj = await generateMutationObject(validated, 'payment', ctx, { includeUser: true })
+      console.log('mutationObj > ', mutationObj)
       if (!input.id) return db.mutation.createPayment(mutationObj, info)
         else return db.mutation.updatePayment(mutationObj, info)
     } catch (err) {
