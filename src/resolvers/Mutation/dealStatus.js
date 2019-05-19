@@ -1,6 +1,7 @@
 
 const axios = require('axios')
 const { amoConnect } = require('./amo')
+const { syncDiskFolders } = require('./disk')
 
 const dealStatus = {
 	async syncDealStatuses(_, __, ctx, info) {
@@ -10,7 +11,6 @@ const dealStatus = {
     const statusesObj = pipelines['1593157'].statuses
     const statuses = []
     Object.keys(statusesObj).forEach(k => statuses.push(statusesObj[k]))
-    console.log('statuses > ', statuses)
     const upserted = await Promise.all(statuses.map(({
       id: amoId,
       name,
@@ -32,6 +32,8 @@ const dealStatus = {
         }
       }, '{ id }')
     ))
+    // UPDATE DISK FOLDERS
+    await syncDiskFolders('/Заявки ХОНИНГОВАНИЕ.РУ', statuses)
     return { count: upserted.length }
   },
 }
