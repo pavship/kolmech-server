@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Sun May 12 2019 12:08:39 GMT+0300 (GMT+03:00)
+# timestamp: Mon May 20 2019 01:38:06 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -693,6 +693,8 @@ type Deal implements Node {
   amoId: Int
   date: DateTime
   name: String
+  models(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Model!]
+  org: Org
   status: DealStatus
 }
 
@@ -710,6 +712,34 @@ input DealCreateInput {
   amoId: Int
   date: DateTime
   name: String
+  models: ModelCreateManyWithoutDealsInput
+  org: OrgCreateOneWithoutDealsInput
+  status: DealStatusCreateOneInput
+}
+
+input DealCreateManyWithoutModelsInput {
+  create: [DealCreateWithoutModelsInput!]
+  connect: [DealWhereUniqueInput!]
+}
+
+input DealCreateManyWithoutOrgInput {
+  create: [DealCreateWithoutOrgInput!]
+  connect: [DealWhereUniqueInput!]
+}
+
+input DealCreateWithoutModelsInput {
+  amoId: Int
+  date: DateTime
+  name: String
+  org: OrgCreateOneWithoutDealsInput
+  status: DealStatusCreateOneInput
+}
+
+input DealCreateWithoutOrgInput {
+  amoId: Int
+  date: DateTime
+  name: String
+  models: ModelCreateManyWithoutDealsInput
   status: DealStatusCreateOneInput
 }
 
@@ -1105,6 +1135,8 @@ input DealUpdateInput {
   amoId: Int
   date: DateTime
   name: String
+  models: ModelUpdateManyWithoutDealsInput
+  org: OrgUpdateOneWithoutDealsInput
   status: DealStatusUpdateOneInput
 }
 
@@ -1112,6 +1144,62 @@ input DealUpdateManyMutationInput {
   amoId: Int
   date: DateTime
   name: String
+}
+
+input DealUpdateManyWithoutModelsInput {
+  create: [DealCreateWithoutModelsInput!]
+  connect: [DealWhereUniqueInput!]
+  disconnect: [DealWhereUniqueInput!]
+  delete: [DealWhereUniqueInput!]
+  update: [DealUpdateWithWhereUniqueWithoutModelsInput!]
+  upsert: [DealUpsertWithWhereUniqueWithoutModelsInput!]
+}
+
+input DealUpdateManyWithoutOrgInput {
+  create: [DealCreateWithoutOrgInput!]
+  connect: [DealWhereUniqueInput!]
+  disconnect: [DealWhereUniqueInput!]
+  delete: [DealWhereUniqueInput!]
+  update: [DealUpdateWithWhereUniqueWithoutOrgInput!]
+  upsert: [DealUpsertWithWhereUniqueWithoutOrgInput!]
+}
+
+input DealUpdateWithoutModelsDataInput {
+  amoId: Int
+  date: DateTime
+  name: String
+  org: OrgUpdateOneWithoutDealsInput
+  status: DealStatusUpdateOneInput
+}
+
+input DealUpdateWithoutOrgDataInput {
+  amoId: Int
+  date: DateTime
+  name: String
+  models: ModelUpdateManyWithoutDealsInput
+  status: DealStatusUpdateOneInput
+}
+
+input DealUpdateWithWhereUniqueWithoutModelsInput {
+  where: DealWhereUniqueInput!
+  data: DealUpdateWithoutModelsDataInput!
+}
+
+input DealUpdateWithWhereUniqueWithoutOrgInput {
+  where: DealWhereUniqueInput!
+  data: DealUpdateWithoutOrgDataInput!
+}
+
+input DealUpsertWithWhereUniqueWithoutModelsInput {
+  where: DealWhereUniqueInput!
+  update: DealUpdateWithoutModelsDataInput!
+  create: DealCreateWithoutModelsInput!
+}
+
+input DealUpsertWithWhereUniqueWithoutOrgInput {
+  where: DealWhereUniqueInput!
+  update: DealUpdateWithoutOrgDataInput!
+  create: DealCreateWithoutOrgInput!
 }
 
 input DealWhereInput {
@@ -1247,6 +1335,10 @@ input DealWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
+  models_every: ModelWhereInput
+  models_some: ModelWhereInput
+  models_none: ModelWhereInput
+  org: OrgWhereInput
   status: DealStatusWhereInput
 }
 
@@ -4231,11 +4323,11 @@ type Model implements Node {
   id: ID!
   article: String
   name: String!
-  org: Org
+  deals(where: DealWhereInput, orderBy: DealOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Deal!]
+  drawings(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Drawing!]
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry!]
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order!]
   prods(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Prod!]
-  drawings(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Drawing!]
 }
 
 """A connection to a list of items."""
@@ -4251,15 +4343,15 @@ type ModelConnection {
 input ModelCreateInput {
   article: String
   name: String!
-  org: OrgCreateOneWithoutModelsInput
+  deals: DealCreateManyWithoutModelsInput
+  drawings: DrawingCreateManyWithoutModelInput
   enquiries: EnquiryCreateManyWithoutModelInput
   orders: OrderCreateManyWithoutModelInput
   prods: ProdCreateManyWithoutModelInput
-  drawings: DrawingCreateManyWithoutModelInput
 }
 
-input ModelCreateManyWithoutOrgInput {
-  create: [ModelCreateWithoutOrgInput!]
+input ModelCreateManyWithoutDealsInput {
+  create: [ModelCreateWithoutDealsInput!]
   connect: [ModelWhereUniqueInput!]
 }
 
@@ -4283,10 +4375,19 @@ input ModelCreateOneWithoutProdsInput {
   connect: ModelWhereUniqueInput
 }
 
+input ModelCreateWithoutDealsInput {
+  article: String
+  name: String!
+  drawings: DrawingCreateManyWithoutModelInput
+  enquiries: EnquiryCreateManyWithoutModelInput
+  orders: OrderCreateManyWithoutModelInput
+  prods: ProdCreateManyWithoutModelInput
+}
+
 input ModelCreateWithoutDrawingsInput {
   article: String
   name: String!
-  org: OrgCreateOneWithoutModelsInput
+  deals: DealCreateManyWithoutModelsInput
   enquiries: EnquiryCreateManyWithoutModelInput
   orders: OrderCreateManyWithoutModelInput
   prods: ProdCreateManyWithoutModelInput
@@ -4295,37 +4396,28 @@ input ModelCreateWithoutDrawingsInput {
 input ModelCreateWithoutEnquiriesInput {
   article: String
   name: String!
-  org: OrgCreateOneWithoutModelsInput
+  deals: DealCreateManyWithoutModelsInput
+  drawings: DrawingCreateManyWithoutModelInput
   orders: OrderCreateManyWithoutModelInput
   prods: ProdCreateManyWithoutModelInput
-  drawings: DrawingCreateManyWithoutModelInput
 }
 
 input ModelCreateWithoutOrdersInput {
   article: String
   name: String!
-  org: OrgCreateOneWithoutModelsInput
+  deals: DealCreateManyWithoutModelsInput
+  drawings: DrawingCreateManyWithoutModelInput
   enquiries: EnquiryCreateManyWithoutModelInput
   prods: ProdCreateManyWithoutModelInput
-  drawings: DrawingCreateManyWithoutModelInput
-}
-
-input ModelCreateWithoutOrgInput {
-  article: String
-  name: String!
-  enquiries: EnquiryCreateManyWithoutModelInput
-  orders: OrderCreateManyWithoutModelInput
-  prods: ProdCreateManyWithoutModelInput
-  drawings: DrawingCreateManyWithoutModelInput
 }
 
 input ModelCreateWithoutProdsInput {
   article: String
   name: String!
-  org: OrgCreateOneWithoutModelsInput
+  deals: DealCreateManyWithoutModelsInput
+  drawings: DrawingCreateManyWithoutModelInput
   enquiries: EnquiryCreateManyWithoutModelInput
   orders: OrderCreateManyWithoutModelInput
-  drawings: DrawingCreateManyWithoutModelInput
 }
 
 """An edge in a connection."""
@@ -4398,11 +4490,11 @@ input ModelSubscriptionWhereInput {
 input ModelUpdateInput {
   article: String
   name: String
-  org: OrgUpdateOneWithoutModelsInput
+  deals: DealUpdateManyWithoutModelsInput
+  drawings: DrawingUpdateManyWithoutModelInput
   enquiries: EnquiryUpdateManyWithoutModelInput
   orders: OrderUpdateManyWithoutModelInput
   prods: ProdUpdateManyWithoutModelInput
-  drawings: DrawingUpdateManyWithoutModelInput
 }
 
 input ModelUpdateManyMutationInput {
@@ -4410,13 +4502,13 @@ input ModelUpdateManyMutationInput {
   name: String
 }
 
-input ModelUpdateManyWithoutOrgInput {
-  create: [ModelCreateWithoutOrgInput!]
+input ModelUpdateManyWithoutDealsInput {
+  create: [ModelCreateWithoutDealsInput!]
   connect: [ModelWhereUniqueInput!]
   disconnect: [ModelWhereUniqueInput!]
   delete: [ModelWhereUniqueInput!]
-  update: [ModelUpdateWithWhereUniqueWithoutOrgInput!]
-  upsert: [ModelUpsertWithWhereUniqueWithoutOrgInput!]
+  update: [ModelUpdateWithWhereUniqueWithoutDealsInput!]
+  upsert: [ModelUpsertWithWhereUniqueWithoutDealsInput!]
 }
 
 input ModelUpdateOneRequiredWithoutProdsInput {
@@ -4453,10 +4545,19 @@ input ModelUpdateOneWithoutOrdersInput {
   upsert: ModelUpsertWithoutOrdersInput
 }
 
+input ModelUpdateWithoutDealsDataInput {
+  article: String
+  name: String
+  drawings: DrawingUpdateManyWithoutModelInput
+  enquiries: EnquiryUpdateManyWithoutModelInput
+  orders: OrderUpdateManyWithoutModelInput
+  prods: ProdUpdateManyWithoutModelInput
+}
+
 input ModelUpdateWithoutDrawingsDataInput {
   article: String
   name: String
-  org: OrgUpdateOneWithoutModelsInput
+  deals: DealUpdateManyWithoutModelsInput
   enquiries: EnquiryUpdateManyWithoutModelInput
   orders: OrderUpdateManyWithoutModelInput
   prods: ProdUpdateManyWithoutModelInput
@@ -4465,42 +4566,33 @@ input ModelUpdateWithoutDrawingsDataInput {
 input ModelUpdateWithoutEnquiriesDataInput {
   article: String
   name: String
-  org: OrgUpdateOneWithoutModelsInput
+  deals: DealUpdateManyWithoutModelsInput
+  drawings: DrawingUpdateManyWithoutModelInput
   orders: OrderUpdateManyWithoutModelInput
   prods: ProdUpdateManyWithoutModelInput
-  drawings: DrawingUpdateManyWithoutModelInput
 }
 
 input ModelUpdateWithoutOrdersDataInput {
   article: String
   name: String
-  org: OrgUpdateOneWithoutModelsInput
+  deals: DealUpdateManyWithoutModelsInput
+  drawings: DrawingUpdateManyWithoutModelInput
   enquiries: EnquiryUpdateManyWithoutModelInput
   prods: ProdUpdateManyWithoutModelInput
-  drawings: DrawingUpdateManyWithoutModelInput
-}
-
-input ModelUpdateWithoutOrgDataInput {
-  article: String
-  name: String
-  enquiries: EnquiryUpdateManyWithoutModelInput
-  orders: OrderUpdateManyWithoutModelInput
-  prods: ProdUpdateManyWithoutModelInput
-  drawings: DrawingUpdateManyWithoutModelInput
 }
 
 input ModelUpdateWithoutProdsDataInput {
   article: String
   name: String
-  org: OrgUpdateOneWithoutModelsInput
+  deals: DealUpdateManyWithoutModelsInput
+  drawings: DrawingUpdateManyWithoutModelInput
   enquiries: EnquiryUpdateManyWithoutModelInput
   orders: OrderUpdateManyWithoutModelInput
-  drawings: DrawingUpdateManyWithoutModelInput
 }
 
-input ModelUpdateWithWhereUniqueWithoutOrgInput {
+input ModelUpdateWithWhereUniqueWithoutDealsInput {
   where: ModelWhereUniqueInput!
-  data: ModelUpdateWithoutOrgDataInput!
+  data: ModelUpdateWithoutDealsDataInput!
 }
 
 input ModelUpsertWithoutDrawingsInput {
@@ -4523,10 +4615,10 @@ input ModelUpsertWithoutProdsInput {
   create: ModelCreateWithoutProdsInput!
 }
 
-input ModelUpsertWithWhereUniqueWithoutOrgInput {
+input ModelUpsertWithWhereUniqueWithoutDealsInput {
   where: ModelWhereUniqueInput!
-  update: ModelUpdateWithoutOrgDataInput!
-  create: ModelCreateWithoutOrgInput!
+  update: ModelUpdateWithoutDealsDataInput!
+  create: ModelCreateWithoutDealsInput!
 }
 
 input ModelWhereInput {
@@ -4658,7 +4750,12 @@ input ModelWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
-  org: OrgWhereInput
+  deals_every: DealWhereInput
+  deals_some: DealWhereInput
+  deals_none: DealWhereInput
+  drawings_every: DrawingWhereInput
+  drawings_some: DrawingWhereInput
+  drawings_none: DrawingWhereInput
   enquiries_every: EnquiryWhereInput
   enquiries_some: EnquiryWhereInput
   enquiries_none: EnquiryWhereInput
@@ -4668,14 +4765,10 @@ input ModelWhereInput {
   prods_every: ProdWhereInput
   prods_some: ProdWhereInput
   prods_none: ProdWhereInput
-  drawings_every: DrawingWhereInput
-  drawings_some: DrawingWhereInput
-  drawings_none: DrawingWhereInput
 }
 
 input ModelWhereUniqueInput {
   id: ID
-  name: String
 }
 
 type Mutation {
@@ -4684,10 +4777,10 @@ type Mutation {
   createDrawing(data: DrawingCreateInput!): Drawing!
   createEmployee(data: EmployeeCreateInput!): Employee!
   createEnquiry(data: EnquiryCreateInput!): Enquiry!
+  createEvent(data: EventCreateInput!): Event!
   createEquipment(data: EquipmentCreateInput!): Equipment!
   createFile(data: FileCreateInput!): File!
   createFileLink(data: FileLinkCreateInput!): FileLink!
-  createEvent(data: EventCreateInput!): Event!
   createModel(data: ModelCreateInput!): Model!
   createOrder(data: OrderCreateInput!): Order!
   createOrg(data: OrgCreateInput!): Org!
@@ -4707,10 +4800,10 @@ type Mutation {
   updateDrawing(data: DrawingUpdateInput!, where: DrawingWhereUniqueInput!): Drawing
   updateEmployee(data: EmployeeUpdateInput!, where: EmployeeWhereUniqueInput!): Employee
   updateEnquiry(data: EnquiryUpdateInput!, where: EnquiryWhereUniqueInput!): Enquiry
+  updateEvent(data: EventUpdateInput!, where: EventWhereUniqueInput!): Event
   updateEquipment(data: EquipmentUpdateInput!, where: EquipmentWhereUniqueInput!): Equipment
   updateFile(data: FileUpdateInput!, where: FileWhereUniqueInput!): File
   updateFileLink(data: FileLinkUpdateInput!, where: FileLinkWhereUniqueInput!): FileLink
-  updateEvent(data: EventUpdateInput!, where: EventWhereUniqueInput!): Event
   updateModel(data: ModelUpdateInput!, where: ModelWhereUniqueInput!): Model
   updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
   updateOrg(data: OrgUpdateInput!, where: OrgWhereUniqueInput!): Org
@@ -4730,10 +4823,10 @@ type Mutation {
   deleteDrawing(where: DrawingWhereUniqueInput!): Drawing
   deleteEmployee(where: EmployeeWhereUniqueInput!): Employee
   deleteEnquiry(where: EnquiryWhereUniqueInput!): Enquiry
+  deleteEvent(where: EventWhereUniqueInput!): Event
   deleteEquipment(where: EquipmentWhereUniqueInput!): Equipment
   deleteFile(where: FileWhereUniqueInput!): File
   deleteFileLink(where: FileLinkWhereUniqueInput!): FileLink
-  deleteEvent(where: EventWhereUniqueInput!): Event
   deleteModel(where: ModelWhereUniqueInput!): Model
   deleteOrder(where: OrderWhereUniqueInput!): Order
   deleteOrg(where: OrgWhereUniqueInput!): Org
@@ -4753,10 +4846,10 @@ type Mutation {
   upsertDrawing(where: DrawingWhereUniqueInput!, create: DrawingCreateInput!, update: DrawingUpdateInput!): Drawing!
   upsertEmployee(where: EmployeeWhereUniqueInput!, create: EmployeeCreateInput!, update: EmployeeUpdateInput!): Employee!
   upsertEnquiry(where: EnquiryWhereUniqueInput!, create: EnquiryCreateInput!, update: EnquiryUpdateInput!): Enquiry!
+  upsertEvent(where: EventWhereUniqueInput!, create: EventCreateInput!, update: EventUpdateInput!): Event!
   upsertEquipment(where: EquipmentWhereUniqueInput!, create: EquipmentCreateInput!, update: EquipmentUpdateInput!): Equipment!
   upsertFile(where: FileWhereUniqueInput!, create: FileCreateInput!, update: FileUpdateInput!): File!
   upsertFileLink(where: FileLinkWhereUniqueInput!, create: FileLinkCreateInput!, update: FileLinkUpdateInput!): FileLink!
-  upsertEvent(where: EventWhereUniqueInput!, create: EventCreateInput!, update: EventUpdateInput!): Event!
   upsertModel(where: ModelWhereUniqueInput!, create: ModelCreateInput!, update: ModelUpdateInput!): Model!
   upsertOrder(where: OrderWhereUniqueInput!, create: OrderCreateInput!, update: OrderUpdateInput!): Order!
   upsertOrg(where: OrgWhereUniqueInput!, create: OrgCreateInput!, update: OrgUpdateInput!): Org!
@@ -4776,10 +4869,10 @@ type Mutation {
   updateManyDrawings(data: DrawingUpdateManyMutationInput!, where: DrawingWhereInput): BatchPayload!
   updateManyEmployees(data: EmployeeUpdateManyMutationInput!, where: EmployeeWhereInput): BatchPayload!
   updateManyEnquiries(data: EnquiryUpdateManyMutationInput!, where: EnquiryWhereInput): BatchPayload!
+  updateManyEvents(data: EventUpdateManyMutationInput!, where: EventWhereInput): BatchPayload!
   updateManyEquipments(data: EquipmentUpdateManyMutationInput!, where: EquipmentWhereInput): BatchPayload!
   updateManyFiles(data: FileUpdateManyMutationInput!, where: FileWhereInput): BatchPayload!
   updateManyFileLinks(data: FileLinkUpdateManyMutationInput!, where: FileLinkWhereInput): BatchPayload!
-  updateManyEvents(data: EventUpdateManyMutationInput!, where: EventWhereInput): BatchPayload!
   updateManyModels(data: ModelUpdateManyMutationInput!, where: ModelWhereInput): BatchPayload!
   updateManyOrders(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
   updateManyOrgs(data: OrgUpdateManyMutationInput!, where: OrgWhereInput): BatchPayload!
@@ -4799,10 +4892,10 @@ type Mutation {
   deleteManyDrawings(where: DrawingWhereInput): BatchPayload!
   deleteManyEmployees(where: EmployeeWhereInput): BatchPayload!
   deleteManyEnquiries(where: EnquiryWhereInput): BatchPayload!
+  deleteManyEvents(where: EventWhereInput): BatchPayload!
   deleteManyEquipments(where: EquipmentWhereInput): BatchPayload!
   deleteManyFiles(where: FileWhereInput): BatchPayload!
   deleteManyFileLinks(where: FileLinkWhereInput): BatchPayload!
-  deleteManyEvents(where: EventWhereInput): BatchPayload!
   deleteManyModels(where: ModelWhereInput): BatchPayload!
   deleteManyOrders(where: OrderWhereInput): BatchPayload!
   deleteManyOrgs(where: OrgWhereInput): BatchPayload!
@@ -5469,13 +5562,14 @@ type Org implements Node {
   id: ID!
   inn: String
   moedeloId: String
+  amoId: Int
   name: String!
   legalAddress: String
+  deals(where: DealWhereInput, orderBy: DealOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Deal!]
   employees(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Employee!]
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry!]
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order!]
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
-  models(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Model!]
 }
 
 """A connection to a list of items."""
@@ -5491,13 +5585,19 @@ type OrgConnection {
 input OrgCreateInput {
   inn: String
   moedeloId: String
+  amoId: Int
   name: String!
   legalAddress: String
+  deals: DealCreateManyWithoutOrgInput
   employees: EmployeeCreateManyWithoutOrgInput
   enquiries: EnquiryCreateManyWithoutOrgInput
   orders: OrderCreateManyWithoutOrgInput
   payments: PaymentCreateManyWithoutOrgInput
-  models: ModelCreateManyWithoutOrgInput
+}
+
+input OrgCreateOneWithoutDealsInput {
+  create: OrgCreateWithoutDealsInput
+  connect: OrgWhereUniqueInput
 }
 
 input OrgCreateOneWithoutEmployeesInput {
@@ -5507,11 +5607,6 @@ input OrgCreateOneWithoutEmployeesInput {
 
 input OrgCreateOneWithoutEnquiriesInput {
   create: OrgCreateWithoutEnquiriesInput
-  connect: OrgWhereUniqueInput
-}
-
-input OrgCreateOneWithoutModelsInput {
-  create: OrgCreateWithoutModelsInput
   connect: OrgWhereUniqueInput
 }
 
@@ -5525,35 +5620,38 @@ input OrgCreateOneWithoutPaymentsInput {
   connect: OrgWhereUniqueInput
 }
 
-input OrgCreateWithoutEmployeesInput {
+input OrgCreateWithoutDealsInput {
   inn: String
   moedeloId: String
+  amoId: Int
   name: String!
   legalAddress: String
+  employees: EmployeeCreateManyWithoutOrgInput
   enquiries: EnquiryCreateManyWithoutOrgInput
   orders: OrderCreateManyWithoutOrgInput
   payments: PaymentCreateManyWithoutOrgInput
-  models: ModelCreateManyWithoutOrgInput
+}
+
+input OrgCreateWithoutEmployeesInput {
+  inn: String
+  moedeloId: String
+  amoId: Int
+  name: String!
+  legalAddress: String
+  deals: DealCreateManyWithoutOrgInput
+  enquiries: EnquiryCreateManyWithoutOrgInput
+  orders: OrderCreateManyWithoutOrgInput
+  payments: PaymentCreateManyWithoutOrgInput
 }
 
 input OrgCreateWithoutEnquiriesInput {
   inn: String
   moedeloId: String
+  amoId: Int
   name: String!
   legalAddress: String
+  deals: DealCreateManyWithoutOrgInput
   employees: EmployeeCreateManyWithoutOrgInput
-  orders: OrderCreateManyWithoutOrgInput
-  payments: PaymentCreateManyWithoutOrgInput
-  models: ModelCreateManyWithoutOrgInput
-}
-
-input OrgCreateWithoutModelsInput {
-  inn: String
-  moedeloId: String
-  name: String!
-  legalAddress: String
-  employees: EmployeeCreateManyWithoutOrgInput
-  enquiries: EnquiryCreateManyWithoutOrgInput
   orders: OrderCreateManyWithoutOrgInput
   payments: PaymentCreateManyWithoutOrgInput
 }
@@ -5561,23 +5659,25 @@ input OrgCreateWithoutModelsInput {
 input OrgCreateWithoutOrdersInput {
   inn: String
   moedeloId: String
+  amoId: Int
   name: String!
   legalAddress: String
+  deals: DealCreateManyWithoutOrgInput
   employees: EmployeeCreateManyWithoutOrgInput
   enquiries: EnquiryCreateManyWithoutOrgInput
   payments: PaymentCreateManyWithoutOrgInput
-  models: ModelCreateManyWithoutOrgInput
 }
 
 input OrgCreateWithoutPaymentsInput {
   inn: String
   moedeloId: String
+  amoId: Int
   name: String!
   legalAddress: String
+  deals: DealCreateManyWithoutOrgInput
   employees: EmployeeCreateManyWithoutOrgInput
   enquiries: EnquiryCreateManyWithoutOrgInput
   orders: OrderCreateManyWithoutOrgInput
-  models: ModelCreateManyWithoutOrgInput
 }
 
 """An edge in a connection."""
@@ -5596,6 +5696,8 @@ enum OrgOrderByInput {
   inn_DESC
   moedeloId_ASC
   moedeloId_DESC
+  amoId_ASC
+  amoId_DESC
   name_ASC
   name_DESC
   legalAddress_ASC
@@ -5610,6 +5712,7 @@ type OrgPreviousValues {
   id: ID!
   inn: String
   moedeloId: String
+  amoId: Int
   name: String!
   legalAddress: String
 }
@@ -5656,18 +5759,20 @@ input OrgSubscriptionWhereInput {
 input OrgUpdateInput {
   inn: String
   moedeloId: String
+  amoId: Int
   name: String
   legalAddress: String
+  deals: DealUpdateManyWithoutOrgInput
   employees: EmployeeUpdateManyWithoutOrgInput
   enquiries: EnquiryUpdateManyWithoutOrgInput
   orders: OrderUpdateManyWithoutOrgInput
   payments: PaymentUpdateManyWithoutOrgInput
-  models: ModelUpdateManyWithoutOrgInput
 }
 
 input OrgUpdateManyMutationInput {
   inn: String
   moedeloId: String
+  amoId: Int
   name: String
   legalAddress: String
 }
@@ -5679,6 +5784,15 @@ input OrgUpdateOneRequiredWithoutEmployeesInput {
   upsert: OrgUpsertWithoutEmployeesInput
 }
 
+input OrgUpdateOneWithoutDealsInput {
+  create: OrgCreateWithoutDealsInput
+  connect: OrgWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: OrgUpdateWithoutDealsDataInput
+  upsert: OrgUpsertWithoutDealsInput
+}
+
 input OrgUpdateOneWithoutEnquiriesInput {
   create: OrgCreateWithoutEnquiriesInput
   connect: OrgWhereUniqueInput
@@ -5686,15 +5800,6 @@ input OrgUpdateOneWithoutEnquiriesInput {
   delete: Boolean
   update: OrgUpdateWithoutEnquiriesDataInput
   upsert: OrgUpsertWithoutEnquiriesInput
-}
-
-input OrgUpdateOneWithoutModelsInput {
-  create: OrgCreateWithoutModelsInput
-  connect: OrgWhereUniqueInput
-  disconnect: Boolean
-  delete: Boolean
-  update: OrgUpdateWithoutModelsDataInput
-  upsert: OrgUpsertWithoutModelsInput
 }
 
 input OrgUpdateOneWithoutOrdersInput {
@@ -5715,35 +5820,38 @@ input OrgUpdateOneWithoutPaymentsInput {
   upsert: OrgUpsertWithoutPaymentsInput
 }
 
-input OrgUpdateWithoutEmployeesDataInput {
+input OrgUpdateWithoutDealsDataInput {
   inn: String
   moedeloId: String
+  amoId: Int
   name: String
   legalAddress: String
+  employees: EmployeeUpdateManyWithoutOrgInput
   enquiries: EnquiryUpdateManyWithoutOrgInput
   orders: OrderUpdateManyWithoutOrgInput
   payments: PaymentUpdateManyWithoutOrgInput
-  models: ModelUpdateManyWithoutOrgInput
+}
+
+input OrgUpdateWithoutEmployeesDataInput {
+  inn: String
+  moedeloId: String
+  amoId: Int
+  name: String
+  legalAddress: String
+  deals: DealUpdateManyWithoutOrgInput
+  enquiries: EnquiryUpdateManyWithoutOrgInput
+  orders: OrderUpdateManyWithoutOrgInput
+  payments: PaymentUpdateManyWithoutOrgInput
 }
 
 input OrgUpdateWithoutEnquiriesDataInput {
   inn: String
   moedeloId: String
+  amoId: Int
   name: String
   legalAddress: String
+  deals: DealUpdateManyWithoutOrgInput
   employees: EmployeeUpdateManyWithoutOrgInput
-  orders: OrderUpdateManyWithoutOrgInput
-  payments: PaymentUpdateManyWithoutOrgInput
-  models: ModelUpdateManyWithoutOrgInput
-}
-
-input OrgUpdateWithoutModelsDataInput {
-  inn: String
-  moedeloId: String
-  name: String
-  legalAddress: String
-  employees: EmployeeUpdateManyWithoutOrgInput
-  enquiries: EnquiryUpdateManyWithoutOrgInput
   orders: OrderUpdateManyWithoutOrgInput
   payments: PaymentUpdateManyWithoutOrgInput
 }
@@ -5751,23 +5859,30 @@ input OrgUpdateWithoutModelsDataInput {
 input OrgUpdateWithoutOrdersDataInput {
   inn: String
   moedeloId: String
+  amoId: Int
   name: String
   legalAddress: String
+  deals: DealUpdateManyWithoutOrgInput
   employees: EmployeeUpdateManyWithoutOrgInput
   enquiries: EnquiryUpdateManyWithoutOrgInput
   payments: PaymentUpdateManyWithoutOrgInput
-  models: ModelUpdateManyWithoutOrgInput
 }
 
 input OrgUpdateWithoutPaymentsDataInput {
   inn: String
   moedeloId: String
+  amoId: Int
   name: String
   legalAddress: String
+  deals: DealUpdateManyWithoutOrgInput
   employees: EmployeeUpdateManyWithoutOrgInput
   enquiries: EnquiryUpdateManyWithoutOrgInput
   orders: OrderUpdateManyWithoutOrgInput
-  models: ModelUpdateManyWithoutOrgInput
+}
+
+input OrgUpsertWithoutDealsInput {
+  update: OrgUpdateWithoutDealsDataInput!
+  create: OrgCreateWithoutDealsInput!
 }
 
 input OrgUpsertWithoutEmployeesInput {
@@ -5778,11 +5893,6 @@ input OrgUpsertWithoutEmployeesInput {
 input OrgUpsertWithoutEnquiriesInput {
   update: OrgUpdateWithoutEnquiriesDataInput!
   create: OrgCreateWithoutEnquiriesInput!
-}
-
-input OrgUpsertWithoutModelsInput {
-  update: OrgUpdateWithoutModelsDataInput!
-  create: OrgCreateWithoutModelsInput!
 }
 
 input OrgUpsertWithoutOrdersInput {
@@ -5924,6 +6034,28 @@ input OrgWhereInput {
 
   """All values not ending with the given string."""
   moedeloId_not_ends_with: String
+  amoId: Int
+
+  """All values that are not equal to given value."""
+  amoId_not: Int
+
+  """All values that are contained in given list."""
+  amoId_in: [Int!]
+
+  """All values that are not contained in given list."""
+  amoId_not_in: [Int!]
+
+  """All values less than the given value."""
+  amoId_lt: Int
+
+  """All values less than or equal the given value."""
+  amoId_lte: Int
+
+  """All values greater than the given value."""
+  amoId_gt: Int
+
+  """All values greater than or equal the given value."""
+  amoId_gte: Int
   name: String
 
   """All values that are not equal to given value."""
@@ -6004,6 +6136,9 @@ input OrgWhereInput {
 
   """All values not ending with the given string."""
   legalAddress_not_ends_with: String
+  deals_every: DealWhereInput
+  deals_some: DealWhereInput
+  deals_none: DealWhereInput
   employees_every: EmployeeWhereInput
   employees_some: EmployeeWhereInput
   employees_none: EmployeeWhereInput
@@ -6016,9 +6151,6 @@ input OrgWhereInput {
   payments_every: PaymentWhereInput
   payments_some: PaymentWhereInput
   payments_none: PaymentWhereInput
-  models_every: ModelWhereInput
-  models_some: ModelWhereInput
-  models_none: ModelWhereInput
 }
 
 input OrgWhereUniqueInput {
@@ -7987,10 +8119,10 @@ type Query {
   drawings(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Drawing]!
   employees(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Employee]!
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry]!
+  events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event]!
   equipments(where: EquipmentWhereInput, orderBy: EquipmentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Equipment]!
   files(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [File]!
   fileLinks(where: FileLinkWhereInput, orderBy: FileLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [FileLink]!
-  events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event]!
   models(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Model]!
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
   orgs(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Org]!
@@ -8010,10 +8142,10 @@ type Query {
   drawing(where: DrawingWhereUniqueInput!): Drawing
   employee(where: EmployeeWhereUniqueInput!): Employee
   enquiry(where: EnquiryWhereUniqueInput!): Enquiry
+  event(where: EventWhereUniqueInput!): Event
   equipment(where: EquipmentWhereUniqueInput!): Equipment
   file(where: FileWhereUniqueInput!): File
   fileLink(where: FileLinkWhereUniqueInput!): FileLink
-  event(where: EventWhereUniqueInput!): Event
   model(where: ModelWhereUniqueInput!): Model
   order(where: OrderWhereUniqueInput!): Order
   org(where: OrgWhereUniqueInput!): Org
@@ -8033,10 +8165,10 @@ type Query {
   drawingsConnection(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DrawingConnection!
   employeesConnection(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EmployeeConnection!
   enquiriesConnection(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EnquiryConnection!
+  eventsConnection(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EventConnection!
   equipmentsConnection(where: EquipmentWhereInput, orderBy: EquipmentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EquipmentConnection!
   filesConnection(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
   fileLinksConnection(where: FileLinkWhereInput, orderBy: FileLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileLinkConnection!
-  eventsConnection(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EventConnection!
   modelsConnection(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ModelConnection!
   ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
   orgsConnection(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgConnection!
@@ -8608,10 +8740,10 @@ type Subscription {
   drawing(where: DrawingSubscriptionWhereInput): DrawingSubscriptionPayload
   employee(where: EmployeeSubscriptionWhereInput): EmployeeSubscriptionPayload
   enquiry(where: EnquirySubscriptionWhereInput): EnquirySubscriptionPayload
+  event(where: EventSubscriptionWhereInput): EventSubscriptionPayload
   equipment(where: EquipmentSubscriptionWhereInput): EquipmentSubscriptionPayload
   file(where: FileSubscriptionWhereInput): FileSubscriptionPayload
   fileLink(where: FileLinkSubscriptionWhereInput): FileLinkSubscriptionPayload
-  event(where: EventSubscriptionWhereInput): EventSubscriptionPayload
   model(where: ModelSubscriptionWhereInput): ModelSubscriptionPayload
   order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
   org(where: OrgSubscriptionWhereInput): OrgSubscriptionPayload

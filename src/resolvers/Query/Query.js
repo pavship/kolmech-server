@@ -56,7 +56,7 @@ const Query = {
 	      
 	deals(_, __, ctx, info) {
 		return ctx.db.query.deals({
-			where: { status: { 'amoId_not_in': [142, 143] }},
+			where: { status: { 'amoId_not_in': [142, 143, 24659131] }},
 			orderBy: 'date_ASC'
 		}, info)
 	},

@@ -19,6 +19,8 @@ type Deal {
 	amoId: Int @unique
 	date: DateTime
 	name: String
+	models: [Model!]!
+	org: Org
 	status: DealStatus
 }
 
@@ -74,6 +76,18 @@ type Enquiry {
 	status: Status
 }
 
+type Event {
+	id: ID! @unique
+	user: User @relation(name: "EventByUser")
+	enquiry: Enquiry @relation(name: "EventOnEnquiry")
+	order: Order @relation(name: "OrderEvents")
+	datetimeLocal: String!
+	htmlText: String
+	type: EventType
+	status: Status
+	doc: Doc @relation(name: "EventDoc" onDelete: CASCADE)
+}
+
 type Equipment {
   id: ID! @unique
 	name: String
@@ -99,27 +113,15 @@ type FileLink {
 	storeId: ID
 }
 
-type Event {
-	id: ID! @unique
-	user: User @relation(name: "EventByUser")
-	enquiry: Enquiry @relation(name: "EventOnEnquiry")
-	order: Order @relation(name: "OrderEvents")
-	datetimeLocal: String!
-	htmlText: String
-	type: EventType
-	status: Status
-	doc: Doc @relation(name: "EventDoc" onDelete: CASCADE)
-}
-
 type Model {
 	id: ID! @unique
 	article: String
-	name: String! @unique
-	org: Org
+	name: String!
+	deals: [Deal!]!
+  drawings: [Drawing!]! @relation(name: "ModelDrawings" onDelete: CASCADE)
 	enquiries: [Enquiry!]! @relation(name: "EnquiryModel")
 	orders: [Order!]! @relation(name: "ModelOrders")
   prods: [Prod!]! @relation(name: "ModelProds")
-  drawings: [Drawing!]! @relation(name: "ModelDrawings" onDelete: CASCADE)
 }
 
 type Order {
@@ -141,13 +143,14 @@ type Org {
 	id: ID! @unique
 	inn: String @unique
 	moedeloId: String
+	amoId: Int
 	name: String!
 	legalAddress: String
+	deals: [Deal!]!
 	employees: [Employee!]!
 	enquiries: [Enquiry!]! @relation(name: "OrgEnquiries")
 	orders: [Order!]! @relation(name: "OrgOrders")
 	payments: [Payment!]!
-	models: [Model!]!
 }
 
 type ServerData {
