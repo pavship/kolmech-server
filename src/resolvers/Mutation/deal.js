@@ -1,4 +1,5 @@
 const { amoConnect } = require('./amo')
+const { generateMutationObject } = require('../utils')
 
 const deal = {
   async connectDealToOrg(_, { dealId, orgId }, ctx, info) {
@@ -47,21 +48,38 @@ const deal = {
     ))
     return { count: upserted.length }
   },
-  async upsertModelToDeal(_, { name, modelId, dealId }, ctx, info) {
-    console.log('name, modelId, dealId > ', name, modelId, dealId)
+  async upsertDeal(_, { input }, ctx, info) {
+    console.log('input > ', JSON.stringify(input, null, 2))
     const { db } = ctx
-    return db.mutation.updateDeal({
-      where: { id: dealId },
-      data: {
-        models: {
-          upsert: [{
-            where: { id: modelId || '' },
-            create: { name },
-            update: { name }
-          }]
-        }
-      }
-    }, info)
+    const mutationObj = await generateMutationObject(input, 'deal', ctx)
+    console.log('mutationObj > ', JSON.stringify(mutationObj, null, 2))
+    if (!input.id) return db.mutation.createDeal(mutationObj, info)
+      else return db.mutation.updateDeal(mutationObj, info)
+
+    // return db.mutation.updateDeal({
+    //   where: { id: dealId },
+    //   data: {
+    //     batches: {
+    //       upsert: [{
+    //         where: { id: batchId || '' },
+    //         create: {
+		// 					qty: qty || 0,
+		// 					model: {
+		// 						create: { name },
+		// 						connect: { id: modelId || '' }
+		// 					}
+    //         },
+    //         update: {
+		// 					qty: qty || 0,
+		// 					model: {
+		// 						connect: { id: modelId },
+		// 						update: { name }
+		// 					}
+		// 				}
+    //       }]
+    //     }
+    //   }
+    // }, info)
   },
 }
 

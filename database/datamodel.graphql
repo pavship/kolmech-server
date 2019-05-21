@@ -14,12 +14,20 @@ type Article {					# payment articles
 	relations: [String!]!	#serves to show related form fields
 }
 
+type Batch {
+	id: ID! @unique
+	qty: Int
+	deal: Deal
+	model: Model
+	procs: [Proc!]!
+}
+
 type Deal {
 	id: ID! @unique
 	amoId: Int @unique
 	date: DateTime
 	name: String
-	models: [Model!]!
+	batches: [Batch!]!
 	org: Org
 	status: DealStatus
 }
@@ -117,10 +125,11 @@ type Model {
 	id: ID! @unique
 	article: String
 	name: String!
-	deals: [Deal!]!
+	batches: [Batch!]!
   drawings: [Drawing!]! @relation(name: "ModelDrawings" onDelete: CASCADE)
 	enquiries: [Enquiry!]! @relation(name: "EnquiryModel")
 	orders: [Order!]! @relation(name: "ModelOrders")
+	procs: [Proc!]!
   prods: [Prod!]! @relation(name: "ModelProds")
 }
 
@@ -151,6 +160,13 @@ type Org {
 	enquiries: [Enquiry!]! @relation(name: "OrgEnquiries")
 	orders: [Order!]! @relation(name: "OrgOrders")
 	payments: [Payment!]!
+}
+
+type Proc {					# technical process
+	id: ID! @unique
+	name: String!
+	batches: [Batch!]!
+	model: Model!
 }
 
 type ServerData {

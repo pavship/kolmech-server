@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Mon May 20 2019 01:38:06 GMT+0300 (GMT+03:00)
+# timestamp: Tue May 21 2019 21:31:01 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -302,6 +302,10 @@ type AggregateArticle {
   count: Int!
 }
 
+type AggregateBatch {
+  count: Int!
+}
+
 type AggregateDeal {
   count: Int!
 }
@@ -363,6 +367,10 @@ type AggregatePayment {
 }
 
 type AggregatePerson {
+  count: Int!
+}
+
+type AggregateProc {
   count: Int!
 }
 
@@ -681,9 +689,302 @@ input ArticleWhereUniqueInput {
   id: ID
 }
 
+type Batch implements Node {
+  id: ID!
+  qty: Int
+  deal: Deal
+  model: Model
+  procs(where: ProcWhereInput, orderBy: ProcOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Proc!]
+}
+
+"""A connection to a list of items."""
+type BatchConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [BatchEdge]!
+  aggregate: AggregateBatch!
+}
+
+input BatchCreateInput {
+  qty: Int
+  deal: DealCreateOneWithoutBatchesInput
+  model: ModelCreateOneWithoutBatchesInput
+  procs: ProcCreateManyWithoutBatchesInput
+}
+
+input BatchCreateManyWithoutDealInput {
+  create: [BatchCreateWithoutDealInput!]
+  connect: [BatchWhereUniqueInput!]
+}
+
+input BatchCreateManyWithoutModelInput {
+  create: [BatchCreateWithoutModelInput!]
+  connect: [BatchWhereUniqueInput!]
+}
+
+input BatchCreateManyWithoutProcsInput {
+  create: [BatchCreateWithoutProcsInput!]
+  connect: [BatchWhereUniqueInput!]
+}
+
+input BatchCreateWithoutDealInput {
+  qty: Int
+  model: ModelCreateOneWithoutBatchesInput
+  procs: ProcCreateManyWithoutBatchesInput
+}
+
+input BatchCreateWithoutModelInput {
+  qty: Int
+  deal: DealCreateOneWithoutBatchesInput
+  procs: ProcCreateManyWithoutBatchesInput
+}
+
+input BatchCreateWithoutProcsInput {
+  qty: Int
+  deal: DealCreateOneWithoutBatchesInput
+  model: ModelCreateOneWithoutBatchesInput
+}
+
+"""An edge in a connection."""
+type BatchEdge {
+  """The item at the end of the edge."""
+  node: Batch!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum BatchOrderByInput {
+  id_ASC
+  id_DESC
+  qty_ASC
+  qty_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
 type BatchPayload {
   """The number of nodes that have been affected by the Batch operation."""
   count: Long!
+}
+
+type BatchPreviousValues {
+  id: ID!
+  qty: Int
+}
+
+type BatchSubscriptionPayload {
+  mutation: MutationType!
+  node: Batch
+  updatedFields: [String!]
+  previousValues: BatchPreviousValues
+}
+
+input BatchSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [BatchSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [BatchSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [BatchSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: BatchWhereInput
+}
+
+input BatchUpdateInput {
+  qty: Int
+  deal: DealUpdateOneWithoutBatchesInput
+  model: ModelUpdateOneWithoutBatchesInput
+  procs: ProcUpdateManyWithoutBatchesInput
+}
+
+input BatchUpdateManyMutationInput {
+  qty: Int
+}
+
+input BatchUpdateManyWithoutDealInput {
+  create: [BatchCreateWithoutDealInput!]
+  connect: [BatchWhereUniqueInput!]
+  disconnect: [BatchWhereUniqueInput!]
+  delete: [BatchWhereUniqueInput!]
+  update: [BatchUpdateWithWhereUniqueWithoutDealInput!]
+  upsert: [BatchUpsertWithWhereUniqueWithoutDealInput!]
+}
+
+input BatchUpdateManyWithoutModelInput {
+  create: [BatchCreateWithoutModelInput!]
+  connect: [BatchWhereUniqueInput!]
+  disconnect: [BatchWhereUniqueInput!]
+  delete: [BatchWhereUniqueInput!]
+  update: [BatchUpdateWithWhereUniqueWithoutModelInput!]
+  upsert: [BatchUpsertWithWhereUniqueWithoutModelInput!]
+}
+
+input BatchUpdateManyWithoutProcsInput {
+  create: [BatchCreateWithoutProcsInput!]
+  connect: [BatchWhereUniqueInput!]
+  disconnect: [BatchWhereUniqueInput!]
+  delete: [BatchWhereUniqueInput!]
+  update: [BatchUpdateWithWhereUniqueWithoutProcsInput!]
+  upsert: [BatchUpsertWithWhereUniqueWithoutProcsInput!]
+}
+
+input BatchUpdateWithoutDealDataInput {
+  qty: Int
+  model: ModelUpdateOneWithoutBatchesInput
+  procs: ProcUpdateManyWithoutBatchesInput
+}
+
+input BatchUpdateWithoutModelDataInput {
+  qty: Int
+  deal: DealUpdateOneWithoutBatchesInput
+  procs: ProcUpdateManyWithoutBatchesInput
+}
+
+input BatchUpdateWithoutProcsDataInput {
+  qty: Int
+  deal: DealUpdateOneWithoutBatchesInput
+  model: ModelUpdateOneWithoutBatchesInput
+}
+
+input BatchUpdateWithWhereUniqueWithoutDealInput {
+  where: BatchWhereUniqueInput!
+  data: BatchUpdateWithoutDealDataInput!
+}
+
+input BatchUpdateWithWhereUniqueWithoutModelInput {
+  where: BatchWhereUniqueInput!
+  data: BatchUpdateWithoutModelDataInput!
+}
+
+input BatchUpdateWithWhereUniqueWithoutProcsInput {
+  where: BatchWhereUniqueInput!
+  data: BatchUpdateWithoutProcsDataInput!
+}
+
+input BatchUpsertWithWhereUniqueWithoutDealInput {
+  where: BatchWhereUniqueInput!
+  update: BatchUpdateWithoutDealDataInput!
+  create: BatchCreateWithoutDealInput!
+}
+
+input BatchUpsertWithWhereUniqueWithoutModelInput {
+  where: BatchWhereUniqueInput!
+  update: BatchUpdateWithoutModelDataInput!
+  create: BatchCreateWithoutModelInput!
+}
+
+input BatchUpsertWithWhereUniqueWithoutProcsInput {
+  where: BatchWhereUniqueInput!
+  update: BatchUpdateWithoutProcsDataInput!
+  create: BatchCreateWithoutProcsInput!
+}
+
+input BatchWhereInput {
+  """Logical AND on all given filters."""
+  AND: [BatchWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [BatchWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [BatchWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  qty: Int
+
+  """All values that are not equal to given value."""
+  qty_not: Int
+
+  """All values that are contained in given list."""
+  qty_in: [Int!]
+
+  """All values that are not contained in given list."""
+  qty_not_in: [Int!]
+
+  """All values less than the given value."""
+  qty_lt: Int
+
+  """All values less than or equal the given value."""
+  qty_lte: Int
+
+  """All values greater than the given value."""
+  qty_gt: Int
+
+  """All values greater than or equal the given value."""
+  qty_gte: Int
+  deal: DealWhereInput
+  model: ModelWhereInput
+  procs_every: ProcWhereInput
+  procs_some: ProcWhereInput
+  procs_none: ProcWhereInput
+}
+
+input BatchWhereUniqueInput {
+  id: ID
 }
 
 scalar DateTime
@@ -693,7 +994,7 @@ type Deal implements Node {
   amoId: Int
   date: DateTime
   name: String
-  models(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Model!]
+  batches(where: BatchWhereInput, orderBy: BatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Batch!]
   org: Org
   status: DealStatus
 }
@@ -712,14 +1013,9 @@ input DealCreateInput {
   amoId: Int
   date: DateTime
   name: String
-  models: ModelCreateManyWithoutDealsInput
+  batches: BatchCreateManyWithoutDealInput
   org: OrgCreateOneWithoutDealsInput
   status: DealStatusCreateOneInput
-}
-
-input DealCreateManyWithoutModelsInput {
-  create: [DealCreateWithoutModelsInput!]
-  connect: [DealWhereUniqueInput!]
 }
 
 input DealCreateManyWithoutOrgInput {
@@ -727,7 +1023,12 @@ input DealCreateManyWithoutOrgInput {
   connect: [DealWhereUniqueInput!]
 }
 
-input DealCreateWithoutModelsInput {
+input DealCreateOneWithoutBatchesInput {
+  create: DealCreateWithoutBatchesInput
+  connect: DealWhereUniqueInput
+}
+
+input DealCreateWithoutBatchesInput {
   amoId: Int
   date: DateTime
   name: String
@@ -739,7 +1040,7 @@ input DealCreateWithoutOrgInput {
   amoId: Int
   date: DateTime
   name: String
-  models: ModelCreateManyWithoutDealsInput
+  batches: BatchCreateManyWithoutDealInput
   status: DealStatusCreateOneInput
 }
 
@@ -1135,7 +1436,7 @@ input DealUpdateInput {
   amoId: Int
   date: DateTime
   name: String
-  models: ModelUpdateManyWithoutDealsInput
+  batches: BatchUpdateManyWithoutDealInput
   org: OrgUpdateOneWithoutDealsInput
   status: DealStatusUpdateOneInput
 }
@@ -1144,15 +1445,6 @@ input DealUpdateManyMutationInput {
   amoId: Int
   date: DateTime
   name: String
-}
-
-input DealUpdateManyWithoutModelsInput {
-  create: [DealCreateWithoutModelsInput!]
-  connect: [DealWhereUniqueInput!]
-  disconnect: [DealWhereUniqueInput!]
-  delete: [DealWhereUniqueInput!]
-  update: [DealUpdateWithWhereUniqueWithoutModelsInput!]
-  upsert: [DealUpsertWithWhereUniqueWithoutModelsInput!]
 }
 
 input DealUpdateManyWithoutOrgInput {
@@ -1164,7 +1456,16 @@ input DealUpdateManyWithoutOrgInput {
   upsert: [DealUpsertWithWhereUniqueWithoutOrgInput!]
 }
 
-input DealUpdateWithoutModelsDataInput {
+input DealUpdateOneWithoutBatchesInput {
+  create: DealCreateWithoutBatchesInput
+  connect: DealWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: DealUpdateWithoutBatchesDataInput
+  upsert: DealUpsertWithoutBatchesInput
+}
+
+input DealUpdateWithoutBatchesDataInput {
   amoId: Int
   date: DateTime
   name: String
@@ -1176,13 +1477,8 @@ input DealUpdateWithoutOrgDataInput {
   amoId: Int
   date: DateTime
   name: String
-  models: ModelUpdateManyWithoutDealsInput
+  batches: BatchUpdateManyWithoutDealInput
   status: DealStatusUpdateOneInput
-}
-
-input DealUpdateWithWhereUniqueWithoutModelsInput {
-  where: DealWhereUniqueInput!
-  data: DealUpdateWithoutModelsDataInput!
 }
 
 input DealUpdateWithWhereUniqueWithoutOrgInput {
@@ -1190,10 +1486,9 @@ input DealUpdateWithWhereUniqueWithoutOrgInput {
   data: DealUpdateWithoutOrgDataInput!
 }
 
-input DealUpsertWithWhereUniqueWithoutModelsInput {
-  where: DealWhereUniqueInput!
-  update: DealUpdateWithoutModelsDataInput!
-  create: DealCreateWithoutModelsInput!
+input DealUpsertWithoutBatchesInput {
+  update: DealUpdateWithoutBatchesDataInput!
+  create: DealCreateWithoutBatchesInput!
 }
 
 input DealUpsertWithWhereUniqueWithoutOrgInput {
@@ -1335,9 +1630,9 @@ input DealWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
-  models_every: ModelWhereInput
-  models_some: ModelWhereInput
-  models_none: ModelWhereInput
+  batches_every: BatchWhereInput
+  batches_some: BatchWhereInput
+  batches_none: BatchWhereInput
   org: OrgWhereInput
   status: DealStatusWhereInput
 }
@@ -4323,10 +4618,11 @@ type Model implements Node {
   id: ID!
   article: String
   name: String!
-  deals(where: DealWhereInput, orderBy: DealOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Deal!]
+  batches(where: BatchWhereInput, orderBy: BatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Batch!]
   drawings(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Drawing!]
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry!]
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order!]
+  procs(where: ProcWhereInput, orderBy: ProcOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Proc!]
   prods(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Prod!]
 }
 
@@ -4343,16 +4639,17 @@ type ModelConnection {
 input ModelCreateInput {
   article: String
   name: String!
-  deals: DealCreateManyWithoutModelsInput
+  batches: BatchCreateManyWithoutModelInput
   drawings: DrawingCreateManyWithoutModelInput
   enquiries: EnquiryCreateManyWithoutModelInput
   orders: OrderCreateManyWithoutModelInput
+  procs: ProcCreateManyWithoutModelInput
   prods: ProdCreateManyWithoutModelInput
 }
 
-input ModelCreateManyWithoutDealsInput {
-  create: [ModelCreateWithoutDealsInput!]
-  connect: [ModelWhereUniqueInput!]
+input ModelCreateOneWithoutBatchesInput {
+  create: ModelCreateWithoutBatchesInput
+  connect: ModelWhereUniqueInput
 }
 
 input ModelCreateOneWithoutDrawingsInput {
@@ -4370,54 +4667,74 @@ input ModelCreateOneWithoutOrdersInput {
   connect: ModelWhereUniqueInput
 }
 
+input ModelCreateOneWithoutProcsInput {
+  create: ModelCreateWithoutProcsInput
+  connect: ModelWhereUniqueInput
+}
+
 input ModelCreateOneWithoutProdsInput {
   create: ModelCreateWithoutProdsInput
   connect: ModelWhereUniqueInput
 }
 
-input ModelCreateWithoutDealsInput {
+input ModelCreateWithoutBatchesInput {
   article: String
   name: String!
   drawings: DrawingCreateManyWithoutModelInput
   enquiries: EnquiryCreateManyWithoutModelInput
   orders: OrderCreateManyWithoutModelInput
+  procs: ProcCreateManyWithoutModelInput
   prods: ProdCreateManyWithoutModelInput
 }
 
 input ModelCreateWithoutDrawingsInput {
   article: String
   name: String!
-  deals: DealCreateManyWithoutModelsInput
+  batches: BatchCreateManyWithoutModelInput
   enquiries: EnquiryCreateManyWithoutModelInput
   orders: OrderCreateManyWithoutModelInput
+  procs: ProcCreateManyWithoutModelInput
   prods: ProdCreateManyWithoutModelInput
 }
 
 input ModelCreateWithoutEnquiriesInput {
   article: String
   name: String!
-  deals: DealCreateManyWithoutModelsInput
+  batches: BatchCreateManyWithoutModelInput
   drawings: DrawingCreateManyWithoutModelInput
   orders: OrderCreateManyWithoutModelInput
+  procs: ProcCreateManyWithoutModelInput
   prods: ProdCreateManyWithoutModelInput
 }
 
 input ModelCreateWithoutOrdersInput {
   article: String
   name: String!
-  deals: DealCreateManyWithoutModelsInput
+  batches: BatchCreateManyWithoutModelInput
   drawings: DrawingCreateManyWithoutModelInput
   enquiries: EnquiryCreateManyWithoutModelInput
+  procs: ProcCreateManyWithoutModelInput
+  prods: ProdCreateManyWithoutModelInput
+}
+
+input ModelCreateWithoutProcsInput {
+  article: String
+  name: String!
+  batches: BatchCreateManyWithoutModelInput
+  drawings: DrawingCreateManyWithoutModelInput
+  enquiries: EnquiryCreateManyWithoutModelInput
+  orders: OrderCreateManyWithoutModelInput
   prods: ProdCreateManyWithoutModelInput
 }
 
 input ModelCreateWithoutProdsInput {
   article: String
   name: String!
-  deals: DealCreateManyWithoutModelsInput
+  batches: BatchCreateManyWithoutModelInput
   drawings: DrawingCreateManyWithoutModelInput
   enquiries: EnquiryCreateManyWithoutModelInput
   orders: OrderCreateManyWithoutModelInput
+  procs: ProcCreateManyWithoutModelInput
 }
 
 """An edge in a connection."""
@@ -4490,10 +4807,11 @@ input ModelSubscriptionWhereInput {
 input ModelUpdateInput {
   article: String
   name: String
-  deals: DealUpdateManyWithoutModelsInput
+  batches: BatchUpdateManyWithoutModelInput
   drawings: DrawingUpdateManyWithoutModelInput
   enquiries: EnquiryUpdateManyWithoutModelInput
   orders: OrderUpdateManyWithoutModelInput
+  procs: ProcUpdateManyWithoutModelInput
   prods: ProdUpdateManyWithoutModelInput
 }
 
@@ -4502,13 +4820,11 @@ input ModelUpdateManyMutationInput {
   name: String
 }
 
-input ModelUpdateManyWithoutDealsInput {
-  create: [ModelCreateWithoutDealsInput!]
-  connect: [ModelWhereUniqueInput!]
-  disconnect: [ModelWhereUniqueInput!]
-  delete: [ModelWhereUniqueInput!]
-  update: [ModelUpdateWithWhereUniqueWithoutDealsInput!]
-  upsert: [ModelUpsertWithWhereUniqueWithoutDealsInput!]
+input ModelUpdateOneRequiredWithoutProcsInput {
+  create: ModelCreateWithoutProcsInput
+  connect: ModelWhereUniqueInput
+  update: ModelUpdateWithoutProcsDataInput
+  upsert: ModelUpsertWithoutProcsInput
 }
 
 input ModelUpdateOneRequiredWithoutProdsInput {
@@ -4516,6 +4832,15 @@ input ModelUpdateOneRequiredWithoutProdsInput {
   connect: ModelWhereUniqueInput
   update: ModelUpdateWithoutProdsDataInput
   upsert: ModelUpsertWithoutProdsInput
+}
+
+input ModelUpdateOneWithoutBatchesInput {
+  create: ModelCreateWithoutBatchesInput
+  connect: ModelWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: ModelUpdateWithoutBatchesDataInput
+  upsert: ModelUpsertWithoutBatchesInput
 }
 
 input ModelUpdateOneWithoutDrawingsInput {
@@ -4545,54 +4870,69 @@ input ModelUpdateOneWithoutOrdersInput {
   upsert: ModelUpsertWithoutOrdersInput
 }
 
-input ModelUpdateWithoutDealsDataInput {
+input ModelUpdateWithoutBatchesDataInput {
   article: String
   name: String
   drawings: DrawingUpdateManyWithoutModelInput
   enquiries: EnquiryUpdateManyWithoutModelInput
   orders: OrderUpdateManyWithoutModelInput
+  procs: ProcUpdateManyWithoutModelInput
   prods: ProdUpdateManyWithoutModelInput
 }
 
 input ModelUpdateWithoutDrawingsDataInput {
   article: String
   name: String
-  deals: DealUpdateManyWithoutModelsInput
+  batches: BatchUpdateManyWithoutModelInput
   enquiries: EnquiryUpdateManyWithoutModelInput
   orders: OrderUpdateManyWithoutModelInput
+  procs: ProcUpdateManyWithoutModelInput
   prods: ProdUpdateManyWithoutModelInput
 }
 
 input ModelUpdateWithoutEnquiriesDataInput {
   article: String
   name: String
-  deals: DealUpdateManyWithoutModelsInput
+  batches: BatchUpdateManyWithoutModelInput
   drawings: DrawingUpdateManyWithoutModelInput
   orders: OrderUpdateManyWithoutModelInput
+  procs: ProcUpdateManyWithoutModelInput
   prods: ProdUpdateManyWithoutModelInput
 }
 
 input ModelUpdateWithoutOrdersDataInput {
   article: String
   name: String
-  deals: DealUpdateManyWithoutModelsInput
+  batches: BatchUpdateManyWithoutModelInput
   drawings: DrawingUpdateManyWithoutModelInput
   enquiries: EnquiryUpdateManyWithoutModelInput
+  procs: ProcUpdateManyWithoutModelInput
+  prods: ProdUpdateManyWithoutModelInput
+}
+
+input ModelUpdateWithoutProcsDataInput {
+  article: String
+  name: String
+  batches: BatchUpdateManyWithoutModelInput
+  drawings: DrawingUpdateManyWithoutModelInput
+  enquiries: EnquiryUpdateManyWithoutModelInput
+  orders: OrderUpdateManyWithoutModelInput
   prods: ProdUpdateManyWithoutModelInput
 }
 
 input ModelUpdateWithoutProdsDataInput {
   article: String
   name: String
-  deals: DealUpdateManyWithoutModelsInput
+  batches: BatchUpdateManyWithoutModelInput
   drawings: DrawingUpdateManyWithoutModelInput
   enquiries: EnquiryUpdateManyWithoutModelInput
   orders: OrderUpdateManyWithoutModelInput
+  procs: ProcUpdateManyWithoutModelInput
 }
 
-input ModelUpdateWithWhereUniqueWithoutDealsInput {
-  where: ModelWhereUniqueInput!
-  data: ModelUpdateWithoutDealsDataInput!
+input ModelUpsertWithoutBatchesInput {
+  update: ModelUpdateWithoutBatchesDataInput!
+  create: ModelCreateWithoutBatchesInput!
 }
 
 input ModelUpsertWithoutDrawingsInput {
@@ -4610,15 +4950,14 @@ input ModelUpsertWithoutOrdersInput {
   create: ModelCreateWithoutOrdersInput!
 }
 
+input ModelUpsertWithoutProcsInput {
+  update: ModelUpdateWithoutProcsDataInput!
+  create: ModelCreateWithoutProcsInput!
+}
+
 input ModelUpsertWithoutProdsInput {
   update: ModelUpdateWithoutProdsDataInput!
   create: ModelCreateWithoutProdsInput!
-}
-
-input ModelUpsertWithWhereUniqueWithoutDealsInput {
-  where: ModelWhereUniqueInput!
-  update: ModelUpdateWithoutDealsDataInput!
-  create: ModelCreateWithoutDealsInput!
 }
 
 input ModelWhereInput {
@@ -4750,9 +5089,9 @@ input ModelWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
-  deals_every: DealWhereInput
-  deals_some: DealWhereInput
-  deals_none: DealWhereInput
+  batches_every: BatchWhereInput
+  batches_some: BatchWhereInput
+  batches_none: BatchWhereInput
   drawings_every: DrawingWhereInput
   drawings_some: DrawingWhereInput
   drawings_none: DrawingWhereInput
@@ -4762,6 +5101,9 @@ input ModelWhereInput {
   orders_every: OrderWhereInput
   orders_some: OrderWhereInput
   orders_none: OrderWhereInput
+  procs_every: ProcWhereInput
+  procs_some: ProcWhereInput
+  procs_none: ProcWhereInput
   prods_every: ProdWhereInput
   prods_some: ProdWhereInput
   prods_none: ProdWhereInput
@@ -4772,6 +5114,7 @@ input ModelWhereUniqueInput {
 }
 
 type Mutation {
+  createBatch(data: BatchCreateInput!): Batch!
   createDeal(data: DealCreateInput!): Deal!
   createDept(data: DeptCreateInput!): Dept!
   createDrawing(data: DrawingCreateInput!): Drawing!
@@ -4784,6 +5127,7 @@ type Mutation {
   createModel(data: ModelCreateInput!): Model!
   createOrder(data: OrderCreateInput!): Order!
   createOrg(data: OrgCreateInput!): Org!
+  createProc(data: ProcCreateInput!): Proc!
   createServerData(data: ServerDataCreateInput!): ServerData!
   createTel(data: TelCreateInput!): Tel!
   createPayment(data: PaymentCreateInput!): Payment!
@@ -4795,6 +5139,7 @@ type Mutation {
   createAccount(data: AccountCreateInput!): Account!
   createDoc(data: DocCreateInput!): Doc!
   createDealStatus(data: DealStatusCreateInput!): DealStatus!
+  updateBatch(data: BatchUpdateInput!, where: BatchWhereUniqueInput!): Batch
   updateDeal(data: DealUpdateInput!, where: DealWhereUniqueInput!): Deal
   updateDept(data: DeptUpdateInput!, where: DeptWhereUniqueInput!): Dept
   updateDrawing(data: DrawingUpdateInput!, where: DrawingWhereUniqueInput!): Drawing
@@ -4807,6 +5152,7 @@ type Mutation {
   updateModel(data: ModelUpdateInput!, where: ModelWhereUniqueInput!): Model
   updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
   updateOrg(data: OrgUpdateInput!, where: OrgWhereUniqueInput!): Org
+  updateProc(data: ProcUpdateInput!, where: ProcWhereUniqueInput!): Proc
   updateServerData(data: ServerDataUpdateInput!, where: ServerDataWhereUniqueInput!): ServerData
   updateTel(data: TelUpdateInput!, where: TelWhereUniqueInput!): Tel
   updatePayment(data: PaymentUpdateInput!, where: PaymentWhereUniqueInput!): Payment
@@ -4818,6 +5164,7 @@ type Mutation {
   updateAccount(data: AccountUpdateInput!, where: AccountWhereUniqueInput!): Account
   updateDoc(data: DocUpdateInput!, where: DocWhereUniqueInput!): Doc
   updateDealStatus(data: DealStatusUpdateInput!, where: DealStatusWhereUniqueInput!): DealStatus
+  deleteBatch(where: BatchWhereUniqueInput!): Batch
   deleteDeal(where: DealWhereUniqueInput!): Deal
   deleteDept(where: DeptWhereUniqueInput!): Dept
   deleteDrawing(where: DrawingWhereUniqueInput!): Drawing
@@ -4830,6 +5177,7 @@ type Mutation {
   deleteModel(where: ModelWhereUniqueInput!): Model
   deleteOrder(where: OrderWhereUniqueInput!): Order
   deleteOrg(where: OrgWhereUniqueInput!): Org
+  deleteProc(where: ProcWhereUniqueInput!): Proc
   deleteServerData(where: ServerDataWhereUniqueInput!): ServerData
   deleteTel(where: TelWhereUniqueInput!): Tel
   deletePayment(where: PaymentWhereUniqueInput!): Payment
@@ -4841,6 +5189,7 @@ type Mutation {
   deleteAccount(where: AccountWhereUniqueInput!): Account
   deleteDoc(where: DocWhereUniqueInput!): Doc
   deleteDealStatus(where: DealStatusWhereUniqueInput!): DealStatus
+  upsertBatch(where: BatchWhereUniqueInput!, create: BatchCreateInput!, update: BatchUpdateInput!): Batch!
   upsertDeal(where: DealWhereUniqueInput!, create: DealCreateInput!, update: DealUpdateInput!): Deal!
   upsertDept(where: DeptWhereUniqueInput!, create: DeptCreateInput!, update: DeptUpdateInput!): Dept!
   upsertDrawing(where: DrawingWhereUniqueInput!, create: DrawingCreateInput!, update: DrawingUpdateInput!): Drawing!
@@ -4853,6 +5202,7 @@ type Mutation {
   upsertModel(where: ModelWhereUniqueInput!, create: ModelCreateInput!, update: ModelUpdateInput!): Model!
   upsertOrder(where: OrderWhereUniqueInput!, create: OrderCreateInput!, update: OrderUpdateInput!): Order!
   upsertOrg(where: OrgWhereUniqueInput!, create: OrgCreateInput!, update: OrgUpdateInput!): Org!
+  upsertProc(where: ProcWhereUniqueInput!, create: ProcCreateInput!, update: ProcUpdateInput!): Proc!
   upsertServerData(where: ServerDataWhereUniqueInput!, create: ServerDataCreateInput!, update: ServerDataUpdateInput!): ServerData!
   upsertTel(where: TelWhereUniqueInput!, create: TelCreateInput!, update: TelUpdateInput!): Tel!
   upsertPayment(where: PaymentWhereUniqueInput!, create: PaymentCreateInput!, update: PaymentUpdateInput!): Payment!
@@ -4864,6 +5214,7 @@ type Mutation {
   upsertAccount(where: AccountWhereUniqueInput!, create: AccountCreateInput!, update: AccountUpdateInput!): Account!
   upsertDoc(where: DocWhereUniqueInput!, create: DocCreateInput!, update: DocUpdateInput!): Doc!
   upsertDealStatus(where: DealStatusWhereUniqueInput!, create: DealStatusCreateInput!, update: DealStatusUpdateInput!): DealStatus!
+  updateManyBatches(data: BatchUpdateManyMutationInput!, where: BatchWhereInput): BatchPayload!
   updateManyDeals(data: DealUpdateManyMutationInput!, where: DealWhereInput): BatchPayload!
   updateManyDepts(data: DeptUpdateManyMutationInput!, where: DeptWhereInput): BatchPayload!
   updateManyDrawings(data: DrawingUpdateManyMutationInput!, where: DrawingWhereInput): BatchPayload!
@@ -4876,6 +5227,7 @@ type Mutation {
   updateManyModels(data: ModelUpdateManyMutationInput!, where: ModelWhereInput): BatchPayload!
   updateManyOrders(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
   updateManyOrgs(data: OrgUpdateManyMutationInput!, where: OrgWhereInput): BatchPayload!
+  updateManyProcs(data: ProcUpdateManyMutationInput!, where: ProcWhereInput): BatchPayload!
   updateManyServerDatas(data: ServerDataUpdateManyMutationInput!, where: ServerDataWhereInput): BatchPayload!
   updateManyTels(data: TelUpdateManyMutationInput!, where: TelWhereInput): BatchPayload!
   updateManyPayments(data: PaymentUpdateManyMutationInput!, where: PaymentWhereInput): BatchPayload!
@@ -4887,6 +5239,7 @@ type Mutation {
   updateManyAccounts(data: AccountUpdateManyMutationInput!, where: AccountWhereInput): BatchPayload!
   updateManyDocs(data: DocUpdateManyMutationInput!, where: DocWhereInput): BatchPayload!
   updateManyDealStatuses(data: DealStatusUpdateManyMutationInput!, where: DealStatusWhereInput): BatchPayload!
+  deleteManyBatches(where: BatchWhereInput): BatchPayload!
   deleteManyDeals(where: DealWhereInput): BatchPayload!
   deleteManyDepts(where: DeptWhereInput): BatchPayload!
   deleteManyDrawings(where: DrawingWhereInput): BatchPayload!
@@ -4899,6 +5252,7 @@ type Mutation {
   deleteManyModels(where: ModelWhereInput): BatchPayload!
   deleteManyOrders(where: OrderWhereInput): BatchPayload!
   deleteManyOrgs(where: OrgWhereInput): BatchPayload!
+  deleteManyProcs(where: ProcWhereInput): BatchPayload!
   deleteManyServerDatas(where: ServerDataWhereInput): BatchPayload!
   deleteManyTels(where: TelWhereInput): BatchPayload!
   deleteManyPayments(where: PaymentWhereInput): BatchPayload!
@@ -7542,6 +7896,272 @@ input PersonWhereUniqueInput {
   amoId: Int
 }
 
+type Proc implements Node {
+  id: ID!
+  name: String!
+  batches(where: BatchWhereInput, orderBy: BatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Batch!]
+  model: Model!
+}
+
+"""A connection to a list of items."""
+type ProcConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ProcEdge]!
+  aggregate: AggregateProc!
+}
+
+input ProcCreateInput {
+  name: String!
+  batches: BatchCreateManyWithoutProcsInput
+  model: ModelCreateOneWithoutProcsInput!
+}
+
+input ProcCreateManyWithoutBatchesInput {
+  create: [ProcCreateWithoutBatchesInput!]
+  connect: [ProcWhereUniqueInput!]
+}
+
+input ProcCreateManyWithoutModelInput {
+  create: [ProcCreateWithoutModelInput!]
+  connect: [ProcWhereUniqueInput!]
+}
+
+input ProcCreateWithoutBatchesInput {
+  name: String!
+  model: ModelCreateOneWithoutProcsInput!
+}
+
+input ProcCreateWithoutModelInput {
+  name: String!
+  batches: BatchCreateManyWithoutProcsInput
+}
+
+"""An edge in a connection."""
+type ProcEdge {
+  """The item at the end of the edge."""
+  node: Proc!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum ProcOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type ProcPreviousValues {
+  id: ID!
+  name: String!
+}
+
+type ProcSubscriptionPayload {
+  mutation: MutationType!
+  node: Proc
+  updatedFields: [String!]
+  previousValues: ProcPreviousValues
+}
+
+input ProcSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ProcSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ProcSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ProcSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ProcWhereInput
+}
+
+input ProcUpdateInput {
+  name: String
+  batches: BatchUpdateManyWithoutProcsInput
+  model: ModelUpdateOneRequiredWithoutProcsInput
+}
+
+input ProcUpdateManyMutationInput {
+  name: String
+}
+
+input ProcUpdateManyWithoutBatchesInput {
+  create: [ProcCreateWithoutBatchesInput!]
+  connect: [ProcWhereUniqueInput!]
+  disconnect: [ProcWhereUniqueInput!]
+  delete: [ProcWhereUniqueInput!]
+  update: [ProcUpdateWithWhereUniqueWithoutBatchesInput!]
+  upsert: [ProcUpsertWithWhereUniqueWithoutBatchesInput!]
+}
+
+input ProcUpdateManyWithoutModelInput {
+  create: [ProcCreateWithoutModelInput!]
+  connect: [ProcWhereUniqueInput!]
+  disconnect: [ProcWhereUniqueInput!]
+  delete: [ProcWhereUniqueInput!]
+  update: [ProcUpdateWithWhereUniqueWithoutModelInput!]
+  upsert: [ProcUpsertWithWhereUniqueWithoutModelInput!]
+}
+
+input ProcUpdateWithoutBatchesDataInput {
+  name: String
+  model: ModelUpdateOneRequiredWithoutProcsInput
+}
+
+input ProcUpdateWithoutModelDataInput {
+  name: String
+  batches: BatchUpdateManyWithoutProcsInput
+}
+
+input ProcUpdateWithWhereUniqueWithoutBatchesInput {
+  where: ProcWhereUniqueInput!
+  data: ProcUpdateWithoutBatchesDataInput!
+}
+
+input ProcUpdateWithWhereUniqueWithoutModelInput {
+  where: ProcWhereUniqueInput!
+  data: ProcUpdateWithoutModelDataInput!
+}
+
+input ProcUpsertWithWhereUniqueWithoutBatchesInput {
+  where: ProcWhereUniqueInput!
+  update: ProcUpdateWithoutBatchesDataInput!
+  create: ProcCreateWithoutBatchesInput!
+}
+
+input ProcUpsertWithWhereUniqueWithoutModelInput {
+  where: ProcWhereUniqueInput!
+  update: ProcUpdateWithoutModelDataInput!
+  create: ProcCreateWithoutModelInput!
+}
+
+input ProcWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ProcWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ProcWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ProcWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  batches_every: BatchWhereInput
+  batches_some: BatchWhereInput
+  batches_none: BatchWhereInput
+  model: ModelWhereInput
+}
+
+input ProcWhereUniqueInput {
+  id: ID
+}
+
 type Prod implements Node {
   id: ID!
   dept: Dept!
@@ -8114,6 +8734,7 @@ input ProdWhereUniqueInput {
 }
 
 type Query {
+  batches(where: BatchWhereInput, orderBy: BatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Batch]!
   deals(where: DealWhereInput, orderBy: DealOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Deal]!
   depts(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Dept]!
   drawings(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Drawing]!
@@ -8126,6 +8747,7 @@ type Query {
   models(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Model]!
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
   orgs(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Org]!
+  procs(where: ProcWhereInput, orderBy: ProcOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Proc]!
   serverDatas(where: ServerDataWhereInput, orderBy: ServerDataOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ServerData]!
   tels(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tel]!
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment]!
@@ -8137,6 +8759,7 @@ type Query {
   accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account]!
   docs(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Doc]!
   dealStatuses(where: DealStatusWhereInput, orderBy: DealStatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [DealStatus]!
+  batch(where: BatchWhereUniqueInput!): Batch
   deal(where: DealWhereUniqueInput!): Deal
   dept(where: DeptWhereUniqueInput!): Dept
   drawing(where: DrawingWhereUniqueInput!): Drawing
@@ -8149,6 +8772,7 @@ type Query {
   model(where: ModelWhereUniqueInput!): Model
   order(where: OrderWhereUniqueInput!): Order
   org(where: OrgWhereUniqueInput!): Org
+  proc(where: ProcWhereUniqueInput!): Proc
   serverData(where: ServerDataWhereUniqueInput!): ServerData
   tel(where: TelWhereUniqueInput!): Tel
   payment(where: PaymentWhereUniqueInput!): Payment
@@ -8160,6 +8784,7 @@ type Query {
   account(where: AccountWhereUniqueInput!): Account
   doc(where: DocWhereUniqueInput!): Doc
   dealStatus(where: DealStatusWhereUniqueInput!): DealStatus
+  batchesConnection(where: BatchWhereInput, orderBy: BatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BatchConnection!
   dealsConnection(where: DealWhereInput, orderBy: DealOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DealConnection!
   deptsConnection(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DeptConnection!
   drawingsConnection(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DrawingConnection!
@@ -8172,6 +8797,7 @@ type Query {
   modelsConnection(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ModelConnection!
   ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
   orgsConnection(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgConnection!
+  procsConnection(where: ProcWhereInput, orderBy: ProcOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProcConnection!
   serverDatasConnection(where: ServerDataWhereInput, orderBy: ServerDataOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ServerDataConnection!
   telsConnection(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TelConnection!
   paymentsConnection(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentConnection!
@@ -8735,6 +9361,7 @@ input StatusWhereUniqueInput {
 }
 
 type Subscription {
+  batch(where: BatchSubscriptionWhereInput): BatchSubscriptionPayload
   deal(where: DealSubscriptionWhereInput): DealSubscriptionPayload
   dept(where: DeptSubscriptionWhereInput): DeptSubscriptionPayload
   drawing(where: DrawingSubscriptionWhereInput): DrawingSubscriptionPayload
@@ -8747,6 +9374,7 @@ type Subscription {
   model(where: ModelSubscriptionWhereInput): ModelSubscriptionPayload
   order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
   org(where: OrgSubscriptionWhereInput): OrgSubscriptionPayload
+  proc(where: ProcSubscriptionWhereInput): ProcSubscriptionPayload
   serverData(where: ServerDataSubscriptionWhereInput): ServerDataSubscriptionPayload
   tel(where: TelSubscriptionWhereInput): TelSubscriptionPayload
   payment(where: PaymentSubscriptionWhereInput): PaymentSubscriptionPayload

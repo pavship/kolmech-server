@@ -46,7 +46,17 @@ const handleObj = async (obj = {}, objTypeName, ctx) => {
   return result
 }
 
+const pluralForms = [
+  ['batch', 'batches']
+]
+
 const handleArr = async (arr, typeName, parentTypeName, parentId, ctx) => {
+  let forms
+  const singularTypeName =
+    (forms = pluralForms.find(([singular, plural]) => plural === typeName))
+      ? forms[0]
+      // : typeName === 'batches' ? 'batch' :
+      : typeName.slice(0, -1)
   // console.log('new arr > ', arr)
   const arrIds = arr.map(r => r.id)
   // console.log('arrIds > ', arrIds)
@@ -54,13 +64,28 @@ const handleArr = async (arr, typeName, parentTypeName, parentId, ctx) => {
   let toUpdate = []
   // if parent object exists, get prevArr and compare with new arr
   if (parentId) {
-    const prevArr = await ctx.db.query[typeName]({ 
-      where: {
-        [parentTypeName]: {
-          id: parentId
+    let prevArr = []
+    try {
+      prevArr = await ctx.db.query[typeName]({
+        where: {
+          [parentTypeName]: {
+            id: parentId
+          }
         }
-      }
-    }, '{ id }')
+      }, '{ id }')
+    } catch (err) {
+      const pluralTypeName =
+        (forms = pluralForms.find(([singular, plural]) => singular === parentTypeName))
+          ? forms[1]
+          : `${parentTypeName}s`
+      prevArr = await ctx.db.query[typeName]({
+        where: {
+          [`${pluralTypeName}_every`]: {
+            id: parentId
+          }
+        }
+      }, '{ id }')
+    }
     // console.log('prevArr > ', prevArr)
     // exceptions' array
     const deleteInsteadUpdateIds = []
@@ -71,7 +96,7 @@ const handleArr = async (arr, typeName, parentTypeName, parentId, ctx) => {
         // assign toUpdate record if it's found in the new arr and has any props except 'id'
         else if (Object.keys(newVal).length > 1) toUpdate.push({
           where: { id },
-          data: await handleObj(newVal, typeName.slice(0, -1), ctx)
+          data: await handleObj(newVal, singularTypeName, ctx)
         })
       // exceptions
       if (typeName === 'tels' && newVal && newVal.number === '')
@@ -84,7 +109,7 @@ const handleArr = async (arr, typeName, parentTypeName, parentId, ctx) => {
     //     // assign toUpdate record if it's found in the new arr and has any props except 'id'
     //     else if (Object.keys(newVal).length > 1) toUpdate.push({
     //       where: { id },
-    //       data: await handleObj(newVal, typeName.slice(0, -1), ctx)
+    //       data: await handleObj(newVal, singularTypeName, ctx)
     //     })
     //   // exceptions
     //   if (typeName === 'tels' && newVal && newVal.number === '')
@@ -104,11 +129,12 @@ const handleArr = async (arr, typeName, parentTypeName, parentId, ctx) => {
   // console.log('toDelete > ', toDelete)
   // console.log('toUpdate > ', toUpdate)
   // all records without ids are saved into db
-  let toCreate = arr.filter(r => !r.id)
+  let toCreate = await Promise.all(arr.filter(r => !r.id)
+    .map(r => handleObj(r, singularTypeName, ctx)))
   if (typeName === 'tels')
     // not creating tels with empty numbers
       toCreate = toCreate.filter(r => !!r.number)
-  // console.log('toCreate > ', toCreate)
+  console.log('toCreate > ', toCreate)
   const result = {
     ...toDelete.length && { delete: toDelete },
     ...toUpdate.length && { update: toUpdate },

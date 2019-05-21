@@ -55,7 +55,8 @@ type Mutation {
   updateEnquiry(input: EnquiryInput!): Enquiry
   upsertEmployee(input: EmployeeInput!): Employee
   upsertModel(input: ModelInput!): Model
-  upsertModelToDeal(name: String! modelId: ID dealId: ID!): Deal
+  upsertBatch(input: BatchInput!): Batch
+  upsertDeal(input: DealInput!): Deal
   upsertOrder(id: ID, enquiryId: ID, dateLocal: String!, qty: Int, amount: Float): Order
   upsertOrgsByInn(inns: [String!]!): [Org!]!
   upsertPayment(input: PaymentInput!): Payment
@@ -87,6 +88,19 @@ type AuthPayload {
 type MoveProdPayload {
   prods: [Prod!]!
   to: ID!
+}
+
+input BatchInput {
+  id: ID
+  qty: Int
+  dealId: ID
+  model: ModelInput
+  procs: [ProcInput!]
+}
+
+input DealInput {
+  id: ID
+  batches: [BatchInput!]
 }
 
 input EmployeeInput {
@@ -132,6 +146,13 @@ input PersonInput {
 	regNameChecked: Boolean
 	htmlNote: String
 	tels: [TelInput!]
+}
+
+input ProcInput {
+  id: ID
+  name: String
+  modelId: ID
+  batchId: ID
 }
 
 input ProdInput {
