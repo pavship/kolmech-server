@@ -17,6 +17,7 @@ type Query {
   model (id: ID!): Model
   models: [Model!]!
   modelProds(modelId: ID!): [Prod!]!
+  opTypes: [OpType!]!
   order (id: ID!): Order
   orgs: [Org!]!
   orgEmployees (orgId: ID!): [Employee!]!
@@ -70,6 +71,7 @@ type Mutation {
   importModels: BatchPayload!
   connectEnquiriesToDocsAndStatus: BatchPayload!
   populateEquipment: BatchPayload
+  populateOpTypes: BatchPayload
   populateOrderFullnums: BatchPayload
   populatePaymentArticles: BatchPayload
   populatePaymentAccounts: BatchPayload
@@ -126,6 +128,12 @@ input ModelInput {
   article: String
 }
 
+input OpInput {
+  id: ID
+  dealLabor: Float
+  opTypeId: ID
+}
+
 input PaymentInput {
   id: ID
 	articleId: ID
@@ -153,6 +161,7 @@ input ProcInput {
   name: String
   modelId: ID
   batchId: ID
+  ops: [OpInput!]
 }
 
 input ProdInput {

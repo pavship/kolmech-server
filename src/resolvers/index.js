@@ -9,6 +9,8 @@ const { dealStatus } = require('./Mutation/dealStatus')
 const { drawing } = require('./Mutation/drawing')
 const { enquiry } = require('./Mutation/enquiry')
 const { file } = require('./Mutation/file')
+// const { op } = require('./Mutation/op')
+const { opType } = require('./Mutation/opType')
 const { org } = require('./Mutation/org')
 const { order } = require('./Mutation/order')
 const { payment } = require('./Mutation/payment')
@@ -36,6 +38,8 @@ module.exports = {
     ...drawing,
     ...enquiry,
     ...file,
+    // ...op,
+    ...opType,
     ...org,
     ...order,
     ...payment,

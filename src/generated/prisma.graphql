@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Tue May 21 2019 21:31:01 GMT+0300 (GMT+03:00)
+# timestamp: Wed May 22 2019 02:49:16 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -351,6 +351,14 @@ type AggregateFileLink {
 }
 
 type AggregateModel {
+  count: Int!
+}
+
+type AggregateOp {
+  count: Int!
+}
+
+type AggregateOpType {
   count: Int!
 }
 
@@ -5125,6 +5133,8 @@ type Mutation {
   createFile(data: FileCreateInput!): File!
   createFileLink(data: FileLinkCreateInput!): FileLink!
   createModel(data: ModelCreateInput!): Model!
+  createOp(data: OpCreateInput!): Op!
+  createOpType(data: OpTypeCreateInput!): OpType!
   createOrder(data: OrderCreateInput!): Order!
   createOrg(data: OrgCreateInput!): Org!
   createProc(data: ProcCreateInput!): Proc!
@@ -5150,6 +5160,8 @@ type Mutation {
   updateFile(data: FileUpdateInput!, where: FileWhereUniqueInput!): File
   updateFileLink(data: FileLinkUpdateInput!, where: FileLinkWhereUniqueInput!): FileLink
   updateModel(data: ModelUpdateInput!, where: ModelWhereUniqueInput!): Model
+  updateOp(data: OpUpdateInput!, where: OpWhereUniqueInput!): Op
+  updateOpType(data: OpTypeUpdateInput!, where: OpTypeWhereUniqueInput!): OpType
   updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
   updateOrg(data: OrgUpdateInput!, where: OrgWhereUniqueInput!): Org
   updateProc(data: ProcUpdateInput!, where: ProcWhereUniqueInput!): Proc
@@ -5175,6 +5187,8 @@ type Mutation {
   deleteFile(where: FileWhereUniqueInput!): File
   deleteFileLink(where: FileLinkWhereUniqueInput!): FileLink
   deleteModel(where: ModelWhereUniqueInput!): Model
+  deleteOp(where: OpWhereUniqueInput!): Op
+  deleteOpType(where: OpTypeWhereUniqueInput!): OpType
   deleteOrder(where: OrderWhereUniqueInput!): Order
   deleteOrg(where: OrgWhereUniqueInput!): Org
   deleteProc(where: ProcWhereUniqueInput!): Proc
@@ -5200,6 +5214,8 @@ type Mutation {
   upsertFile(where: FileWhereUniqueInput!, create: FileCreateInput!, update: FileUpdateInput!): File!
   upsertFileLink(where: FileLinkWhereUniqueInput!, create: FileLinkCreateInput!, update: FileLinkUpdateInput!): FileLink!
   upsertModel(where: ModelWhereUniqueInput!, create: ModelCreateInput!, update: ModelUpdateInput!): Model!
+  upsertOp(where: OpWhereUniqueInput!, create: OpCreateInput!, update: OpUpdateInput!): Op!
+  upsertOpType(where: OpTypeWhereUniqueInput!, create: OpTypeCreateInput!, update: OpTypeUpdateInput!): OpType!
   upsertOrder(where: OrderWhereUniqueInput!, create: OrderCreateInput!, update: OrderUpdateInput!): Order!
   upsertOrg(where: OrgWhereUniqueInput!, create: OrgCreateInput!, update: OrgUpdateInput!): Org!
   upsertProc(where: ProcWhereUniqueInput!, create: ProcCreateInput!, update: ProcUpdateInput!): Proc!
@@ -5225,6 +5241,8 @@ type Mutation {
   updateManyFiles(data: FileUpdateManyMutationInput!, where: FileWhereInput): BatchPayload!
   updateManyFileLinks(data: FileLinkUpdateManyMutationInput!, where: FileLinkWhereInput): BatchPayload!
   updateManyModels(data: ModelUpdateManyMutationInput!, where: ModelWhereInput): BatchPayload!
+  updateManyOps(data: OpUpdateManyMutationInput!, where: OpWhereInput): BatchPayload!
+  updateManyOpTypes(data: OpTypeUpdateManyMutationInput!, where: OpTypeWhereInput): BatchPayload!
   updateManyOrders(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
   updateManyOrgs(data: OrgUpdateManyMutationInput!, where: OrgWhereInput): BatchPayload!
   updateManyProcs(data: ProcUpdateManyMutationInput!, where: ProcWhereInput): BatchPayload!
@@ -5250,6 +5268,8 @@ type Mutation {
   deleteManyFiles(where: FileWhereInput): BatchPayload!
   deleteManyFileLinks(where: FileLinkWhereInput): BatchPayload!
   deleteManyModels(where: ModelWhereInput): BatchPayload!
+  deleteManyOps(where: OpWhereInput): BatchPayload!
+  deleteManyOpTypes(where: OpTypeWhereInput): BatchPayload!
   deleteManyOrders(where: OrderWhereInput): BatchPayload!
   deleteManyOrgs(where: OrgWhereInput): BatchPayload!
   deleteManyProcs(where: ProcWhereInput): BatchPayload!
@@ -5276,6 +5296,469 @@ enum MutationType {
 interface Node {
   """The id of the object."""
   id: ID!
+}
+
+type Op implements Node {
+  id: ID!
+  dealLabor: Float
+  opType: OpType!
+  proc: Proc!
+}
+
+"""A connection to a list of items."""
+type OpConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [OpEdge]!
+  aggregate: AggregateOp!
+}
+
+input OpCreateInput {
+  dealLabor: Float
+  opType: OpTypeCreateOneWithoutOpsInput!
+  proc: ProcCreateOneWithoutOpsInput!
+}
+
+input OpCreateManyWithoutOpTypeInput {
+  create: [OpCreateWithoutOpTypeInput!]
+  connect: [OpWhereUniqueInput!]
+}
+
+input OpCreateManyWithoutProcInput {
+  create: [OpCreateWithoutProcInput!]
+  connect: [OpWhereUniqueInput!]
+}
+
+input OpCreateWithoutOpTypeInput {
+  dealLabor: Float
+  proc: ProcCreateOneWithoutOpsInput!
+}
+
+input OpCreateWithoutProcInput {
+  dealLabor: Float
+  opType: OpTypeCreateOneWithoutOpsInput!
+}
+
+"""An edge in a connection."""
+type OpEdge {
+  """The item at the end of the edge."""
+  node: Op!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum OpOrderByInput {
+  id_ASC
+  id_DESC
+  dealLabor_ASC
+  dealLabor_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type OpPreviousValues {
+  id: ID!
+  dealLabor: Float
+}
+
+type OpSubscriptionPayload {
+  mutation: MutationType!
+  node: Op
+  updatedFields: [String!]
+  previousValues: OpPreviousValues
+}
+
+input OpSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [OpSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [OpSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [OpSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: OpWhereInput
+}
+
+type OpType implements Node {
+  id: ID!
+  name: String!
+  ops(where: OpWhereInput, orderBy: OpOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Op!]
+}
+
+"""A connection to a list of items."""
+type OpTypeConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [OpTypeEdge]!
+  aggregate: AggregateOpType!
+}
+
+input OpTypeCreateInput {
+  name: String!
+  ops: OpCreateManyWithoutOpTypeInput
+}
+
+input OpTypeCreateOneWithoutOpsInput {
+  create: OpTypeCreateWithoutOpsInput
+  connect: OpTypeWhereUniqueInput
+}
+
+input OpTypeCreateWithoutOpsInput {
+  name: String!
+}
+
+"""An edge in a connection."""
+type OpTypeEdge {
+  """The item at the end of the edge."""
+  node: OpType!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum OpTypeOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type OpTypePreviousValues {
+  id: ID!
+  name: String!
+}
+
+type OpTypeSubscriptionPayload {
+  mutation: MutationType!
+  node: OpType
+  updatedFields: [String!]
+  previousValues: OpTypePreviousValues
+}
+
+input OpTypeSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [OpTypeSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [OpTypeSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [OpTypeSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: OpTypeWhereInput
+}
+
+input OpTypeUpdateInput {
+  name: String
+  ops: OpUpdateManyWithoutOpTypeInput
+}
+
+input OpTypeUpdateManyMutationInput {
+  name: String
+}
+
+input OpTypeUpdateOneRequiredWithoutOpsInput {
+  create: OpTypeCreateWithoutOpsInput
+  connect: OpTypeWhereUniqueInput
+  update: OpTypeUpdateWithoutOpsDataInput
+  upsert: OpTypeUpsertWithoutOpsInput
+}
+
+input OpTypeUpdateWithoutOpsDataInput {
+  name: String
+}
+
+input OpTypeUpsertWithoutOpsInput {
+  update: OpTypeUpdateWithoutOpsDataInput!
+  create: OpTypeCreateWithoutOpsInput!
+}
+
+input OpTypeWhereInput {
+  """Logical AND on all given filters."""
+  AND: [OpTypeWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [OpTypeWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [OpTypeWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  ops_every: OpWhereInput
+  ops_some: OpWhereInput
+  ops_none: OpWhereInput
+}
+
+input OpTypeWhereUniqueInput {
+  id: ID
+}
+
+input OpUpdateInput {
+  dealLabor: Float
+  opType: OpTypeUpdateOneRequiredWithoutOpsInput
+  proc: ProcUpdateOneRequiredWithoutOpsInput
+}
+
+input OpUpdateManyMutationInput {
+  dealLabor: Float
+}
+
+input OpUpdateManyWithoutOpTypeInput {
+  create: [OpCreateWithoutOpTypeInput!]
+  connect: [OpWhereUniqueInput!]
+  disconnect: [OpWhereUniqueInput!]
+  delete: [OpWhereUniqueInput!]
+  update: [OpUpdateWithWhereUniqueWithoutOpTypeInput!]
+  upsert: [OpUpsertWithWhereUniqueWithoutOpTypeInput!]
+}
+
+input OpUpdateManyWithoutProcInput {
+  create: [OpCreateWithoutProcInput!]
+  connect: [OpWhereUniqueInput!]
+  disconnect: [OpWhereUniqueInput!]
+  delete: [OpWhereUniqueInput!]
+  update: [OpUpdateWithWhereUniqueWithoutProcInput!]
+  upsert: [OpUpsertWithWhereUniqueWithoutProcInput!]
+}
+
+input OpUpdateWithoutOpTypeDataInput {
+  dealLabor: Float
+  proc: ProcUpdateOneRequiredWithoutOpsInput
+}
+
+input OpUpdateWithoutProcDataInput {
+  dealLabor: Float
+  opType: OpTypeUpdateOneRequiredWithoutOpsInput
+}
+
+input OpUpdateWithWhereUniqueWithoutOpTypeInput {
+  where: OpWhereUniqueInput!
+  data: OpUpdateWithoutOpTypeDataInput!
+}
+
+input OpUpdateWithWhereUniqueWithoutProcInput {
+  where: OpWhereUniqueInput!
+  data: OpUpdateWithoutProcDataInput!
+}
+
+input OpUpsertWithWhereUniqueWithoutOpTypeInput {
+  where: OpWhereUniqueInput!
+  update: OpUpdateWithoutOpTypeDataInput!
+  create: OpCreateWithoutOpTypeInput!
+}
+
+input OpUpsertWithWhereUniqueWithoutProcInput {
+  where: OpWhereUniqueInput!
+  update: OpUpdateWithoutProcDataInput!
+  create: OpCreateWithoutProcInput!
+}
+
+input OpWhereInput {
+  """Logical AND on all given filters."""
+  AND: [OpWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [OpWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [OpWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  dealLabor: Float
+
+  """All values that are not equal to given value."""
+  dealLabor_not: Float
+
+  """All values that are contained in given list."""
+  dealLabor_in: [Float!]
+
+  """All values that are not contained in given list."""
+  dealLabor_not_in: [Float!]
+
+  """All values less than the given value."""
+  dealLabor_lt: Float
+
+  """All values less than or equal the given value."""
+  dealLabor_lte: Float
+
+  """All values greater than the given value."""
+  dealLabor_gt: Float
+
+  """All values greater than or equal the given value."""
+  dealLabor_gte: Float
+  opType: OpTypeWhereInput
+  proc: ProcWhereInput
+}
+
+input OpWhereUniqueInput {
+  id: ID
 }
 
 type Order implements Node {
@@ -7901,6 +8384,7 @@ type Proc implements Node {
   name: String!
   batches(where: BatchWhereInput, orderBy: BatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Batch!]
   model: Model!
+  ops(where: OpWhereInput, orderBy: OpOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Op!]
 }
 
 """A connection to a list of items."""
@@ -7917,6 +8401,7 @@ input ProcCreateInput {
   name: String!
   batches: BatchCreateManyWithoutProcsInput
   model: ModelCreateOneWithoutProcsInput!
+  ops: OpCreateManyWithoutProcInput
 }
 
 input ProcCreateManyWithoutBatchesInput {
@@ -7929,14 +8414,27 @@ input ProcCreateManyWithoutModelInput {
   connect: [ProcWhereUniqueInput!]
 }
 
+input ProcCreateOneWithoutOpsInput {
+  create: ProcCreateWithoutOpsInput
+  connect: ProcWhereUniqueInput
+}
+
 input ProcCreateWithoutBatchesInput {
   name: String!
   model: ModelCreateOneWithoutProcsInput!
+  ops: OpCreateManyWithoutProcInput
 }
 
 input ProcCreateWithoutModelInput {
   name: String!
   batches: BatchCreateManyWithoutProcsInput
+  ops: OpCreateManyWithoutProcInput
+}
+
+input ProcCreateWithoutOpsInput {
+  name: String!
+  batches: BatchCreateManyWithoutProcsInput
+  model: ModelCreateOneWithoutProcsInput!
 }
 
 """An edge in a connection."""
@@ -8007,6 +8505,7 @@ input ProcUpdateInput {
   name: String
   batches: BatchUpdateManyWithoutProcsInput
   model: ModelUpdateOneRequiredWithoutProcsInput
+  ops: OpUpdateManyWithoutProcInput
 }
 
 input ProcUpdateManyMutationInput {
@@ -8031,14 +8530,29 @@ input ProcUpdateManyWithoutModelInput {
   upsert: [ProcUpsertWithWhereUniqueWithoutModelInput!]
 }
 
+input ProcUpdateOneRequiredWithoutOpsInput {
+  create: ProcCreateWithoutOpsInput
+  connect: ProcWhereUniqueInput
+  update: ProcUpdateWithoutOpsDataInput
+  upsert: ProcUpsertWithoutOpsInput
+}
+
 input ProcUpdateWithoutBatchesDataInput {
   name: String
   model: ModelUpdateOneRequiredWithoutProcsInput
+  ops: OpUpdateManyWithoutProcInput
 }
 
 input ProcUpdateWithoutModelDataInput {
   name: String
   batches: BatchUpdateManyWithoutProcsInput
+  ops: OpUpdateManyWithoutProcInput
+}
+
+input ProcUpdateWithoutOpsDataInput {
+  name: String
+  batches: BatchUpdateManyWithoutProcsInput
+  model: ModelUpdateOneRequiredWithoutProcsInput
 }
 
 input ProcUpdateWithWhereUniqueWithoutBatchesInput {
@@ -8049,6 +8563,11 @@ input ProcUpdateWithWhereUniqueWithoutBatchesInput {
 input ProcUpdateWithWhereUniqueWithoutModelInput {
   where: ProcWhereUniqueInput!
   data: ProcUpdateWithoutModelDataInput!
+}
+
+input ProcUpsertWithoutOpsInput {
+  update: ProcUpdateWithoutOpsDataInput!
+  create: ProcCreateWithoutOpsInput!
 }
 
 input ProcUpsertWithWhereUniqueWithoutBatchesInput {
@@ -8156,6 +8675,9 @@ input ProcWhereInput {
   batches_some: BatchWhereInput
   batches_none: BatchWhereInput
   model: ModelWhereInput
+  ops_every: OpWhereInput
+  ops_some: OpWhereInput
+  ops_none: OpWhereInput
 }
 
 input ProcWhereUniqueInput {
@@ -8745,6 +9267,8 @@ type Query {
   files(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [File]!
   fileLinks(where: FileLinkWhereInput, orderBy: FileLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [FileLink]!
   models(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Model]!
+  ops(where: OpWhereInput, orderBy: OpOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Op]!
+  opTypes(where: OpTypeWhereInput, orderBy: OpTypeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OpType]!
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
   orgs(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Org]!
   procs(where: ProcWhereInput, orderBy: ProcOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Proc]!
@@ -8770,6 +9294,8 @@ type Query {
   file(where: FileWhereUniqueInput!): File
   fileLink(where: FileLinkWhereUniqueInput!): FileLink
   model(where: ModelWhereUniqueInput!): Model
+  op(where: OpWhereUniqueInput!): Op
+  opType(where: OpTypeWhereUniqueInput!): OpType
   order(where: OrderWhereUniqueInput!): Order
   org(where: OrgWhereUniqueInput!): Org
   proc(where: ProcWhereUniqueInput!): Proc
@@ -8795,6 +9321,8 @@ type Query {
   filesConnection(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
   fileLinksConnection(where: FileLinkWhereInput, orderBy: FileLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileLinkConnection!
   modelsConnection(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ModelConnection!
+  opsConnection(where: OpWhereInput, orderBy: OpOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OpConnection!
+  opTypesConnection(where: OpTypeWhereInput, orderBy: OpTypeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OpTypeConnection!
   ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
   orgsConnection(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgConnection!
   procsConnection(where: ProcWhereInput, orderBy: ProcOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProcConnection!
@@ -9372,6 +9900,8 @@ type Subscription {
   file(where: FileSubscriptionWhereInput): FileSubscriptionPayload
   fileLink(where: FileLinkSubscriptionWhereInput): FileLinkSubscriptionPayload
   model(where: ModelSubscriptionWhereInput): ModelSubscriptionPayload
+  op(where: OpSubscriptionWhereInput): OpSubscriptionPayload
+  opType(where: OpTypeSubscriptionWhereInput): OpTypeSubscriptionPayload
   order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
   org(where: OrgSubscriptionWhereInput): OrgSubscriptionPayload
   proc(where: ProcSubscriptionWhereInput): ProcSubscriptionPayload

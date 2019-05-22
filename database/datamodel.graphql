@@ -133,6 +133,19 @@ type Model {
   prods: [Prod!]! @relation(name: "ModelProds")
 }
 
+type Op {
+	id: ID! @unique
+	dealLabor: Float
+	opType: OpType!
+	proc: Proc!
+}
+
+type OpType {
+	id: ID! @unique
+	name: String!
+	ops: [Op!]!
+}
+
 type Order {
 	id: ID! @unique
 	num: Int # represents sequential number of this org orders
@@ -167,6 +180,7 @@ type Proc {					# technical process
 	name: String!
 	batches: [Batch!]!
 	model: Model!
+	ops: [Op!]!
 }
 
 type ServerData {

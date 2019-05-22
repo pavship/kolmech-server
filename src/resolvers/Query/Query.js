@@ -72,6 +72,10 @@ const Query = {
 	equipments(_, __, ctx, info) {
 		return ctx.db.query.equipments({}, info)
 	},
+
+	opTypes(_, __, ctx, info) {
+		return ctx.db.query.opTypes({}, info)
+	},
         
 	order(_, { id }, ctx, info) {
 		return ctx.db.query.order({ where: { id } }, info)
