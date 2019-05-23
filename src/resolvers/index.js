@@ -6,6 +6,7 @@ const { auth } = require('./Mutation/auth')
 const { batch } = require('./Mutation/batch')
 const { deal } = require('./Mutation/deal')
 const { dealStatus } = require('./Mutation/dealStatus')
+const { disk } = require('./Mutation/disk')
 const { drawing } = require('./Mutation/drawing')
 const { enquiry } = require('./Mutation/enquiry')
 const { file } = require('./Mutation/file')
@@ -35,6 +36,7 @@ module.exports = {
     ...batch,
     ...deal,
     ...dealStatus,
+    ...disk,
     ...drawing,
     ...enquiry,
     ...file,

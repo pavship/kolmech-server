@@ -1,5 +1,4 @@
 
-const axios = require('axios')
 const { amoConnect } = require('./amo')
 const { syncDiskFolders } = require('./disk')
 

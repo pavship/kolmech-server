@@ -4,7 +4,7 @@ const qs = require('qs')
 
 const baseURL = 'https://cloud-api.yandex.net/v1/disk/resources'
 
-const disk = axios.create({
+const Disk = axios.create({
 	baseURL,
 	headers: {
 		'content-type': 'application/json',
@@ -13,7 +13,7 @@ const disk = axios.create({
 })
 
 const getDiskResources = async path => {
-	const { data: { _embedded: { items: resources }}} = await disk.get('?'+
+	const { data: { _embedded: { items: resources }}} = await Disk.get('?'+
 		qs.stringify({ path, limit: 10000 }))
 	return resources
 }
@@ -40,14 +40,14 @@ const syncDiskFolders = async (path, folders) => {
 		return !!r
 			? r.name === f.name
 				? null
-				: disk.post('/move?'+
+				: Disk.post('/move?'+
 						qs.stringify({
 							from: `${path}/${r.oldName}`,
 							path: `${path}/${r.hasNoPrefix ? '' : r.prefix + '_'}` +
 								`${f.name}_${f.id}`,
 						})
 					)
-			: disk.put('?'+
+			: Disk.put('?'+
 					qs.stringify({
 						path: `${path}/${f.name}_${f.id}`,
 					})
@@ -57,8 +57,16 @@ const syncDiskFolders = async (path, folders) => {
 	// console.log('results > ', results)
 }
 
+const disk = {
+	async highlightFolder(_, { orgId }, ctx, info) {
+		console.log('orgId > ', orgId)
+		return { statusText: 'normal' }
+	}
+}
+
 module.exports = { 
-  disk,
+	disk,
+	Disk,
 	getDiskResources,
 	syncDiskFolders
 }

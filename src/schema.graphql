@@ -64,9 +64,10 @@ type Mutation {
   upsertPerson(input: PersonInput!): Person
   upsertProd(input: ProdInput!): Prod
   upsertTel(input: TelInput!): Tel
-  # file handling
+  # file handling and cloud storage
   singleUpload (file: Upload!): File
   multipleUpload (files: [Upload!]!): [File!]!
+  highlightFolder (orgId: ID): StatusPayload
   # db migration scripts:
   importModels: BatchPayload!
   connectEnquiriesToDocsAndStatus: BatchPayload!
@@ -75,10 +76,6 @@ type Mutation {
   populateOrderFullnums: BatchPayload
   populatePaymentArticles: BatchPayload
   populatePaymentAccounts: BatchPayload
-}
-
-type Subscription {
-  enquirySubscription: EnquirySubscriptionPayload!
 }
 
 type AuthPayload {
@@ -92,6 +89,14 @@ type MoveProdPayload {
   to: ID!
 }
 
+type StatusPayload {
+  statusText: String
+}
+
+type Subscription {
+  enquirySubscription: EnquirySubscriptionPayload!
+}
+
 input BatchInput {
   id: ID
   qty: Int
@@ -102,6 +107,7 @@ input BatchInput {
 
 input DealInput {
   id: ID
+  orgId: ID
   batches: [BatchInput!]
 }
 
