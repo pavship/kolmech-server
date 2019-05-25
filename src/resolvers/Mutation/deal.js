@@ -18,9 +18,8 @@ const deal = {
     const amo = await amoConnect(ctx)
     const { data: {_embedded: {items: deals}}} = await amo.get('/api/v2/leads')
     // sync orgs
-    console.log('deals > ', deals.find(d => d.company.id === 52117159))
+    console.log('deals > ', deals.find(d => d.company.id === 19793913))
     const { data } = await amo.get('/api/v2/companies?id=52117159')
-    console.log('data > ', data, !data, data === '', data.trim() === '')
     const orgs = await db.query.orgs({}, '{ id amoId name }')
     const { data: {_embedded: {items: companies}}} = await amo.get('/api/v2/companies?id=' +
       deals.map(d => d.company.id).filter(id => !!id).toString())
@@ -37,26 +36,34 @@ const deal = {
               create: { amoId, name }
             }, '{ id amoId name }')
       }))
-    const oldDeals = await db.query.deals({}, '{ amoId org { id } }')
-    // write deals
+    const toDeleteIds = []
+    const oldDeals = (await db.query.deals({}, '{ amoId org { id } }'))
+      .forEach(oldDeal => {
+        const deal = deals.find(d => d.amoId === oldDeal.amoId)
+        return deal
+          ? deal.oldDeal = oldDeal
+          : toDeleteIds.push(oldDeal.amoId)
+      })
+    // delete deals
+    await db.mutation.deleteManyDeals({ where: { amoId_in: toDeleteIds } })
+    // upsert deals
     const upserted = await Promise.all(deals.map(({
       id: amoId,
       created_at,
       name,
       status_id: statusId,
-      company: { id: companyId }
+      company: { id: companyId },
+      oldDeal
     }) => {
-      const oldDeal = oldDeals.find(d => d.amoId === amoId)
       const syncedOrg = !!companyId
         && syncedOrgs.find(o => o.amoId === companyId)
-        console.log(' amoId, syncedOrg> ', amoId, syncedOrg)
       return db.mutation.upsertDeal({
         where: { amoId },
         update: {
           name,
           ...syncedOrg
             ? { org: { connect: { id: syncedOrg.id } } }
-            : !!oldDeal.org && { org: { disconnect: true } },
+            : !!oldDeal && oldDeal.org && { org: { disconnect: true } },
           status: {
             connect: { amoId: statusId }
           }

@@ -212,6 +212,7 @@ const migration = {
 			{ name: 'lend', rusName: 'Займ (Выдача)', isLoan: true},
 			{ name: 'loan', rusName: 'Займ (Получение)', isLoan: true, isIncome: true},
 			{ name: 'maintainance', rusName: 'ТО Оборудования', relations: { set: ['EQUIPMENT'] }},
+			{ name: 'modernization', rusName: 'Модернизация оборудования', relations: { set: ['EQUIPMENT'] }},
 			{ name: 'nonCoreRevenue', rusName: 'Выручка (Неосновная деятельность)', isIncome: true},
 			{ name: 'otherExpenses', rusName: 'Прочие расходы'},
 			{ name: 'repair', rusName: 'Ремонт оборудования', relations: { set: ['EQUIPMENT'] }},

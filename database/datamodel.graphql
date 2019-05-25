@@ -17,9 +17,9 @@ type Article {					# payment articles
 type Batch {
 	id: ID! @unique
 	qty: Int
-	deal: Deal
+	deal: Deal @relation(name: "DealBatches")
 	model: Model
-	procs: [Proc!]!
+	procs: [Proc!]! @relation(name: "BatchesProcs" onDelete: CASCADE)
 }
 
 type Deal {
@@ -27,7 +27,7 @@ type Deal {
 	amoId: Int @unique
 	date: DateTime
 	name: String
-	batches: [Batch!]!
+	batches: [Batch!]! @relation(name: "DealBatches" onDelete: CASCADE)
 	org: Org
 	status: DealStatus
 }
@@ -137,7 +137,7 @@ type Op {
 	id: ID! @unique
 	dealLabor: Float
 	opType: OpType!
-	proc: Proc!
+	proc: Proc! @relation(name: "ProcOps")
 }
 
 type OpType {
@@ -178,9 +178,9 @@ type Org {
 type Proc {					# technical process
 	id: ID! @unique
 	name: String!
-	batches: [Batch!]!
+	batches: [Batch!]! @relation(name: "BatchesProcs")
 	model: Model!
-	ops: [Op!]!
+	ops: [Op!]! @relation(name: "ProcOps" onDelete: CASCADE)
 }
 
 type ServerData {
