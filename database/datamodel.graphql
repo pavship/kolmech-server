@@ -166,8 +166,9 @@ type Org {
 	inn: String @unique
 	moedeloId: String
 	amoId: Int
-	name: String!
 	legalAddress: String
+	name: String!
+	ulName: String
 	deals: [Deal!]!
 	employees: [Employee!]!
 	enquiries: [Enquiry!]! @relation(name: "OrgEnquiries")

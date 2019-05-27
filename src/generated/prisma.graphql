@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Wed May 22 2019 02:49:16 GMT+0300 (GMT+03:00)
+# timestamp: Mon May 27 2019 13:46:51 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -6400,8 +6400,9 @@ type Org implements Node {
   inn: String
   moedeloId: String
   amoId: Int
-  name: String!
   legalAddress: String
+  name: String!
+  ulName: String
   deals(where: DealWhereInput, orderBy: DealOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Deal!]
   employees(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Employee!]
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry!]
@@ -6423,8 +6424,9 @@ input OrgCreateInput {
   inn: String
   moedeloId: String
   amoId: Int
-  name: String!
   legalAddress: String
+  name: String!
+  ulName: String
   deals: DealCreateManyWithoutOrgInput
   employees: EmployeeCreateManyWithoutOrgInput
   enquiries: EnquiryCreateManyWithoutOrgInput
@@ -6461,8 +6463,9 @@ input OrgCreateWithoutDealsInput {
   inn: String
   moedeloId: String
   amoId: Int
-  name: String!
   legalAddress: String
+  name: String!
+  ulName: String
   employees: EmployeeCreateManyWithoutOrgInput
   enquiries: EnquiryCreateManyWithoutOrgInput
   orders: OrderCreateManyWithoutOrgInput
@@ -6473,8 +6476,9 @@ input OrgCreateWithoutEmployeesInput {
   inn: String
   moedeloId: String
   amoId: Int
-  name: String!
   legalAddress: String
+  name: String!
+  ulName: String
   deals: DealCreateManyWithoutOrgInput
   enquiries: EnquiryCreateManyWithoutOrgInput
   orders: OrderCreateManyWithoutOrgInput
@@ -6485,8 +6489,9 @@ input OrgCreateWithoutEnquiriesInput {
   inn: String
   moedeloId: String
   amoId: Int
-  name: String!
   legalAddress: String
+  name: String!
+  ulName: String
   deals: DealCreateManyWithoutOrgInput
   employees: EmployeeCreateManyWithoutOrgInput
   orders: OrderCreateManyWithoutOrgInput
@@ -6497,8 +6502,9 @@ input OrgCreateWithoutOrdersInput {
   inn: String
   moedeloId: String
   amoId: Int
-  name: String!
   legalAddress: String
+  name: String!
+  ulName: String
   deals: DealCreateManyWithoutOrgInput
   employees: EmployeeCreateManyWithoutOrgInput
   enquiries: EnquiryCreateManyWithoutOrgInput
@@ -6509,8 +6515,9 @@ input OrgCreateWithoutPaymentsInput {
   inn: String
   moedeloId: String
   amoId: Int
-  name: String!
   legalAddress: String
+  name: String!
+  ulName: String
   deals: DealCreateManyWithoutOrgInput
   employees: EmployeeCreateManyWithoutOrgInput
   enquiries: EnquiryCreateManyWithoutOrgInput
@@ -6535,10 +6542,12 @@ enum OrgOrderByInput {
   moedeloId_DESC
   amoId_ASC
   amoId_DESC
-  name_ASC
-  name_DESC
   legalAddress_ASC
   legalAddress_DESC
+  name_ASC
+  name_DESC
+  ulName_ASC
+  ulName_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -6550,8 +6559,9 @@ type OrgPreviousValues {
   inn: String
   moedeloId: String
   amoId: Int
-  name: String!
   legalAddress: String
+  name: String!
+  ulName: String
 }
 
 type OrgSubscriptionPayload {
@@ -6597,8 +6607,9 @@ input OrgUpdateInput {
   inn: String
   moedeloId: String
   amoId: Int
-  name: String
   legalAddress: String
+  name: String
+  ulName: String
   deals: DealUpdateManyWithoutOrgInput
   employees: EmployeeUpdateManyWithoutOrgInput
   enquiries: EnquiryUpdateManyWithoutOrgInput
@@ -6610,8 +6621,9 @@ input OrgUpdateManyMutationInput {
   inn: String
   moedeloId: String
   amoId: Int
-  name: String
   legalAddress: String
+  name: String
+  ulName: String
 }
 
 input OrgUpdateOneRequiredWithoutEmployeesInput {
@@ -6661,8 +6673,9 @@ input OrgUpdateWithoutDealsDataInput {
   inn: String
   moedeloId: String
   amoId: Int
-  name: String
   legalAddress: String
+  name: String
+  ulName: String
   employees: EmployeeUpdateManyWithoutOrgInput
   enquiries: EnquiryUpdateManyWithoutOrgInput
   orders: OrderUpdateManyWithoutOrgInput
@@ -6673,8 +6686,9 @@ input OrgUpdateWithoutEmployeesDataInput {
   inn: String
   moedeloId: String
   amoId: Int
-  name: String
   legalAddress: String
+  name: String
+  ulName: String
   deals: DealUpdateManyWithoutOrgInput
   enquiries: EnquiryUpdateManyWithoutOrgInput
   orders: OrderUpdateManyWithoutOrgInput
@@ -6685,8 +6699,9 @@ input OrgUpdateWithoutEnquiriesDataInput {
   inn: String
   moedeloId: String
   amoId: Int
-  name: String
   legalAddress: String
+  name: String
+  ulName: String
   deals: DealUpdateManyWithoutOrgInput
   employees: EmployeeUpdateManyWithoutOrgInput
   orders: OrderUpdateManyWithoutOrgInput
@@ -6697,8 +6712,9 @@ input OrgUpdateWithoutOrdersDataInput {
   inn: String
   moedeloId: String
   amoId: Int
-  name: String
   legalAddress: String
+  name: String
+  ulName: String
   deals: DealUpdateManyWithoutOrgInput
   employees: EmployeeUpdateManyWithoutOrgInput
   enquiries: EnquiryUpdateManyWithoutOrgInput
@@ -6709,8 +6725,9 @@ input OrgUpdateWithoutPaymentsDataInput {
   inn: String
   moedeloId: String
   amoId: Int
-  name: String
   legalAddress: String
+  name: String
+  ulName: String
   deals: DealUpdateManyWithoutOrgInput
   employees: EmployeeUpdateManyWithoutOrgInput
   enquiries: EnquiryUpdateManyWithoutOrgInput
@@ -6893,46 +6910,6 @@ input OrgWhereInput {
 
   """All values greater than or equal the given value."""
   amoId_gte: Int
-  name: String
-
-  """All values that are not equal to given value."""
-  name_not: String
-
-  """All values that are contained in given list."""
-  name_in: [String!]
-
-  """All values that are not contained in given list."""
-  name_not_in: [String!]
-
-  """All values less than the given value."""
-  name_lt: String
-
-  """All values less than or equal the given value."""
-  name_lte: String
-
-  """All values greater than the given value."""
-  name_gt: String
-
-  """All values greater than or equal the given value."""
-  name_gte: String
-
-  """All values containing the given string."""
-  name_contains: String
-
-  """All values not containing the given string."""
-  name_not_contains: String
-
-  """All values starting with the given string."""
-  name_starts_with: String
-
-  """All values not starting with the given string."""
-  name_not_starts_with: String
-
-  """All values ending with the given string."""
-  name_ends_with: String
-
-  """All values not ending with the given string."""
-  name_not_ends_with: String
   legalAddress: String
 
   """All values that are not equal to given value."""
@@ -6973,6 +6950,86 @@ input OrgWhereInput {
 
   """All values not ending with the given string."""
   legalAddress_not_ends_with: String
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  ulName: String
+
+  """All values that are not equal to given value."""
+  ulName_not: String
+
+  """All values that are contained in given list."""
+  ulName_in: [String!]
+
+  """All values that are not contained in given list."""
+  ulName_not_in: [String!]
+
+  """All values less than the given value."""
+  ulName_lt: String
+
+  """All values less than or equal the given value."""
+  ulName_lte: String
+
+  """All values greater than the given value."""
+  ulName_gt: String
+
+  """All values greater than or equal the given value."""
+  ulName_gte: String
+
+  """All values containing the given string."""
+  ulName_contains: String
+
+  """All values not containing the given string."""
+  ulName_not_contains: String
+
+  """All values starting with the given string."""
+  ulName_starts_with: String
+
+  """All values not starting with the given string."""
+  ulName_not_starts_with: String
+
+  """All values ending with the given string."""
+  ulName_ends_with: String
+
+  """All values not ending with the given string."""
+  ulName_not_ends_with: String
   deals_every: DealWhereInput
   deals_some: DealWhereInput
   deals_none: DealWhereInput
