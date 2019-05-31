@@ -1,9 +1,11 @@
 const { File } = require('./File')
 const { Query } = require('./Query/Query')
+const { orgQueries } = require('./Query/orgQueries')
 const { Subscription } = require('./Subscription')
 const { amo } = require('./Mutation/amo')
 const { auth } = require('./Mutation/auth')
 const { batch } = require('./Mutation/batch')
+const { contract } = require('./Mutation/contract')
 const { deal } = require('./Mutation/deal')
 const { dealStatus } = require('./Mutation/dealStatus')
 const { disk } = require('./Mutation/disk')
@@ -29,11 +31,13 @@ module.exports = {
   File,
   Query: {
     ...Query, //simple queries collection
+    ...orgQueries
   },
   Mutation: {
     ...amo,
     ...auth,
     ...batch,
+    ...contract,
     ...deal,
     ...dealStatus,
     ...disk,

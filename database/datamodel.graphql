@@ -52,8 +52,10 @@ type Doc {
 	dateLocal: String
 	amount: Float
 	nds: Boolean
+	num: String
 	type: DocType
 	enquiry: Enquiry @relation(name: "EnquiryDocs")
+	org: Org
 }
 
 type Drawing{
@@ -170,6 +172,7 @@ type Org {
 	name: String!
 	ulName: String
 	deals: [Deal!]!
+	docs: [Doc!]!
 	employees: [Employee!]!
 	enquiries: [Enquiry!]! @relation(name: "OrgEnquiries")
 	orders: [Order!]! @relation(name: "OrgOrders")
@@ -293,6 +296,7 @@ enum EventType {
 
 enum DocType {
 	CO
+	CONTRACT
 }
 
 enum UserRole {

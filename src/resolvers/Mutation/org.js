@@ -1,10 +1,16 @@
 const fetch = require('node-fetch')
+const axios = require('axios')
 const moedeloBaseUrl = 'https://restapi.moedelo.org/kontragents/api/v1/kontragent'
 
 const headers = {
 	'md-api-key': process.env.MOEDELO_SECRET,
 	'Content-Type': 'application/json'
 }
+
+const MoeDelo = axios.create({
+	baseUrl: moedeloBaseUrl,
+	headers
+})
 
 const createMoeDeloOrg = async inn => {
 	const createOrgUrl = moedeloBaseUrl + '/inn'
@@ -182,12 +188,15 @@ const upsertOrgsByInn = async (_, inns, ctx, info) => {
 	))
 }
 
-module.exports = { org: {
-	checkOrgs,
-	createOrg,
-	deleteOrg,
-	deleteAllOrgs,
-	getMoeDeloOrgs,
-	mergeOrg,
-	upsertOrgsByInn,
-}}
+module.exports = {
+	MoeDelo,
+	org: {
+		checkOrgs,
+		createOrg,
+		deleteOrg,
+		deleteAllOrgs,
+		getMoeDeloOrgs,
+		mergeOrg,
+		upsertOrgsByInn,
+	}
+}

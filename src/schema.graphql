@@ -7,8 +7,8 @@ type Query {
   articles: [Article!]!
   deals: [Deal!]!
   depts: [Dept!]!
-  deptProds(deptId: ID!): [Prod!]!
-  confirmEmail(token: String!): AuthPayload
+  deptProds (deptId: ID!): [Prod!]!
+  confirmEmail (token: String!): AuthPayload
   enquiries: [Enquiry!]!
   enquiry (id: ID!): Enquiry
   equipment (id: ID!): Equipment
@@ -20,6 +20,7 @@ type Query {
   opTypes: [OpType!]!
   order (id: ID!): Order
   orgs: [Org!]!
+  orgDetails (id: ID!): Org
   orgEmployees (orgId: ID!): [Employee!]!
   persons: [Person!]!
   payments: [Payment!]!
@@ -35,6 +36,7 @@ type Mutation {
   # other
   checkOrgs: [String]
   connectDealToOrg(dealId: ID!, orgId: ID!): Deal
+  createContract (id: ID!, date: String): StatusPayload
   createDrawings(modelId: ID!, files: [Upload!]!): [Drawing!]!
   createEnquiry(dateLocal: String!, orgId: ID!, modelId: ID!, qty: Int!): Enquiry
   createEnquiryEvent(enquiryId: ID!, htmlText: String, statusId: ID, doc: DocCreateInput): Event

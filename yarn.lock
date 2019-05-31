@@ -1676,6 +1676,13 @@ doctrine@0.7.2:
     esutils "^1.1.6"
     isarray "0.0.1"
 
+docxtemplater@^3.11.1:
+  version "3.11.1"
+  resolved "https://registry.yarnpkg.com/docxtemplater/-/docxtemplater-3.11.1.tgz#6d158030948eaed8993b18c1c6fb17ee9908f869"
+  integrity sha512-gaCgq3qfvbX62VY46VI3wKuL1AjVq55NGz8HusGPaoRtyf0vrJ0CStHqkSOmKewPLmmo3lk05D3BpUOFOaJdGQ==
+  dependencies:
+    xmldom "^0.1.27"
+
 dot-case@^2.1.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/dot-case/-/dot-case-2.1.1.tgz#34dcf37f50a8e93c2b3bca8bb7fb9155c7da3bee"
@@ -3712,6 +3719,13 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
+jszip@2:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/jszip/-/jszip-2.6.1.tgz#b88f3a7b2e67a2a048152982c7a3756d9c4828f0"
+  integrity sha1-uI86ey5noqBIFSmCx6N1bZxIKPA=
+  dependencies:
+    pako "~1.0.2"
+
 jwa@^1.1.5:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/jwa/-/jwa-1.1.6.tgz#87240e76c9808dbde18783cf2264ef4929ee50e6"
@@ -4754,6 +4768,11 @@ packet-reader@0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/packet-reader/-/packet-reader-0.3.1.tgz#cd62e60af8d7fea8a705ec4ff990871c46871f27"
   integrity sha1-zWLmCvjX/qinBexP+ZCHHEaHHyc=
+
+pako@~1.0.2:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.10.tgz#4328badb5086a426aa90f541977d4955da5c9732"
+  integrity sha512-0DTvPVU3ed8+HNXOu5Bs+o//Mbdj9VNQMUOe9oKCwh8l0GNwpTDMKCWbRjgtD291AWnkAgkqA/LOnQS8AmS1tw==
 
 param-case@^2.1.0:
   version "2.1.1"
@@ -7015,6 +7034,11 @@ xmlbuilder@~9.0.1:
   version "9.0.7"
   resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-9.0.7.tgz#132ee63d2ec5565c557e20f4c22df9aca686b10d"
   integrity sha1-Ey7mPS7FVlxVfiD0wi35rKaGsQ0=
+
+xmldom@^0.1.27:
+  version "0.1.27"
+  resolved "https://registry.yarnpkg.com/xmldom/-/xmldom-0.1.27.tgz#d501f97b3bdb403af8ef9ecc20573187aadac0e9"
+  integrity sha1-1QH5ezvbQDr4757MIFcxh6rawOk=
 
 xregexp@4.0.0:
   version "4.0.0"
