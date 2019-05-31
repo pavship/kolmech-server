@@ -70,7 +70,7 @@ type Mutation {
   # file handling and cloud storage
   singleUpload (file: Upload!): File
   multipleUpload (files: [Upload!]!): [File!]!
-  highlightFolder (orgId: ID): StatusPayload
+  highlightFolder (orgId: ID, dealId: ID): StatusPayload
   # db migration scripts:
   importModels: BatchPayload!
   connectEnquiriesToDocsAndStatus: BatchPayload!

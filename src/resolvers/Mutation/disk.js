@@ -17,7 +17,29 @@ const getDiskResources = async path => {
 		qs.stringify({ path, limit: 10000 }))
 	return resources
 }
-const base = '/Компании'
+
+const getDiskResources2Levels = async path => {
+	const level1 = (await getDiskResources(path))
+		.filter(r => r.type === 'dir')
+		.map(({ name }) => name)
+	const level2 = await Promise.all(level1.map(folder => getDiskResources(`${path}/${folder}`)))
+	const resources = []
+	level2.forEach((rs, i) => {
+		rs.filter(r => r.type === 'dir')
+			.forEach(r => resources.push({
+				name: r.name,
+				id: r.name.slice(r.name.lastIndexOf('_') + 1),
+				parent: level1[i]
+			}))
+	})
+	return resources
+}
+
+const getResourceDownloadUrl = async path => {
+	const { data: { href }} = await Disk.get('/download?'+
+		qs.stringify({ path }))
+	return href
+}
 
 const getFolderName = async (path, anyTypeId) => {
 	const id = anyTypeId.toString()
@@ -72,8 +94,9 @@ const syncDiskFolders = async (path, folders) => {
 }
 
 const disk = {
-	async highlightFolder(_, { orgId }, ctx, info) {
+	async highlightFolder(_, { orgId, dealId }, ctx, info) {
 		const { db } = ctx
+		console.log('orgId, dealId > ', orgId, dealId)
 		if (orgId) {
 			const org = await db.query.org({ where: { id: orgId }}, '{ amoId name }')
 			if (!org) throw new Error('Organization was not found in DB')
@@ -92,7 +115,20 @@ const disk = {
 				}, 2000)
 			}
 		}
-		return { statusText: 'normal' }
+		if (dealId) {
+			const deal = await db.query.deal({ where: { id: dealId }}, '{ amoId name }')
+			if (!deal) throw new Error('Deal was not found in DB')
+			const basePath = '/Заявки ХОНИНГОВАНИЕ.РУ'
+			const resourses = await getDiskResources2Levels(basePath)
+			const resourse = resourses.find(r => r.id == deal.amoId)
+			if (!resourse) throw new Error('Не найдена папка сделки # ' + deal.amoId)
+			const highlighterPath = `${basePath}/${resourse.parent}/${resourse.name}/!folder_highlighter_(used_by_Kolmech_server)`
+			await createFolder(highlighterPath)
+			setTimeout(async () => {
+				await deleteFolder(highlighterPath, true)
+			}, 2000)
+		}
+		return { statusText: 'OK' }
 	}
 }
 
@@ -100,5 +136,6 @@ module.exports = {
 	disk,
 	Disk,
 	getDiskResources,
+	getResourceDownloadUrl,
 	syncDiskFolders
 }
