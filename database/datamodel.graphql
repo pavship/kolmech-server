@@ -279,6 +279,7 @@ type User {
 
 type Workpiece {
 	id: ID! @unique
+	hardness: String
 	name: String
 	material: String
 	batch: Batch @relation(name: "BatchWorkpiece")

@@ -214,6 +214,8 @@ input TelInput {
 
 input WorkpieceInput {
   id: ID
+  hardness: String
   name: String
   material: String
+  drawing: DrawingInput
 }

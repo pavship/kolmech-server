@@ -29,9 +29,11 @@ const handleObj = async (obj = {}, objTypeName, ctx) => {
     }
     if (type === 'object') {
       const method = obj[k].id ? 'update' : 'create'
-      return result[k] = {
+      result[k] = {
         [method]: await handleObj(obj[k], k, ctx)
       }
+      if (!Object.keys(result[k][method]).length) delete result[k]
+      return
     }
     if (k.endsWith('Id')) {
       const typeName = k.slice(0, -2)
@@ -94,30 +96,17 @@ const handleArr = async (arr, typeName, parentTypeName, parentId, ctx) => {
       // assign toDelete record if it's not found in the new arr
       if (!newVal) toDelete.push({ id })
         // assign toUpdate record if it's found in the new arr and has any props except 'id'
-        else if (Object.keys(newVal).length > 1) toUpdate.push({
-          where: { id },
-          data: await handleObj(newVal, singularTypeName, ctx)
-        })
+        else if (Object.keys(newVal).length > 1) {
+          const data = await handleObj(newVal, singularTypeName, ctx)
+          if (Object.keys(data).length) toUpdate.push({
+            where: { id },
+            data
+          })
+        }
       // exceptions
       if (typeName === 'tels' && newVal && newVal.number === '')
         deleteInsteadUpdateIds.push(newVal.id)
     }
-    // prevArr.forEach(({ id }) => {
-    //   const newVal = cloneDeep(arr.find(r => r.id === id))
-    //   // assign toDelete record if it's not found in the new arr
-    //   if (!newVal) toDelete.push({ id })
-    //     // assign toUpdate record if it's found in the new arr and has any props except 'id'
-    //     else if (Object.keys(newVal).length > 1) toUpdate.push({
-    //       where: { id },
-    //       data: await handleObj(newVal, singularTypeName, ctx)
-    //     })
-    //   // exceptions
-    //   if (typeName === 'tels' && newVal && newVal.number === '')
-    //     deleteInsteadUpdateIds.push(newVal.id)
-    // })
-    // console.log('deleteInsteadUpdateIds > ', deleteInsteadUpdateIds)
-    // handle exceptions
-    // console.log('toUpdate > ', toUpdate)
     if (deleteInsteadUpdateIds.length) {
       toUpdate = toUpdate.filter(r => !deleteInsteadUpdateIds.includes(r.where.id))
       toDelete = [
@@ -134,7 +123,7 @@ const handleArr = async (arr, typeName, parentTypeName, parentId, ctx) => {
   if (typeName === 'tels')
     // not creating tels with empty numbers
       toCreate = toCreate.filter(r => !!r.number)
-  console.log('toCreate > ', toCreate)
+  // console.log('toCreate > ', toCreate)
   const result = {
     ...toDelete.length && { delete: toDelete },
     ...toUpdate.length && { update: toUpdate },
