@@ -20,6 +20,105 @@ const headers = {
   'Content-Type': 'application/json'
 }
 
+const createCO = async (_, { id, date = toLocalDateString(new Date()) }, { db }, info) => {
+  console.log('createCO > ')
+  console.log('id, date > ', id, date)
+  const { amoId, batches } = await db.query.deal({ where: { id }}, `{
+    amoId
+    batches {
+      qty
+      model {
+        name
+      }
+      procs {
+        ops {
+          dealLabor
+          opType {
+            name
+          }
+        }
+      }
+    }
+  }`)
+  const genOpTemplateData = ({
+    dealLabor,
+    opType
+  }, batchNum, num) => ({
+    num: batchNum + '.' + num,
+    op: opType.name,
+    hrs: dealLabor,
+    description: 'Растачивание внутреннего диаметра под хонингование',
+    price: '10 000 ₽'
+  })
+  const templateDownloadUrl = await getResourceDownloadUrl('/Шаблоны документов/КП/template.docx')
+  const { data: template } = await axios.get( templateDownloadUrl, { responseType: 'arraybuffer'} )
+  const zip = new JSZip(template)
+  const doc = new Docxtemplater()
+    .loadZip(zip)
+    .setData({
+      date: date.split('-').reverse().join('.'),
+      amoId,
+      batches: batches.map(({
+        qty,
+        model,
+        procs
+      }, i) => {
+        const batchNum = i + 1
+        const ops = procs[0].ops
+        return {
+          num: batchNum,
+          qty,
+          model: model.name,
+          ...ops.length === 1 && {oOp: genOpTemplateData(ops[0], batchNum, 1)}, //onlyOp
+          ...ops.length > 1 && {
+            fOp: genOpTemplateData(ops[0], batchNum, 1), // firstOp
+            lOp: genOpTemplateData(ops[ops.length - 1], batchNum, ops.length), // lastOp
+          },
+          ...ops.length > 3 && {
+            iOps: ops.slice(1,-1).map((op, i) => genOpTemplateData(op, batchNum, i + 2)) // intermediateOps
+          }
+        }
+      }),
+      total: '195 000 ₽'
+      // batches: [{
+      //   qty: '8',
+      //   ops: [{
+      //     num: '1.1',
+      //     name: 'Расточка',
+      //     qty: '6'
+      //   },{
+      //     num: '1.2',
+      //     name: 'Фрез',
+      //     qty: '7'
+      //   }]
+      // },{
+      //   qty: '9',
+      //   ops: [{
+      //     num: '1.1',
+      //     name: 'Расточка',
+      //     qty: '6'
+      //   },{
+      //     num: '1.2',
+      //     name: 'Фрез',
+      //     qty: '7'
+      //   }]
+      // }]
+    })
+    // .setOptions({ paragraphLoop:true })
+  try { doc.render() }
+  catch (error) {
+      const { message, name, stack, properties } = error
+      console.log(JSON.stringify({error: { message, name, stack, properties }}))
+      throw error
+  }
+  const buf = doc.getZip()
+    .generate({
+      type: 'nodebuffer',
+      compression: "DEFLATE"
+  })
+  writeFileSync('./co.docx', buf)
+}
+
 const createContract = async (_, { id, date = toLocalDateString(new Date()) }, { db }, info) => {
   const { moedeloId } = await db.query.org({ where: { id }})
   console.log('moedeloId > ', moedeloId)
@@ -82,6 +181,7 @@ const createContract = async (_, { id, date = toLocalDateString(new Date()) }, {
 
 module.exports = {
 	contract: {
-		createContract
+    createCO,
+    createContract
 	}
 }

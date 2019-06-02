@@ -20,6 +20,7 @@ type Batch {
 	deal: Deal @relation(name: "DealBatches")
 	model: Model
 	procs: [Proc!]! @relation(name: "BatchesProcs" onDelete: CASCADE)
+	workpiece: Workpiece @relation(name: "BatchWorkpiece"  onDelete: CASCADE)
 }
 
 type Deal {
@@ -58,11 +59,13 @@ type Doc {
 	org: Org
 }
 
-type Drawing{
+type Drawing {
 	id: ID! @unique
+	name: String
 	sortOrder: Int						# display order of model's drawings collection
 	files: [File!]! @relation(name: "DrawingFiles" onDelete: CASCADE)
 	model: Model @relation(name: "ModelDrawings")
+	workpiece: Workpiece @relation(name: "WorkpieceDrawing")
 }
 
 type Employee {
@@ -272,6 +275,14 @@ type User {
 	account: Account				# default payment account
 	createdPayments: [Payment!]! @relation(name: "PaymentsCreatedByUser")
 	updatedPayments: [Payment!]! @relation(name: "PaymentsUpdatedByUser")
+}
+
+type Workpiece {
+	id: ID! @unique
+	name: String
+	material: String
+	batch: Batch @relation(name: "BatchWorkpiece")
+	drawing: Drawing @relation(name: "WorkpieceDrawing" onDelete: CASCADE)
 }
 
 enum TelType {

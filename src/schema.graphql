@@ -5,6 +5,7 @@ scalar Upload
 type Query {
   accounts: [Account!]!
   articles: [Article!]!
+  deal (id: ID!): Deal
   deals: [Deal!]!
   depts: [Dept!]!
   deptProds (deptId: ID!): [Prod!]!
@@ -36,6 +37,7 @@ type Mutation {
   # other
   checkOrgs: [String]
   connectDealToOrg(dealId: ID!, orgId: ID!): Deal
+  createCO (id: ID!, date: String): StatusPayload
   createContract (id: ID!, date: String): StatusPayload
   createDrawings(modelId: ID!, files: [Upload!]!): [Drawing!]!
   createEnquiry(dateLocal: String!, orgId: ID!, modelId: ID!, qty: Int!): Enquiry
@@ -106,12 +108,18 @@ input BatchInput {
   dealId: ID
   model: ModelInput
   procs: [ProcInput!]
+  workpiece: WorkpieceInput
 }
 
 input DealInput {
   id: ID
   orgId: ID
   batches: [BatchInput!]
+}
+
+input DrawingInput {
+  id: ID
+  name: String
 }
 
 input EmployeeInput {
@@ -135,12 +143,18 @@ input ModelInput {
   orgId: ID
   name: String
   article: String
+  drawings: [DrawingInput]
 }
 
 input OpInput {
   id: ID
   dealLabor: Float
   opTypeId: ID
+  opType: OpTypeInput
+}
+
+input OpTypeInput {
+  id: ID
 }
 
 input PaymentInput {
@@ -196,4 +210,10 @@ input TelInput {
 	country: String
 	note: String
 	default: Boolean
+}
+
+input WorkpieceInput {
+  id: ID
+  name: String
+  material: String
 }

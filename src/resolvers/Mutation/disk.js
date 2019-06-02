@@ -96,7 +96,6 @@ const syncDiskFolders = async (path, folders) => {
 const disk = {
 	async highlightFolder(_, { orgId, dealId }, ctx, info) {
 		const { db } = ctx
-		console.log('orgId, dealId > ', orgId, dealId)
 		if (orgId) {
 			const org = await db.query.org({ where: { id: orgId }}, '{ amoId name }')
 			if (!org) throw new Error('Organization was not found in DB')

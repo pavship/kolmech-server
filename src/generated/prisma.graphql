@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Tue May 28 2019 11:30:13 GMT+0300 (GMT+03:00)
+# timestamp: Sat Jun 01 2019 13:29:37 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -402,6 +402,10 @@ type AggregateUser {
   count: Int!
 }
 
+type AggregateWorkpiece {
+  count: Int!
+}
+
 type Article implements Node {
   id: ID!
   name: String
@@ -703,6 +707,7 @@ type Batch implements Node {
   deal: Deal
   model: Model
   procs(where: ProcWhereInput, orderBy: ProcOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Proc!]
+  workpiece: Workpiece
 }
 
 """A connection to a list of items."""
@@ -720,6 +725,7 @@ input BatchCreateInput {
   deal: DealCreateOneWithoutBatchesInput
   model: ModelCreateOneWithoutBatchesInput
   procs: ProcCreateManyWithoutBatchesInput
+  workpiece: WorkpieceCreateOneWithoutBatchInput
 }
 
 input BatchCreateManyWithoutDealInput {
@@ -737,22 +743,37 @@ input BatchCreateManyWithoutProcsInput {
   connect: [BatchWhereUniqueInput!]
 }
 
+input BatchCreateOneWithoutWorkpieceInput {
+  create: BatchCreateWithoutWorkpieceInput
+  connect: BatchWhereUniqueInput
+}
+
 input BatchCreateWithoutDealInput {
   qty: Int
   model: ModelCreateOneWithoutBatchesInput
   procs: ProcCreateManyWithoutBatchesInput
+  workpiece: WorkpieceCreateOneWithoutBatchInput
 }
 
 input BatchCreateWithoutModelInput {
   qty: Int
   deal: DealCreateOneWithoutBatchesInput
   procs: ProcCreateManyWithoutBatchesInput
+  workpiece: WorkpieceCreateOneWithoutBatchInput
 }
 
 input BatchCreateWithoutProcsInput {
   qty: Int
   deal: DealCreateOneWithoutBatchesInput
   model: ModelCreateOneWithoutBatchesInput
+  workpiece: WorkpieceCreateOneWithoutBatchInput
+}
+
+input BatchCreateWithoutWorkpieceInput {
+  qty: Int
+  deal: DealCreateOneWithoutBatchesInput
+  model: ModelCreateOneWithoutBatchesInput
+  procs: ProcCreateManyWithoutBatchesInput
 }
 
 """An edge in a connection."""
@@ -829,6 +850,7 @@ input BatchUpdateInput {
   deal: DealUpdateOneWithoutBatchesInput
   model: ModelUpdateOneWithoutBatchesInput
   procs: ProcUpdateManyWithoutBatchesInput
+  workpiece: WorkpieceUpdateOneWithoutBatchInput
 }
 
 input BatchUpdateManyMutationInput {
@@ -862,22 +884,41 @@ input BatchUpdateManyWithoutProcsInput {
   upsert: [BatchUpsertWithWhereUniqueWithoutProcsInput!]
 }
 
+input BatchUpdateOneWithoutWorkpieceInput {
+  create: BatchCreateWithoutWorkpieceInput
+  connect: BatchWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: BatchUpdateWithoutWorkpieceDataInput
+  upsert: BatchUpsertWithoutWorkpieceInput
+}
+
 input BatchUpdateWithoutDealDataInput {
   qty: Int
   model: ModelUpdateOneWithoutBatchesInput
   procs: ProcUpdateManyWithoutBatchesInput
+  workpiece: WorkpieceUpdateOneWithoutBatchInput
 }
 
 input BatchUpdateWithoutModelDataInput {
   qty: Int
   deal: DealUpdateOneWithoutBatchesInput
   procs: ProcUpdateManyWithoutBatchesInput
+  workpiece: WorkpieceUpdateOneWithoutBatchInput
 }
 
 input BatchUpdateWithoutProcsDataInput {
   qty: Int
   deal: DealUpdateOneWithoutBatchesInput
   model: ModelUpdateOneWithoutBatchesInput
+  workpiece: WorkpieceUpdateOneWithoutBatchInput
+}
+
+input BatchUpdateWithoutWorkpieceDataInput {
+  qty: Int
+  deal: DealUpdateOneWithoutBatchesInput
+  model: ModelUpdateOneWithoutBatchesInput
+  procs: ProcUpdateManyWithoutBatchesInput
 }
 
 input BatchUpdateWithWhereUniqueWithoutDealInput {
@@ -893,6 +934,11 @@ input BatchUpdateWithWhereUniqueWithoutModelInput {
 input BatchUpdateWithWhereUniqueWithoutProcsInput {
   where: BatchWhereUniqueInput!
   data: BatchUpdateWithoutProcsDataInput!
+}
+
+input BatchUpsertWithoutWorkpieceInput {
+  update: BatchUpdateWithoutWorkpieceDataInput!
+  create: BatchCreateWithoutWorkpieceInput!
 }
 
 input BatchUpsertWithWhereUniqueWithoutDealInput {
@@ -989,6 +1035,7 @@ input BatchWhereInput {
   procs_every: ProcWhereInput
   procs_some: ProcWhereInput
   procs_none: ProcWhereInput
+  workpiece: WorkpieceWhereInput
 }
 
 input BatchWhereUniqueInput {
@@ -2313,9 +2360,11 @@ input DocWhereUniqueInput {
 
 type Drawing implements Node {
   id: ID!
+  name: String
   sortOrder: Int
   files(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [File!]
   model: Model
+  workpiece: Workpiece
 }
 
 """A connection to a list of items."""
@@ -2329,9 +2378,11 @@ type DrawingConnection {
 }
 
 input DrawingCreateInput {
+  name: String
   sortOrder: Int
   files: FileCreateManyWithoutDrawingInput
   model: ModelCreateOneWithoutDrawingsInput
+  workpiece: WorkpieceCreateOneWithoutDrawingInput
 }
 
 input DrawingCreateManyWithoutModelInput {
@@ -2344,14 +2395,30 @@ input DrawingCreateOneWithoutFilesInput {
   connect: DrawingWhereUniqueInput
 }
 
+input DrawingCreateOneWithoutWorkpieceInput {
+  create: DrawingCreateWithoutWorkpieceInput
+  connect: DrawingWhereUniqueInput
+}
+
 input DrawingCreateWithoutFilesInput {
+  name: String
   sortOrder: Int
   model: ModelCreateOneWithoutDrawingsInput
+  workpiece: WorkpieceCreateOneWithoutDrawingInput
 }
 
 input DrawingCreateWithoutModelInput {
+  name: String
   sortOrder: Int
   files: FileCreateManyWithoutDrawingInput
+  workpiece: WorkpieceCreateOneWithoutDrawingInput
+}
+
+input DrawingCreateWithoutWorkpieceInput {
+  name: String
+  sortOrder: Int
+  files: FileCreateManyWithoutDrawingInput
+  model: ModelCreateOneWithoutDrawingsInput
 }
 
 """An edge in a connection."""
@@ -2366,6 +2433,8 @@ type DrawingEdge {
 enum DrawingOrderByInput {
   id_ASC
   id_DESC
+  name_ASC
+  name_DESC
   sortOrder_ASC
   sortOrder_DESC
   updatedAt_ASC
@@ -2376,6 +2445,7 @@ enum DrawingOrderByInput {
 
 type DrawingPreviousValues {
   id: ID!
+  name: String
   sortOrder: Int
 }
 
@@ -2419,12 +2489,15 @@ input DrawingSubscriptionWhereInput {
 }
 
 input DrawingUpdateInput {
+  name: String
   sortOrder: Int
   files: FileUpdateManyWithoutDrawingInput
   model: ModelUpdateOneWithoutDrawingsInput
+  workpiece: WorkpieceUpdateOneWithoutDrawingInput
 }
 
 input DrawingUpdateManyMutationInput {
+  name: String
   sortOrder: Int
 }
 
@@ -2446,14 +2519,34 @@ input DrawingUpdateOneWithoutFilesInput {
   upsert: DrawingUpsertWithoutFilesInput
 }
 
+input DrawingUpdateOneWithoutWorkpieceInput {
+  create: DrawingCreateWithoutWorkpieceInput
+  connect: DrawingWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: DrawingUpdateWithoutWorkpieceDataInput
+  upsert: DrawingUpsertWithoutWorkpieceInput
+}
+
 input DrawingUpdateWithoutFilesDataInput {
+  name: String
   sortOrder: Int
   model: ModelUpdateOneWithoutDrawingsInput
+  workpiece: WorkpieceUpdateOneWithoutDrawingInput
 }
 
 input DrawingUpdateWithoutModelDataInput {
+  name: String
   sortOrder: Int
   files: FileUpdateManyWithoutDrawingInput
+  workpiece: WorkpieceUpdateOneWithoutDrawingInput
+}
+
+input DrawingUpdateWithoutWorkpieceDataInput {
+  name: String
+  sortOrder: Int
+  files: FileUpdateManyWithoutDrawingInput
+  model: ModelUpdateOneWithoutDrawingsInput
 }
 
 input DrawingUpdateWithWhereUniqueWithoutModelInput {
@@ -2464,6 +2557,11 @@ input DrawingUpdateWithWhereUniqueWithoutModelInput {
 input DrawingUpsertWithoutFilesInput {
   update: DrawingUpdateWithoutFilesDataInput!
   create: DrawingCreateWithoutFilesInput!
+}
+
+input DrawingUpsertWithoutWorkpieceInput {
+  update: DrawingUpdateWithoutWorkpieceDataInput!
+  create: DrawingCreateWithoutWorkpieceInput!
 }
 
 input DrawingUpsertWithWhereUniqueWithoutModelInput {
@@ -2521,6 +2619,46 @@ input DrawingWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
   sortOrder: Int
 
   """All values that are not equal to given value."""
@@ -2547,6 +2685,7 @@ input DrawingWhereInput {
   files_some: FileWhereInput
   files_none: FileWhereInput
   model: ModelWhereInput
+  workpiece: WorkpieceWhereInput
 }
 
 input DrawingWhereUniqueInput {
@@ -5245,6 +5384,7 @@ type Mutation {
   createPerson(data: PersonCreateInput!): Person!
   createProd(data: ProdCreateInput!): Prod!
   createUser(data: UserCreateInput!): User!
+  createWorkpiece(data: WorkpieceCreateInput!): Workpiece!
   createArticle(data: ArticleCreateInput!): Article!
   createStatus(data: StatusCreateInput!): Status!
   createAccount(data: AccountCreateInput!): Account!
@@ -5272,6 +5412,7 @@ type Mutation {
   updatePerson(data: PersonUpdateInput!, where: PersonWhereUniqueInput!): Person
   updateProd(data: ProdUpdateInput!, where: ProdWhereUniqueInput!): Prod
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  updateWorkpiece(data: WorkpieceUpdateInput!, where: WorkpieceWhereUniqueInput!): Workpiece
   updateArticle(data: ArticleUpdateInput!, where: ArticleWhereUniqueInput!): Article
   updateStatus(data: StatusUpdateInput!, where: StatusWhereUniqueInput!): Status
   updateAccount(data: AccountUpdateInput!, where: AccountWhereUniqueInput!): Account
@@ -5299,6 +5440,7 @@ type Mutation {
   deletePerson(where: PersonWhereUniqueInput!): Person
   deleteProd(where: ProdWhereUniqueInput!): Prod
   deleteUser(where: UserWhereUniqueInput!): User
+  deleteWorkpiece(where: WorkpieceWhereUniqueInput!): Workpiece
   deleteArticle(where: ArticleWhereUniqueInput!): Article
   deleteStatus(where: StatusWhereUniqueInput!): Status
   deleteAccount(where: AccountWhereUniqueInput!): Account
@@ -5326,6 +5468,7 @@ type Mutation {
   upsertPerson(where: PersonWhereUniqueInput!, create: PersonCreateInput!, update: PersonUpdateInput!): Person!
   upsertProd(where: ProdWhereUniqueInput!, create: ProdCreateInput!, update: ProdUpdateInput!): Prod!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  upsertWorkpiece(where: WorkpieceWhereUniqueInput!, create: WorkpieceCreateInput!, update: WorkpieceUpdateInput!): Workpiece!
   upsertArticle(where: ArticleWhereUniqueInput!, create: ArticleCreateInput!, update: ArticleUpdateInput!): Article!
   upsertStatus(where: StatusWhereUniqueInput!, create: StatusCreateInput!, update: StatusUpdateInput!): Status!
   upsertAccount(where: AccountWhereUniqueInput!, create: AccountCreateInput!, update: AccountUpdateInput!): Account!
@@ -5353,6 +5496,7 @@ type Mutation {
   updateManyPersons(data: PersonUpdateManyMutationInput!, where: PersonWhereInput): BatchPayload!
   updateManyProds(data: ProdUpdateManyMutationInput!, where: ProdWhereInput): BatchPayload!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  updateManyWorkpieces(data: WorkpieceUpdateManyMutationInput!, where: WorkpieceWhereInput): BatchPayload!
   updateManyArticles(data: ArticleUpdateManyMutationInput!, where: ArticleWhereInput): BatchPayload!
   updateManyStatuses(data: StatusUpdateManyMutationInput!, where: StatusWhereInput): BatchPayload!
   updateManyAccounts(data: AccountUpdateManyMutationInput!, where: AccountWhereInput): BatchPayload!
@@ -5380,6 +5524,7 @@ type Mutation {
   deleteManyPersons(where: PersonWhereInput): BatchPayload!
   deleteManyProds(where: ProdWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
+  deleteManyWorkpieces(where: WorkpieceWhereInput): BatchPayload!
   deleteManyArticles(where: ArticleWhereInput): BatchPayload!
   deleteManyStatuses(where: StatusWhereInput): BatchPayload!
   deleteManyAccounts(where: AccountWhereInput): BatchPayload!
@@ -9499,6 +9644,7 @@ type Query {
   persons(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Person]!
   prods(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Prod]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  workpieces(where: WorkpieceWhereInput, orderBy: WorkpieceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Workpiece]!
   articles(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Article]!
   statuses(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Status]!
   accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account]!
@@ -9526,6 +9672,7 @@ type Query {
   person(where: PersonWhereUniqueInput!): Person
   prod(where: ProdWhereUniqueInput!): Prod
   user(where: UserWhereUniqueInput!): User
+  workpiece(where: WorkpieceWhereUniqueInput!): Workpiece
   article(where: ArticleWhereUniqueInput!): Article
   status(where: StatusWhereUniqueInput!): Status
   account(where: AccountWhereUniqueInput!): Account
@@ -9553,6 +9700,7 @@ type Query {
   personsConnection(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PersonConnection!
   prodsConnection(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProdConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  workpiecesConnection(where: WorkpieceWhereInput, orderBy: WorkpieceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WorkpieceConnection!
   articlesConnection(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ArticleConnection!
   statusesConnection(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StatusConnection!
   accountsConnection(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AccountConnection!
@@ -10132,6 +10280,7 @@ type Subscription {
   person(where: PersonSubscriptionWhereInput): PersonSubscriptionPayload
   prod(where: ProdSubscriptionWhereInput): ProdSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+  workpiece(where: WorkpieceSubscriptionWhereInput): WorkpieceSubscriptionPayload
   article(where: ArticleSubscriptionWhereInput): ArticleSubscriptionPayload
   status(where: StatusSubscriptionWhereInput): StatusSubscriptionPayload
   account(where: AccountSubscriptionWhereInput): AccountSubscriptionPayload
@@ -10952,4 +11101,307 @@ input UserWhereInput {
 input UserWhereUniqueInput {
   id: ID
   email: String
+}
+
+type Workpiece implements Node {
+  id: ID!
+  name: String
+  material: String
+  batch: Batch
+  drawing: Drawing
+}
+
+"""A connection to a list of items."""
+type WorkpieceConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [WorkpieceEdge]!
+  aggregate: AggregateWorkpiece!
+}
+
+input WorkpieceCreateInput {
+  name: String
+  material: String
+  batch: BatchCreateOneWithoutWorkpieceInput
+  drawing: DrawingCreateOneWithoutWorkpieceInput
+}
+
+input WorkpieceCreateOneWithoutBatchInput {
+  create: WorkpieceCreateWithoutBatchInput
+  connect: WorkpieceWhereUniqueInput
+}
+
+input WorkpieceCreateOneWithoutDrawingInput {
+  create: WorkpieceCreateWithoutDrawingInput
+  connect: WorkpieceWhereUniqueInput
+}
+
+input WorkpieceCreateWithoutBatchInput {
+  name: String
+  material: String
+  drawing: DrawingCreateOneWithoutWorkpieceInput
+}
+
+input WorkpieceCreateWithoutDrawingInput {
+  name: String
+  material: String
+  batch: BatchCreateOneWithoutWorkpieceInput
+}
+
+"""An edge in a connection."""
+type WorkpieceEdge {
+  """The item at the end of the edge."""
+  node: Workpiece!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum WorkpieceOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  material_ASC
+  material_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type WorkpiecePreviousValues {
+  id: ID!
+  name: String
+  material: String
+}
+
+type WorkpieceSubscriptionPayload {
+  mutation: MutationType!
+  node: Workpiece
+  updatedFields: [String!]
+  previousValues: WorkpiecePreviousValues
+}
+
+input WorkpieceSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [WorkpieceSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [WorkpieceSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [WorkpieceSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: WorkpieceWhereInput
+}
+
+input WorkpieceUpdateInput {
+  name: String
+  material: String
+  batch: BatchUpdateOneWithoutWorkpieceInput
+  drawing: DrawingUpdateOneWithoutWorkpieceInput
+}
+
+input WorkpieceUpdateManyMutationInput {
+  name: String
+  material: String
+}
+
+input WorkpieceUpdateOneWithoutBatchInput {
+  create: WorkpieceCreateWithoutBatchInput
+  connect: WorkpieceWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: WorkpieceUpdateWithoutBatchDataInput
+  upsert: WorkpieceUpsertWithoutBatchInput
+}
+
+input WorkpieceUpdateOneWithoutDrawingInput {
+  create: WorkpieceCreateWithoutDrawingInput
+  connect: WorkpieceWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: WorkpieceUpdateWithoutDrawingDataInput
+  upsert: WorkpieceUpsertWithoutDrawingInput
+}
+
+input WorkpieceUpdateWithoutBatchDataInput {
+  name: String
+  material: String
+  drawing: DrawingUpdateOneWithoutWorkpieceInput
+}
+
+input WorkpieceUpdateWithoutDrawingDataInput {
+  name: String
+  material: String
+  batch: BatchUpdateOneWithoutWorkpieceInput
+}
+
+input WorkpieceUpsertWithoutBatchInput {
+  update: WorkpieceUpdateWithoutBatchDataInput!
+  create: WorkpieceCreateWithoutBatchInput!
+}
+
+input WorkpieceUpsertWithoutDrawingInput {
+  update: WorkpieceUpdateWithoutDrawingDataInput!
+  create: WorkpieceCreateWithoutDrawingInput!
+}
+
+input WorkpieceWhereInput {
+  """Logical AND on all given filters."""
+  AND: [WorkpieceWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [WorkpieceWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [WorkpieceWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  material: String
+
+  """All values that are not equal to given value."""
+  material_not: String
+
+  """All values that are contained in given list."""
+  material_in: [String!]
+
+  """All values that are not contained in given list."""
+  material_not_in: [String!]
+
+  """All values less than the given value."""
+  material_lt: String
+
+  """All values less than or equal the given value."""
+  material_lte: String
+
+  """All values greater than the given value."""
+  material_gt: String
+
+  """All values greater than or equal the given value."""
+  material_gte: String
+
+  """All values containing the given string."""
+  material_contains: String
+
+  """All values not containing the given string."""
+  material_not_contains: String
+
+  """All values starting with the given string."""
+  material_starts_with: String
+
+  """All values not starting with the given string."""
+  material_not_starts_with: String
+
+  """All values ending with the given string."""
+  material_ends_with: String
+
+  """All values not ending with the given string."""
+  material_not_ends_with: String
+  batch: BatchWhereInput
+  drawing: DrawingWhereInput
+}
+
+input WorkpieceWhereUniqueInput {
+  id: ID
 }

@@ -53,7 +53,11 @@ const Query = {
 	enquiries(_, __, ctx, info) {
 		return ctx.db.query.enquiries({ orderBy: 'num_DESC' }, info)
 	},
-	      
+	
+	deal(_, { id }, ctx, info) {
+		return ctx.db.query.deal({ where: { id } }, info)
+	},
+
 	deals(_, __, ctx, info) {
 		return ctx.db.query.deals({
 			where: { status: { 'amoId_not_in': [142, 143, 24659131] }},
