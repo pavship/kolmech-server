@@ -37,8 +37,10 @@ const deal = {
             }, '{ id amoId name }')
       }))
     const toDeleteIds = []
-    const oldDeals = (await db.query.deals({}, '{ amoId org { id } }'))
+    console.log('toDeleteIds > ', toDeleteIds)
+    const oldDeals = (await db.query.deals({}, '{ amoId org { id } batches { id } }'))
       .forEach(oldDeal => {
+        console.log('oldDeal > ', JSON.stringify(oldDeal, null, 2))
         const deal = deals.find(d => d.amoId === oldDeal.amoId)
         return deal
           ? deal.oldDeal = oldDeal
@@ -57,7 +59,7 @@ const deal = {
     }) => {
       const syncedOrg = !!companyId
         && syncedOrgs.find(o => o.amoId === companyId)
-      return db.mutation.upsertDeal({
+      const mutationObj = {
         where: { amoId },
         update: {
           name,
@@ -77,9 +79,11 @@ const deal = {
             connect: { amoId: statusId }
           }
         }
-      }, '{ id }')
       }
-    ))
+      console.log('mutationObj > ', JSON.stringify(mutationObj, null, 2))
+      return db.mutation.upsertDeal(mutationObj, '{ id batches { id } }')
+    }))
+    // console.log('upserted > ', JSON.stringify(upserted, null, 2))
     return { count: upserted.length }
   },
   async upsertDeal(_, { input }, ctx, info) {

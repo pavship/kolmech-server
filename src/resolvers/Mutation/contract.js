@@ -3,6 +3,7 @@ var JSZip = require('jszip')
 var Docxtemplater = require('docxtemplater')
 const { toLocalDateString } = require('../../utils/dates')
 const { getResourceDownloadUrl } = require('./disk')
+const { currency } = require('../../utils/format')
 
 const { writeFileSync } = require('fs')
 
@@ -29,10 +30,22 @@ const createCO = async (_, { id, date = toLocalDateString(new Date()) }, { db },
       qty
       model {
         name
+        drawings {
+          name
+        }
+      }
+      workpiece {
+        name
+        drawing {
+          name
+        }
       }
       procs {
         ops {
           dealLabor
+          description
+          info
+          warning
           opType {
             name
           }
@@ -42,18 +55,24 @@ const createCO = async (_, { id, date = toLocalDateString(new Date()) }, { db },
   }`)
   const genOpTemplateData = ({
     dealLabor,
+    description='',
+    info='',
+    warning='',
     opType
   }, batchNum, num) => ({
     num: batchNum + '.' + num,
     op: opType.name,
     hrs: dealLabor,
-    description: 'Растачивание внутреннего диаметра под хонингование',
-    price: '10 000 ₽'
+    description,
+    info,
+    warning,
+    price: currency(dealLabor*2000)
   })
   const templateDownloadUrl = await getResourceDownloadUrl('/Шаблоны документов/КП/template.docx')
   const { data: template } = await axios.get( templateDownloadUrl, { responseType: 'arraybuffer'} )
   const zip = new JSZip(template)
   const doc = new Docxtemplater()
+    .setOptions({linebreaks:true})
     .loadZip(zip)
     .setData({
       date: date.split('-').reverse().join('.'),
@@ -61,14 +80,17 @@ const createCO = async (_, { id, date = toLocalDateString(new Date()) }, { db },
       batches: batches.map(({
         qty,
         model,
-        procs
+        procs,
+        workpiece
       }, i) => {
         const batchNum = i + 1
-        const ops = procs[0].ops
+        const ops = procs[0] && procs[0].ops || []
         return {
           num: batchNum,
           qty,
-          model: model.name,
+          modelName: model.name,
+          drwName: model.drawing && model.drawing.name || '',
+          wpName: workpiece && workpiece.name || '',
           ...ops.length === 1 && {oOp: genOpTemplateData(ops[0], batchNum, 1)}, //onlyOp
           ...ops.length > 1 && {
             fOp: genOpTemplateData(ops[0], batchNum, 1), // firstOp
@@ -76,7 +98,8 @@ const createCO = async (_, { id, date = toLocalDateString(new Date()) }, { db },
           },
           ...ops.length > 3 && {
             iOps: ops.slice(1,-1).map((op, i) => genOpTemplateData(op, batchNum, i + 2)) // intermediateOps
-          }
+          },
+          workpiece
         }
       }),
       total: '195 000 ₽'

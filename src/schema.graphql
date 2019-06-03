@@ -149,6 +149,9 @@ input ModelInput {
 input OpInput {
   id: ID
   dealLabor: Float
+  description: String
+  info: String
+  warning: String
   opTypeId: ID
   opType: OpTypeInput
 }

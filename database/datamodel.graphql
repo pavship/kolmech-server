@@ -142,6 +142,9 @@ type Op {
 	id: ID! @unique
 	dealLabor: Float
 	opType: OpType!
+	description: String
+	info: String
+	warning: String
 	proc: Proc! @relation(name: "ProcOps")
 }
 
