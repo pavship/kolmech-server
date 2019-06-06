@@ -19,7 +19,7 @@ const syncDeals = async (_, __, ctx, ___) => {
   const { data: {_embedded: {items: deals}}} = await amo.get('/api/v2/leads')
   // sync orgs
   // console.log('deal > ', deals.find(d => d.company.id === 19793913))
-  console.log('deal > ', deals.find(d => d.id === 18154001))
+  // console.log('deal > ', deals.find(d => d.id === 18154001))
   const { data } = await amo.get('/api/v2/companies?id=52117159')
   const orgs = await db.query.orgs({}, '{ id amoId name }')
   const { data: {_embedded: {items: companies}}} = await amo.get('/api/v2/companies?id=' +
@@ -41,10 +41,9 @@ const syncDeals = async (_, __, ctx, ___) => {
   // console.log('toDeleteIds > ', toDeleteIds)
   const oldDeals = (await db.query.deals({}, '{ id amoId org { id } batches { id } }'))
     .forEach(oldDeal => {
-      // console.log('oldDeal > ', JSON.stringify(oldDeal, null, 2))
-      if (oldDeal.amoId === 18154001) console.log('oldDeal > ', JSON.stringify(oldDeal, null, 2))
+      // if (oldDeal.amoId === 18154001) console.log('oldDeal > ', JSON.stringify(oldDeal, null, 2))
       const deal = deals.find(d => d.id === oldDeal.amoId)
-      if (oldDeal.amoId === 18154001) console.log('deal > ', JSON.stringify(deal, null, 2))
+      // if (oldDeal.amoId === 18154001) console.log('deal > ', JSON.stringify(deal, null, 2))
       return deal
         ? deal.oldDeal = oldDeal
         : toDeleteIds.push(oldDeal.amoId)
@@ -54,7 +53,6 @@ const syncDeals = async (_, __, ctx, ___) => {
   // fetch dealstatuses
   const dealStatusesIdsMap = (await db.query.dealStatuses({}, '{ id amoId }'))
     .reduce((res, { id, amoId }) => ({ ...res, [amoId]: id }), {})
-  console.log('dealStatusesIdsMap > ', dealStatusesIdsMap)
   // upsert deals
   const upserted = await Promise.all(deals.map(({
     id: amoId,
@@ -88,7 +86,7 @@ const syncDeals = async (_, __, ctx, ___) => {
         }
       }
     }
-    if (amoId === 18154001) console.log('mutationObj > ', JSON.stringify(mutationObj, null, 2))
+    // if (amoId === 18154001) console.log('mutationObj > ', JSON.stringify(mutationObj, null, 2))
     return db.mutation.upsertDeal(mutationObj, '{ id batches { id } }')
     // const input = {
     //   id: oldDeal && oldDeal.id,

@@ -7,14 +7,6 @@ const { currency } = require('../../utils/format')
 
 const { writeFileSync } = require('fs')
 
-// const toArray = require('stream-to-array')
-
-// const createBuffer = async ( stream ) => {
-//   const parts = await toArray(stream)
-//   const buffers = parts.map(part => Buffer.from(part))
-//   return Buffer.concat(buffers)
-//}
-
 const baseUrl = 'https://restapi.moedelo.org'
 const headers = {
   'md-api-key': process.env.MOEDELO_SECRET,
@@ -27,7 +19,9 @@ const createCO = async (_, { id, date = toLocalDateString(new Date()) }, { db },
   const { amoId, batches } = await db.query.deal({ where: { id }}, `{
     amoId
     batches {
+      info
       qty
+      warning
       model {
         name
         drawings {
@@ -36,6 +30,7 @@ const createCO = async (_, { id, date = toLocalDateString(new Date()) }, { db },
       }
       workpiece {
         name
+        material
         drawing {
           name
         }
@@ -44,8 +39,6 @@ const createCO = async (_, { id, date = toLocalDateString(new Date()) }, { db },
         ops {
           dealLabor
           description
-          info
-          warning
           opType {
             name
           }
@@ -56,16 +49,12 @@ const createCO = async (_, { id, date = toLocalDateString(new Date()) }, { db },
   const genOpTemplateData = ({
     dealLabor,
     description='',
-    info='',
-    warning='',
     opType
   }, batchNum, num) => ({
     num: batchNum + '.' + num,
     op: opType.name,
     hrs: dealLabor,
     description,
-    info,
-    warning,
     price: currency(dealLabor*2000)
   })
   const templateDownloadUrl = await getResourceDownloadUrl('/Шаблоны документов/КП/template.docx')
@@ -78,7 +67,9 @@ const createCO = async (_, { id, date = toLocalDateString(new Date()) }, { db },
       date: date.split('-').reverse().join('.'),
       amoId,
       batches: batches.map(({
+        info,
         qty,
+        warning,
         model,
         procs,
         workpiece
@@ -87,10 +78,14 @@ const createCO = async (_, { id, date = toLocalDateString(new Date()) }, { db },
         const ops = procs[0] && procs[0].ops || []
         return {
           num: batchNum,
+          info,
           qty,
+          warning,
           modelName: model.name,
-          drwName: model.drawing && model.drawing.name || '',
+          drwName: model.drawings[0] && model.drawings[0].name || '',
           wpName: workpiece && workpiece.name || '',
+          wpMaterial: workpiece && workpiece.material,
+          wpDrwName: workpiece && workpiece.drawing && workpiece.drawing.name,
           ...ops.length === 1 && {oOp: genOpTemplateData(ops[0], batchNum, 1)}, //onlyOp
           ...ops.length > 1 && {
             fOp: genOpTemplateData(ops[0], batchNum, 1), // firstOp
@@ -99,33 +94,9 @@ const createCO = async (_, { id, date = toLocalDateString(new Date()) }, { db },
           ...ops.length > 3 && {
             iOps: ops.slice(1,-1).map((op, i) => genOpTemplateData(op, batchNum, i + 2)) // intermediateOps
           },
-          workpiece
         }
       }),
       total: '195 000 ₽'
-      // batches: [{
-      //   qty: '8',
-      //   ops: [{
-      //     num: '1.1',
-      //     name: 'Расточка',
-      //     qty: '6'
-      //   },{
-      //     num: '1.2',
-      //     name: 'Фрез',
-      //     qty: '7'
-      //   }]
-      // },{
-      //   qty: '9',
-      //   ops: [{
-      //     num: '1.1',
-      //     name: 'Расточка',
-      //     qty: '6'
-      //   },{
-      //     num: '1.2',
-      //     name: 'Фрез',
-      //     qty: '7'
-      //   }]
-      // }]
     })
     // .setOptions({ paragraphLoop:true })
   try { doc.render() }
@@ -166,29 +137,27 @@ const createContract = async (_, { id, date = toLocalDateString(new Date()) }, {
   console.log('data > ', data)
   const templateDownloadUrl = await getResourceDownloadUrl('/Шаблоны документов/Договор подряда (для клиентов)/Шаблоны для МоеДело/2019-05-09_Шаблон договора ИП ШПС на мехобработку.docx')
   const { data: template } = await axios.get( templateDownloadUrl, { responseType: 'arraybuffer'} )
-
   var zip = new JSZip(template)
   var doc = new Docxtemplater()
   doc.loadZip(zip)
   //set the templateVariables
   doc.setData({
-      number: `${date}/1`,
-      date: date.split('-').reverse().join('.')
+    number: `${date}/1`,
+    date: date.split('-').reverse().join('.')
   })
   try {
-      // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
-      doc.render()
+    doc.render()
   }
   catch (error) {
-      var e = {
-          message: error.message,
-          name: error.name,
-          stack: error.stack,
-          properties: error.properties,
-      }
-      console.log(JSON.stringify({error: e}))
-      // The error thrown here contains additional information when logged with JSON.stringify (it contains a property object).
-      throw error
+    var e = {
+      message: error.message,
+      name: error.name,
+      stack: error.stack,
+      properties: error.properties,
+    }
+    console.log(JSON.stringify({error: e}))
+    // The error thrown here contains additional information when logged with JSON.stringify (it contains a property object).
+    throw error
   }
   var buf = doc.getZip()
     .generate({
@@ -197,8 +166,6 @@ const createContract = async (_, { id, date = toLocalDateString(new Date()) }, {
     })
   // buf is a nodejs buffer, you can either write it to a file or do anything else with it.
   writeFileSync('./output.docx', buf)
-
-  console.log('res > ', res)
   return { statusText: 'OK' }
 }
 
