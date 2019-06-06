@@ -17,8 +17,10 @@ type Article {					# payment articles
 type Batch {
 	id: ID! @unique
 	qty: Int
+	info: String
+	warning: String
 	deal: Deal @relation(name: "DealBatches")
-	model: Model
+	model: Model!
 	procs: [Proc!]! @relation(name: "BatchesProcs" onDelete: CASCADE)
 	workpiece: Workpiece @relation(name: "BatchWorkpiece"  onDelete: CASCADE)
 }
@@ -143,8 +145,6 @@ type Op {
 	dealLabor: Float
 	opType: OpType!
 	description: String
-	info: String
-	warning: String
 	proc: Proc! @relation(name: "ProcOps")
 }
 

@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Sun Jun 02 2019 17:59:19 GMT+0300 (GMT+03:00)
+# timestamp: Thu Jun 06 2019 13:22:36 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -704,8 +704,10 @@ input ArticleWhereUniqueInput {
 type Batch implements Node {
   id: ID!
   qty: Int
+  info: String
+  warning: String
   deal: Deal
-  model: Model
+  model: Model!
   procs(where: ProcWhereInput, orderBy: ProcOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Proc!]
   workpiece: Workpiece
 }
@@ -722,8 +724,10 @@ type BatchConnection {
 
 input BatchCreateInput {
   qty: Int
+  info: String
+  warning: String
   deal: DealCreateOneWithoutBatchesInput
-  model: ModelCreateOneWithoutBatchesInput
+  model: ModelCreateOneWithoutBatchesInput!
   procs: ProcCreateManyWithoutBatchesInput
   workpiece: WorkpieceCreateOneWithoutBatchInput
 }
@@ -750,13 +754,17 @@ input BatchCreateOneWithoutWorkpieceInput {
 
 input BatchCreateWithoutDealInput {
   qty: Int
-  model: ModelCreateOneWithoutBatchesInput
+  info: String
+  warning: String
+  model: ModelCreateOneWithoutBatchesInput!
   procs: ProcCreateManyWithoutBatchesInput
   workpiece: WorkpieceCreateOneWithoutBatchInput
 }
 
 input BatchCreateWithoutModelInput {
   qty: Int
+  info: String
+  warning: String
   deal: DealCreateOneWithoutBatchesInput
   procs: ProcCreateManyWithoutBatchesInput
   workpiece: WorkpieceCreateOneWithoutBatchInput
@@ -764,15 +772,19 @@ input BatchCreateWithoutModelInput {
 
 input BatchCreateWithoutProcsInput {
   qty: Int
+  info: String
+  warning: String
   deal: DealCreateOneWithoutBatchesInput
-  model: ModelCreateOneWithoutBatchesInput
+  model: ModelCreateOneWithoutBatchesInput!
   workpiece: WorkpieceCreateOneWithoutBatchInput
 }
 
 input BatchCreateWithoutWorkpieceInput {
   qty: Int
+  info: String
+  warning: String
   deal: DealCreateOneWithoutBatchesInput
-  model: ModelCreateOneWithoutBatchesInput
+  model: ModelCreateOneWithoutBatchesInput!
   procs: ProcCreateManyWithoutBatchesInput
 }
 
@@ -790,6 +802,10 @@ enum BatchOrderByInput {
   id_DESC
   qty_ASC
   qty_DESC
+  info_ASC
+  info_DESC
+  warning_ASC
+  warning_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -804,6 +820,8 @@ type BatchPayload {
 type BatchPreviousValues {
   id: ID!
   qty: Int
+  info: String
+  warning: String
 }
 
 type BatchSubscriptionPayload {
@@ -847,14 +865,18 @@ input BatchSubscriptionWhereInput {
 
 input BatchUpdateInput {
   qty: Int
+  info: String
+  warning: String
   deal: DealUpdateOneWithoutBatchesInput
-  model: ModelUpdateOneWithoutBatchesInput
+  model: ModelUpdateOneRequiredWithoutBatchesInput
   procs: ProcUpdateManyWithoutBatchesInput
   workpiece: WorkpieceUpdateOneWithoutBatchInput
 }
 
 input BatchUpdateManyMutationInput {
   qty: Int
+  info: String
+  warning: String
 }
 
 input BatchUpdateManyWithoutDealInput {
@@ -895,13 +917,17 @@ input BatchUpdateOneWithoutWorkpieceInput {
 
 input BatchUpdateWithoutDealDataInput {
   qty: Int
-  model: ModelUpdateOneWithoutBatchesInput
+  info: String
+  warning: String
+  model: ModelUpdateOneRequiredWithoutBatchesInput
   procs: ProcUpdateManyWithoutBatchesInput
   workpiece: WorkpieceUpdateOneWithoutBatchInput
 }
 
 input BatchUpdateWithoutModelDataInput {
   qty: Int
+  info: String
+  warning: String
   deal: DealUpdateOneWithoutBatchesInput
   procs: ProcUpdateManyWithoutBatchesInput
   workpiece: WorkpieceUpdateOneWithoutBatchInput
@@ -909,15 +935,19 @@ input BatchUpdateWithoutModelDataInput {
 
 input BatchUpdateWithoutProcsDataInput {
   qty: Int
+  info: String
+  warning: String
   deal: DealUpdateOneWithoutBatchesInput
-  model: ModelUpdateOneWithoutBatchesInput
+  model: ModelUpdateOneRequiredWithoutBatchesInput
   workpiece: WorkpieceUpdateOneWithoutBatchInput
 }
 
 input BatchUpdateWithoutWorkpieceDataInput {
   qty: Int
+  info: String
+  warning: String
   deal: DealUpdateOneWithoutBatchesInput
-  model: ModelUpdateOneWithoutBatchesInput
+  model: ModelUpdateOneRequiredWithoutBatchesInput
   procs: ProcUpdateManyWithoutBatchesInput
 }
 
@@ -1030,6 +1060,86 @@ input BatchWhereInput {
 
   """All values greater than or equal the given value."""
   qty_gte: Int
+  info: String
+
+  """All values that are not equal to given value."""
+  info_not: String
+
+  """All values that are contained in given list."""
+  info_in: [String!]
+
+  """All values that are not contained in given list."""
+  info_not_in: [String!]
+
+  """All values less than the given value."""
+  info_lt: String
+
+  """All values less than or equal the given value."""
+  info_lte: String
+
+  """All values greater than the given value."""
+  info_gt: String
+
+  """All values greater than or equal the given value."""
+  info_gte: String
+
+  """All values containing the given string."""
+  info_contains: String
+
+  """All values not containing the given string."""
+  info_not_contains: String
+
+  """All values starting with the given string."""
+  info_starts_with: String
+
+  """All values not starting with the given string."""
+  info_not_starts_with: String
+
+  """All values ending with the given string."""
+  info_ends_with: String
+
+  """All values not ending with the given string."""
+  info_not_ends_with: String
+  warning: String
+
+  """All values that are not equal to given value."""
+  warning_not: String
+
+  """All values that are contained in given list."""
+  warning_in: [String!]
+
+  """All values that are not contained in given list."""
+  warning_not_in: [String!]
+
+  """All values less than the given value."""
+  warning_lt: String
+
+  """All values less than or equal the given value."""
+  warning_lte: String
+
+  """All values greater than the given value."""
+  warning_gt: String
+
+  """All values greater than or equal the given value."""
+  warning_gte: String
+
+  """All values containing the given string."""
+  warning_contains: String
+
+  """All values not containing the given string."""
+  warning_not_contains: String
+
+  """All values starting with the given string."""
+  warning_starts_with: String
+
+  """All values not starting with the given string."""
+  warning_not_starts_with: String
+
+  """All values ending with the given string."""
+  warning_ends_with: String
+
+  """All values not ending with the given string."""
+  warning_not_ends_with: String
   deal: DealWhereInput
   model: ModelWhereInput
   procs_every: ProcWhereInput
@@ -5068,6 +5178,13 @@ input ModelUpdateManyMutationInput {
   name: String
 }
 
+input ModelUpdateOneRequiredWithoutBatchesInput {
+  create: ModelCreateWithoutBatchesInput
+  connect: ModelWhereUniqueInput
+  update: ModelUpdateWithoutBatchesDataInput
+  upsert: ModelUpsertWithoutBatchesInput
+}
+
 input ModelUpdateOneRequiredWithoutProcsInput {
   create: ModelCreateWithoutProcsInput
   connect: ModelWhereUniqueInput
@@ -5080,15 +5197,6 @@ input ModelUpdateOneRequiredWithoutProdsInput {
   connect: ModelWhereUniqueInput
   update: ModelUpdateWithoutProdsDataInput
   upsert: ModelUpsertWithoutProdsInput
-}
-
-input ModelUpdateOneWithoutBatchesInput {
-  create: ModelCreateWithoutBatchesInput
-  connect: ModelWhereUniqueInput
-  disconnect: Boolean
-  delete: Boolean
-  update: ModelUpdateWithoutBatchesDataInput
-  upsert: ModelUpsertWithoutBatchesInput
 }
 
 input ModelUpdateOneWithoutDrawingsInput {
@@ -5549,8 +5657,6 @@ type Op implements Node {
   dealLabor: Float
   opType: OpType!
   description: String
-  info: String
-  warning: String
   proc: Proc!
 }
 
@@ -5567,8 +5673,6 @@ type OpConnection {
 input OpCreateInput {
   dealLabor: Float
   description: String
-  info: String
-  warning: String
   opType: OpTypeCreateOneWithoutOpsInput!
   proc: ProcCreateOneWithoutOpsInput!
 }
@@ -5586,16 +5690,12 @@ input OpCreateManyWithoutProcInput {
 input OpCreateWithoutOpTypeInput {
   dealLabor: Float
   description: String
-  info: String
-  warning: String
   proc: ProcCreateOneWithoutOpsInput!
 }
 
 input OpCreateWithoutProcInput {
   dealLabor: Float
   description: String
-  info: String
-  warning: String
   opType: OpTypeCreateOneWithoutOpsInput!
 }
 
@@ -5615,10 +5715,6 @@ enum OpOrderByInput {
   dealLabor_DESC
   description_ASC
   description_DESC
-  info_ASC
-  info_DESC
-  warning_ASC
-  warning_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -5629,8 +5725,6 @@ type OpPreviousValues {
   id: ID!
   dealLabor: Float
   description: String
-  info: String
-  warning: String
 }
 
 type OpSubscriptionPayload {
@@ -5892,8 +5986,6 @@ input OpTypeWhereUniqueInput {
 input OpUpdateInput {
   dealLabor: Float
   description: String
-  info: String
-  warning: String
   opType: OpTypeUpdateOneRequiredWithoutOpsInput
   proc: ProcUpdateOneRequiredWithoutOpsInput
 }
@@ -5901,8 +5993,6 @@ input OpUpdateInput {
 input OpUpdateManyMutationInput {
   dealLabor: Float
   description: String
-  info: String
-  warning: String
 }
 
 input OpUpdateManyWithoutOpTypeInput {
@@ -5926,16 +6016,12 @@ input OpUpdateManyWithoutProcInput {
 input OpUpdateWithoutOpTypeDataInput {
   dealLabor: Float
   description: String
-  info: String
-  warning: String
   proc: ProcUpdateOneRequiredWithoutOpsInput
 }
 
 input OpUpdateWithoutProcDataInput {
   dealLabor: Float
   description: String
-  info: String
-  warning: String
   opType: OpTypeUpdateOneRequiredWithoutOpsInput
 }
 
@@ -6072,86 +6158,6 @@ input OpWhereInput {
 
   """All values not ending with the given string."""
   description_not_ends_with: String
-  info: String
-
-  """All values that are not equal to given value."""
-  info_not: String
-
-  """All values that are contained in given list."""
-  info_in: [String!]
-
-  """All values that are not contained in given list."""
-  info_not_in: [String!]
-
-  """All values less than the given value."""
-  info_lt: String
-
-  """All values less than or equal the given value."""
-  info_lte: String
-
-  """All values greater than the given value."""
-  info_gt: String
-
-  """All values greater than or equal the given value."""
-  info_gte: String
-
-  """All values containing the given string."""
-  info_contains: String
-
-  """All values not containing the given string."""
-  info_not_contains: String
-
-  """All values starting with the given string."""
-  info_starts_with: String
-
-  """All values not starting with the given string."""
-  info_not_starts_with: String
-
-  """All values ending with the given string."""
-  info_ends_with: String
-
-  """All values not ending with the given string."""
-  info_not_ends_with: String
-  warning: String
-
-  """All values that are not equal to given value."""
-  warning_not: String
-
-  """All values that are contained in given list."""
-  warning_in: [String!]
-
-  """All values that are not contained in given list."""
-  warning_not_in: [String!]
-
-  """All values less than the given value."""
-  warning_lt: String
-
-  """All values less than or equal the given value."""
-  warning_lte: String
-
-  """All values greater than the given value."""
-  warning_gt: String
-
-  """All values greater than or equal the given value."""
-  warning_gte: String
-
-  """All values containing the given string."""
-  warning_contains: String
-
-  """All values not containing the given string."""
-  warning_not_contains: String
-
-  """All values starting with the given string."""
-  warning_starts_with: String
-
-  """All values not starting with the given string."""
-  warning_not_starts_with: String
-
-  """All values ending with the given string."""
-  warning_ends_with: String
-
-  """All values not ending with the given string."""
-  warning_not_ends_with: String
   opType: OpTypeWhereInput
   proc: ProcWhereInput
 }
