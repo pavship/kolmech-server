@@ -109,6 +109,13 @@ type Equipment {
 	payments: [Payment!]!
 }
 
+type Exec {
+	id: ID! @unique
+	person: Person
+	ops: [Op!]!
+	opTypes: [OpType!]!
+}
+
 type File {
 	id: ID! @unique
 	path: String @unique
@@ -145,12 +152,14 @@ type Op {
 	dealLabor: Float
 	opType: OpType!
 	description: String
+	execs: [Exec!]!
 	proc: Proc! @relation(name: "ProcOps")
 }
 
 type OpType {
 	id: ID! @unique
 	name: String!
+	execs: [Exec!]!
 	ops: [Op!]!
 }
 
@@ -185,38 +194,6 @@ type Org {
 	payments: [Payment!]!
 }
 
-type Proc {					# technical process
-	id: ID! @unique
-	name: String!
-	batches: [Batch!]! @relation(name: "BatchesProcs")
-	model: Model!
-	ops: [Op!]! @relation(name: "ProcOps" onDelete: CASCADE)
-}
-
-type ServerData {
-	id: ID! @unique
-	amoExpiresAt: Int
-	amoCookie: String
-}
-
-type Status {
-	id: ID! @unique
-	name: String! @unique
-	stage: Int
-	prev: [Status!]! @relation(name: "StatusLink")
-	next: [Status!]! @relation(name: "StatusLink")
-}
-
-type Tel {
-	id: ID! @unique
-	number: String!
-	type: TelType
-	country: String
-	note: String
-	default: Boolean
-	person: Person @relation(name: "PersonTels")
-}
-
 type Payment {
 	id: ID! @unique
 	dateLocal: DateTime! @unique
@@ -245,10 +222,19 @@ type Person {
 	amoName: String
 	regNameChecked: Boolean
 	htmlNote: String
+	employees: [Employee!]!
+	exec: Exec
+	payments: [Payment!]!
 	tels: [Tel!]! @relation(name: "PersonTels", onDelete: CASCADE)
 	user: User @relation(name: "PersonUser")
-	employees: [Employee!]!
-	payments: [Payment!]!
+}
+
+type Proc {					# technical process
+	id: ID! @unique
+	name: String!
+	batches: [Batch!]! @relation(name: "BatchesProcs")
+	model: Model!
+	ops: [Op!]! @relation(name: "ProcOps" onDelete: CASCADE)
 }
 
 type Prod {
@@ -265,6 +251,30 @@ type Prod {
   number: Int
   progress: Float
   year: Int
+}
+
+type ServerData {
+	id: ID! @unique
+	amoExpiresAt: Int
+	amoCookie: String
+}
+
+type Status {
+	id: ID! @unique
+	name: String! @unique
+	stage: Int
+	prev: [Status!]! @relation(name: "StatusLink")
+	next: [Status!]! @relation(name: "StatusLink")
+}
+
+type Tel {
+	id: ID! @unique
+	number: String!
+	type: TelType
+	country: String
+	note: String
+	default: Boolean
+	person: Person @relation(name: "PersonTels")
 }
 
 type User {

@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Fri Jun 07 2019 12:37:32 GMT+0300 (GMT+03:00)
+# timestamp: Fri Jun 07 2019 19:55:16 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -339,6 +339,10 @@ type AggregateEquipment {
 }
 
 type AggregateEvent {
+  count: Int!
+}
+
+type AggregateExec {
   count: Int!
 }
 
@@ -4263,6 +4267,257 @@ input EventWhereUniqueInput {
   id: ID
 }
 
+type Exec implements Node {
+  id: ID!
+  person: Person
+  ops(where: OpWhereInput, orderBy: OpOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Op!]
+  opTypes(where: OpTypeWhereInput, orderBy: OpTypeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OpType!]
+}
+
+"""A connection to a list of items."""
+type ExecConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ExecEdge]!
+  aggregate: AggregateExec!
+}
+
+input ExecCreateInput {
+  person: PersonCreateOneWithoutExecInput
+  ops: OpCreateManyWithoutExecsInput
+  opTypes: OpTypeCreateManyWithoutExecsInput
+}
+
+input ExecCreateManyWithoutOpsInput {
+  create: [ExecCreateWithoutOpsInput!]
+  connect: [ExecWhereUniqueInput!]
+}
+
+input ExecCreateManyWithoutOpTypesInput {
+  create: [ExecCreateWithoutOpTypesInput!]
+  connect: [ExecWhereUniqueInput!]
+}
+
+input ExecCreateOneWithoutPersonInput {
+  create: ExecCreateWithoutPersonInput
+  connect: ExecWhereUniqueInput
+}
+
+input ExecCreateWithoutOpsInput {
+  person: PersonCreateOneWithoutExecInput
+  opTypes: OpTypeCreateManyWithoutExecsInput
+}
+
+input ExecCreateWithoutOpTypesInput {
+  person: PersonCreateOneWithoutExecInput
+  ops: OpCreateManyWithoutExecsInput
+}
+
+input ExecCreateWithoutPersonInput {
+  ops: OpCreateManyWithoutExecsInput
+  opTypes: OpTypeCreateManyWithoutExecsInput
+}
+
+"""An edge in a connection."""
+type ExecEdge {
+  """The item at the end of the edge."""
+  node: Exec!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum ExecOrderByInput {
+  id_ASC
+  id_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type ExecPreviousValues {
+  id: ID!
+}
+
+type ExecSubscriptionPayload {
+  mutation: MutationType!
+  node: Exec
+  updatedFields: [String!]
+  previousValues: ExecPreviousValues
+}
+
+input ExecSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ExecSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ExecSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ExecSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ExecWhereInput
+}
+
+input ExecUpdateInput {
+  person: PersonUpdateOneWithoutExecInput
+  ops: OpUpdateManyWithoutExecsInput
+  opTypes: OpTypeUpdateManyWithoutExecsInput
+}
+
+input ExecUpdateManyWithoutOpsInput {
+  create: [ExecCreateWithoutOpsInput!]
+  connect: [ExecWhereUniqueInput!]
+  disconnect: [ExecWhereUniqueInput!]
+  delete: [ExecWhereUniqueInput!]
+  update: [ExecUpdateWithWhereUniqueWithoutOpsInput!]
+  upsert: [ExecUpsertWithWhereUniqueWithoutOpsInput!]
+}
+
+input ExecUpdateManyWithoutOpTypesInput {
+  create: [ExecCreateWithoutOpTypesInput!]
+  connect: [ExecWhereUniqueInput!]
+  disconnect: [ExecWhereUniqueInput!]
+  delete: [ExecWhereUniqueInput!]
+  update: [ExecUpdateWithWhereUniqueWithoutOpTypesInput!]
+  upsert: [ExecUpsertWithWhereUniqueWithoutOpTypesInput!]
+}
+
+input ExecUpdateOneWithoutPersonInput {
+  create: ExecCreateWithoutPersonInput
+  connect: ExecWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: ExecUpdateWithoutPersonDataInput
+  upsert: ExecUpsertWithoutPersonInput
+}
+
+input ExecUpdateWithoutOpsDataInput {
+  person: PersonUpdateOneWithoutExecInput
+  opTypes: OpTypeUpdateManyWithoutExecsInput
+}
+
+input ExecUpdateWithoutOpTypesDataInput {
+  person: PersonUpdateOneWithoutExecInput
+  ops: OpUpdateManyWithoutExecsInput
+}
+
+input ExecUpdateWithoutPersonDataInput {
+  ops: OpUpdateManyWithoutExecsInput
+  opTypes: OpTypeUpdateManyWithoutExecsInput
+}
+
+input ExecUpdateWithWhereUniqueWithoutOpsInput {
+  where: ExecWhereUniqueInput!
+  data: ExecUpdateWithoutOpsDataInput!
+}
+
+input ExecUpdateWithWhereUniqueWithoutOpTypesInput {
+  where: ExecWhereUniqueInput!
+  data: ExecUpdateWithoutOpTypesDataInput!
+}
+
+input ExecUpsertWithoutPersonInput {
+  update: ExecUpdateWithoutPersonDataInput!
+  create: ExecCreateWithoutPersonInput!
+}
+
+input ExecUpsertWithWhereUniqueWithoutOpsInput {
+  where: ExecWhereUniqueInput!
+  update: ExecUpdateWithoutOpsDataInput!
+  create: ExecCreateWithoutOpsInput!
+}
+
+input ExecUpsertWithWhereUniqueWithoutOpTypesInput {
+  where: ExecWhereUniqueInput!
+  update: ExecUpdateWithoutOpTypesDataInput!
+  create: ExecCreateWithoutOpTypesInput!
+}
+
+input ExecWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ExecWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ExecWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ExecWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  person: PersonWhereInput
+  ops_every: OpWhereInput
+  ops_some: OpWhereInput
+  ops_none: OpWhereInput
+  opTypes_every: OpTypeWhereInput
+  opTypes_some: OpTypeWhereInput
+  opTypes_none: OpTypeWhereInput
+}
+
+input ExecWhereUniqueInput {
+  id: ID
+}
+
 type File implements Node {
   id: ID!
   path: String
@@ -5496,6 +5751,7 @@ type Mutation {
   createEnquiry(data: EnquiryCreateInput!): Enquiry!
   createEvent(data: EventCreateInput!): Event!
   createEquipment(data: EquipmentCreateInput!): Equipment!
+  createExec(data: ExecCreateInput!): Exec!
   createFile(data: FileCreateInput!): File!
   createFileLink(data: FileLinkCreateInput!): FileLink!
   createModel(data: ModelCreateInput!): Model!
@@ -5503,12 +5759,12 @@ type Mutation {
   createOpType(data: OpTypeCreateInput!): OpType!
   createOrder(data: OrderCreateInput!): Order!
   createOrg(data: OrgCreateInput!): Org!
-  createProc(data: ProcCreateInput!): Proc!
-  createServerData(data: ServerDataCreateInput!): ServerData!
-  createTel(data: TelCreateInput!): Tel!
   createPayment(data: PaymentCreateInput!): Payment!
   createPerson(data: PersonCreateInput!): Person!
+  createProc(data: ProcCreateInput!): Proc!
   createProd(data: ProdCreateInput!): Prod!
+  createServerData(data: ServerDataCreateInput!): ServerData!
+  createTel(data: TelCreateInput!): Tel!
   createUser(data: UserCreateInput!): User!
   createWorkpiece(data: WorkpieceCreateInput!): Workpiece!
   createArticle(data: ArticleCreateInput!): Article!
@@ -5524,6 +5780,7 @@ type Mutation {
   updateEnquiry(data: EnquiryUpdateInput!, where: EnquiryWhereUniqueInput!): Enquiry
   updateEvent(data: EventUpdateInput!, where: EventWhereUniqueInput!): Event
   updateEquipment(data: EquipmentUpdateInput!, where: EquipmentWhereUniqueInput!): Equipment
+  updateExec(data: ExecUpdateInput!, where: ExecWhereUniqueInput!): Exec
   updateFile(data: FileUpdateInput!, where: FileWhereUniqueInput!): File
   updateFileLink(data: FileLinkUpdateInput!, where: FileLinkWhereUniqueInput!): FileLink
   updateModel(data: ModelUpdateInput!, where: ModelWhereUniqueInput!): Model
@@ -5531,12 +5788,12 @@ type Mutation {
   updateOpType(data: OpTypeUpdateInput!, where: OpTypeWhereUniqueInput!): OpType
   updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
   updateOrg(data: OrgUpdateInput!, where: OrgWhereUniqueInput!): Org
-  updateProc(data: ProcUpdateInput!, where: ProcWhereUniqueInput!): Proc
-  updateServerData(data: ServerDataUpdateInput!, where: ServerDataWhereUniqueInput!): ServerData
-  updateTel(data: TelUpdateInput!, where: TelWhereUniqueInput!): Tel
   updatePayment(data: PaymentUpdateInput!, where: PaymentWhereUniqueInput!): Payment
   updatePerson(data: PersonUpdateInput!, where: PersonWhereUniqueInput!): Person
+  updateProc(data: ProcUpdateInput!, where: ProcWhereUniqueInput!): Proc
   updateProd(data: ProdUpdateInput!, where: ProdWhereUniqueInput!): Prod
+  updateServerData(data: ServerDataUpdateInput!, where: ServerDataWhereUniqueInput!): ServerData
+  updateTel(data: TelUpdateInput!, where: TelWhereUniqueInput!): Tel
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateWorkpiece(data: WorkpieceUpdateInput!, where: WorkpieceWhereUniqueInput!): Workpiece
   updateArticle(data: ArticleUpdateInput!, where: ArticleWhereUniqueInput!): Article
@@ -5552,6 +5809,7 @@ type Mutation {
   deleteEnquiry(where: EnquiryWhereUniqueInput!): Enquiry
   deleteEvent(where: EventWhereUniqueInput!): Event
   deleteEquipment(where: EquipmentWhereUniqueInput!): Equipment
+  deleteExec(where: ExecWhereUniqueInput!): Exec
   deleteFile(where: FileWhereUniqueInput!): File
   deleteFileLink(where: FileLinkWhereUniqueInput!): FileLink
   deleteModel(where: ModelWhereUniqueInput!): Model
@@ -5559,12 +5817,12 @@ type Mutation {
   deleteOpType(where: OpTypeWhereUniqueInput!): OpType
   deleteOrder(where: OrderWhereUniqueInput!): Order
   deleteOrg(where: OrgWhereUniqueInput!): Org
-  deleteProc(where: ProcWhereUniqueInput!): Proc
-  deleteServerData(where: ServerDataWhereUniqueInput!): ServerData
-  deleteTel(where: TelWhereUniqueInput!): Tel
   deletePayment(where: PaymentWhereUniqueInput!): Payment
   deletePerson(where: PersonWhereUniqueInput!): Person
+  deleteProc(where: ProcWhereUniqueInput!): Proc
   deleteProd(where: ProdWhereUniqueInput!): Prod
+  deleteServerData(where: ServerDataWhereUniqueInput!): ServerData
+  deleteTel(where: TelWhereUniqueInput!): Tel
   deleteUser(where: UserWhereUniqueInput!): User
   deleteWorkpiece(where: WorkpieceWhereUniqueInput!): Workpiece
   deleteArticle(where: ArticleWhereUniqueInput!): Article
@@ -5580,6 +5838,7 @@ type Mutation {
   upsertEnquiry(where: EnquiryWhereUniqueInput!, create: EnquiryCreateInput!, update: EnquiryUpdateInput!): Enquiry!
   upsertEvent(where: EventWhereUniqueInput!, create: EventCreateInput!, update: EventUpdateInput!): Event!
   upsertEquipment(where: EquipmentWhereUniqueInput!, create: EquipmentCreateInput!, update: EquipmentUpdateInput!): Equipment!
+  upsertExec(where: ExecWhereUniqueInput!, create: ExecCreateInput!, update: ExecUpdateInput!): Exec!
   upsertFile(where: FileWhereUniqueInput!, create: FileCreateInput!, update: FileUpdateInput!): File!
   upsertFileLink(where: FileLinkWhereUniqueInput!, create: FileLinkCreateInput!, update: FileLinkUpdateInput!): FileLink!
   upsertModel(where: ModelWhereUniqueInput!, create: ModelCreateInput!, update: ModelUpdateInput!): Model!
@@ -5587,12 +5846,12 @@ type Mutation {
   upsertOpType(where: OpTypeWhereUniqueInput!, create: OpTypeCreateInput!, update: OpTypeUpdateInput!): OpType!
   upsertOrder(where: OrderWhereUniqueInput!, create: OrderCreateInput!, update: OrderUpdateInput!): Order!
   upsertOrg(where: OrgWhereUniqueInput!, create: OrgCreateInput!, update: OrgUpdateInput!): Org!
-  upsertProc(where: ProcWhereUniqueInput!, create: ProcCreateInput!, update: ProcUpdateInput!): Proc!
-  upsertServerData(where: ServerDataWhereUniqueInput!, create: ServerDataCreateInput!, update: ServerDataUpdateInput!): ServerData!
-  upsertTel(where: TelWhereUniqueInput!, create: TelCreateInput!, update: TelUpdateInput!): Tel!
   upsertPayment(where: PaymentWhereUniqueInput!, create: PaymentCreateInput!, update: PaymentUpdateInput!): Payment!
   upsertPerson(where: PersonWhereUniqueInput!, create: PersonCreateInput!, update: PersonUpdateInput!): Person!
+  upsertProc(where: ProcWhereUniqueInput!, create: ProcCreateInput!, update: ProcUpdateInput!): Proc!
   upsertProd(where: ProdWhereUniqueInput!, create: ProdCreateInput!, update: ProdUpdateInput!): Prod!
+  upsertServerData(where: ServerDataWhereUniqueInput!, create: ServerDataCreateInput!, update: ServerDataUpdateInput!): ServerData!
+  upsertTel(where: TelWhereUniqueInput!, create: TelCreateInput!, update: TelUpdateInput!): Tel!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertWorkpiece(where: WorkpieceWhereUniqueInput!, create: WorkpieceCreateInput!, update: WorkpieceUpdateInput!): Workpiece!
   upsertArticle(where: ArticleWhereUniqueInput!, create: ArticleCreateInput!, update: ArticleUpdateInput!): Article!
@@ -5615,12 +5874,12 @@ type Mutation {
   updateManyOpTypes(data: OpTypeUpdateManyMutationInput!, where: OpTypeWhereInput): BatchPayload!
   updateManyOrders(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
   updateManyOrgs(data: OrgUpdateManyMutationInput!, where: OrgWhereInput): BatchPayload!
-  updateManyProcs(data: ProcUpdateManyMutationInput!, where: ProcWhereInput): BatchPayload!
-  updateManyServerDatas(data: ServerDataUpdateManyMutationInput!, where: ServerDataWhereInput): BatchPayload!
-  updateManyTels(data: TelUpdateManyMutationInput!, where: TelWhereInput): BatchPayload!
   updateManyPayments(data: PaymentUpdateManyMutationInput!, where: PaymentWhereInput): BatchPayload!
   updateManyPersons(data: PersonUpdateManyMutationInput!, where: PersonWhereInput): BatchPayload!
+  updateManyProcs(data: ProcUpdateManyMutationInput!, where: ProcWhereInput): BatchPayload!
   updateManyProds(data: ProdUpdateManyMutationInput!, where: ProdWhereInput): BatchPayload!
+  updateManyServerDatas(data: ServerDataUpdateManyMutationInput!, where: ServerDataWhereInput): BatchPayload!
+  updateManyTels(data: TelUpdateManyMutationInput!, where: TelWhereInput): BatchPayload!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyWorkpieces(data: WorkpieceUpdateManyMutationInput!, where: WorkpieceWhereInput): BatchPayload!
   updateManyArticles(data: ArticleUpdateManyMutationInput!, where: ArticleWhereInput): BatchPayload!
@@ -5636,6 +5895,7 @@ type Mutation {
   deleteManyEnquiries(where: EnquiryWhereInput): BatchPayload!
   deleteManyEvents(where: EventWhereInput): BatchPayload!
   deleteManyEquipments(where: EquipmentWhereInput): BatchPayload!
+  deleteManyExecs(where: ExecWhereInput): BatchPayload!
   deleteManyFiles(where: FileWhereInput): BatchPayload!
   deleteManyFileLinks(where: FileLinkWhereInput): BatchPayload!
   deleteManyModels(where: ModelWhereInput): BatchPayload!
@@ -5643,12 +5903,12 @@ type Mutation {
   deleteManyOpTypes(where: OpTypeWhereInput): BatchPayload!
   deleteManyOrders(where: OrderWhereInput): BatchPayload!
   deleteManyOrgs(where: OrgWhereInput): BatchPayload!
-  deleteManyProcs(where: ProcWhereInput): BatchPayload!
-  deleteManyServerDatas(where: ServerDataWhereInput): BatchPayload!
-  deleteManyTels(where: TelWhereInput): BatchPayload!
   deleteManyPayments(where: PaymentWhereInput): BatchPayload!
   deleteManyPersons(where: PersonWhereInput): BatchPayload!
+  deleteManyProcs(where: ProcWhereInput): BatchPayload!
   deleteManyProds(where: ProdWhereInput): BatchPayload!
+  deleteManyServerDatas(where: ServerDataWhereInput): BatchPayload!
+  deleteManyTels(where: TelWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyWorkpieces(where: WorkpieceWhereInput): BatchPayload!
   deleteManyArticles(where: ArticleWhereInput): BatchPayload!
@@ -5675,6 +5935,7 @@ type Op implements Node {
   dealLabor: Float
   opType: OpType!
   description: String
+  execs(where: ExecWhereInput, orderBy: ExecOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Exec!]
   proc: Proc!
 }
 
@@ -5692,7 +5953,13 @@ input OpCreateInput {
   dealLabor: Float
   description: String
   opType: OpTypeCreateOneWithoutOpsInput!
+  execs: ExecCreateManyWithoutOpsInput
   proc: ProcCreateOneWithoutOpsInput!
+}
+
+input OpCreateManyWithoutExecsInput {
+  create: [OpCreateWithoutExecsInput!]
+  connect: [OpWhereUniqueInput!]
 }
 
 input OpCreateManyWithoutOpTypeInput {
@@ -5705,9 +5972,17 @@ input OpCreateManyWithoutProcInput {
   connect: [OpWhereUniqueInput!]
 }
 
+input OpCreateWithoutExecsInput {
+  dealLabor: Float
+  description: String
+  opType: OpTypeCreateOneWithoutOpsInput!
+  proc: ProcCreateOneWithoutOpsInput!
+}
+
 input OpCreateWithoutOpTypeInput {
   dealLabor: Float
   description: String
+  execs: ExecCreateManyWithoutOpsInput
   proc: ProcCreateOneWithoutOpsInput!
 }
 
@@ -5715,6 +5990,7 @@ input OpCreateWithoutProcInput {
   dealLabor: Float
   description: String
   opType: OpTypeCreateOneWithoutOpsInput!
+  execs: ExecCreateManyWithoutOpsInput
 }
 
 """An edge in a connection."""
@@ -5787,6 +6063,7 @@ input OpSubscriptionWhereInput {
 type OpType implements Node {
   id: ID!
   name: String!
+  execs(where: ExecWhereInput, orderBy: ExecOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Exec!]
   ops(where: OpWhereInput, orderBy: OpOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Op!]
 }
 
@@ -5802,7 +6079,13 @@ type OpTypeConnection {
 
 input OpTypeCreateInput {
   name: String!
+  execs: ExecCreateManyWithoutOpTypesInput
   ops: OpCreateManyWithoutOpTypeInput
+}
+
+input OpTypeCreateManyWithoutExecsInput {
+  create: [OpTypeCreateWithoutExecsInput!]
+  connect: [OpTypeWhereUniqueInput!]
 }
 
 input OpTypeCreateOneWithoutOpsInput {
@@ -5810,8 +6093,14 @@ input OpTypeCreateOneWithoutOpsInput {
   connect: OpTypeWhereUniqueInput
 }
 
+input OpTypeCreateWithoutExecsInput {
+  name: String!
+  ops: OpCreateManyWithoutOpTypeInput
+}
+
 input OpTypeCreateWithoutOpsInput {
   name: String!
+  execs: ExecCreateManyWithoutOpTypesInput
 }
 
 """An edge in a connection."""
@@ -5880,11 +6169,21 @@ input OpTypeSubscriptionWhereInput {
 
 input OpTypeUpdateInput {
   name: String
+  execs: ExecUpdateManyWithoutOpTypesInput
   ops: OpUpdateManyWithoutOpTypeInput
 }
 
 input OpTypeUpdateManyMutationInput {
   name: String
+}
+
+input OpTypeUpdateManyWithoutExecsInput {
+  create: [OpTypeCreateWithoutExecsInput!]
+  connect: [OpTypeWhereUniqueInput!]
+  disconnect: [OpTypeWhereUniqueInput!]
+  delete: [OpTypeWhereUniqueInput!]
+  update: [OpTypeUpdateWithWhereUniqueWithoutExecsInput!]
+  upsert: [OpTypeUpsertWithWhereUniqueWithoutExecsInput!]
 }
 
 input OpTypeUpdateOneRequiredWithoutOpsInput {
@@ -5894,13 +6193,30 @@ input OpTypeUpdateOneRequiredWithoutOpsInput {
   upsert: OpTypeUpsertWithoutOpsInput
 }
 
+input OpTypeUpdateWithoutExecsDataInput {
+  name: String
+  ops: OpUpdateManyWithoutOpTypeInput
+}
+
 input OpTypeUpdateWithoutOpsDataInput {
   name: String
+  execs: ExecUpdateManyWithoutOpTypesInput
+}
+
+input OpTypeUpdateWithWhereUniqueWithoutExecsInput {
+  where: OpTypeWhereUniqueInput!
+  data: OpTypeUpdateWithoutExecsDataInput!
 }
 
 input OpTypeUpsertWithoutOpsInput {
   update: OpTypeUpdateWithoutOpsDataInput!
   create: OpTypeCreateWithoutOpsInput!
+}
+
+input OpTypeUpsertWithWhereUniqueWithoutExecsInput {
+  where: OpTypeWhereUniqueInput!
+  update: OpTypeUpdateWithoutExecsDataInput!
+  create: OpTypeCreateWithoutExecsInput!
 }
 
 input OpTypeWhereInput {
@@ -5992,6 +6308,9 @@ input OpTypeWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
+  execs_every: ExecWhereInput
+  execs_some: ExecWhereInput
+  execs_none: ExecWhereInput
   ops_every: OpWhereInput
   ops_some: OpWhereInput
   ops_none: OpWhereInput
@@ -6005,12 +6324,22 @@ input OpUpdateInput {
   dealLabor: Float
   description: String
   opType: OpTypeUpdateOneRequiredWithoutOpsInput
+  execs: ExecUpdateManyWithoutOpsInput
   proc: ProcUpdateOneRequiredWithoutOpsInput
 }
 
 input OpUpdateManyMutationInput {
   dealLabor: Float
   description: String
+}
+
+input OpUpdateManyWithoutExecsInput {
+  create: [OpCreateWithoutExecsInput!]
+  connect: [OpWhereUniqueInput!]
+  disconnect: [OpWhereUniqueInput!]
+  delete: [OpWhereUniqueInput!]
+  update: [OpUpdateWithWhereUniqueWithoutExecsInput!]
+  upsert: [OpUpsertWithWhereUniqueWithoutExecsInput!]
 }
 
 input OpUpdateManyWithoutOpTypeInput {
@@ -6031,9 +6360,17 @@ input OpUpdateManyWithoutProcInput {
   upsert: [OpUpsertWithWhereUniqueWithoutProcInput!]
 }
 
+input OpUpdateWithoutExecsDataInput {
+  dealLabor: Float
+  description: String
+  opType: OpTypeUpdateOneRequiredWithoutOpsInput
+  proc: ProcUpdateOneRequiredWithoutOpsInput
+}
+
 input OpUpdateWithoutOpTypeDataInput {
   dealLabor: Float
   description: String
+  execs: ExecUpdateManyWithoutOpsInput
   proc: ProcUpdateOneRequiredWithoutOpsInput
 }
 
@@ -6041,6 +6378,12 @@ input OpUpdateWithoutProcDataInput {
   dealLabor: Float
   description: String
   opType: OpTypeUpdateOneRequiredWithoutOpsInput
+  execs: ExecUpdateManyWithoutOpsInput
+}
+
+input OpUpdateWithWhereUniqueWithoutExecsInput {
+  where: OpWhereUniqueInput!
+  data: OpUpdateWithoutExecsDataInput!
 }
 
 input OpUpdateWithWhereUniqueWithoutOpTypeInput {
@@ -6051,6 +6394,12 @@ input OpUpdateWithWhereUniqueWithoutOpTypeInput {
 input OpUpdateWithWhereUniqueWithoutProcInput {
   where: OpWhereUniqueInput!
   data: OpUpdateWithoutProcDataInput!
+}
+
+input OpUpsertWithWhereUniqueWithoutExecsInput {
+  where: OpWhereUniqueInput!
+  update: OpUpdateWithoutExecsDataInput!
+  create: OpCreateWithoutExecsInput!
 }
 
 input OpUpsertWithWhereUniqueWithoutOpTypeInput {
@@ -6177,6 +6526,9 @@ input OpWhereInput {
   """All values not ending with the given string."""
   description_not_ends_with: String
   opType: OpTypeWhereInput
+  execs_every: ExecWhereInput
+  execs_some: ExecWhereInput
+  execs_none: ExecWhereInput
   proc: ProcWhereInput
 }
 
@@ -8260,10 +8612,11 @@ type Person implements Node {
   amoName: String
   regNameChecked: Boolean
   htmlNote: String
+  employees(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Employee!]
+  exec: Exec
+  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
   tels(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tel!]
   user: User
-  employees(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Employee!]
-  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
 }
 
 """A connection to a list of items."""
@@ -8285,14 +8638,20 @@ input PersonCreateInput {
   amoName: String
   regNameChecked: Boolean
   htmlNote: String
+  employees: EmployeeCreateManyWithoutPersonInput
+  exec: ExecCreateOneWithoutPersonInput
+  payments: PaymentCreateManyWithoutPersonInput
   tels: TelCreateManyWithoutPersonInput
   user: UserCreateOneWithoutPersonInput
-  employees: EmployeeCreateManyWithoutPersonInput
-  payments: PaymentCreateManyWithoutPersonInput
 }
 
 input PersonCreateOneWithoutEmployeesInput {
   create: PersonCreateWithoutEmployeesInput
+  connect: PersonWhereUniqueInput
+}
+
+input PersonCreateOneWithoutExecInput {
+  create: PersonCreateWithoutExecInput
   connect: PersonWhereUniqueInput
 }
 
@@ -8320,9 +8679,25 @@ input PersonCreateWithoutEmployeesInput {
   amoName: String
   regNameChecked: Boolean
   htmlNote: String
+  exec: ExecCreateOneWithoutPersonInput
+  payments: PaymentCreateManyWithoutPersonInput
   tels: TelCreateManyWithoutPersonInput
   user: UserCreateOneWithoutPersonInput
+}
+
+input PersonCreateWithoutExecInput {
+  amoId: Int
+  fName: String
+  lName: String
+  mName: String
+  regName: String
+  amoName: String
+  regNameChecked: Boolean
+  htmlNote: String
+  employees: EmployeeCreateManyWithoutPersonInput
   payments: PaymentCreateManyWithoutPersonInput
+  tels: TelCreateManyWithoutPersonInput
+  user: UserCreateOneWithoutPersonInput
 }
 
 input PersonCreateWithoutPaymentsInput {
@@ -8334,9 +8709,10 @@ input PersonCreateWithoutPaymentsInput {
   amoName: String
   regNameChecked: Boolean
   htmlNote: String
+  employees: EmployeeCreateManyWithoutPersonInput
+  exec: ExecCreateOneWithoutPersonInput
   tels: TelCreateManyWithoutPersonInput
   user: UserCreateOneWithoutPersonInput
-  employees: EmployeeCreateManyWithoutPersonInput
 }
 
 input PersonCreateWithoutTelsInput {
@@ -8348,9 +8724,10 @@ input PersonCreateWithoutTelsInput {
   amoName: String
   regNameChecked: Boolean
   htmlNote: String
-  user: UserCreateOneWithoutPersonInput
   employees: EmployeeCreateManyWithoutPersonInput
+  exec: ExecCreateOneWithoutPersonInput
   payments: PaymentCreateManyWithoutPersonInput
+  user: UserCreateOneWithoutPersonInput
 }
 
 input PersonCreateWithoutUserInput {
@@ -8362,9 +8739,10 @@ input PersonCreateWithoutUserInput {
   amoName: String
   regNameChecked: Boolean
   htmlNote: String
-  tels: TelCreateManyWithoutPersonInput
   employees: EmployeeCreateManyWithoutPersonInput
+  exec: ExecCreateOneWithoutPersonInput
   payments: PaymentCreateManyWithoutPersonInput
+  tels: TelCreateManyWithoutPersonInput
 }
 
 """An edge in a connection."""
@@ -8461,10 +8839,11 @@ input PersonUpdateInput {
   amoName: String
   regNameChecked: Boolean
   htmlNote: String
+  employees: EmployeeUpdateManyWithoutPersonInput
+  exec: ExecUpdateOneWithoutPersonInput
+  payments: PaymentUpdateManyWithoutPersonInput
   tels: TelUpdateManyWithoutPersonInput
   user: UserUpdateOneWithoutPersonInput
-  employees: EmployeeUpdateManyWithoutPersonInput
-  payments: PaymentUpdateManyWithoutPersonInput
 }
 
 input PersonUpdateManyMutationInput {
@@ -8485,6 +8864,15 @@ input PersonUpdateOneWithoutEmployeesInput {
   delete: Boolean
   update: PersonUpdateWithoutEmployeesDataInput
   upsert: PersonUpsertWithoutEmployeesInput
+}
+
+input PersonUpdateOneWithoutExecInput {
+  create: PersonCreateWithoutExecInput
+  connect: PersonWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: PersonUpdateWithoutExecDataInput
+  upsert: PersonUpsertWithoutExecInput
 }
 
 input PersonUpdateOneWithoutPaymentsInput {
@@ -8523,9 +8911,25 @@ input PersonUpdateWithoutEmployeesDataInput {
   amoName: String
   regNameChecked: Boolean
   htmlNote: String
+  exec: ExecUpdateOneWithoutPersonInput
+  payments: PaymentUpdateManyWithoutPersonInput
   tels: TelUpdateManyWithoutPersonInput
   user: UserUpdateOneWithoutPersonInput
+}
+
+input PersonUpdateWithoutExecDataInput {
+  amoId: Int
+  fName: String
+  lName: String
+  mName: String
+  regName: String
+  amoName: String
+  regNameChecked: Boolean
+  htmlNote: String
+  employees: EmployeeUpdateManyWithoutPersonInput
   payments: PaymentUpdateManyWithoutPersonInput
+  tels: TelUpdateManyWithoutPersonInput
+  user: UserUpdateOneWithoutPersonInput
 }
 
 input PersonUpdateWithoutPaymentsDataInput {
@@ -8537,9 +8941,10 @@ input PersonUpdateWithoutPaymentsDataInput {
   amoName: String
   regNameChecked: Boolean
   htmlNote: String
+  employees: EmployeeUpdateManyWithoutPersonInput
+  exec: ExecUpdateOneWithoutPersonInput
   tels: TelUpdateManyWithoutPersonInput
   user: UserUpdateOneWithoutPersonInput
-  employees: EmployeeUpdateManyWithoutPersonInput
 }
 
 input PersonUpdateWithoutTelsDataInput {
@@ -8551,9 +8956,10 @@ input PersonUpdateWithoutTelsDataInput {
   amoName: String
   regNameChecked: Boolean
   htmlNote: String
-  user: UserUpdateOneWithoutPersonInput
   employees: EmployeeUpdateManyWithoutPersonInput
+  exec: ExecUpdateOneWithoutPersonInput
   payments: PaymentUpdateManyWithoutPersonInput
+  user: UserUpdateOneWithoutPersonInput
 }
 
 input PersonUpdateWithoutUserDataInput {
@@ -8565,14 +8971,20 @@ input PersonUpdateWithoutUserDataInput {
   amoName: String
   regNameChecked: Boolean
   htmlNote: String
-  tels: TelUpdateManyWithoutPersonInput
   employees: EmployeeUpdateManyWithoutPersonInput
+  exec: ExecUpdateOneWithoutPersonInput
   payments: PaymentUpdateManyWithoutPersonInput
+  tels: TelUpdateManyWithoutPersonInput
 }
 
 input PersonUpsertWithoutEmployeesInput {
   update: PersonUpdateWithoutEmployeesDataInput!
   create: PersonCreateWithoutEmployeesInput!
+}
+
+input PersonUpsertWithoutExecInput {
+  update: PersonUpdateWithoutExecDataInput!
+  create: PersonCreateWithoutExecInput!
 }
 
 input PersonUpsertWithoutPaymentsInput {
@@ -8905,16 +9317,17 @@ input PersonWhereInput {
 
   """All values not ending with the given string."""
   htmlNote_not_ends_with: String
+  employees_every: EmployeeWhereInput
+  employees_some: EmployeeWhereInput
+  employees_none: EmployeeWhereInput
+  exec: ExecWhereInput
+  payments_every: PaymentWhereInput
+  payments_some: PaymentWhereInput
+  payments_none: PaymentWhereInput
   tels_every: TelWhereInput
   tels_some: TelWhereInput
   tels_none: TelWhereInput
   user: UserWhereInput
-  employees_every: EmployeeWhereInput
-  employees_some: EmployeeWhereInput
-  employees_none: EmployeeWhereInput
-  payments_every: PaymentWhereInput
-  payments_some: PaymentWhereInput
-  payments_none: PaymentWhereInput
 }
 
 input PersonWhereUniqueInput {
@@ -9807,6 +10220,7 @@ type Query {
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry]!
   events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event]!
   equipments(where: EquipmentWhereInput, orderBy: EquipmentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Equipment]!
+  execs(where: ExecWhereInput, orderBy: ExecOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Exec]!
   files(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [File]!
   fileLinks(where: FileLinkWhereInput, orderBy: FileLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [FileLink]!
   models(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Model]!
@@ -9814,12 +10228,12 @@ type Query {
   opTypes(where: OpTypeWhereInput, orderBy: OpTypeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OpType]!
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
   orgs(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Org]!
-  procs(where: ProcWhereInput, orderBy: ProcOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Proc]!
-  serverDatas(where: ServerDataWhereInput, orderBy: ServerDataOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ServerData]!
-  tels(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tel]!
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment]!
   persons(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Person]!
+  procs(where: ProcWhereInput, orderBy: ProcOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Proc]!
   prods(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Prod]!
+  serverDatas(where: ServerDataWhereInput, orderBy: ServerDataOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ServerData]!
+  tels(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tel]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   workpieces(where: WorkpieceWhereInput, orderBy: WorkpieceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Workpiece]!
   articles(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Article]!
@@ -9835,6 +10249,7 @@ type Query {
   enquiry(where: EnquiryWhereUniqueInput!): Enquiry
   event(where: EventWhereUniqueInput!): Event
   equipment(where: EquipmentWhereUniqueInput!): Equipment
+  exec(where: ExecWhereUniqueInput!): Exec
   file(where: FileWhereUniqueInput!): File
   fileLink(where: FileLinkWhereUniqueInput!): FileLink
   model(where: ModelWhereUniqueInput!): Model
@@ -9842,12 +10257,12 @@ type Query {
   opType(where: OpTypeWhereUniqueInput!): OpType
   order(where: OrderWhereUniqueInput!): Order
   org(where: OrgWhereUniqueInput!): Org
-  proc(where: ProcWhereUniqueInput!): Proc
-  serverData(where: ServerDataWhereUniqueInput!): ServerData
-  tel(where: TelWhereUniqueInput!): Tel
   payment(where: PaymentWhereUniqueInput!): Payment
   person(where: PersonWhereUniqueInput!): Person
+  proc(where: ProcWhereUniqueInput!): Proc
   prod(where: ProdWhereUniqueInput!): Prod
+  serverData(where: ServerDataWhereUniqueInput!): ServerData
+  tel(where: TelWhereUniqueInput!): Tel
   user(where: UserWhereUniqueInput!): User
   workpiece(where: WorkpieceWhereUniqueInput!): Workpiece
   article(where: ArticleWhereUniqueInput!): Article
@@ -9863,6 +10278,7 @@ type Query {
   enquiriesConnection(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EnquiryConnection!
   eventsConnection(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EventConnection!
   equipmentsConnection(where: EquipmentWhereInput, orderBy: EquipmentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EquipmentConnection!
+  execsConnection(where: ExecWhereInput, orderBy: ExecOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ExecConnection!
   filesConnection(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
   fileLinksConnection(where: FileLinkWhereInput, orderBy: FileLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileLinkConnection!
   modelsConnection(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ModelConnection!
@@ -9870,12 +10286,12 @@ type Query {
   opTypesConnection(where: OpTypeWhereInput, orderBy: OpTypeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OpTypeConnection!
   ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
   orgsConnection(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgConnection!
-  procsConnection(where: ProcWhereInput, orderBy: ProcOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProcConnection!
-  serverDatasConnection(where: ServerDataWhereInput, orderBy: ServerDataOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ServerDataConnection!
-  telsConnection(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TelConnection!
   paymentsConnection(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentConnection!
   personsConnection(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PersonConnection!
+  procsConnection(where: ProcWhereInput, orderBy: ProcOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProcConnection!
   prodsConnection(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProdConnection!
+  serverDatasConnection(where: ServerDataWhereInput, orderBy: ServerDataOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ServerDataConnection!
+  telsConnection(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TelConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   workpiecesConnection(where: WorkpieceWhereInput, orderBy: WorkpieceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WorkpieceConnection!
   articlesConnection(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ArticleConnection!
@@ -10443,6 +10859,7 @@ type Subscription {
   enquiry(where: EnquirySubscriptionWhereInput): EnquirySubscriptionPayload
   event(where: EventSubscriptionWhereInput): EventSubscriptionPayload
   equipment(where: EquipmentSubscriptionWhereInput): EquipmentSubscriptionPayload
+  exec(where: ExecSubscriptionWhereInput): ExecSubscriptionPayload
   file(where: FileSubscriptionWhereInput): FileSubscriptionPayload
   fileLink(where: FileLinkSubscriptionWhereInput): FileLinkSubscriptionPayload
   model(where: ModelSubscriptionWhereInput): ModelSubscriptionPayload
@@ -10450,12 +10867,12 @@ type Subscription {
   opType(where: OpTypeSubscriptionWhereInput): OpTypeSubscriptionPayload
   order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
   org(where: OrgSubscriptionWhereInput): OrgSubscriptionPayload
-  proc(where: ProcSubscriptionWhereInput): ProcSubscriptionPayload
-  serverData(where: ServerDataSubscriptionWhereInput): ServerDataSubscriptionPayload
-  tel(where: TelSubscriptionWhereInput): TelSubscriptionPayload
   payment(where: PaymentSubscriptionWhereInput): PaymentSubscriptionPayload
   person(where: PersonSubscriptionWhereInput): PersonSubscriptionPayload
+  proc(where: ProcSubscriptionWhereInput): ProcSubscriptionPayload
   prod(where: ProdSubscriptionWhereInput): ProdSubscriptionPayload
+  serverData(where: ServerDataSubscriptionWhereInput): ServerDataSubscriptionPayload
+  tel(where: TelSubscriptionWhereInput): TelSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   workpiece(where: WorkpieceSubscriptionWhereInput): WorkpieceSubscriptionPayload
   article(where: ArticleSubscriptionWhereInput): ArticleSubscriptionPayload

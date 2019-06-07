@@ -185,6 +185,7 @@ input PersonInput {
 input ProcInput {
   id: ID
   name: String
+  model: ModelInput
   modelId: ID
   batchId: ID
   ops: [OpInput!]
