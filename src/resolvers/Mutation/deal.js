@@ -1,5 +1,6 @@
 const { amoConnect } = require('./amo')
 const { generateMutationObject } = require('../utils')
+const { toLocalDateString } = require('../../utils/dates')
 
 const connectDealToOrg = async (_, { dealId, orgId }, ctx, info) => {
   const { db } = ctx
@@ -74,12 +75,12 @@ const syncDeals = async (_, __, ctx, ___) => {
           : !!oldDeal && oldDeal.org && { org: { disconnect: true } },
         status: {
           connect: { amoId: statusAmoId }
-        }
+        },
       },
       create: {
         amoId,
         name,
-        date: new Date(created_at*1000),
+        date: toLocalDateString(new Date(created_at*1000)),
         ...!!syncedOrg && { org: { connect: { id: syncedOrg.id } }},
         status: {
           connect: { amoId: statusAmoId }

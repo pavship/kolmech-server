@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Thu Jun 06 2019 13:22:36 GMT+0300 (GMT+03:00)
+# timestamp: Fri Jun 07 2019 12:37:32 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -1157,7 +1157,7 @@ scalar DateTime
 type Deal implements Node {
   id: ID!
   amoId: Int
-  date: DateTime
+  date: String
   name: String
   batches(where: BatchWhereInput, orderBy: BatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Batch!]
   org: Org
@@ -1176,7 +1176,7 @@ type DealConnection {
 
 input DealCreateInput {
   amoId: Int
-  date: DateTime
+  date: String
   name: String
   batches: BatchCreateManyWithoutDealInput
   org: OrgCreateOneWithoutDealsInput
@@ -1195,7 +1195,7 @@ input DealCreateOneWithoutBatchesInput {
 
 input DealCreateWithoutBatchesInput {
   amoId: Int
-  date: DateTime
+  date: String
   name: String
   org: OrgCreateOneWithoutDealsInput
   status: DealStatusCreateOneInput
@@ -1203,7 +1203,7 @@ input DealCreateWithoutBatchesInput {
 
 input DealCreateWithoutOrgInput {
   amoId: Int
-  date: DateTime
+  date: String
   name: String
   batches: BatchCreateManyWithoutDealInput
   status: DealStatusCreateOneInput
@@ -1236,7 +1236,7 @@ enum DealOrderByInput {
 type DealPreviousValues {
   id: ID!
   amoId: Int
-  date: DateTime
+  date: String
   name: String
 }
 
@@ -1599,7 +1599,7 @@ input DealSubscriptionWhereInput {
 
 input DealUpdateInput {
   amoId: Int
-  date: DateTime
+  date: String
   name: String
   batches: BatchUpdateManyWithoutDealInput
   org: OrgUpdateOneWithoutDealsInput
@@ -1608,7 +1608,7 @@ input DealUpdateInput {
 
 input DealUpdateManyMutationInput {
   amoId: Int
-  date: DateTime
+  date: String
   name: String
 }
 
@@ -1632,7 +1632,7 @@ input DealUpdateOneWithoutBatchesInput {
 
 input DealUpdateWithoutBatchesDataInput {
   amoId: Int
-  date: DateTime
+  date: String
   name: String
   org: OrgUpdateOneWithoutDealsInput
   status: DealStatusUpdateOneInput
@@ -1640,7 +1640,7 @@ input DealUpdateWithoutBatchesDataInput {
 
 input DealUpdateWithoutOrgDataInput {
   amoId: Int
-  date: DateTime
+  date: String
   name: String
   batches: BatchUpdateManyWithoutDealInput
   status: DealStatusUpdateOneInput
@@ -1733,28 +1733,46 @@ input DealWhereInput {
 
   """All values greater than or equal the given value."""
   amoId_gte: Int
-  date: DateTime
+  date: String
 
   """All values that are not equal to given value."""
-  date_not: DateTime
+  date_not: String
 
   """All values that are contained in given list."""
-  date_in: [DateTime!]
+  date_in: [String!]
 
   """All values that are not contained in given list."""
-  date_not_in: [DateTime!]
+  date_not_in: [String!]
 
   """All values less than the given value."""
-  date_lt: DateTime
+  date_lt: String
 
   """All values less than or equal the given value."""
-  date_lte: DateTime
+  date_lte: String
 
   """All values greater than the given value."""
-  date_gt: DateTime
+  date_gt: String
 
   """All values greater than or equal the given value."""
-  date_gte: DateTime
+  date_gte: String
+
+  """All values containing the given string."""
+  date_contains: String
+
+  """All values not containing the given string."""
+  date_not_contains: String
+
+  """All values starting with the given string."""
+  date_starts_with: String
+
+  """All values not starting with the given string."""
+  date_not_starts_with: String
+
+  """All values ending with the given string."""
+  date_ends_with: String
+
+  """All values not ending with the given string."""
+  date_not_ends_with: String
   name: String
 
   """All values that are not equal to given value."""

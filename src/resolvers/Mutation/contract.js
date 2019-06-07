@@ -2,7 +2,7 @@ const axios = require('axios')
 var JSZip = require('jszip')
 var Docxtemplater = require('docxtemplater')
 const { toLocalDateString } = require('../../utils/dates')
-const { getResourceDownloadUrl } = require('./disk')
+const { upsertOrgDealFolder, getResourceDownloadUrl, getResourceUploadUrl } = require('./disk')
 const { currency } = require('../../utils/format')
 
 const { writeFileSync } = require('fs')
@@ -13,11 +13,12 @@ const headers = {
   'Content-Type': 'application/json'
 }
 
-const createCO = async (_, { id, date = toLocalDateString(new Date()) }, { db }, info) => {
+const createCO = async (_, { id, date = toLocalDateString(new Date()) }, ctx, info) => {
+	const { db } = ctx
   console.log('createCO > ')
   console.log('id, date > ', id, date)
-  const { amoId, batches } = await db.query.deal({ where: { id }}, `{
-    amoId
+  const { amoId, batches: dealBatches } = await db.query.deal({ where: { id }}, `{
+		amoId
     batches {
       info
       qty
@@ -29,8 +30,9 @@ const createCO = async (_, { id, date = toLocalDateString(new Date()) }, { db },
         }
       }
       workpiece {
-        name
+				hardness
         material
+				name
         drawing {
           name
         }
@@ -44,10 +46,10 @@ const createCO = async (_, { id, date = toLocalDateString(new Date()) }, { db },
           }
         }
       }
-    }
+		}
   }`)
   const genOpTemplateData = ({
-    dealLabor,
+    dealLabor=0,
     description='',
     opType
   }, batchNum, num) => ({
@@ -56,7 +58,42 @@ const createCO = async (_, { id, date = toLocalDateString(new Date()) }, { db },
     hrs: dealLabor,
     description,
     price: currency(dealLabor*2000)
-  })
+	})
+	const batches = dealBatches.map(({
+		info,
+		qty,
+		warning,
+		model,
+		procs,
+		workpiece
+	}, i) => {
+		const batchNum = i + 1
+		const ops = procs[0] && procs[0].ops || []
+		const amount = ops.reduce((sum, op) => sum += (op.dealLabor || 0)*2000, 0)
+		return {
+			amount: currency(amount),
+			num: batchNum,
+			info,
+			qty,
+			sum: currency(qty*amount),
+			sumFloat: qty*amount,
+			warning,
+			modelName: model.name,
+			drwName: model.drawings[0] && model.drawings[0].name,
+			wpHardness: workpiece && workpiece.hardness,
+			wpName: workpiece && workpiece.name,
+			wpMaterial: workpiece && workpiece.material,
+			wpDrwName: workpiece && workpiece.drawing && workpiece.drawing.name,
+			...ops.length === 1 && {oOp: genOpTemplateData(ops[0], batchNum, 1)}, //onlyOp
+			...ops.length > 1 && {
+				fOp: genOpTemplateData(ops[0], batchNum, 1), // firstOp
+				lOp: genOpTemplateData(ops[ops.length - 1], batchNum, ops.length), // lastOp
+			},
+			...ops.length > 3 && {
+				iOps: ops.slice(1,-1).map((op, i) => genOpTemplateData(op, batchNum, i + 2)) // intermediateOps
+			},
+		}
+	})
   const templateDownloadUrl = await getResourceDownloadUrl('/Шаблоны документов/КП/template.docx')
   const { data: template } = await axios.get( templateDownloadUrl, { responseType: 'arraybuffer'} )
   const zip = new JSZip(template)
@@ -66,37 +103,8 @@ const createCO = async (_, { id, date = toLocalDateString(new Date()) }, { db },
     .setData({
       date: date.split('-').reverse().join('.'),
       amoId,
-      batches: batches.map(({
-        info,
-        qty,
-        warning,
-        model,
-        procs,
-        workpiece
-      }, i) => {
-        const batchNum = i + 1
-        const ops = procs[0] && procs[0].ops || []
-        return {
-          num: batchNum,
-          info,
-          qty,
-          warning,
-          modelName: model.name,
-          drwName: model.drawings[0] && model.drawings[0].name || '',
-          wpName: workpiece && workpiece.name || '',
-          wpMaterial: workpiece && workpiece.material,
-          wpDrwName: workpiece && workpiece.drawing && workpiece.drawing.name,
-          ...ops.length === 1 && {oOp: genOpTemplateData(ops[0], batchNum, 1)}, //onlyOp
-          ...ops.length > 1 && {
-            fOp: genOpTemplateData(ops[0], batchNum, 1), // firstOp
-            lOp: genOpTemplateData(ops[ops.length - 1], batchNum, ops.length), // lastOp
-          },
-          ...ops.length > 3 && {
-            iOps: ops.slice(1,-1).map((op, i) => genOpTemplateData(op, batchNum, i + 2)) // intermediateOps
-          },
-        }
-      }),
-      total: '195 000 ₽'
+      batches,
+      total: currency(batches.reduce((total, b) => total += b.sumFloat || 0, 0))
     })
     // .setOptions({ paragraphLoop:true })
   try { doc.render() }
@@ -109,8 +117,13 @@ const createCO = async (_, { id, date = toLocalDateString(new Date()) }, { db },
     .generate({
       type: 'nodebuffer',
       compression: "DEFLATE"
-  })
-  writeFileSync('./co.docx', buf)
+	})
+	// upload to yandex.disk
+	const dealFolderPath = await upsertOrgDealFolder(id, ctx)
+	const uploadUrl = await getResourceUploadUrl(`${dealFolderPath}/${date}_КП ХОНИНГОВАНИЕ.РУ_${amoId}.docx`)
+	const { data } = await axios.put( uploadUrl, buf, { responseType: 'arraybuffer'} )
+	console.log('data > ', data)
+  // writeFileSync('./co.docx', buf)
 }
 
 const createContract = async (_, { id, date = toLocalDateString(new Date()) }, { db }, info) => {

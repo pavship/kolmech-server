@@ -28,7 +28,7 @@ type Batch {
 type Deal {
 	id: ID! @unique
 	amoId: Int @unique
-	date: DateTime
+	date: String
 	name: String
 	batches: [Batch!]! @relation(name: "DealBatches" onDelete: CASCADE)
 	org: Org

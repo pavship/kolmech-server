@@ -41,8 +41,14 @@ const getResourceDownloadUrl = async path => {
 	return href
 }
 
-const getFolderName = async (path, anyTypeId) => {
-	const id = anyTypeId.toString()
+const getResourceUploadUrl = async (path, overwrite = true) => {
+	const { data: { href }} = await Disk.get('/upload?'+
+		qs.stringify({ path, overwrite }))
+	return href
+}
+
+const getFolderName = async (path, intOrStringId) => {
+	const id = intOrStringId.toString()
 	const dirFoldersNames = (await getDiskResources(path))
 		.filter(r => r.type === 'dir').map(({ name }) => name)
 	return dirFoldersNames.find(n => n.slice(-id.length) === id)
@@ -62,6 +68,36 @@ const moveFolder = (from, path) => {
 	)
 }
 
+const upsertOrgFolder = async (orgId, ctx) => {
+	const { db } = ctx
+	const org = await db.query.org({ where: { id: orgId }}, '{ amoId name }')
+	if (!org) throw new Error('Organization was not found in DB')
+	const { amoId, name } = org
+	const basePath = '/Компании'
+	const folderName = `${name}_${amoId}`
+	const oldFolderName = await getFolderName(basePath, amoId)
+	if (!oldFolderName)
+		await createFolder(`${basePath}/${folderName}`)
+	else if (oldFolderName !== folderName)
+		await moveFolder(`${basePath}/${oldFolderName}`, `${basePath}/${folderName}`)
+	return `${basePath}/${folderName}`
+}
+
+const upsertOrgDealFolder = async (dealId, ctx) => {
+	const { db } = ctx
+	const deal = await db.query.deal({ where: { id: dealId }}, '{ amoId name date org { id } }')
+	if (!deal) throw new Error('Deal was not found in DB')
+	const { amoId, name, date, org } = deal
+	const orgFolderPath = await upsertOrgFolder(org.id, ctx)
+	const folderName = `${date}_${name}_${amoId}`
+	const oldFolderName = await getFolderName(orgFolderPath, amoId)
+	if (!oldFolderName)
+		await createFolder(`${orgFolderPath}/${folderName}`)
+	else if (oldFolderName !== folderName)
+		await moveFolder(`${orgFolderPath}/${oldFolderName}`, `${orgFolderPath}/${folderName}`)
+	return `${orgFolderPath}/${folderName}`
+}
+
 const syncDiskFolders = async (path, folders) => {
 	const resourses = (await getDiskResources(path))
 	.filter(r => r.type === 'dir')
@@ -77,8 +113,6 @@ const syncDiskFolders = async (path, folders) => {
 			hasNoPrefix
 		}
 	})
-	// console.log('folders > ', folders)
-	// console.log('resourses > ', resourses)
 	const results = await Promise.all(folders.map(f => {
 		const r = resourses.find(r => r.id == f.id)
 		return !!r
@@ -97,22 +131,12 @@ const disk = {
 	async highlightFolder(_, { orgId, dealId }, ctx, info) {
 		const { db } = ctx
 		if (orgId) {
-			const org = await db.query.org({ where: { id: orgId }}, '{ amoId name }')
-			if (!org) throw new Error('Organization was not found in DB')
-			const { amoId, name } = org
-			const basePath = '/Компании'
-			const folderName = `${name}_${amoId}`
-			const oldFolderName = await getFolderName(basePath, amoId)
-			if (!oldFolderName) await createFolder(`${basePath}/${folderName}`)
-			else if (oldFolderName !== folderName)
-				await moveFolder(`${basePath}/${oldFolderName}`, `${basePath}/${folderName}`)
-			else {
-				const highlighterPath = `${basePath}/${folderName}/!folder_highlighter_(used_by_Kolmech_server)`
-				await createFolder(highlighterPath)
-				setTimeout(async () => {
-					await deleteFolder(highlighterPath, true)
-				}, 2000)
-			}
+			const orgFolderPath = await upsertOrgFolder(orgId, ctx)
+			const highlighterPath = `${orgFolderPath}/!folder_highlighter_(used_by_Kolmech_server)`
+			await createFolder(highlighterPath)
+			setTimeout(async () => {
+				await deleteFolder(highlighterPath, true)
+			}, 2000)
 		}
 		if (dealId) {
 			const deal = await db.query.deal({ where: { id: dealId }}, '{ amoId name }')
@@ -136,5 +160,7 @@ module.exports = {
 	Disk,
 	getDiskResources,
 	getResourceDownloadUrl,
+	getResourceUploadUrl,
+	upsertOrgDealFolder,
 	syncDiskFolders
 }
