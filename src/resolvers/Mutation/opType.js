@@ -1,9 +1,10 @@
 const opType = {
   async populateOpTypes(_, __, ctx, info) {
 		const items = [
-			{ name: 'Токарная'},
-			{ name: 'Фрезерная'},
-			{ name: 'Хон'},
+			{ name: 'Тех. проработка', opClass: 'SURVEY'},
+			{ name: 'Токарная', opClass: 'MACHINING'},
+			{ name: 'Фрезерная', opClass: 'MACHINING'},
+			{ name: 'Хон', opClass: 'MACHINING'},
 		]
 		const existing = await ctx.db.query.opTypes({}, '{ id name }')
 		const existingNames = existing.map(a => a.name)

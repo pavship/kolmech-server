@@ -111,6 +111,7 @@ type Equipment {
 
 type Exec {
 	id: ID! @unique
+	amoUserId: Int
 	person: Person
 	ops: [Op!]!
 	opTypes: [OpType!]!
@@ -161,6 +162,7 @@ type OpType {
 	name: String!
 	execs: [Exec!]!
 	ops: [Op!]!
+	opClass: OpClass
 }
 
 type Order {
@@ -299,17 +301,16 @@ type Workpiece {
 	drawing: Drawing @relation(name: "WorkpieceDrawing" onDelete: CASCADE)
 }
 
-enum TelType {
-  WORK
-  MOBILE
-  OTHER
-}
-
 enum DeptType {
   OWNED
   CLIENT
   PARTNER
   TRANSPORT
+}
+
+enum DocType {
+	CO
+	CONTRACT
 }
 
 enum EventType {
@@ -319,16 +320,22 @@ enum EventType {
 	COMMENT
 }
 
-enum DocType {
-	CO
-	CONTRACT
+enum ImgFor {
+	ORIGINAL
+	FEED_W792
+}
+
+enum OpClass {
+	MACHINING
+	SURVEY
+}
+
+enum TelType {
+  WORK
+  MOBILE
+  OTHER
 }
 
 enum UserRole {
 	INACTIVE
-}
-
-enum ImgFor {
-	ORIGINAL
-	FEED_W792
 }

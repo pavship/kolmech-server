@@ -13,11 +13,11 @@ const headers = {
   'Content-Type': 'application/json'
 }
 
-const createCO = async (_, { id, date = toLocalDateString(new Date()) }, ctx, info) => {
+const createComOffer = async (_, { dealId, date = toLocalDateString(new Date()) }, ctx, info) => {
 	const { db } = ctx
-  console.log('createCO > ')
-  console.log('id, date > ', id, date)
-  const { amoId, batches: dealBatches } = await db.query.deal({ where: { id }}, `{
+  console.log('createComOffer > ')
+  console.log('dealId, date > ', dealId, date)
+  const { amoId, batches: dealBatches } = await db.query.deal({ where: { id: dealId }}, `{
 		amoId
     batches {
       info
@@ -42,7 +42,8 @@ const createCO = async (_, { id, date = toLocalDateString(new Date()) }, ctx, in
           dealLabor
           description
           opType {
-            name
+						name
+						opClass
           }
         }
       }
@@ -68,7 +69,9 @@ const createCO = async (_, { id, date = toLocalDateString(new Date()) }, ctx, in
 		workpiece
 	}, i) => {
 		const batchNum = i + 1
-		const ops = procs[0] && procs[0].ops || []
+		const ops = procs[0]
+			&& procs[0].ops.filter(op => op.opType.opClass === 'MACHINING')
+			|| []
 		const amount = ops.reduce((sum, op) => sum += (op.dealLabor || 0)*2000, 0)
 		return {
 			amount: currency(amount),
@@ -119,7 +122,7 @@ const createCO = async (_, { id, date = toLocalDateString(new Date()) }, ctx, in
       compression: "DEFLATE"
 	})
 	// upload to yandex.disk
-	const dealFolderPath = await upsertOrgDealFolder(id, ctx)
+	const dealFolderPath = await upsertOrgDealFolder(dealId, ctx)
 	const uploadUrl = await getResourceUploadUrl(`${dealFolderPath}/${date}_КП ХОНИНГОВАНИЕ.РУ_${amoId}.docx`)
 	const { data } = await axios.put( uploadUrl, buf, { responseType: 'arraybuffer'} )
 	console.log('data > ', data)
@@ -184,7 +187,7 @@ const createContract = async (_, { id, date = toLocalDateString(new Date()) }, {
 
 module.exports = {
 	contract: {
-    createCO,
+    createComOffer,
     createContract
 	}
 }

@@ -54,9 +54,8 @@ const getFolderName = async (path, intOrStringId) => {
 	return dirFoldersNames.find(n => n.slice(-id.length) === id)
 }
 
-const createFolder = path => {
+const createFolder = path =>
 	Disk.put('?'+ qs.stringify({ path }))
-}
 
 const deleteFolder = (path, permanently = false) => {
 	Disk.delete('?'+ qs.stringify({ path, permanently }))
@@ -76,8 +75,11 @@ const upsertOrgFolder = async (orgId, ctx) => {
 	const basePath = '/Компании'
 	const folderName = `${name}_${amoId}`
 	const oldFolderName = await getFolderName(basePath, amoId)
+	console.log('oldFolderName > ', oldFolderName)
 	if (!oldFolderName)
-		await createFolder(`${basePath}/${folderName}`)
+		{const {data: createFolderData} = await createFolder(`${basePath}/${folderName}`)
+			console.log('createFolderData > ', createFolderData)
+		}
 	else if (oldFolderName !== folderName)
 		await moveFolder(`${basePath}/${oldFolderName}`, `${basePath}/${folderName}`)
 	return `${basePath}/${folderName}`
@@ -91,8 +93,11 @@ const upsertOrgDealFolder = async (dealId, ctx) => {
 	const orgFolderPath = await upsertOrgFolder(org.id, ctx)
 	const folderName = `${date}_${name}_${amoId}`
 	const oldFolderName = await getFolderName(orgFolderPath, amoId)
+	console.log('oldFolderName > ', oldFolderName)
 	if (!oldFolderName)
-		await createFolder(`${orgFolderPath}/${folderName}`)
+		{const {data: createFolderData} = await createFolder(`${orgFolderPath}/${folderName}`)
+			console.log('createFolderData > ', createFolderData)
+		}
 	else if (oldFolderName !== folderName)
 		await moveFolder(`${orgFolderPath}/${oldFolderName}`, `${orgFolderPath}/${folderName}`)
 	return `${orgFolderPath}/${folderName}`

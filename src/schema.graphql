@@ -37,7 +37,8 @@ type Mutation {
   # other
   checkOrgs: [String]
   connectDealToOrg(dealId: ID!, orgId: ID!): Deal
-  createCO (id: ID!, date: String): StatusPayload
+  createAmoTask (dealId: ID!, date: String): StatusPayload
+  createComOffer (dealId: ID!, date: String): StatusPayload
   createContract (id: ID!, date: String): StatusPayload
   createDrawings(modelId: ID!, files: [Upload!]!): [Drawing!]!
   createEnquiry(dateLocal: String!, orgId: ID!, modelId: ID!, qty: Int!): Enquiry
@@ -60,6 +61,7 @@ type Mutation {
   syncWithTochkaPayments: BatchPayload
   updateEnquiry(input: EnquiryInput!): Enquiry
   upsertEmployee(input: EmployeeInput!): Employee
+  upsertExec(input: ExecInput!): Exec
   upsertModel(input: ModelInput!): Model
   upsertBatch(input: BatchInput!): Batch
   upsertDeal(input: DealInput!): Deal
@@ -67,6 +69,7 @@ type Mutation {
   upsertOrgsByInn(inns: [String!]!): [Org!]!
   upsertPayment(input: PaymentInput!): Payment
   upsertPerson(input: PersonInput!): Person
+  upsertPerson2(input: PersonInput!): Person
   upsertProd(input: ProdInput!): Prod
   upsertTel(input: TelInput!): Tel
   # file handling and cloud storage
@@ -104,8 +107,10 @@ type Subscription {
 
 input BatchInput {
   id: ID
-  qty: Int
   dealId: ID
+  info: String
+  qty: Int
+  warning: String
   model: ModelInput
   procs: [ProcInput!]
   workpiece: WorkpieceInput
@@ -138,6 +143,11 @@ input EnquiryInput {
   htmlNote: String
 }
 
+input ExecInput {
+  id: ID
+  personId: ID
+}
+
 input ModelInput {
   id: ID
   orgId: ID
@@ -150,8 +160,7 @@ input OpInput {
   id: ID
   dealLabor: Float
   description: String
-  info: String
-  warning: String
+  execs: [ExecInput]
   opTypeId: ID
   opType: OpTypeInput
 }

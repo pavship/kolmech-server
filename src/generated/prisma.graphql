@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Fri Jun 07 2019 19:55:16 GMT+0300 (GMT+03:00)
+# timestamp: Mon Jun 10 2019 11:32:04 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -4269,6 +4269,7 @@ input EventWhereUniqueInput {
 
 type Exec implements Node {
   id: ID!
+  amoUserId: Int
   person: Person
   ops(where: OpWhereInput, orderBy: OpOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Op!]
   opTypes(where: OpTypeWhereInput, orderBy: OpTypeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OpType!]
@@ -4285,6 +4286,7 @@ type ExecConnection {
 }
 
 input ExecCreateInput {
+  amoUserId: Int
   person: PersonCreateOneWithoutExecInput
   ops: OpCreateManyWithoutExecsInput
   opTypes: OpTypeCreateManyWithoutExecsInput
@@ -4306,16 +4308,19 @@ input ExecCreateOneWithoutPersonInput {
 }
 
 input ExecCreateWithoutOpsInput {
+  amoUserId: Int
   person: PersonCreateOneWithoutExecInput
   opTypes: OpTypeCreateManyWithoutExecsInput
 }
 
 input ExecCreateWithoutOpTypesInput {
+  amoUserId: Int
   person: PersonCreateOneWithoutExecInput
   ops: OpCreateManyWithoutExecsInput
 }
 
 input ExecCreateWithoutPersonInput {
+  amoUserId: Int
   ops: OpCreateManyWithoutExecsInput
   opTypes: OpTypeCreateManyWithoutExecsInput
 }
@@ -4332,6 +4337,8 @@ type ExecEdge {
 enum ExecOrderByInput {
   id_ASC
   id_DESC
+  amoUserId_ASC
+  amoUserId_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -4340,6 +4347,7 @@ enum ExecOrderByInput {
 
 type ExecPreviousValues {
   id: ID!
+  amoUserId: Int
 }
 
 type ExecSubscriptionPayload {
@@ -4382,9 +4390,14 @@ input ExecSubscriptionWhereInput {
 }
 
 input ExecUpdateInput {
+  amoUserId: Int
   person: PersonUpdateOneWithoutExecInput
   ops: OpUpdateManyWithoutExecsInput
   opTypes: OpTypeUpdateManyWithoutExecsInput
+}
+
+input ExecUpdateManyMutationInput {
+  amoUserId: Int
 }
 
 input ExecUpdateManyWithoutOpsInput {
@@ -4415,16 +4428,19 @@ input ExecUpdateOneWithoutPersonInput {
 }
 
 input ExecUpdateWithoutOpsDataInput {
+  amoUserId: Int
   person: PersonUpdateOneWithoutExecInput
   opTypes: OpTypeUpdateManyWithoutExecsInput
 }
 
 input ExecUpdateWithoutOpTypesDataInput {
+  amoUserId: Int
   person: PersonUpdateOneWithoutExecInput
   ops: OpUpdateManyWithoutExecsInput
 }
 
 input ExecUpdateWithoutPersonDataInput {
+  amoUserId: Int
   ops: OpUpdateManyWithoutExecsInput
   opTypes: OpTypeUpdateManyWithoutExecsInput
 }
@@ -4505,6 +4521,28 @@ input ExecWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  amoUserId: Int
+
+  """All values that are not equal to given value."""
+  amoUserId_not: Int
+
+  """All values that are contained in given list."""
+  amoUserId_in: [Int!]
+
+  """All values that are not contained in given list."""
+  amoUserId_not_in: [Int!]
+
+  """All values less than the given value."""
+  amoUserId_lt: Int
+
+  """All values less than or equal the given value."""
+  amoUserId_lte: Int
+
+  """All values greater than the given value."""
+  amoUserId_gt: Int
+
+  """All values greater than or equal the given value."""
+  amoUserId_gte: Int
   person: PersonWhereInput
   ops_every: OpWhereInput
   ops_some: OpWhereInput
@@ -5867,6 +5905,7 @@ type Mutation {
   updateManyEnquiries(data: EnquiryUpdateManyMutationInput!, where: EnquiryWhereInput): BatchPayload!
   updateManyEvents(data: EventUpdateManyMutationInput!, where: EventWhereInput): BatchPayload!
   updateManyEquipments(data: EquipmentUpdateManyMutationInput!, where: EquipmentWhereInput): BatchPayload!
+  updateManyExecs(data: ExecUpdateManyMutationInput!, where: ExecWhereInput): BatchPayload!
   updateManyFiles(data: FileUpdateManyMutationInput!, where: FileWhereInput): BatchPayload!
   updateManyFileLinks(data: FileLinkUpdateManyMutationInput!, where: FileLinkWhereInput): BatchPayload!
   updateManyModels(data: ModelUpdateManyMutationInput!, where: ModelWhereInput): BatchPayload!
@@ -5937,6 +5976,11 @@ type Op implements Node {
   description: String
   execs(where: ExecWhereInput, orderBy: ExecOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Exec!]
   proc: Proc!
+}
+
+enum OpClass {
+  MACHINING
+  SURVEY
 }
 
 """A connection to a list of items."""
@@ -6065,6 +6109,7 @@ type OpType implements Node {
   name: String!
   execs(where: ExecWhereInput, orderBy: ExecOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Exec!]
   ops(where: OpWhereInput, orderBy: OpOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Op!]
+  opClass: OpClass
 }
 
 """A connection to a list of items."""
@@ -6079,6 +6124,7 @@ type OpTypeConnection {
 
 input OpTypeCreateInput {
   name: String!
+  opClass: OpClass
   execs: ExecCreateManyWithoutOpTypesInput
   ops: OpCreateManyWithoutOpTypeInput
 }
@@ -6095,11 +6141,13 @@ input OpTypeCreateOneWithoutOpsInput {
 
 input OpTypeCreateWithoutExecsInput {
   name: String!
+  opClass: OpClass
   ops: OpCreateManyWithoutOpTypeInput
 }
 
 input OpTypeCreateWithoutOpsInput {
   name: String!
+  opClass: OpClass
   execs: ExecCreateManyWithoutOpTypesInput
 }
 
@@ -6117,6 +6165,8 @@ enum OpTypeOrderByInput {
   id_DESC
   name_ASC
   name_DESC
+  opClass_ASC
+  opClass_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -6126,6 +6176,7 @@ enum OpTypeOrderByInput {
 type OpTypePreviousValues {
   id: ID!
   name: String!
+  opClass: OpClass
 }
 
 type OpTypeSubscriptionPayload {
@@ -6169,12 +6220,14 @@ input OpTypeSubscriptionWhereInput {
 
 input OpTypeUpdateInput {
   name: String
+  opClass: OpClass
   execs: ExecUpdateManyWithoutOpTypesInput
   ops: OpUpdateManyWithoutOpTypeInput
 }
 
 input OpTypeUpdateManyMutationInput {
   name: String
+  opClass: OpClass
 }
 
 input OpTypeUpdateManyWithoutExecsInput {
@@ -6195,11 +6248,13 @@ input OpTypeUpdateOneRequiredWithoutOpsInput {
 
 input OpTypeUpdateWithoutExecsDataInput {
   name: String
+  opClass: OpClass
   ops: OpUpdateManyWithoutOpTypeInput
 }
 
 input OpTypeUpdateWithoutOpsDataInput {
   name: String
+  opClass: OpClass
   execs: ExecUpdateManyWithoutOpTypesInput
 }
 
@@ -6308,6 +6363,16 @@ input OpTypeWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
+  opClass: OpClass
+
+  """All values that are not equal to given value."""
+  opClass_not: OpClass
+
+  """All values that are contained in given list."""
+  opClass_in: [OpClass!]
+
+  """All values that are not contained in given list."""
+  opClass_not_in: [OpClass!]
   execs_every: ExecWhereInput
   execs_some: ExecWhereInput
   execs_none: ExecWhereInput

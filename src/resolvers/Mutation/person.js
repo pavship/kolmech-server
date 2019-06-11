@@ -1,6 +1,15 @@
+const { generateMutationObject } = require('../utils')
 const { tel: { upsertTel } } = require('./tel')
 
 const person = {
+	async upsertPerson2(_, { input }, ctx, info) {
+		const { db } = ctx
+    console.log('input > ', JSON.stringify(input, null, 2))
+    const mutationObj = await generateMutationObject(input, 'person', ctx)
+    console.log('mutationObj > ', JSON.stringify(mutationObj, null, 2))
+    if (!input.id) return db.mutation.createPerson(mutationObj, info)
+      else return db.mutation.updatePerson(mutationObj, info)
+	},
 	async upsertPerson(_, { input }, ctx, info) {
     const { userId, db } = ctx
     const {
