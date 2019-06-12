@@ -57,7 +57,7 @@ type Mutation {
   setDrawingsSortOrder(ids: [ID!]!): BatchPayload!
   syncDeals: BatchPayload
   syncDealStatuses: BatchPayload!
-  syncWithAmoContacts: BatchPayload!
+  syncWithAmoContacts: [Person!]
   syncWithTochkaPayments: BatchPayload
   updateEnquiry(input: EnquiryInput!): Enquiry
   upsertEmployee(input: EmployeeInput!): Employee
@@ -145,7 +145,10 @@ input EnquiryInput {
 
 input ExecInput {
   id: ID
+  execId: ID
   personId: ID
+  opTypes: [OpTypeInput]
+  opTypeId: ID
 }
 
 input ModelInput {
@@ -167,6 +170,7 @@ input OpInput {
 
 input OpTypeInput {
   id: ID
+  opTypeId: ID
 }
 
 input PaymentInput {
@@ -188,6 +192,7 @@ input PersonInput {
 	regName: String
 	regNameChecked: Boolean
 	htmlNote: String
+  exec: ExecInput
 	tels: [TelInput!]
 }
 

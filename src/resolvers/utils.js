@@ -76,19 +76,20 @@ const handleArr = async (arr, typeName, parentTypeName, parentId, ctx) => {
         }
       }, '{ id }')
     } catch (err) {
-      const pluralTypeName =
+      const pluralParentTypeName =
         (forms = pluralForms.find(([singular, plural]) => singular === parentTypeName))
           ? forms[1]
           : `${parentTypeName}s`
+      console.log('parentTypeName, parentId, pluralParentTypeName, typeName > ', parentTypeName, parentId, pluralParentTypeName, typeName, prevArr)  
       prevArr = await ctx.db.query[typeName]({
         where: {
-          [`${pluralTypeName}_every`]: {
+          [`${pluralParentTypeName}_some`]: {
             id: parentId
           }
         }
       }, '{ id }')
     }
-    // console.log('prevArr > ', prevArr)
+    console.log('prevArr > ', prevArr)
     // exceptions' array
     const deleteInsteadUpdateIds = []
     for (let { id } of prevArr) {
@@ -115,10 +116,12 @@ const handleArr = async (arr, typeName, parentTypeName, parentId, ctx) => {
       ]
     }
   }
-  // console.log('toDelete > ', toDelete)
+  console.log('toDelete > ', toDelete)
   // console.log('toUpdate > ', toUpdate)
+  let toConnect = arr.filter(r => r[singularTypeName + 'Id'])
+    .map(r => ({ id: r[singularTypeName + 'Id'] }))
   // all records without ids are saved into db
-  let toCreate = await Promise.all(arr.filter(r => !r.id)
+  let toCreate = await Promise.all(arr.filter(r => !r.id && !r[singularTypeName + 'Id'])
     .map(r => handleObj(r, singularTypeName, ctx)))
   if (typeName === 'tels')
     // not creating tels with empty numbers
@@ -127,6 +130,7 @@ const handleArr = async (arr, typeName, parentTypeName, parentId, ctx) => {
   const result = {
     ...toDelete.length && { delete: toDelete },
     ...toUpdate.length && { update: toUpdate },
+    ...toConnect.length && { connect: toConnect },
     ...toCreate.length && { create: toCreate },
   }
   return Object.keys(result).length

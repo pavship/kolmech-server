@@ -49,7 +49,7 @@ const amoConnect = async ctx => {
 
 const createAmoTask = async(_, { dealId, date }, ctx, info) => {
   console.log('dealId, date > ', dealId, date)
-  const Amo = await amoConnect(ctx)
+  const amo = await amoConnect(ctx)
   try {
     // const { data } = await Amo.post('/api/v2/tasks/', {
     //   add: [
@@ -79,11 +79,11 @@ const createAmoTask = async(_, { dealId, date }, ctx, info) => {
 const syncWithAmoContacts = async(_, __, ctx, info) => {
   try {
     const { userId, db } = ctx
-    await crm.connect()
-    const res = await crm.request.get( '/api/v2/contacts' )
+    const amo = await amoConnect(ctx)
+    const { data: {_embedded: { items }}} = await amo.get('/api/v2/contacts')
     // console.log('res > ', res)
-    const contacts = res._embedded.items.map(({ id, name }) => ({ id, name }))
-    // console.log('contacts > ', JSON.stringify(contacts, null, 2))
+    const contacts = items.map(({ id, name }) => ({ id, name }))
+    console.log('contacts > ', JSON.stringify(contacts, null, 2))
     const persons = await db.query.persons({
       where: {
         id_not_in: [
@@ -127,7 +127,7 @@ const syncWithAmoContacts = async(_, __, ctx, info) => {
         }
       }, '{ amoId amoName }')
     }))
-    const upserted = handled.filter(c => !!c) //filter out nulls
+    // const upserted = handled.filter(c => !!c) //filter out nulls
     const toDelete = persons.filter(p => !contacts.map(c => c.id).includes(p.amoId))
     const deleted = await db.mutation.deleteManyPersons({
       where: {
@@ -136,15 +136,12 @@ const syncWithAmoContacts = async(_, __, ctx, info) => {
     })
     // console.log('upserted > ', JSON.stringify(upserted, null, 2))
     // console.log('deleted > ', JSON.stringify(deleted, null, 2))
-    return { count: upserted.length + deleted.count }
+    return db.query.persons({}, info)
   } catch (err) {
     console.log('err > ', err)
     throw err
-    // throw new Error(err.message + ' ')
   }
 }
-
-
 
 module.exports = { 
   amo: {
