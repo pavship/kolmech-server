@@ -33,15 +33,6 @@ const Query = {
 		}
 	},
 
-	persons(_, __, ctx, info) {
-		return ctx.db.query.persons({ where: {
-			id_not_in: [
-				'cjm85kntr00f009385au7tolq', //Admin
-				'cjnfcpohm0d4h0724cmtoe8sj', //Server
-			]
-		}, orderBy: 'amoName_ASC' }, info)
-	},
-
 	accounts(_, __, ctx, info) {
 		return ctx.db.query.accounts({ orderBy: 'name_ASC' }, info)
 	},
@@ -104,7 +95,20 @@ const Query = {
 	payments(_, __, ctx, info) {
 		return ctx.db.query.payments({ orderBy: 'dateLocal_DESC' }, info)
 	},
-        
+
+	persons(_, __, ctx, info) {
+		return ctx.db.query.persons({ where: {
+			id_not_in: [
+				'cjm85kntr00f009385au7tolq', //Admin
+				'cjnfcpohm0d4h0724cmtoe8sj', //Server
+			]
+		}, orderBy: 'amoName_ASC' }, info)
+	},
+
+	person(_, { id }, ctx, info) {
+		return ctx.db.query.person({ where: { id } }, info)
+	},
+
 	model(_, { id }, ctx, info) {
 		return ctx.db.query.model({ where: { id } }, info)
 	},

@@ -23,6 +23,7 @@ type Query {
   orgs: [Org!]!
   orgDetails (id: ID!): Org
   orgEmployees (orgId: ID!): [Employee!]!
+  person (id: ID!): Person!
   persons: [Person!]!
   payments: [Payment!]!
   statuses: [Status!]!
@@ -112,6 +113,7 @@ input BatchInput {
   qty: Int
   warning: String
   model: ModelInput
+  ops: [OpInput!]
   procs: [ProcInput!]
   workpiece: WorkpieceInput
 }
@@ -146,6 +148,8 @@ input EnquiryInput {
 input ExecInput {
   id: ID
   execId: ID
+  disconnect: Boolean
+  person: PersonInput
   personId: ID
   opTypes: [OpTypeInput]
   opTypeId: ID

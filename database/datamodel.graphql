@@ -21,6 +21,7 @@ type Batch {
 	warning: String
 	deal: Deal @relation(name: "DealBatches")
 	model: Model!
+	ops: [Op!]! @relation(name: "BatchOps" onDelete: CASCADE)
 	procs: [Proc!]! @relation(name: "BatchesProcs" onDelete: CASCADE)
 	workpiece: Workpiece @relation(name: "BatchWorkpiece"  onDelete: CASCADE)
 }
@@ -153,8 +154,9 @@ type Op {
 	dealLabor: Float
 	opType: OpType!
 	description: String
+	batch: Batch @relation(name: "BatchOps")
 	execs: [Exec!]!
-	proc: Proc! @relation(name: "ProcOps")
+	proc: Proc @relation(name: "ProcOps")
 }
 
 type OpType {

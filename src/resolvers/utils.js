@@ -63,8 +63,9 @@ const handleArr = async (arr, typeName, parentTypeName, parentId, ctx) => {
   const arrIds = arr.map(r => r.id)
   // console.log('arrIds > ', arrIds)
   let toDelete = []
+  let toDisconnect = []
   let toUpdate = []
-  // if parent object exists, get prevArr and compare with new arr
+  // if parent object exists, get prevArr to then compare with new arr
   if (parentId) {
     let prevArr = []
     try {
@@ -89,21 +90,21 @@ const handleArr = async (arr, typeName, parentTypeName, parentId, ctx) => {
         }
       }, '{ id }')
     }
-    console.log('prevArr > ', prevArr)
-    // exceptions' array
+    // console.log('prevArr > ', prevArr)
     const deleteInsteadUpdateIds = []
     for (let { id } of prevArr) {
       const newVal = cloneDeep(arr.find(r => r.id === id))
       // assign toDelete record if it's not found in the new arr
       if (!newVal) toDelete.push({ id })
-        // assign toUpdate record if it's found in the new arr and has any props except 'id'
-        else if (Object.keys(newVal).length > 1) {
-          const data = await handleObj(newVal, singularTypeName, ctx)
-          if (Object.keys(data).length) toUpdate.push({
-            where: { id },
-            data
-          })
-        }
+      else if (newVal.disconnect) toDisconnect.push({ id })
+      // assign toUpdate record if it's found in the new arr and has any props except 'id' and 'disconnect'
+      else if (Object.keys(newVal).length > 1) {
+        const data = await handleObj(newVal, singularTypeName, ctx)
+        if (Object.keys(data).length) toUpdate.push({
+          where: { id },
+          data
+        })
+      }
       // exceptions
       if (typeName === 'tels' && newVal && newVal.number === '')
         deleteInsteadUpdateIds.push(newVal.id)
@@ -121,7 +122,7 @@ const handleArr = async (arr, typeName, parentTypeName, parentId, ctx) => {
   let toConnect = arr.filter(r => r[singularTypeName + 'Id'])
     .map(r => ({ id: r[singularTypeName + 'Id'] }))
   // all records without ids are saved into db
-  let toCreate = await Promise.all(arr.filter(r => !r.id && !r[singularTypeName + 'Id'])
+  let toCreate = await Promise.all(arr.filter(r => !r.id && !r[singularTypeName + 'Id'] && Object.keys(r).length)
     .map(r => handleObj(r, singularTypeName, ctx)))
   if (typeName === 'tels')
     // not creating tels with empty numbers
@@ -129,6 +130,7 @@ const handleArr = async (arr, typeName, parentTypeName, parentId, ctx) => {
   // console.log('toCreate > ', toCreate)
   const result = {
     ...toDelete.length && { delete: toDelete },
+    ...toDisconnect.length && { disconnect: toDisconnect },
     ...toUpdate.length && { update: toUpdate },
     ...toConnect.length && { connect: toConnect },
     ...toCreate.length && { create: toCreate },

@@ -1,7 +1,7 @@
 const opType = {
   async populateOpTypes(_, __, ctx, info) {
 		const items = [
-			{ name: 'Тех. проработка', opClass: 'SURVEY'},
+			{ name: 'Проработка', opClass: 'SURVEY'},
 			{ name: 'Токарная', opClass: 'MACHINING'},
 			{ name: 'Фрезерная', opClass: 'MACHINING'},
 			{ name: 'Хон', opClass: 'MACHINING'},

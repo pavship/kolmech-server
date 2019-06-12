@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Mon Jun 10 2019 11:32:04 GMT+0300 (GMT+03:00)
+# timestamp: Thu Jun 13 2019 01:57:01 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -712,6 +712,7 @@ type Batch implements Node {
   warning: String
   deal: Deal
   model: Model!
+  ops(where: OpWhereInput, orderBy: OpOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Op!]
   procs(where: ProcWhereInput, orderBy: ProcOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Proc!]
   workpiece: Workpiece
 }
@@ -732,6 +733,7 @@ input BatchCreateInput {
   warning: String
   deal: DealCreateOneWithoutBatchesInput
   model: ModelCreateOneWithoutBatchesInput!
+  ops: OpCreateManyWithoutBatchInput
   procs: ProcCreateManyWithoutBatchesInput
   workpiece: WorkpieceCreateOneWithoutBatchInput
 }
@@ -751,6 +753,11 @@ input BatchCreateManyWithoutProcsInput {
   connect: [BatchWhereUniqueInput!]
 }
 
+input BatchCreateOneWithoutOpsInput {
+  create: BatchCreateWithoutOpsInput
+  connect: BatchWhereUniqueInput
+}
+
 input BatchCreateOneWithoutWorkpieceInput {
   create: BatchCreateWithoutWorkpieceInput
   connect: BatchWhereUniqueInput
@@ -761,6 +768,7 @@ input BatchCreateWithoutDealInput {
   info: String
   warning: String
   model: ModelCreateOneWithoutBatchesInput!
+  ops: OpCreateManyWithoutBatchInput
   procs: ProcCreateManyWithoutBatchesInput
   workpiece: WorkpieceCreateOneWithoutBatchInput
 }
@@ -770,6 +778,17 @@ input BatchCreateWithoutModelInput {
   info: String
   warning: String
   deal: DealCreateOneWithoutBatchesInput
+  ops: OpCreateManyWithoutBatchInput
+  procs: ProcCreateManyWithoutBatchesInput
+  workpiece: WorkpieceCreateOneWithoutBatchInput
+}
+
+input BatchCreateWithoutOpsInput {
+  qty: Int
+  info: String
+  warning: String
+  deal: DealCreateOneWithoutBatchesInput
+  model: ModelCreateOneWithoutBatchesInput!
   procs: ProcCreateManyWithoutBatchesInput
   workpiece: WorkpieceCreateOneWithoutBatchInput
 }
@@ -780,6 +799,7 @@ input BatchCreateWithoutProcsInput {
   warning: String
   deal: DealCreateOneWithoutBatchesInput
   model: ModelCreateOneWithoutBatchesInput!
+  ops: OpCreateManyWithoutBatchInput
   workpiece: WorkpieceCreateOneWithoutBatchInput
 }
 
@@ -789,6 +809,7 @@ input BatchCreateWithoutWorkpieceInput {
   warning: String
   deal: DealCreateOneWithoutBatchesInput
   model: ModelCreateOneWithoutBatchesInput!
+  ops: OpCreateManyWithoutBatchInput
   procs: ProcCreateManyWithoutBatchesInput
 }
 
@@ -873,6 +894,7 @@ input BatchUpdateInput {
   warning: String
   deal: DealUpdateOneWithoutBatchesInput
   model: ModelUpdateOneRequiredWithoutBatchesInput
+  ops: OpUpdateManyWithoutBatchInput
   procs: ProcUpdateManyWithoutBatchesInput
   workpiece: WorkpieceUpdateOneWithoutBatchInput
 }
@@ -910,6 +932,15 @@ input BatchUpdateManyWithoutProcsInput {
   upsert: [BatchUpsertWithWhereUniqueWithoutProcsInput!]
 }
 
+input BatchUpdateOneWithoutOpsInput {
+  create: BatchCreateWithoutOpsInput
+  connect: BatchWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: BatchUpdateWithoutOpsDataInput
+  upsert: BatchUpsertWithoutOpsInput
+}
+
 input BatchUpdateOneWithoutWorkpieceInput {
   create: BatchCreateWithoutWorkpieceInput
   connect: BatchWhereUniqueInput
@@ -924,6 +955,7 @@ input BatchUpdateWithoutDealDataInput {
   info: String
   warning: String
   model: ModelUpdateOneRequiredWithoutBatchesInput
+  ops: OpUpdateManyWithoutBatchInput
   procs: ProcUpdateManyWithoutBatchesInput
   workpiece: WorkpieceUpdateOneWithoutBatchInput
 }
@@ -933,6 +965,17 @@ input BatchUpdateWithoutModelDataInput {
   info: String
   warning: String
   deal: DealUpdateOneWithoutBatchesInput
+  ops: OpUpdateManyWithoutBatchInput
+  procs: ProcUpdateManyWithoutBatchesInput
+  workpiece: WorkpieceUpdateOneWithoutBatchInput
+}
+
+input BatchUpdateWithoutOpsDataInput {
+  qty: Int
+  info: String
+  warning: String
+  deal: DealUpdateOneWithoutBatchesInput
+  model: ModelUpdateOneRequiredWithoutBatchesInput
   procs: ProcUpdateManyWithoutBatchesInput
   workpiece: WorkpieceUpdateOneWithoutBatchInput
 }
@@ -943,6 +986,7 @@ input BatchUpdateWithoutProcsDataInput {
   warning: String
   deal: DealUpdateOneWithoutBatchesInput
   model: ModelUpdateOneRequiredWithoutBatchesInput
+  ops: OpUpdateManyWithoutBatchInput
   workpiece: WorkpieceUpdateOneWithoutBatchInput
 }
 
@@ -952,6 +996,7 @@ input BatchUpdateWithoutWorkpieceDataInput {
   warning: String
   deal: DealUpdateOneWithoutBatchesInput
   model: ModelUpdateOneRequiredWithoutBatchesInput
+  ops: OpUpdateManyWithoutBatchInput
   procs: ProcUpdateManyWithoutBatchesInput
 }
 
@@ -968,6 +1013,11 @@ input BatchUpdateWithWhereUniqueWithoutModelInput {
 input BatchUpdateWithWhereUniqueWithoutProcsInput {
   where: BatchWhereUniqueInput!
   data: BatchUpdateWithoutProcsDataInput!
+}
+
+input BatchUpsertWithoutOpsInput {
+  update: BatchUpdateWithoutOpsDataInput!
+  create: BatchCreateWithoutOpsInput!
 }
 
 input BatchUpsertWithoutWorkpieceInput {
@@ -1146,6 +1196,9 @@ input BatchWhereInput {
   warning_not_ends_with: String
   deal: DealWhereInput
   model: ModelWhereInput
+  ops_every: OpWhereInput
+  ops_some: OpWhereInput
+  ops_none: OpWhereInput
   procs_every: ProcWhereInput
   procs_some: ProcWhereInput
   procs_none: ProcWhereInput
@@ -5974,8 +6027,9 @@ type Op implements Node {
   dealLabor: Float
   opType: OpType!
   description: String
+  batch: Batch
   execs(where: ExecWhereInput, orderBy: ExecOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Exec!]
-  proc: Proc!
+  proc: Proc
 }
 
 enum OpClass {
@@ -5997,8 +6051,14 @@ input OpCreateInput {
   dealLabor: Float
   description: String
   opType: OpTypeCreateOneWithoutOpsInput!
+  batch: BatchCreateOneWithoutOpsInput
   execs: ExecCreateManyWithoutOpsInput
-  proc: ProcCreateOneWithoutOpsInput!
+  proc: ProcCreateOneWithoutOpsInput
+}
+
+input OpCreateManyWithoutBatchInput {
+  create: [OpCreateWithoutBatchInput!]
+  connect: [OpWhereUniqueInput!]
 }
 
 input OpCreateManyWithoutExecsInput {
@@ -6016,24 +6076,35 @@ input OpCreateManyWithoutProcInput {
   connect: [OpWhereUniqueInput!]
 }
 
+input OpCreateWithoutBatchInput {
+  dealLabor: Float
+  description: String
+  opType: OpTypeCreateOneWithoutOpsInput!
+  execs: ExecCreateManyWithoutOpsInput
+  proc: ProcCreateOneWithoutOpsInput
+}
+
 input OpCreateWithoutExecsInput {
   dealLabor: Float
   description: String
   opType: OpTypeCreateOneWithoutOpsInput!
-  proc: ProcCreateOneWithoutOpsInput!
+  batch: BatchCreateOneWithoutOpsInput
+  proc: ProcCreateOneWithoutOpsInput
 }
 
 input OpCreateWithoutOpTypeInput {
   dealLabor: Float
   description: String
+  batch: BatchCreateOneWithoutOpsInput
   execs: ExecCreateManyWithoutOpsInput
-  proc: ProcCreateOneWithoutOpsInput!
+  proc: ProcCreateOneWithoutOpsInput
 }
 
 input OpCreateWithoutProcInput {
   dealLabor: Float
   description: String
   opType: OpTypeCreateOneWithoutOpsInput!
+  batch: BatchCreateOneWithoutOpsInput
   execs: ExecCreateManyWithoutOpsInput
 }
 
@@ -6389,13 +6460,23 @@ input OpUpdateInput {
   dealLabor: Float
   description: String
   opType: OpTypeUpdateOneRequiredWithoutOpsInput
+  batch: BatchUpdateOneWithoutOpsInput
   execs: ExecUpdateManyWithoutOpsInput
-  proc: ProcUpdateOneRequiredWithoutOpsInput
+  proc: ProcUpdateOneWithoutOpsInput
 }
 
 input OpUpdateManyMutationInput {
   dealLabor: Float
   description: String
+}
+
+input OpUpdateManyWithoutBatchInput {
+  create: [OpCreateWithoutBatchInput!]
+  connect: [OpWhereUniqueInput!]
+  disconnect: [OpWhereUniqueInput!]
+  delete: [OpWhereUniqueInput!]
+  update: [OpUpdateWithWhereUniqueWithoutBatchInput!]
+  upsert: [OpUpsertWithWhereUniqueWithoutBatchInput!]
 }
 
 input OpUpdateManyWithoutExecsInput {
@@ -6425,25 +6506,41 @@ input OpUpdateManyWithoutProcInput {
   upsert: [OpUpsertWithWhereUniqueWithoutProcInput!]
 }
 
+input OpUpdateWithoutBatchDataInput {
+  dealLabor: Float
+  description: String
+  opType: OpTypeUpdateOneRequiredWithoutOpsInput
+  execs: ExecUpdateManyWithoutOpsInput
+  proc: ProcUpdateOneWithoutOpsInput
+}
+
 input OpUpdateWithoutExecsDataInput {
   dealLabor: Float
   description: String
   opType: OpTypeUpdateOneRequiredWithoutOpsInput
-  proc: ProcUpdateOneRequiredWithoutOpsInput
+  batch: BatchUpdateOneWithoutOpsInput
+  proc: ProcUpdateOneWithoutOpsInput
 }
 
 input OpUpdateWithoutOpTypeDataInput {
   dealLabor: Float
   description: String
+  batch: BatchUpdateOneWithoutOpsInput
   execs: ExecUpdateManyWithoutOpsInput
-  proc: ProcUpdateOneRequiredWithoutOpsInput
+  proc: ProcUpdateOneWithoutOpsInput
 }
 
 input OpUpdateWithoutProcDataInput {
   dealLabor: Float
   description: String
   opType: OpTypeUpdateOneRequiredWithoutOpsInput
+  batch: BatchUpdateOneWithoutOpsInput
   execs: ExecUpdateManyWithoutOpsInput
+}
+
+input OpUpdateWithWhereUniqueWithoutBatchInput {
+  where: OpWhereUniqueInput!
+  data: OpUpdateWithoutBatchDataInput!
 }
 
 input OpUpdateWithWhereUniqueWithoutExecsInput {
@@ -6459,6 +6556,12 @@ input OpUpdateWithWhereUniqueWithoutOpTypeInput {
 input OpUpdateWithWhereUniqueWithoutProcInput {
   where: OpWhereUniqueInput!
   data: OpUpdateWithoutProcDataInput!
+}
+
+input OpUpsertWithWhereUniqueWithoutBatchInput {
+  where: OpWhereUniqueInput!
+  update: OpUpdateWithoutBatchDataInput!
+  create: OpCreateWithoutBatchInput!
 }
 
 input OpUpsertWithWhereUniqueWithoutExecsInput {
@@ -6591,6 +6694,7 @@ input OpWhereInput {
   """All values not ending with the given string."""
   description_not_ends_with: String
   opType: OpTypeWhereInput
+  batch: BatchWhereInput
   execs_every: ExecWhereInput
   execs_some: ExecWhereInput
   execs_none: ExecWhereInput
@@ -9551,9 +9655,11 @@ input ProcUpdateManyWithoutModelInput {
   upsert: [ProcUpsertWithWhereUniqueWithoutModelInput!]
 }
 
-input ProcUpdateOneRequiredWithoutOpsInput {
+input ProcUpdateOneWithoutOpsInput {
   create: ProcCreateWithoutOpsInput
   connect: ProcWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
   update: ProcUpdateWithoutOpsDataInput
   upsert: ProcUpsertWithoutOpsInput
 }
