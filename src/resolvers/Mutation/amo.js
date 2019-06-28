@@ -14,6 +14,9 @@ const baseURL = `https://${process.env.AMO_DOMAIN}.amocrm.ru`
 
 let Amo = null
 
+// const { bot } = require('./telegram')
+// console.log('Amo > ', bot)
+
 const amoConnect = async ctx => {
   const { db } = ctx
   let [{ id, amoExpiresAt, amoCookie}] = 

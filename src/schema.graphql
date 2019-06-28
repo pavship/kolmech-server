@@ -27,6 +27,7 @@ type Query {
   persons: [Person!]!
   payments: [Payment!]!
   statuses: [Status!]!
+  task: Task!
 }
 
 type Mutation {
@@ -57,7 +58,7 @@ type Mutation {
   seedEnquiryStatuses: BatchPayload!
   setDrawingsSortOrder(ids: [ID!]!): BatchPayload!
   syncDeals: BatchPayload
-  syncDealStatuses: BatchPayload!
+  syncDealStatuses: StatusPayload
   syncWithAmoContacts: [Person!]
   syncWithTochkaPayments: BatchPayload
   updateEnquiry(input: EnquiryInput!): Enquiry
@@ -72,6 +73,7 @@ type Mutation {
   upsertPerson(input: PersonInput!): Person
   upsertPerson2(input: PersonInput!): Person
   upsertProd(input: ProdInput!): Prod
+  upsertTask(input: TaskInput!): Task
   upsertTel(input: TelInput!): Tel
   # file handling and cloud storage
   singleUpload (file: Upload!): File
@@ -104,6 +106,13 @@ type StatusPayload {
 
 type Subscription {
   enquirySubscription: EnquirySubscriptionPayload!
+}
+
+
+input AppointInput {
+  id: ID
+  exec: [ExecInput]
+  execId: ID
 }
 
 input BatchInput {
@@ -167,7 +176,7 @@ input OpInput {
   id: ID
   dealLabor: Float
   description: String
-  execs: [ExecInput]
+  appoints: [AppointInput]
   opTypeId: ID
   opType: OpTypeInput
 }
@@ -222,6 +231,20 @@ input ProdInput {
   year: Int
   deptId: ID
   modelId: ID
+}
+
+input TaskInput {
+  id: ID
+  delete: Boolean
+  end: DateTime
+	from: DateTime
+	status: TaskStatus
+	text: String
+	to: DateTime
+	exec: ExecInput
+	execId: ID
+	op: OpInput
+	opId: ID
 }
 
 input TelInput {

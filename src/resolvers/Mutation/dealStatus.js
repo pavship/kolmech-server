@@ -10,6 +10,8 @@ const dealStatus = {
     const statusesObj = pipelines['1593157'].statuses
     const statuses = []
     Object.keys(statusesObj).forEach(k => statuses.push(statusesObj[k]))
+    const oldStatuses = await db.query.dealStatuses({}, '{ id amoId }')
+    // upsert
     const upserted = await Promise.all(statuses.map(({
       id: amoId,
       name,
@@ -29,11 +31,21 @@ const dealStatus = {
           color,
           sort
         }
-      }, '{ id }')
+      }, '{ id name }')
     ))
+    // delete
+    const statusesAmoIds = statuses.map(s => s.id)
+    const toDeleteIds = oldStatuses
+      .filter(s => !statusesAmoIds.includes(s.amoId))
+      .map(s => s.id)
+    const deleted = await db.mutation.deleteManyDealStatuses({
+      where: {id_in: toDeleteIds}
+    }, '{ count }')
     // UPDATE DISK FOLDERS
     await syncDiskFolders('/Заявки ХОНИНГОВАНИЕ.РУ', statuses)
-    return { count: upserted.length }
+    console.log('upserted > ', JSON.stringify(upserted, null, 2))
+    console.log('deleted count > ', JSON.stringify(deleted, null, 2))
+    return { statusText: 'OK' }
   },
 }
 

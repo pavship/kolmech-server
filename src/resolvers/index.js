@@ -19,6 +19,7 @@ const { order } = require('./Mutation/order')
 const { payment } = require('./Mutation/payment')
 const { person } = require('./Mutation/person')
 const { prod } = require('./Mutation/prod')
+const { task } = require('./Mutation/task')
 const { tel } = require('./Mutation/tel')
 const { tochka } = require('./Mutation/tochka')
 const { employee } = require('./Mutation/employee')
@@ -51,6 +52,7 @@ module.exports = {
     ...payment,
     ...person,
     ...prod,
+    ...task,
     ...tel,
     ...tochka,
     ...employee,

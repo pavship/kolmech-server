@@ -56,6 +56,14 @@ const Query = {
 		}, info)
 	},
 
+	deptProds(_, { deptId }, ctx, info) {
+		return ctx.db.query.prods({ where: { dept: { id: deptId } } }, info)
+	},
+	        
+	depts(_, __, ctx, info) {
+		return ctx.db.query.depts({ orderBy: 'type_ASC' }, info)
+	},
+
 	enquiry(_, { id }, ctx, info) {
 		return ctx.db.query.enquiry({ where: { id } }, info)
 	},
@@ -83,9 +91,17 @@ const Query = {
 	orgEmployees(_, { orgId }, ctx, info) {
 		return ctx.db.query.employees({ where: { org: { id: orgId } } }, info)
 	},
-        
-	depts(_, __, ctx, info) {
-		return ctx.db.query.depts({ orderBy: 'type_ASC' }, info)
+
+	model(_, { id }, ctx, info) {
+		return ctx.db.query.model({ where: { id } }, info)
+	},
+
+	async models(_, __, ctx, info) {
+		return ctx.db.query.models({ orderBy: 'name_ASC' }, info)
+	},
+
+	modelProds(_, { modelId }, ctx, info) {
+		return ctx.db.query.prods({ where: { model: { id: modelId } } }, info)
 	},
 	
 	statuses(_, __, ctx, info) {
@@ -109,21 +125,10 @@ const Query = {
 		return ctx.db.query.person({ where: { id } }, info)
 	},
 
-	model(_, { id }, ctx, info) {
-		return ctx.db.query.model({ where: { id } }, info)
+	task(_, { id }, ctx, info) {
+		return ctx.db.query.task({ where: { id } }, info)
 	},
 
-	async models(_, __, ctx, info) {
-		return ctx.db.query.models({ orderBy: 'name_ASC' }, info)
-	},
-
-	modelProds(_, { modelId }, ctx, info) {
-		return ctx.db.query.prods({ where: { model: { id: modelId } } }, info)
-	},
-
-	deptProds(_, { deptId }, ctx, info) {
-		return ctx.db.query.prods({ where: { dept: { id: deptId } } }, info)
-	},
 }
 
 module.exports = { Query }

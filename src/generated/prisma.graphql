@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Thu Jun 13 2019 01:57:01 GMT+0300 (GMT+03:00)
+# timestamp: Tue Jun 18 2019 15:27:22 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -298,6 +298,10 @@ type AggregateAccount {
   count: Int!
 }
 
+type AggregateAppoint {
+  count: Int!
+}
+
 type AggregateArticle {
   count: Int!
 }
@@ -398,6 +402,10 @@ type AggregateStatus {
   count: Int!
 }
 
+type AggregateTask {
+  count: Int!
+}
+
 type AggregateTel {
   count: Int!
 }
@@ -408,6 +416,396 @@ type AggregateUser {
 
 type AggregateWorkpiece {
   count: Int!
+}
+
+type Appoint implements Node {
+  id: ID!
+  factCost: Float
+  factLabor: Float
+  planCost: Float
+  planLabor: Float
+  exec: Exec!
+  op: Op!
+  tasks(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Task!]
+}
+
+"""A connection to a list of items."""
+type AppointConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [AppointEdge]!
+  aggregate: AggregateAppoint!
+}
+
+input AppointCreateInput {
+  factCost: Float
+  factLabor: Float
+  planCost: Float
+  planLabor: Float
+  exec: ExecCreateOneWithoutAppointsInput!
+  op: OpCreateOneWithoutAppointsInput!
+  tasks: TaskCreateManyWithoutAppointInput
+}
+
+input AppointCreateManyWithoutExecInput {
+  create: [AppointCreateWithoutExecInput!]
+  connect: [AppointWhereUniqueInput!]
+}
+
+input AppointCreateManyWithoutOpInput {
+  create: [AppointCreateWithoutOpInput!]
+  connect: [AppointWhereUniqueInput!]
+}
+
+input AppointCreateOneWithoutTasksInput {
+  create: AppointCreateWithoutTasksInput
+  connect: AppointWhereUniqueInput
+}
+
+input AppointCreateWithoutExecInput {
+  factCost: Float
+  factLabor: Float
+  planCost: Float
+  planLabor: Float
+  op: OpCreateOneWithoutAppointsInput!
+  tasks: TaskCreateManyWithoutAppointInput
+}
+
+input AppointCreateWithoutOpInput {
+  factCost: Float
+  factLabor: Float
+  planCost: Float
+  planLabor: Float
+  exec: ExecCreateOneWithoutAppointsInput!
+  tasks: TaskCreateManyWithoutAppointInput
+}
+
+input AppointCreateWithoutTasksInput {
+  factCost: Float
+  factLabor: Float
+  planCost: Float
+  planLabor: Float
+  exec: ExecCreateOneWithoutAppointsInput!
+  op: OpCreateOneWithoutAppointsInput!
+}
+
+"""An edge in a connection."""
+type AppointEdge {
+  """The item at the end of the edge."""
+  node: Appoint!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum AppointOrderByInput {
+  id_ASC
+  id_DESC
+  factCost_ASC
+  factCost_DESC
+  factLabor_ASC
+  factLabor_DESC
+  planCost_ASC
+  planCost_DESC
+  planLabor_ASC
+  planLabor_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type AppointPreviousValues {
+  id: ID!
+  factCost: Float
+  factLabor: Float
+  planCost: Float
+  planLabor: Float
+}
+
+type AppointSubscriptionPayload {
+  mutation: MutationType!
+  node: Appoint
+  updatedFields: [String!]
+  previousValues: AppointPreviousValues
+}
+
+input AppointSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [AppointSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [AppointSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [AppointSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: AppointWhereInput
+}
+
+input AppointUpdateInput {
+  factCost: Float
+  factLabor: Float
+  planCost: Float
+  planLabor: Float
+  exec: ExecUpdateOneRequiredWithoutAppointsInput
+  op: OpUpdateOneRequiredWithoutAppointsInput
+  tasks: TaskUpdateManyWithoutAppointInput
+}
+
+input AppointUpdateManyMutationInput {
+  factCost: Float
+  factLabor: Float
+  planCost: Float
+  planLabor: Float
+}
+
+input AppointUpdateManyWithoutExecInput {
+  create: [AppointCreateWithoutExecInput!]
+  connect: [AppointWhereUniqueInput!]
+  disconnect: [AppointWhereUniqueInput!]
+  delete: [AppointWhereUniqueInput!]
+  update: [AppointUpdateWithWhereUniqueWithoutExecInput!]
+  upsert: [AppointUpsertWithWhereUniqueWithoutExecInput!]
+}
+
+input AppointUpdateManyWithoutOpInput {
+  create: [AppointCreateWithoutOpInput!]
+  connect: [AppointWhereUniqueInput!]
+  disconnect: [AppointWhereUniqueInput!]
+  delete: [AppointWhereUniqueInput!]
+  update: [AppointUpdateWithWhereUniqueWithoutOpInput!]
+  upsert: [AppointUpsertWithWhereUniqueWithoutOpInput!]
+}
+
+input AppointUpdateOneRequiredWithoutTasksInput {
+  create: AppointCreateWithoutTasksInput
+  connect: AppointWhereUniqueInput
+  update: AppointUpdateWithoutTasksDataInput
+  upsert: AppointUpsertWithoutTasksInput
+}
+
+input AppointUpdateWithoutExecDataInput {
+  factCost: Float
+  factLabor: Float
+  planCost: Float
+  planLabor: Float
+  op: OpUpdateOneRequiredWithoutAppointsInput
+  tasks: TaskUpdateManyWithoutAppointInput
+}
+
+input AppointUpdateWithoutOpDataInput {
+  factCost: Float
+  factLabor: Float
+  planCost: Float
+  planLabor: Float
+  exec: ExecUpdateOneRequiredWithoutAppointsInput
+  tasks: TaskUpdateManyWithoutAppointInput
+}
+
+input AppointUpdateWithoutTasksDataInput {
+  factCost: Float
+  factLabor: Float
+  planCost: Float
+  planLabor: Float
+  exec: ExecUpdateOneRequiredWithoutAppointsInput
+  op: OpUpdateOneRequiredWithoutAppointsInput
+}
+
+input AppointUpdateWithWhereUniqueWithoutExecInput {
+  where: AppointWhereUniqueInput!
+  data: AppointUpdateWithoutExecDataInput!
+}
+
+input AppointUpdateWithWhereUniqueWithoutOpInput {
+  where: AppointWhereUniqueInput!
+  data: AppointUpdateWithoutOpDataInput!
+}
+
+input AppointUpsertWithoutTasksInput {
+  update: AppointUpdateWithoutTasksDataInput!
+  create: AppointCreateWithoutTasksInput!
+}
+
+input AppointUpsertWithWhereUniqueWithoutExecInput {
+  where: AppointWhereUniqueInput!
+  update: AppointUpdateWithoutExecDataInput!
+  create: AppointCreateWithoutExecInput!
+}
+
+input AppointUpsertWithWhereUniqueWithoutOpInput {
+  where: AppointWhereUniqueInput!
+  update: AppointUpdateWithoutOpDataInput!
+  create: AppointCreateWithoutOpInput!
+}
+
+input AppointWhereInput {
+  """Logical AND on all given filters."""
+  AND: [AppointWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [AppointWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [AppointWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  factCost: Float
+
+  """All values that are not equal to given value."""
+  factCost_not: Float
+
+  """All values that are contained in given list."""
+  factCost_in: [Float!]
+
+  """All values that are not contained in given list."""
+  factCost_not_in: [Float!]
+
+  """All values less than the given value."""
+  factCost_lt: Float
+
+  """All values less than or equal the given value."""
+  factCost_lte: Float
+
+  """All values greater than the given value."""
+  factCost_gt: Float
+
+  """All values greater than or equal the given value."""
+  factCost_gte: Float
+  factLabor: Float
+
+  """All values that are not equal to given value."""
+  factLabor_not: Float
+
+  """All values that are contained in given list."""
+  factLabor_in: [Float!]
+
+  """All values that are not contained in given list."""
+  factLabor_not_in: [Float!]
+
+  """All values less than the given value."""
+  factLabor_lt: Float
+
+  """All values less than or equal the given value."""
+  factLabor_lte: Float
+
+  """All values greater than the given value."""
+  factLabor_gt: Float
+
+  """All values greater than or equal the given value."""
+  factLabor_gte: Float
+  planCost: Float
+
+  """All values that are not equal to given value."""
+  planCost_not: Float
+
+  """All values that are contained in given list."""
+  planCost_in: [Float!]
+
+  """All values that are not contained in given list."""
+  planCost_not_in: [Float!]
+
+  """All values less than the given value."""
+  planCost_lt: Float
+
+  """All values less than or equal the given value."""
+  planCost_lte: Float
+
+  """All values greater than the given value."""
+  planCost_gt: Float
+
+  """All values greater than or equal the given value."""
+  planCost_gte: Float
+  planLabor: Float
+
+  """All values that are not equal to given value."""
+  planLabor_not: Float
+
+  """All values that are contained in given list."""
+  planLabor_in: [Float!]
+
+  """All values that are not contained in given list."""
+  planLabor_not_in: [Float!]
+
+  """All values less than the given value."""
+  planLabor_lt: Float
+
+  """All values less than or equal the given value."""
+  planLabor_lte: Float
+
+  """All values greater than the given value."""
+  planLabor_gt: Float
+
+  """All values greater than or equal the given value."""
+  planLabor_gte: Float
+  exec: ExecWhereInput
+  op: OpWhereInput
+  tasks_every: TaskWhereInput
+  tasks_some: TaskWhereInput
+  tasks_none: TaskWhereInput
+}
+
+input AppointWhereUniqueInput {
+  id: ID
 }
 
 type Article implements Node {
@@ -4324,8 +4722,9 @@ type Exec implements Node {
   id: ID!
   amoUserId: Int
   person: Person
-  ops(where: OpWhereInput, orderBy: OpOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Op!]
+  appoints(where: AppointWhereInput, orderBy: AppointOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Appoint!]
   opTypes(where: OpTypeWhereInput, orderBy: OpTypeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OpType!]
+  tasks(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Task!]
 }
 
 """A connection to a list of items."""
@@ -4341,13 +4740,9 @@ type ExecConnection {
 input ExecCreateInput {
   amoUserId: Int
   person: PersonCreateOneWithoutExecInput
-  ops: OpCreateManyWithoutExecsInput
+  appoints: AppointCreateManyWithoutExecInput
   opTypes: OpTypeCreateManyWithoutExecsInput
-}
-
-input ExecCreateManyWithoutOpsInput {
-  create: [ExecCreateWithoutOpsInput!]
-  connect: [ExecWhereUniqueInput!]
+  tasks: TaskCreateManyWithoutExecInput
 }
 
 input ExecCreateManyWithoutOpTypesInput {
@@ -4355,26 +4750,46 @@ input ExecCreateManyWithoutOpTypesInput {
   connect: [ExecWhereUniqueInput!]
 }
 
+input ExecCreateOneWithoutAppointsInput {
+  create: ExecCreateWithoutAppointsInput
+  connect: ExecWhereUniqueInput
+}
+
 input ExecCreateOneWithoutPersonInput {
   create: ExecCreateWithoutPersonInput
   connect: ExecWhereUniqueInput
 }
 
-input ExecCreateWithoutOpsInput {
+input ExecCreateOneWithoutTasksInput {
+  create: ExecCreateWithoutTasksInput
+  connect: ExecWhereUniqueInput
+}
+
+input ExecCreateWithoutAppointsInput {
   amoUserId: Int
   person: PersonCreateOneWithoutExecInput
   opTypes: OpTypeCreateManyWithoutExecsInput
+  tasks: TaskCreateManyWithoutExecInput
 }
 
 input ExecCreateWithoutOpTypesInput {
   amoUserId: Int
   person: PersonCreateOneWithoutExecInput
-  ops: OpCreateManyWithoutExecsInput
+  appoints: AppointCreateManyWithoutExecInput
+  tasks: TaskCreateManyWithoutExecInput
 }
 
 input ExecCreateWithoutPersonInput {
   amoUserId: Int
-  ops: OpCreateManyWithoutExecsInput
+  appoints: AppointCreateManyWithoutExecInput
+  opTypes: OpTypeCreateManyWithoutExecsInput
+  tasks: TaskCreateManyWithoutExecInput
+}
+
+input ExecCreateWithoutTasksInput {
+  amoUserId: Int
+  person: PersonCreateOneWithoutExecInput
+  appoints: AppointCreateManyWithoutExecInput
   opTypes: OpTypeCreateManyWithoutExecsInput
 }
 
@@ -4445,21 +4860,13 @@ input ExecSubscriptionWhereInput {
 input ExecUpdateInput {
   amoUserId: Int
   person: PersonUpdateOneWithoutExecInput
-  ops: OpUpdateManyWithoutExecsInput
+  appoints: AppointUpdateManyWithoutExecInput
   opTypes: OpTypeUpdateManyWithoutExecsInput
+  tasks: TaskUpdateManyWithoutExecInput
 }
 
 input ExecUpdateManyMutationInput {
   amoUserId: Int
-}
-
-input ExecUpdateManyWithoutOpsInput {
-  create: [ExecCreateWithoutOpsInput!]
-  connect: [ExecWhereUniqueInput!]
-  disconnect: [ExecWhereUniqueInput!]
-  delete: [ExecWhereUniqueInput!]
-  update: [ExecUpdateWithWhereUniqueWithoutOpsInput!]
-  upsert: [ExecUpsertWithWhereUniqueWithoutOpsInput!]
 }
 
 input ExecUpdateManyWithoutOpTypesInput {
@@ -4471,6 +4878,20 @@ input ExecUpdateManyWithoutOpTypesInput {
   upsert: [ExecUpsertWithWhereUniqueWithoutOpTypesInput!]
 }
 
+input ExecUpdateOneRequiredWithoutAppointsInput {
+  create: ExecCreateWithoutAppointsInput
+  connect: ExecWhereUniqueInput
+  update: ExecUpdateWithoutAppointsDataInput
+  upsert: ExecUpsertWithoutAppointsInput
+}
+
+input ExecUpdateOneRequiredWithoutTasksInput {
+  create: ExecCreateWithoutTasksInput
+  connect: ExecWhereUniqueInput
+  update: ExecUpdateWithoutTasksDataInput
+  upsert: ExecUpsertWithoutTasksInput
+}
+
 input ExecUpdateOneWithoutPersonInput {
   create: ExecCreateWithoutPersonInput
   connect: ExecWhereUniqueInput
@@ -4480,27 +4901,32 @@ input ExecUpdateOneWithoutPersonInput {
   upsert: ExecUpsertWithoutPersonInput
 }
 
-input ExecUpdateWithoutOpsDataInput {
+input ExecUpdateWithoutAppointsDataInput {
   amoUserId: Int
   person: PersonUpdateOneWithoutExecInput
   opTypes: OpTypeUpdateManyWithoutExecsInput
+  tasks: TaskUpdateManyWithoutExecInput
 }
 
 input ExecUpdateWithoutOpTypesDataInput {
   amoUserId: Int
   person: PersonUpdateOneWithoutExecInput
-  ops: OpUpdateManyWithoutExecsInput
+  appoints: AppointUpdateManyWithoutExecInput
+  tasks: TaskUpdateManyWithoutExecInput
 }
 
 input ExecUpdateWithoutPersonDataInput {
   amoUserId: Int
-  ops: OpUpdateManyWithoutExecsInput
+  appoints: AppointUpdateManyWithoutExecInput
   opTypes: OpTypeUpdateManyWithoutExecsInput
+  tasks: TaskUpdateManyWithoutExecInput
 }
 
-input ExecUpdateWithWhereUniqueWithoutOpsInput {
-  where: ExecWhereUniqueInput!
-  data: ExecUpdateWithoutOpsDataInput!
+input ExecUpdateWithoutTasksDataInput {
+  amoUserId: Int
+  person: PersonUpdateOneWithoutExecInput
+  appoints: AppointUpdateManyWithoutExecInput
+  opTypes: OpTypeUpdateManyWithoutExecsInput
 }
 
 input ExecUpdateWithWhereUniqueWithoutOpTypesInput {
@@ -4508,15 +4934,19 @@ input ExecUpdateWithWhereUniqueWithoutOpTypesInput {
   data: ExecUpdateWithoutOpTypesDataInput!
 }
 
+input ExecUpsertWithoutAppointsInput {
+  update: ExecUpdateWithoutAppointsDataInput!
+  create: ExecCreateWithoutAppointsInput!
+}
+
 input ExecUpsertWithoutPersonInput {
   update: ExecUpdateWithoutPersonDataInput!
   create: ExecCreateWithoutPersonInput!
 }
 
-input ExecUpsertWithWhereUniqueWithoutOpsInput {
-  where: ExecWhereUniqueInput!
-  update: ExecUpdateWithoutOpsDataInput!
-  create: ExecCreateWithoutOpsInput!
+input ExecUpsertWithoutTasksInput {
+  update: ExecUpdateWithoutTasksDataInput!
+  create: ExecCreateWithoutTasksInput!
 }
 
 input ExecUpsertWithWhereUniqueWithoutOpTypesInput {
@@ -4597,12 +5027,15 @@ input ExecWhereInput {
   """All values greater than or equal the given value."""
   amoUserId_gte: Int
   person: PersonWhereInput
-  ops_every: OpWhereInput
-  ops_some: OpWhereInput
-  ops_none: OpWhereInput
+  appoints_every: AppointWhereInput
+  appoints_some: AppointWhereInput
+  appoints_none: AppointWhereInput
   opTypes_every: OpTypeWhereInput
   opTypes_some: OpTypeWhereInput
   opTypes_none: OpTypeWhereInput
+  tasks_every: TaskWhereInput
+  tasks_some: TaskWhereInput
+  tasks_none: TaskWhereInput
 }
 
 input ExecWhereUniqueInput {
@@ -5834,6 +6267,7 @@ input ModelWhereUniqueInput {
 }
 
 type Mutation {
+  createAppoint(data: AppointCreateInput!): Appoint!
   createBatch(data: BatchCreateInput!): Batch!
   createDeal(data: DealCreateInput!): Deal!
   createDept(data: DeptCreateInput!): Dept!
@@ -5855,6 +6289,7 @@ type Mutation {
   createProc(data: ProcCreateInput!): Proc!
   createProd(data: ProdCreateInput!): Prod!
   createServerData(data: ServerDataCreateInput!): ServerData!
+  createTask(data: TaskCreateInput!): Task!
   createTel(data: TelCreateInput!): Tel!
   createUser(data: UserCreateInput!): User!
   createWorkpiece(data: WorkpieceCreateInput!): Workpiece!
@@ -5863,6 +6298,7 @@ type Mutation {
   createAccount(data: AccountCreateInput!): Account!
   createDoc(data: DocCreateInput!): Doc!
   createDealStatus(data: DealStatusCreateInput!): DealStatus!
+  updateAppoint(data: AppointUpdateInput!, where: AppointWhereUniqueInput!): Appoint
   updateBatch(data: BatchUpdateInput!, where: BatchWhereUniqueInput!): Batch
   updateDeal(data: DealUpdateInput!, where: DealWhereUniqueInput!): Deal
   updateDept(data: DeptUpdateInput!, where: DeptWhereUniqueInput!): Dept
@@ -5884,6 +6320,7 @@ type Mutation {
   updateProc(data: ProcUpdateInput!, where: ProcWhereUniqueInput!): Proc
   updateProd(data: ProdUpdateInput!, where: ProdWhereUniqueInput!): Prod
   updateServerData(data: ServerDataUpdateInput!, where: ServerDataWhereUniqueInput!): ServerData
+  updateTask(data: TaskUpdateInput!, where: TaskWhereUniqueInput!): Task
   updateTel(data: TelUpdateInput!, where: TelWhereUniqueInput!): Tel
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateWorkpiece(data: WorkpieceUpdateInput!, where: WorkpieceWhereUniqueInput!): Workpiece
@@ -5892,6 +6329,7 @@ type Mutation {
   updateAccount(data: AccountUpdateInput!, where: AccountWhereUniqueInput!): Account
   updateDoc(data: DocUpdateInput!, where: DocWhereUniqueInput!): Doc
   updateDealStatus(data: DealStatusUpdateInput!, where: DealStatusWhereUniqueInput!): DealStatus
+  deleteAppoint(where: AppointWhereUniqueInput!): Appoint
   deleteBatch(where: BatchWhereUniqueInput!): Batch
   deleteDeal(where: DealWhereUniqueInput!): Deal
   deleteDept(where: DeptWhereUniqueInput!): Dept
@@ -5913,6 +6351,7 @@ type Mutation {
   deleteProc(where: ProcWhereUniqueInput!): Proc
   deleteProd(where: ProdWhereUniqueInput!): Prod
   deleteServerData(where: ServerDataWhereUniqueInput!): ServerData
+  deleteTask(where: TaskWhereUniqueInput!): Task
   deleteTel(where: TelWhereUniqueInput!): Tel
   deleteUser(where: UserWhereUniqueInput!): User
   deleteWorkpiece(where: WorkpieceWhereUniqueInput!): Workpiece
@@ -5921,6 +6360,7 @@ type Mutation {
   deleteAccount(where: AccountWhereUniqueInput!): Account
   deleteDoc(where: DocWhereUniqueInput!): Doc
   deleteDealStatus(where: DealStatusWhereUniqueInput!): DealStatus
+  upsertAppoint(where: AppointWhereUniqueInput!, create: AppointCreateInput!, update: AppointUpdateInput!): Appoint!
   upsertBatch(where: BatchWhereUniqueInput!, create: BatchCreateInput!, update: BatchUpdateInput!): Batch!
   upsertDeal(where: DealWhereUniqueInput!, create: DealCreateInput!, update: DealUpdateInput!): Deal!
   upsertDept(where: DeptWhereUniqueInput!, create: DeptCreateInput!, update: DeptUpdateInput!): Dept!
@@ -5942,6 +6382,7 @@ type Mutation {
   upsertProc(where: ProcWhereUniqueInput!, create: ProcCreateInput!, update: ProcUpdateInput!): Proc!
   upsertProd(where: ProdWhereUniqueInput!, create: ProdCreateInput!, update: ProdUpdateInput!): Prod!
   upsertServerData(where: ServerDataWhereUniqueInput!, create: ServerDataCreateInput!, update: ServerDataUpdateInput!): ServerData!
+  upsertTask(where: TaskWhereUniqueInput!, create: TaskCreateInput!, update: TaskUpdateInput!): Task!
   upsertTel(where: TelWhereUniqueInput!, create: TelCreateInput!, update: TelUpdateInput!): Tel!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertWorkpiece(where: WorkpieceWhereUniqueInput!, create: WorkpieceCreateInput!, update: WorkpieceUpdateInput!): Workpiece!
@@ -5950,6 +6391,7 @@ type Mutation {
   upsertAccount(where: AccountWhereUniqueInput!, create: AccountCreateInput!, update: AccountUpdateInput!): Account!
   upsertDoc(where: DocWhereUniqueInput!, create: DocCreateInput!, update: DocUpdateInput!): Doc!
   upsertDealStatus(where: DealStatusWhereUniqueInput!, create: DealStatusCreateInput!, update: DealStatusUpdateInput!): DealStatus!
+  updateManyAppoints(data: AppointUpdateManyMutationInput!, where: AppointWhereInput): BatchPayload!
   updateManyBatches(data: BatchUpdateManyMutationInput!, where: BatchWhereInput): BatchPayload!
   updateManyDeals(data: DealUpdateManyMutationInput!, where: DealWhereInput): BatchPayload!
   updateManyDepts(data: DeptUpdateManyMutationInput!, where: DeptWhereInput): BatchPayload!
@@ -5971,6 +6413,7 @@ type Mutation {
   updateManyProcs(data: ProcUpdateManyMutationInput!, where: ProcWhereInput): BatchPayload!
   updateManyProds(data: ProdUpdateManyMutationInput!, where: ProdWhereInput): BatchPayload!
   updateManyServerDatas(data: ServerDataUpdateManyMutationInput!, where: ServerDataWhereInput): BatchPayload!
+  updateManyTasks(data: TaskUpdateManyMutationInput!, where: TaskWhereInput): BatchPayload!
   updateManyTels(data: TelUpdateManyMutationInput!, where: TelWhereInput): BatchPayload!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyWorkpieces(data: WorkpieceUpdateManyMutationInput!, where: WorkpieceWhereInput): BatchPayload!
@@ -5979,6 +6422,7 @@ type Mutation {
   updateManyAccounts(data: AccountUpdateManyMutationInput!, where: AccountWhereInput): BatchPayload!
   updateManyDocs(data: DocUpdateManyMutationInput!, where: DocWhereInput): BatchPayload!
   updateManyDealStatuses(data: DealStatusUpdateManyMutationInput!, where: DealStatusWhereInput): BatchPayload!
+  deleteManyAppoints(where: AppointWhereInput): BatchPayload!
   deleteManyBatches(where: BatchWhereInput): BatchPayload!
   deleteManyDeals(where: DealWhereInput): BatchPayload!
   deleteManyDepts(where: DeptWhereInput): BatchPayload!
@@ -6000,6 +6444,7 @@ type Mutation {
   deleteManyProcs(where: ProcWhereInput): BatchPayload!
   deleteManyProds(where: ProdWhereInput): BatchPayload!
   deleteManyServerDatas(where: ServerDataWhereInput): BatchPayload!
+  deleteManyTasks(where: TaskWhereInput): BatchPayload!
   deleteManyTels(where: TelWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyWorkpieces(where: WorkpieceWhereInput): BatchPayload!
@@ -6027,8 +6472,8 @@ type Op implements Node {
   dealLabor: Float
   opType: OpType!
   description: String
+  appoints(where: AppointWhereInput, orderBy: AppointOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Appoint!]
   batch: Batch
-  execs(where: ExecWhereInput, orderBy: ExecOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Exec!]
   proc: Proc
 }
 
@@ -6051,18 +6496,13 @@ input OpCreateInput {
   dealLabor: Float
   description: String
   opType: OpTypeCreateOneWithoutOpsInput!
+  appoints: AppointCreateManyWithoutOpInput
   batch: BatchCreateOneWithoutOpsInput
-  execs: ExecCreateManyWithoutOpsInput
   proc: ProcCreateOneWithoutOpsInput
 }
 
 input OpCreateManyWithoutBatchInput {
   create: [OpCreateWithoutBatchInput!]
-  connect: [OpWhereUniqueInput!]
-}
-
-input OpCreateManyWithoutExecsInput {
-  create: [OpCreateWithoutExecsInput!]
   connect: [OpWhereUniqueInput!]
 }
 
@@ -6076,27 +6516,32 @@ input OpCreateManyWithoutProcInput {
   connect: [OpWhereUniqueInput!]
 }
 
-input OpCreateWithoutBatchInput {
-  dealLabor: Float
-  description: String
-  opType: OpTypeCreateOneWithoutOpsInput!
-  execs: ExecCreateManyWithoutOpsInput
-  proc: ProcCreateOneWithoutOpsInput
+input OpCreateOneWithoutAppointsInput {
+  create: OpCreateWithoutAppointsInput
+  connect: OpWhereUniqueInput
 }
 
-input OpCreateWithoutExecsInput {
+input OpCreateWithoutAppointsInput {
   dealLabor: Float
   description: String
   opType: OpTypeCreateOneWithoutOpsInput!
   batch: BatchCreateOneWithoutOpsInput
+  proc: ProcCreateOneWithoutOpsInput
+}
+
+input OpCreateWithoutBatchInput {
+  dealLabor: Float
+  description: String
+  opType: OpTypeCreateOneWithoutOpsInput!
+  appoints: AppointCreateManyWithoutOpInput
   proc: ProcCreateOneWithoutOpsInput
 }
 
 input OpCreateWithoutOpTypeInput {
   dealLabor: Float
   description: String
+  appoints: AppointCreateManyWithoutOpInput
   batch: BatchCreateOneWithoutOpsInput
-  execs: ExecCreateManyWithoutOpsInput
   proc: ProcCreateOneWithoutOpsInput
 }
 
@@ -6104,8 +6549,8 @@ input OpCreateWithoutProcInput {
   dealLabor: Float
   description: String
   opType: OpTypeCreateOneWithoutOpsInput!
+  appoints: AppointCreateManyWithoutOpInput
   batch: BatchCreateOneWithoutOpsInput
-  execs: ExecCreateManyWithoutOpsInput
 }
 
 """An edge in a connection."""
@@ -6460,8 +6905,8 @@ input OpUpdateInput {
   dealLabor: Float
   description: String
   opType: OpTypeUpdateOneRequiredWithoutOpsInput
+  appoints: AppointUpdateManyWithoutOpInput
   batch: BatchUpdateOneWithoutOpsInput
-  execs: ExecUpdateManyWithoutOpsInput
   proc: ProcUpdateOneWithoutOpsInput
 }
 
@@ -6477,15 +6922,6 @@ input OpUpdateManyWithoutBatchInput {
   delete: [OpWhereUniqueInput!]
   update: [OpUpdateWithWhereUniqueWithoutBatchInput!]
   upsert: [OpUpsertWithWhereUniqueWithoutBatchInput!]
-}
-
-input OpUpdateManyWithoutExecsInput {
-  create: [OpCreateWithoutExecsInput!]
-  connect: [OpWhereUniqueInput!]
-  disconnect: [OpWhereUniqueInput!]
-  delete: [OpWhereUniqueInput!]
-  update: [OpUpdateWithWhereUniqueWithoutExecsInput!]
-  upsert: [OpUpsertWithWhereUniqueWithoutExecsInput!]
 }
 
 input OpUpdateManyWithoutOpTypeInput {
@@ -6506,27 +6942,34 @@ input OpUpdateManyWithoutProcInput {
   upsert: [OpUpsertWithWhereUniqueWithoutProcInput!]
 }
 
-input OpUpdateWithoutBatchDataInput {
-  dealLabor: Float
-  description: String
-  opType: OpTypeUpdateOneRequiredWithoutOpsInput
-  execs: ExecUpdateManyWithoutOpsInput
-  proc: ProcUpdateOneWithoutOpsInput
+input OpUpdateOneRequiredWithoutAppointsInput {
+  create: OpCreateWithoutAppointsInput
+  connect: OpWhereUniqueInput
+  update: OpUpdateWithoutAppointsDataInput
+  upsert: OpUpsertWithoutAppointsInput
 }
 
-input OpUpdateWithoutExecsDataInput {
+input OpUpdateWithoutAppointsDataInput {
   dealLabor: Float
   description: String
   opType: OpTypeUpdateOneRequiredWithoutOpsInput
   batch: BatchUpdateOneWithoutOpsInput
+  proc: ProcUpdateOneWithoutOpsInput
+}
+
+input OpUpdateWithoutBatchDataInput {
+  dealLabor: Float
+  description: String
+  opType: OpTypeUpdateOneRequiredWithoutOpsInput
+  appoints: AppointUpdateManyWithoutOpInput
   proc: ProcUpdateOneWithoutOpsInput
 }
 
 input OpUpdateWithoutOpTypeDataInput {
   dealLabor: Float
   description: String
+  appoints: AppointUpdateManyWithoutOpInput
   batch: BatchUpdateOneWithoutOpsInput
-  execs: ExecUpdateManyWithoutOpsInput
   proc: ProcUpdateOneWithoutOpsInput
 }
 
@@ -6534,18 +6977,13 @@ input OpUpdateWithoutProcDataInput {
   dealLabor: Float
   description: String
   opType: OpTypeUpdateOneRequiredWithoutOpsInput
+  appoints: AppointUpdateManyWithoutOpInput
   batch: BatchUpdateOneWithoutOpsInput
-  execs: ExecUpdateManyWithoutOpsInput
 }
 
 input OpUpdateWithWhereUniqueWithoutBatchInput {
   where: OpWhereUniqueInput!
   data: OpUpdateWithoutBatchDataInput!
-}
-
-input OpUpdateWithWhereUniqueWithoutExecsInput {
-  where: OpWhereUniqueInput!
-  data: OpUpdateWithoutExecsDataInput!
 }
 
 input OpUpdateWithWhereUniqueWithoutOpTypeInput {
@@ -6558,16 +6996,15 @@ input OpUpdateWithWhereUniqueWithoutProcInput {
   data: OpUpdateWithoutProcDataInput!
 }
 
+input OpUpsertWithoutAppointsInput {
+  update: OpUpdateWithoutAppointsDataInput!
+  create: OpCreateWithoutAppointsInput!
+}
+
 input OpUpsertWithWhereUniqueWithoutBatchInput {
   where: OpWhereUniqueInput!
   update: OpUpdateWithoutBatchDataInput!
   create: OpCreateWithoutBatchInput!
-}
-
-input OpUpsertWithWhereUniqueWithoutExecsInput {
-  where: OpWhereUniqueInput!
-  update: OpUpdateWithoutExecsDataInput!
-  create: OpCreateWithoutExecsInput!
 }
 
 input OpUpsertWithWhereUniqueWithoutOpTypeInput {
@@ -6694,10 +7131,10 @@ input OpWhereInput {
   """All values not ending with the given string."""
   description_not_ends_with: String
   opType: OpTypeWhereInput
+  appoints_every: AppointWhereInput
+  appoints_some: AppointWhereInput
+  appoints_none: AppointWhereInput
   batch: BatchWhereInput
-  execs_every: ExecWhereInput
-  execs_some: ExecWhereInput
-  execs_none: ExecWhereInput
   proc: ProcWhereInput
 }
 
@@ -10383,6 +10820,7 @@ input ProdWhereUniqueInput {
 }
 
 type Query {
+  appoints(where: AppointWhereInput, orderBy: AppointOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Appoint]!
   batches(where: BatchWhereInput, orderBy: BatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Batch]!
   deals(where: DealWhereInput, orderBy: DealOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Deal]!
   depts(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Dept]!
@@ -10404,6 +10842,7 @@ type Query {
   procs(where: ProcWhereInput, orderBy: ProcOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Proc]!
   prods(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Prod]!
   serverDatas(where: ServerDataWhereInput, orderBy: ServerDataOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ServerData]!
+  tasks(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Task]!
   tels(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tel]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   workpieces(where: WorkpieceWhereInput, orderBy: WorkpieceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Workpiece]!
@@ -10412,6 +10851,7 @@ type Query {
   accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account]!
   docs(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Doc]!
   dealStatuses(where: DealStatusWhereInput, orderBy: DealStatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [DealStatus]!
+  appoint(where: AppointWhereUniqueInput!): Appoint
   batch(where: BatchWhereUniqueInput!): Batch
   deal(where: DealWhereUniqueInput!): Deal
   dept(where: DeptWhereUniqueInput!): Dept
@@ -10433,6 +10873,7 @@ type Query {
   proc(where: ProcWhereUniqueInput!): Proc
   prod(where: ProdWhereUniqueInput!): Prod
   serverData(where: ServerDataWhereUniqueInput!): ServerData
+  task(where: TaskWhereUniqueInput!): Task
   tel(where: TelWhereUniqueInput!): Tel
   user(where: UserWhereUniqueInput!): User
   workpiece(where: WorkpieceWhereUniqueInput!): Workpiece
@@ -10441,6 +10882,7 @@ type Query {
   account(where: AccountWhereUniqueInput!): Account
   doc(where: DocWhereUniqueInput!): Doc
   dealStatus(where: DealStatusWhereUniqueInput!): DealStatus
+  appointsConnection(where: AppointWhereInput, orderBy: AppointOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AppointConnection!
   batchesConnection(where: BatchWhereInput, orderBy: BatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BatchConnection!
   dealsConnection(where: DealWhereInput, orderBy: DealOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DealConnection!
   deptsConnection(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DeptConnection!
@@ -10462,6 +10904,7 @@ type Query {
   procsConnection(where: ProcWhereInput, orderBy: ProcOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProcConnection!
   prodsConnection(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProdConnection!
   serverDatasConnection(where: ServerDataWhereInput, orderBy: ServerDataOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ServerDataConnection!
+  tasksConnection(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TaskConnection!
   telsConnection(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TelConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   workpiecesConnection(where: WorkpieceWhereInput, orderBy: WorkpieceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WorkpieceConnection!
@@ -11022,6 +11465,7 @@ input StatusWhereUniqueInput {
 }
 
 type Subscription {
+  appoint(where: AppointSubscriptionWhereInput): AppointSubscriptionPayload
   batch(where: BatchSubscriptionWhereInput): BatchSubscriptionPayload
   deal(where: DealSubscriptionWhereInput): DealSubscriptionPayload
   dept(where: DeptSubscriptionWhereInput): DeptSubscriptionPayload
@@ -11043,6 +11487,7 @@ type Subscription {
   proc(where: ProcSubscriptionWhereInput): ProcSubscriptionPayload
   prod(where: ProdSubscriptionWhereInput): ProdSubscriptionPayload
   serverData(where: ServerDataSubscriptionWhereInput): ServerDataSubscriptionPayload
+  task(where: TaskSubscriptionWhereInput): TaskSubscriptionPayload
   tel(where: TelSubscriptionWhereInput): TelSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   workpiece(where: WorkpieceSubscriptionWhereInput): WorkpieceSubscriptionPayload
@@ -11051,6 +11496,399 @@ type Subscription {
   account(where: AccountSubscriptionWhereInput): AccountSubscriptionPayload
   doc(where: DocSubscriptionWhereInput): DocSubscriptionPayload
   dealStatus(where: DealStatusSubscriptionWhereInput): DealStatusSubscriptionPayload
+}
+
+type Task implements Node {
+  id: ID!
+  end: DateTime
+  from: DateTime!
+  status: TaskStatus!
+  text: String
+  to: DateTime
+  appoint: Appoint!
+  exec: Exec!
+}
+
+"""A connection to a list of items."""
+type TaskConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [TaskEdge]!
+  aggregate: AggregateTask!
+}
+
+input TaskCreateInput {
+  end: DateTime
+  from: DateTime!
+  status: TaskStatus!
+  text: String
+  to: DateTime
+  appoint: AppointCreateOneWithoutTasksInput!
+  exec: ExecCreateOneWithoutTasksInput!
+}
+
+input TaskCreateManyWithoutAppointInput {
+  create: [TaskCreateWithoutAppointInput!]
+  connect: [TaskWhereUniqueInput!]
+}
+
+input TaskCreateManyWithoutExecInput {
+  create: [TaskCreateWithoutExecInput!]
+  connect: [TaskWhereUniqueInput!]
+}
+
+input TaskCreateWithoutAppointInput {
+  end: DateTime
+  from: DateTime!
+  status: TaskStatus!
+  text: String
+  to: DateTime
+  exec: ExecCreateOneWithoutTasksInput!
+}
+
+input TaskCreateWithoutExecInput {
+  end: DateTime
+  from: DateTime!
+  status: TaskStatus!
+  text: String
+  to: DateTime
+  appoint: AppointCreateOneWithoutTasksInput!
+}
+
+"""An edge in a connection."""
+type TaskEdge {
+  """The item at the end of the edge."""
+  node: Task!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum TaskOrderByInput {
+  id_ASC
+  id_DESC
+  end_ASC
+  end_DESC
+  from_ASC
+  from_DESC
+  status_ASC
+  status_DESC
+  text_ASC
+  text_DESC
+  to_ASC
+  to_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type TaskPreviousValues {
+  id: ID!
+  end: DateTime
+  from: DateTime!
+  status: TaskStatus!
+  text: String
+  to: DateTime
+}
+
+enum TaskStatus {
+  ACTIVE
+  DELAYED
+  LATE
+  COMPLETED
+  REJECTED
+  CANCELLED
+}
+
+type TaskSubscriptionPayload {
+  mutation: MutationType!
+  node: Task
+  updatedFields: [String!]
+  previousValues: TaskPreviousValues
+}
+
+input TaskSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [TaskSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [TaskSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [TaskSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: TaskWhereInput
+}
+
+input TaskUpdateInput {
+  end: DateTime
+  from: DateTime
+  status: TaskStatus
+  text: String
+  to: DateTime
+  appoint: AppointUpdateOneRequiredWithoutTasksInput
+  exec: ExecUpdateOneRequiredWithoutTasksInput
+}
+
+input TaskUpdateManyMutationInput {
+  end: DateTime
+  from: DateTime
+  status: TaskStatus
+  text: String
+  to: DateTime
+}
+
+input TaskUpdateManyWithoutAppointInput {
+  create: [TaskCreateWithoutAppointInput!]
+  connect: [TaskWhereUniqueInput!]
+  disconnect: [TaskWhereUniqueInput!]
+  delete: [TaskWhereUniqueInput!]
+  update: [TaskUpdateWithWhereUniqueWithoutAppointInput!]
+  upsert: [TaskUpsertWithWhereUniqueWithoutAppointInput!]
+}
+
+input TaskUpdateManyWithoutExecInput {
+  create: [TaskCreateWithoutExecInput!]
+  connect: [TaskWhereUniqueInput!]
+  disconnect: [TaskWhereUniqueInput!]
+  delete: [TaskWhereUniqueInput!]
+  update: [TaskUpdateWithWhereUniqueWithoutExecInput!]
+  upsert: [TaskUpsertWithWhereUniqueWithoutExecInput!]
+}
+
+input TaskUpdateWithoutAppointDataInput {
+  end: DateTime
+  from: DateTime
+  status: TaskStatus
+  text: String
+  to: DateTime
+  exec: ExecUpdateOneRequiredWithoutTasksInput
+}
+
+input TaskUpdateWithoutExecDataInput {
+  end: DateTime
+  from: DateTime
+  status: TaskStatus
+  text: String
+  to: DateTime
+  appoint: AppointUpdateOneRequiredWithoutTasksInput
+}
+
+input TaskUpdateWithWhereUniqueWithoutAppointInput {
+  where: TaskWhereUniqueInput!
+  data: TaskUpdateWithoutAppointDataInput!
+}
+
+input TaskUpdateWithWhereUniqueWithoutExecInput {
+  where: TaskWhereUniqueInput!
+  data: TaskUpdateWithoutExecDataInput!
+}
+
+input TaskUpsertWithWhereUniqueWithoutAppointInput {
+  where: TaskWhereUniqueInput!
+  update: TaskUpdateWithoutAppointDataInput!
+  create: TaskCreateWithoutAppointInput!
+}
+
+input TaskUpsertWithWhereUniqueWithoutExecInput {
+  where: TaskWhereUniqueInput!
+  update: TaskUpdateWithoutExecDataInput!
+  create: TaskCreateWithoutExecInput!
+}
+
+input TaskWhereInput {
+  """Logical AND on all given filters."""
+  AND: [TaskWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [TaskWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [TaskWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  end: DateTime
+
+  """All values that are not equal to given value."""
+  end_not: DateTime
+
+  """All values that are contained in given list."""
+  end_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  end_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  end_lt: DateTime
+
+  """All values less than or equal the given value."""
+  end_lte: DateTime
+
+  """All values greater than the given value."""
+  end_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  end_gte: DateTime
+  from: DateTime
+
+  """All values that are not equal to given value."""
+  from_not: DateTime
+
+  """All values that are contained in given list."""
+  from_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  from_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  from_lt: DateTime
+
+  """All values less than or equal the given value."""
+  from_lte: DateTime
+
+  """All values greater than the given value."""
+  from_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  from_gte: DateTime
+  status: TaskStatus
+
+  """All values that are not equal to given value."""
+  status_not: TaskStatus
+
+  """All values that are contained in given list."""
+  status_in: [TaskStatus!]
+
+  """All values that are not contained in given list."""
+  status_not_in: [TaskStatus!]
+  text: String
+
+  """All values that are not equal to given value."""
+  text_not: String
+
+  """All values that are contained in given list."""
+  text_in: [String!]
+
+  """All values that are not contained in given list."""
+  text_not_in: [String!]
+
+  """All values less than the given value."""
+  text_lt: String
+
+  """All values less than or equal the given value."""
+  text_lte: String
+
+  """All values greater than the given value."""
+  text_gt: String
+
+  """All values greater than or equal the given value."""
+  text_gte: String
+
+  """All values containing the given string."""
+  text_contains: String
+
+  """All values not containing the given string."""
+  text_not_contains: String
+
+  """All values starting with the given string."""
+  text_starts_with: String
+
+  """All values not starting with the given string."""
+  text_not_starts_with: String
+
+  """All values ending with the given string."""
+  text_ends_with: String
+
+  """All values not ending with the given string."""
+  text_not_ends_with: String
+  to: DateTime
+
+  """All values that are not equal to given value."""
+  to_not: DateTime
+
+  """All values that are contained in given list."""
+  to_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  to_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  to_lt: DateTime
+
+  """All values less than or equal the given value."""
+  to_lte: DateTime
+
+  """All values greater than the given value."""
+  to_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  to_gte: DateTime
+  appoint: AppointWhereInput
+  exec: ExecWhereInput
+}
+
+input TaskWhereUniqueInput {
+  id: ID
 }
 
 type Tel implements Node {

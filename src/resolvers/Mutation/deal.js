@@ -55,52 +55,54 @@ const syncDeals = async (_, __, ctx, ___) => {
   const dealStatusesIdsMap = (await db.query.dealStatuses({}, '{ id amoId }'))
     .reduce((res, { id, amoId }) => ({ ...res, [amoId]: id }), {})
   // upsert deals
-  const upserted = await Promise.all(deals.map(({
-    id: amoId,
-    created_at,
-    name,
-    status_id: statusAmoId,
-    company: { id: companyId },
-    oldDeal
-  }) => {
-    const syncedOrg = !!companyId
-      && syncedOrgs.find(o => o.amoId === companyId)
-    
-    const mutationObj = {
-      where: { amoId },
-      update: {
-        name,
-        ...syncedOrg
-          ? { org: { connect: { id: syncedOrg.id } } }
-          : !!oldDeal && oldDeal.org && { org: { disconnect: true } },
-        status: {
-          connect: { amoId: statusAmoId }
+  const upserted = await Promise.all(deals
+    .filter(d => d.pipeline_id === 1593157)
+    .map(({
+      id: amoId,
+      created_at,
+      name,
+      status_id: statusAmoId,
+      company: { id: companyId },
+      oldDeal
+    }) => {
+      const syncedOrg = !!companyId
+        && syncedOrgs.find(o => o.amoId === companyId)
+      const mutationObj = {
+        where: { amoId },
+        update: {
+          name,
+          ...syncedOrg
+            ? { org: { connect: { id: syncedOrg.id } } }
+            : !!oldDeal && oldDeal.org && { org: { disconnect: true } },
+          status: {
+            connect: { amoId: statusAmoId }
+          },
         },
-      },
-      create: {
-        amoId,
-        name,
-        date: toLocalDateString(new Date(created_at*1000)),
-        ...!!syncedOrg && { org: { connect: { id: syncedOrg.id } }},
-        status: {
-          connect: { amoId: statusAmoId }
+        create: {
+          amoId,
+          name,
+          date: toLocalDateString(new Date(created_at*1000)),
+          ...!!syncedOrg && { org: { connect: { id: syncedOrg.id } }},
+          status: {
+            connect: { amoId: statusAmoId }
+          }
         }
       }
-    }
-    // if (amoId === 18154001) console.log('mutationObj > ', JSON.stringify(mutationObj, null, 2))
-    return db.mutation.upsertDeal(mutationObj, '{ id batches { id } }')
-    // const input = {
-    //   id: oldDeal && oldDeal.id,
-    //   amoId,
-    //   date: new Date(created_at*1000),
-    //   name,
-    //   statusId: dealStatusesIdsMap[statusAmoId],
-    //   org: 
-    //   // batches: oldDeal && oldDeal.batches.map(({ id }) => ({ id }))
-    // }
-    // if (amoId === 18154001) console.log('input > ', JSON.stringify(input, null, 2))
-    // return upsertDeal(_, { input }, ctx, ___)
-  }))
+      // skip deals 
+      // if (amoId === 18154001) console.log('mutationObj > ', JSON.stringify(mutationObj, null, 2))
+      return db.mutation.upsertDeal(mutationObj, '{ id batches { id } }')
+      // const input = {
+      //   id: oldDeal && oldDeal.id,
+      //   amoId,
+      //   date: new Date(created_at*1000),
+      //   name,
+      //   statusId: dealStatusesIdsMap[statusAmoId],
+      //   org: 
+      //   // batches: oldDeal && oldDeal.batches.map(({ id }) => ({ id }))
+      // }
+      // if (amoId === 18154001) console.log('input > ', JSON.stringify(input, null, 2))
+      // return upsertDeal(_, { input }, ctx, ___)
+    }))
   // console.log('upserted > ', JSON.stringify(upserted, null, 2))
   return { count: upserted.length }
   // return { count: 9999 }
