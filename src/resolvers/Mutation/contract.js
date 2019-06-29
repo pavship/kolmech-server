@@ -2,7 +2,7 @@ const axios = require('axios')
 var JSZip = require('jszip')
 var Docxtemplater = require('docxtemplater')
 const { toLocalDateString } = require('../../utils/dates')
-const { upsertOrgDealFolder, getResourceDownloadUrl, getResourceUploadUrl } = require('./disk')
+const { upsertOrgFolder, upsertOrgDealFolder, getResourceDownloadUrl, getResourceUploadUrl } = require('./disk')
 const { currency } = require('../../utils/format')
 
 const { writeFileSync } = require('fs')
@@ -11,6 +11,27 @@ const baseUrl = 'https://restapi.moedelo.org'
 const headers = {
   'md-api-key': process.env.MOEDELO_SECRET,
   'Content-Type': 'application/json'
+}
+
+const generateDocx = (template, data) => {
+  const zip = new JSZip(template)
+  const doc = new Docxtemplater()
+    .setOptions({linebreaks:true})
+    .loadZip(zip)
+    .setData(data)
+    // .setOptions({ paragraphLoop:true })
+  try { doc.render() }
+  catch (error) {
+      const { message, name, stack, properties } = error
+      console.log(JSON.stringify({error: { message, name, stack, properties }}))
+      throw error
+  }
+  // return buf which is a nodejs buffer, you can either write it to a file or do anything else with it.
+  return doc.getZip()
+    .generate({
+      type: 'nodebuffer',
+      compression: "DEFLATE"
+	  })
 }
 
 const createComOffer = async (_, { dealId, date = toLocalDateString(new Date()) }, ctx, info) => {
@@ -185,9 +206,30 @@ const createContract = async (_, { id, date = toLocalDateString(new Date()) }, {
   return { statusText: 'OK' }
 }
 
+const createPostEnvelopeAddressInsert = async (_, { orgId }, ctx, info) => {
+  const { db } = ctx
+  const { amoId, name } = await db.query.org({ where: { id: orgId }}, '{ amoId name }')
+  const date = toLocalDateString(new Date())
+  const templateDownloadUrl = await getResourceDownloadUrl('/Шаблоны документов/Корреспонденция/Конверт С4/template_ip.docx')
+  const { data: template } = await axios.get( templateDownloadUrl, { responseType: 'arraybuffer'} )
+  const docx = generateDocx(template, {
+    kontr_short: name,
+    // kontr_zip: '140408',
+    // kontr_post_address: 'г.Пермь, ул. Глазовская 1-174',
+    // kontr_tel: '+7 925 1234567',
+    // kontr_manager: 'Аликин Никита',
+    // kontr_manager_tel: '+7 925 1234567',
+  })
+	const orgFolderPath = await upsertOrgFolder(orgId, ctx)
+	const uploadUrl = await getResourceUploadUrl(`${orgFolderPath}/${date}_Адресное почтовое вложение_${amoId}.docx`)
+	await axios.put( uploadUrl, docx, { responseType: 'arraybuffer'} )
+  return { statusText: 'OK' }
+}
+
 module.exports = {
 	contract: {
     createComOffer,
-    createContract
+    createContract,
+    createPostEnvelopeAddressInsert
 	}
 }

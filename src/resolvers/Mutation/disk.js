@@ -166,6 +166,7 @@ module.exports = {
 	getDiskResources,
 	getResourceDownloadUrl,
 	getResourceUploadUrl,
+	upsertOrgFolder,
 	upsertOrgDealFolder,
 	syncDiskFolders
 }
