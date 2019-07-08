@@ -75,7 +75,6 @@ const upsertOrgFolder = async (orgId, ctx) => {
 	const basePath = '/Компании'
 	const folderName = `${name}_${amoId}`
 	const oldFolderName = await getFolderName(basePath, amoId)
-	console.log('oldFolderName > ', oldFolderName)
 	if (!oldFolderName)
 		{const {data: createFolderData} = await createFolder(`${basePath}/${folderName}`)
 			console.log('createFolderData > ', createFolderData)
@@ -93,7 +92,6 @@ const upsertOrgDealFolder = async (dealId, ctx) => {
 	const orgFolderPath = await upsertOrgFolder(org.id, ctx)
 	const folderName = `${date}_${name}_${amoId}`
 	const oldFolderName = await getFolderName(orgFolderPath, amoId)
-	console.log('oldFolderName > ', oldFolderName)
 	if (!oldFolderName)
 		{const {data: createFolderData} = await createFolder(`${orgFolderPath}/${folderName}`)
 			console.log('createFolderData > ', createFolderData)

@@ -36,10 +36,9 @@ const generateDocx = (template, data) => {
 
 const createComOffer = async (_, { dealId, date = toLocalDateString(new Date()) }, ctx, info) => {
 	const { db } = ctx
-  console.log('createComOffer > ')
-  console.log('dealId, date > ', dealId, date)
-  const { amoId, batches: dealBatches } = await db.query.deal({ where: { id: dealId }}, `{
-		amoId
+  const { amoId, date: dealDate, batches: dealBatches } = await db.query.deal({ where: { id: dealId }}, `{
+    amoId
+    date
     batches {
       info
       qty
@@ -63,7 +62,8 @@ const createComOffer = async (_, { dealId, date = toLocalDateString(new Date()) 
           dealLabor
           description
           opType {
-						name
+            name
+            laborPrice
 						opClass
           }
         }
@@ -79,7 +79,7 @@ const createComOffer = async (_, { dealId, date = toLocalDateString(new Date()) 
     op: opType.name,
     hrs: dealLabor,
     description,
-    price: currency(dealLabor*2000)
+    price: currency(dealLabor*opType.laborPrice)
 	})
 	const batches = dealBatches.map(({
 		info,
@@ -93,7 +93,7 @@ const createComOffer = async (_, { dealId, date = toLocalDateString(new Date()) 
 		const ops = procs[0]
 			&& procs[0].ops.filter(op => op.opType.opClass === 'MACHINING')
 			|| []
-		const amount = ops.reduce((sum, op) => sum += (op.dealLabor || 0)*2000, 0)
+		const amount = ops.reduce((sum, op) => sum += (op.dealLabor || 0)*op.opType.laborPrice, 0)
 		return {
 			amount: currency(amount),
 			num: batchNum,
@@ -126,6 +126,7 @@ const createComOffer = async (_, { dealId, date = toLocalDateString(new Date()) 
     .loadZip(zip)
     .setData({
       date: date.split('-').reverse().join('.'),
+      dealDate: dealDate.split('-').reverse().join('.'),
       amoId,
       batches,
       total: currency(batches.reduce((total, b) => total += b.sumFloat || 0, 0))
@@ -145,7 +146,7 @@ const createComOffer = async (_, { dealId, date = toLocalDateString(new Date()) 
 	// upload to yandex.disk
 	const dealFolderPath = await upsertOrgDealFolder(dealId, ctx)
 	const uploadUrl = await getResourceUploadUrl(`${dealFolderPath}/${date}_КП ХОНИНГОВАНИЕ.РУ_${amoId}.docx`)
-	const { data } = await axios.put( uploadUrl, buf, { responseType: 'arraybuffer'} )
+	const { data } = await axios.put( uploadUrl, buf )
 	console.log('data > ', data)
   // writeFileSync('./co.docx', buf)
 }

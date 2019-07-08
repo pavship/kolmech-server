@@ -158,10 +158,11 @@ const mergeOrg = async (_, { id, inn }, ctx, info) => {
 
 const upsertOrgsByInn = async (_, inns, ctx, info) => {
 	const { userId, db } = ctx
-	let moeDeloOrgs = await org.getMoeDeloOrgs(_, {}, ctx, '{ moedeloId inn name }')
+	let moeDeloOrgs = await getMoeDeloOrgs(_, {}, ctx, '{ moedeloId inn name }')
 	const existedOrgs = moeDeloOrgs.filter(o => inns.includes(o.inn))
+	const newInns = inns.filter(inn => moeDeloOrgs.findIndex(o => o.inn === inn) === -1)
 	const createdOrgs = []
-	for (let inn of inns.filter(inn => moeDeloOrgs.findIndex(o => o.inn === inn) === -1)) {
+	for (let inn of newInns) {
 		createdOrgs.push(await createMoeDeloOrg(inn))
 	}
 	moeDeloOrgs = [...existedOrgs, ...createdOrgs]

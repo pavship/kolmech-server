@@ -173,6 +173,7 @@ type Op {
 
 type OpType {
 	id: ID! @unique
+	laborPrice: Float
 	name: String!
 	execs: [Exec!]!
 	ops: [Op!]!

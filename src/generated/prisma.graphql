@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Tue Jun 18 2019 15:27:22 GMT+0300 (GMT+03:00)
+# timestamp: Thu Jul 04 2019 11:33:47 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -6622,6 +6622,7 @@ input OpSubscriptionWhereInput {
 
 type OpType implements Node {
   id: ID!
+  laborPrice: Float
   name: String!
   execs(where: ExecWhereInput, orderBy: ExecOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Exec!]
   ops(where: OpWhereInput, orderBy: OpOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Op!]
@@ -6639,6 +6640,7 @@ type OpTypeConnection {
 }
 
 input OpTypeCreateInput {
+  laborPrice: Float
   name: String!
   opClass: OpClass
   execs: ExecCreateManyWithoutOpTypesInput
@@ -6656,12 +6658,14 @@ input OpTypeCreateOneWithoutOpsInput {
 }
 
 input OpTypeCreateWithoutExecsInput {
+  laborPrice: Float
   name: String!
   opClass: OpClass
   ops: OpCreateManyWithoutOpTypeInput
 }
 
 input OpTypeCreateWithoutOpsInput {
+  laborPrice: Float
   name: String!
   opClass: OpClass
   execs: ExecCreateManyWithoutOpTypesInput
@@ -6679,6 +6683,8 @@ type OpTypeEdge {
 enum OpTypeOrderByInput {
   id_ASC
   id_DESC
+  laborPrice_ASC
+  laborPrice_DESC
   name_ASC
   name_DESC
   opClass_ASC
@@ -6691,6 +6697,7 @@ enum OpTypeOrderByInput {
 
 type OpTypePreviousValues {
   id: ID!
+  laborPrice: Float
   name: String!
   opClass: OpClass
 }
@@ -6735,6 +6742,7 @@ input OpTypeSubscriptionWhereInput {
 }
 
 input OpTypeUpdateInput {
+  laborPrice: Float
   name: String
   opClass: OpClass
   execs: ExecUpdateManyWithoutOpTypesInput
@@ -6742,6 +6750,7 @@ input OpTypeUpdateInput {
 }
 
 input OpTypeUpdateManyMutationInput {
+  laborPrice: Float
   name: String
   opClass: OpClass
 }
@@ -6763,12 +6772,14 @@ input OpTypeUpdateOneRequiredWithoutOpsInput {
 }
 
 input OpTypeUpdateWithoutExecsDataInput {
+  laborPrice: Float
   name: String
   opClass: OpClass
   ops: OpUpdateManyWithoutOpTypeInput
 }
 
 input OpTypeUpdateWithoutOpsDataInput {
+  laborPrice: Float
   name: String
   opClass: OpClass
   execs: ExecUpdateManyWithoutOpTypesInput
@@ -6839,6 +6850,28 @@ input OpTypeWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  laborPrice: Float
+
+  """All values that are not equal to given value."""
+  laborPrice_not: Float
+
+  """All values that are contained in given list."""
+  laborPrice_in: [Float!]
+
+  """All values that are not contained in given list."""
+  laborPrice_not_in: [Float!]
+
+  """All values less than the given value."""
+  laborPrice_lt: Float
+
+  """All values less than or equal the given value."""
+  laborPrice_lte: Float
+
+  """All values greater than the given value."""
+  laborPrice_gt: Float
+
+  """All values greater than or equal the given value."""
+  laborPrice_gte: Float
   name: String
 
   """All values that are not equal to given value."""
