@@ -62,6 +62,7 @@ type Mutation {
   syncWithTochkaPayments: BatchPayload
   updateEnquiry(input: EnquiryInput!): Enquiry
   upsertEmployee(input: EmployeeInput!): Employee
+  upsertAppoint(input: AppointInput!): Appoint
   upsertExec(input: ExecInput!): Exec
   upsertModel(input: ModelInput!): Model
   upsertBatch(input: BatchInput!): Batch
@@ -116,18 +117,35 @@ input AppointInput {
   id: ID
   exec: [ExecInput]
   execId: ID
+  bpStat: BpStatInput
 }
 
 input BatchInput {
   id: ID
   dealId: ID
+  descript: String
   info: String
   qty: Int
   warning: String
+  sort: Int
+  bpStat: BpStatInput
   model: ModelInput
   ops: [OpInput!]
   procs: [ProcInput!]
   workpiece: WorkpieceInput
+}
+
+input BpStatInput {
+  id: ID
+  autoPlanCost: Boolean
+	autoPlanLabor: Boolean
+	autoPlanRevenue: Boolean
+	factCost: Float
+	factLabor: Float
+	factRevenue: Float
+	planCost: Float
+	planLabor: Float
+	planRevenue: Float
 }
 
 input DealInput {
@@ -179,6 +197,7 @@ input OpInput {
   id: ID
   dealLabor: Float
   description: String
+  laborPrice: Float
   appoints: [AppointInput]
   opTypeId: ID
   opType: OpTypeInput
@@ -244,10 +263,8 @@ input TaskInput {
 	status: TaskStatus
 	text: String
 	to: DateTime
-	exec: ExecInput
-	execId: ID
-	op: OpInput
-	opId: ID
+	appoint: AppointInput
+	appointId: ID
 }
 
 input TelInput {

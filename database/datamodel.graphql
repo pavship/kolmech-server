@@ -7,13 +7,10 @@ type Account {				# payment account including bank accounts and cashboxes
 
 type Appoint {
 	id: ID! @unique
-	factCost: Float
-	factLabor: Float
-	planCost: Float
-	planLabor: Float
+	bpStat: BpStat @relation(name: "AppointBpStat" onDelete: CASCADE)
 	exec: Exec!
 	op: Op! @relation(name: "OpAppoints")
-	tasks: [Task!]!  @relation(name: "AppointTasks" onDelete: CASCADE)
+	tasks: [Task!]! @relation(name: "AppointTasks" onDelete: CASCADE)
 }
 
 type Article {					# payment articles
@@ -27,14 +24,32 @@ type Article {					# payment articles
 
 type Batch {
 	id: ID! @unique
-	qty: Int
+	descript: String
 	info: String
 	warning: String
+	qty: Int
+	sort: Int
+	bpStat: BpStat @relation(name: "BatchBpStat" onDelete: CASCADE)
 	deal: Deal @relation(name: "DealBatches")
 	model: Model!
 	ops: [Op!]! @relation(name: "BatchOps" onDelete: CASCADE)
 	procs: [Proc!]! @relation(name: "BatchesProcs" onDelete: CASCADE)
 	workpiece: Workpiece @relation(name: "BatchWorkpiece"  onDelete: CASCADE)
+}
+
+type BpStat {
+	id: ID! @unique
+	autoPlanCost: Boolean
+	autoPlanLabor: Boolean
+	autoPlanRevenue: Boolean
+	factCost: Float
+	factLabor: Float
+	factRevenue: Float
+	planCost: Float
+	planLabor: Float
+	planRevenue: Float
+	appoint: Appoint @relation(name: "AppointBpStat")
+	batch: Batch @relation(name: "BatchBpStat")
 }
 
 type Deal {
@@ -124,10 +139,10 @@ type Equipment {
 type Exec {
 	id: ID! @unique
 	amoUserId: Int
+	org: Org
 	person: Person
 	appoints: [Appoint!]!
 	opTypes: [OpType!]!
-	tasks: [Task!]!  @relation(name: "ExecTasks" onDelete: CASCADE)
 }
 
 type File {
@@ -164,8 +179,9 @@ type Model {
 type Op {
 	id: ID! @unique
 	dealLabor: Float
-	opType: OpType!
 	description: String
+	laborPrice: Float
+	opType: OpType!
 	appoints: [Appoint!]! @relation(name: "OpAppoints" onDelete: CASCADE)
 	batch: Batch @relation(name: "BatchOps")
 	proc: Proc @relation(name: "ProcOps")
@@ -207,6 +223,7 @@ type Org {
 	docs: [Doc!]!
 	employees: [Employee!]!
 	enquiries: [Enquiry!]! @relation(name: "OrgEnquiries")
+	exec: Exec
 	orders: [Order!]! @relation(name: "OrgOrders")
 	payments: [Payment!]!
 }
@@ -292,7 +309,6 @@ type Task {
 	text: String
 	to: DateTime
 	appoint: Appoint! @relation(name: "AppointTasks")
-	exec: Exec! @relation(name: "ExecTasks")
 }
 
 type Tel {

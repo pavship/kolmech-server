@@ -109,10 +109,10 @@ const syncDeals = async (_, __, ctx, ___) => {
 }
 
 const upsertDeal = async (_, { input }, ctx, info) => {
-  // console.log('input > ', JSON.stringify(input, null, 2))
+  console.log('input > ', JSON.stringify(input, null, 2))
   const { db } = ctx
   const mutationObj = await generateMutationObject(input, 'deal', ctx)
-  // console.log('mutationObj > ', JSON.stringify(mutationObj, null, 2))
+  console.log('mutationObj > ', JSON.stringify(mutationObj, null, 2))
   if (!input.id) return db.mutation.createDeal(mutationObj, info)
     else return db.mutation.updateDeal(mutationObj, info)
 }

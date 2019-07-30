@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Thu Jul 04 2019 11:33:47 GMT+0300 (GMT+03:00)
+# timestamp: Mon Jul 29 2019 22:46:40 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -310,6 +310,10 @@ type AggregateBatch {
   count: Int!
 }
 
+type AggregateBpStat {
+  count: Int!
+}
+
 type AggregateDeal {
   count: Int!
 }
@@ -420,10 +424,7 @@ type AggregateWorkpiece {
 
 type Appoint implements Node {
   id: ID!
-  factCost: Float
-  factLabor: Float
-  planCost: Float
-  planLabor: Float
+  bpStat: BpStat
   exec: Exec!
   op: Op!
   tasks(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Task!]
@@ -440,10 +441,7 @@ type AppointConnection {
 }
 
 input AppointCreateInput {
-  factCost: Float
-  factLabor: Float
-  planCost: Float
-  planLabor: Float
+  bpStat: BpStatCreateOneWithoutAppointInput
   exec: ExecCreateOneWithoutAppointsInput!
   op: OpCreateOneWithoutAppointsInput!
   tasks: TaskCreateManyWithoutAppointInput
@@ -459,34 +457,36 @@ input AppointCreateManyWithoutOpInput {
   connect: [AppointWhereUniqueInput!]
 }
 
+input AppointCreateOneWithoutBpStatInput {
+  create: AppointCreateWithoutBpStatInput
+  connect: AppointWhereUniqueInput
+}
+
 input AppointCreateOneWithoutTasksInput {
   create: AppointCreateWithoutTasksInput
   connect: AppointWhereUniqueInput
 }
 
+input AppointCreateWithoutBpStatInput {
+  exec: ExecCreateOneWithoutAppointsInput!
+  op: OpCreateOneWithoutAppointsInput!
+  tasks: TaskCreateManyWithoutAppointInput
+}
+
 input AppointCreateWithoutExecInput {
-  factCost: Float
-  factLabor: Float
-  planCost: Float
-  planLabor: Float
+  bpStat: BpStatCreateOneWithoutAppointInput
   op: OpCreateOneWithoutAppointsInput!
   tasks: TaskCreateManyWithoutAppointInput
 }
 
 input AppointCreateWithoutOpInput {
-  factCost: Float
-  factLabor: Float
-  planCost: Float
-  planLabor: Float
+  bpStat: BpStatCreateOneWithoutAppointInput
   exec: ExecCreateOneWithoutAppointsInput!
   tasks: TaskCreateManyWithoutAppointInput
 }
 
 input AppointCreateWithoutTasksInput {
-  factCost: Float
-  factLabor: Float
-  planCost: Float
-  planLabor: Float
+  bpStat: BpStatCreateOneWithoutAppointInput
   exec: ExecCreateOneWithoutAppointsInput!
   op: OpCreateOneWithoutAppointsInput!
 }
@@ -503,14 +503,6 @@ type AppointEdge {
 enum AppointOrderByInput {
   id_ASC
   id_DESC
-  factCost_ASC
-  factCost_DESC
-  factLabor_ASC
-  factLabor_DESC
-  planCost_ASC
-  planCost_DESC
-  planLabor_ASC
-  planLabor_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -519,10 +511,6 @@ enum AppointOrderByInput {
 
 type AppointPreviousValues {
   id: ID!
-  factCost: Float
-  factLabor: Float
-  planCost: Float
-  planLabor: Float
 }
 
 type AppointSubscriptionPayload {
@@ -565,20 +553,10 @@ input AppointSubscriptionWhereInput {
 }
 
 input AppointUpdateInput {
-  factCost: Float
-  factLabor: Float
-  planCost: Float
-  planLabor: Float
+  bpStat: BpStatUpdateOneWithoutAppointInput
   exec: ExecUpdateOneRequiredWithoutAppointsInput
   op: OpUpdateOneRequiredWithoutAppointsInput
   tasks: TaskUpdateManyWithoutAppointInput
-}
-
-input AppointUpdateManyMutationInput {
-  factCost: Float
-  factLabor: Float
-  planCost: Float
-  planLabor: Float
 }
 
 input AppointUpdateManyWithoutExecInput {
@@ -606,29 +584,35 @@ input AppointUpdateOneRequiredWithoutTasksInput {
   upsert: AppointUpsertWithoutTasksInput
 }
 
+input AppointUpdateOneWithoutBpStatInput {
+  create: AppointCreateWithoutBpStatInput
+  connect: AppointWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: AppointUpdateWithoutBpStatDataInput
+  upsert: AppointUpsertWithoutBpStatInput
+}
+
+input AppointUpdateWithoutBpStatDataInput {
+  exec: ExecUpdateOneRequiredWithoutAppointsInput
+  op: OpUpdateOneRequiredWithoutAppointsInput
+  tasks: TaskUpdateManyWithoutAppointInput
+}
+
 input AppointUpdateWithoutExecDataInput {
-  factCost: Float
-  factLabor: Float
-  planCost: Float
-  planLabor: Float
+  bpStat: BpStatUpdateOneWithoutAppointInput
   op: OpUpdateOneRequiredWithoutAppointsInput
   tasks: TaskUpdateManyWithoutAppointInput
 }
 
 input AppointUpdateWithoutOpDataInput {
-  factCost: Float
-  factLabor: Float
-  planCost: Float
-  planLabor: Float
+  bpStat: BpStatUpdateOneWithoutAppointInput
   exec: ExecUpdateOneRequiredWithoutAppointsInput
   tasks: TaskUpdateManyWithoutAppointInput
 }
 
 input AppointUpdateWithoutTasksDataInput {
-  factCost: Float
-  factLabor: Float
-  planCost: Float
-  planLabor: Float
+  bpStat: BpStatUpdateOneWithoutAppointInput
   exec: ExecUpdateOneRequiredWithoutAppointsInput
   op: OpUpdateOneRequiredWithoutAppointsInput
 }
@@ -641,6 +625,11 @@ input AppointUpdateWithWhereUniqueWithoutExecInput {
 input AppointUpdateWithWhereUniqueWithoutOpInput {
   where: AppointWhereUniqueInput!
   data: AppointUpdateWithoutOpDataInput!
+}
+
+input AppointUpsertWithoutBpStatInput {
+  update: AppointUpdateWithoutBpStatDataInput!
+  create: AppointCreateWithoutBpStatInput!
 }
 
 input AppointUpsertWithoutTasksInput {
@@ -709,94 +698,7 @@ input AppointWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
-  factCost: Float
-
-  """All values that are not equal to given value."""
-  factCost_not: Float
-
-  """All values that are contained in given list."""
-  factCost_in: [Float!]
-
-  """All values that are not contained in given list."""
-  factCost_not_in: [Float!]
-
-  """All values less than the given value."""
-  factCost_lt: Float
-
-  """All values less than or equal the given value."""
-  factCost_lte: Float
-
-  """All values greater than the given value."""
-  factCost_gt: Float
-
-  """All values greater than or equal the given value."""
-  factCost_gte: Float
-  factLabor: Float
-
-  """All values that are not equal to given value."""
-  factLabor_not: Float
-
-  """All values that are contained in given list."""
-  factLabor_in: [Float!]
-
-  """All values that are not contained in given list."""
-  factLabor_not_in: [Float!]
-
-  """All values less than the given value."""
-  factLabor_lt: Float
-
-  """All values less than or equal the given value."""
-  factLabor_lte: Float
-
-  """All values greater than the given value."""
-  factLabor_gt: Float
-
-  """All values greater than or equal the given value."""
-  factLabor_gte: Float
-  planCost: Float
-
-  """All values that are not equal to given value."""
-  planCost_not: Float
-
-  """All values that are contained in given list."""
-  planCost_in: [Float!]
-
-  """All values that are not contained in given list."""
-  planCost_not_in: [Float!]
-
-  """All values less than the given value."""
-  planCost_lt: Float
-
-  """All values less than or equal the given value."""
-  planCost_lte: Float
-
-  """All values greater than the given value."""
-  planCost_gt: Float
-
-  """All values greater than or equal the given value."""
-  planCost_gte: Float
-  planLabor: Float
-
-  """All values that are not equal to given value."""
-  planLabor_not: Float
-
-  """All values that are contained in given list."""
-  planLabor_in: [Float!]
-
-  """All values that are not contained in given list."""
-  planLabor_not_in: [Float!]
-
-  """All values less than the given value."""
-  planLabor_lt: Float
-
-  """All values less than or equal the given value."""
-  planLabor_lte: Float
-
-  """All values greater than the given value."""
-  planLabor_gt: Float
-
-  """All values greater than or equal the given value."""
-  planLabor_gte: Float
+  bpStat: BpStatWhereInput
   exec: ExecWhereInput
   op: OpWhereInput
   tasks_every: TaskWhereInput
@@ -1105,9 +1007,12 @@ input ArticleWhereUniqueInput {
 
 type Batch implements Node {
   id: ID!
-  qty: Int
+  descript: String
   info: String
   warning: String
+  qty: Int
+  sort: Int
+  bpStat: BpStat
   deal: Deal
   model: Model!
   ops(where: OpWhereInput, orderBy: OpOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Op!]
@@ -1126,9 +1031,12 @@ type BatchConnection {
 }
 
 input BatchCreateInput {
-  qty: Int
+  descript: String
   info: String
   warning: String
+  qty: Int
+  sort: Int
+  bpStat: BpStatCreateOneWithoutBatchInput
   deal: DealCreateOneWithoutBatchesInput
   model: ModelCreateOneWithoutBatchesInput!
   ops: OpCreateManyWithoutBatchInput
@@ -1151,6 +1059,11 @@ input BatchCreateManyWithoutProcsInput {
   connect: [BatchWhereUniqueInput!]
 }
 
+input BatchCreateOneWithoutBpStatInput {
+  create: BatchCreateWithoutBpStatInput
+  connect: BatchWhereUniqueInput
+}
+
 input BatchCreateOneWithoutOpsInput {
   create: BatchCreateWithoutOpsInput
   connect: BatchWhereUniqueInput
@@ -1161,10 +1074,26 @@ input BatchCreateOneWithoutWorkpieceInput {
   connect: BatchWhereUniqueInput
 }
 
-input BatchCreateWithoutDealInput {
-  qty: Int
+input BatchCreateWithoutBpStatInput {
+  descript: String
   info: String
   warning: String
+  qty: Int
+  sort: Int
+  deal: DealCreateOneWithoutBatchesInput
+  model: ModelCreateOneWithoutBatchesInput!
+  ops: OpCreateManyWithoutBatchInput
+  procs: ProcCreateManyWithoutBatchesInput
+  workpiece: WorkpieceCreateOneWithoutBatchInput
+}
+
+input BatchCreateWithoutDealInput {
+  descript: String
+  info: String
+  warning: String
+  qty: Int
+  sort: Int
+  bpStat: BpStatCreateOneWithoutBatchInput
   model: ModelCreateOneWithoutBatchesInput!
   ops: OpCreateManyWithoutBatchInput
   procs: ProcCreateManyWithoutBatchesInput
@@ -1172,9 +1101,12 @@ input BatchCreateWithoutDealInput {
 }
 
 input BatchCreateWithoutModelInput {
-  qty: Int
+  descript: String
   info: String
   warning: String
+  qty: Int
+  sort: Int
+  bpStat: BpStatCreateOneWithoutBatchInput
   deal: DealCreateOneWithoutBatchesInput
   ops: OpCreateManyWithoutBatchInput
   procs: ProcCreateManyWithoutBatchesInput
@@ -1182,9 +1114,12 @@ input BatchCreateWithoutModelInput {
 }
 
 input BatchCreateWithoutOpsInput {
-  qty: Int
+  descript: String
   info: String
   warning: String
+  qty: Int
+  sort: Int
+  bpStat: BpStatCreateOneWithoutBatchInput
   deal: DealCreateOneWithoutBatchesInput
   model: ModelCreateOneWithoutBatchesInput!
   procs: ProcCreateManyWithoutBatchesInput
@@ -1192,9 +1127,12 @@ input BatchCreateWithoutOpsInput {
 }
 
 input BatchCreateWithoutProcsInput {
-  qty: Int
+  descript: String
   info: String
   warning: String
+  qty: Int
+  sort: Int
+  bpStat: BpStatCreateOneWithoutBatchInput
   deal: DealCreateOneWithoutBatchesInput
   model: ModelCreateOneWithoutBatchesInput!
   ops: OpCreateManyWithoutBatchInput
@@ -1202,9 +1140,12 @@ input BatchCreateWithoutProcsInput {
 }
 
 input BatchCreateWithoutWorkpieceInput {
-  qty: Int
+  descript: String
   info: String
   warning: String
+  qty: Int
+  sort: Int
+  bpStat: BpStatCreateOneWithoutBatchInput
   deal: DealCreateOneWithoutBatchesInput
   model: ModelCreateOneWithoutBatchesInput!
   ops: OpCreateManyWithoutBatchInput
@@ -1223,12 +1164,16 @@ type BatchEdge {
 enum BatchOrderByInput {
   id_ASC
   id_DESC
-  qty_ASC
-  qty_DESC
+  descript_ASC
+  descript_DESC
   info_ASC
   info_DESC
   warning_ASC
   warning_DESC
+  qty_ASC
+  qty_DESC
+  sort_ASC
+  sort_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -1242,9 +1187,11 @@ type BatchPayload {
 
 type BatchPreviousValues {
   id: ID!
-  qty: Int
+  descript: String
   info: String
   warning: String
+  qty: Int
+  sort: Int
 }
 
 type BatchSubscriptionPayload {
@@ -1287,9 +1234,12 @@ input BatchSubscriptionWhereInput {
 }
 
 input BatchUpdateInput {
-  qty: Int
+  descript: String
   info: String
   warning: String
+  qty: Int
+  sort: Int
+  bpStat: BpStatUpdateOneWithoutBatchInput
   deal: DealUpdateOneWithoutBatchesInput
   model: ModelUpdateOneRequiredWithoutBatchesInput
   ops: OpUpdateManyWithoutBatchInput
@@ -1298,9 +1248,11 @@ input BatchUpdateInput {
 }
 
 input BatchUpdateManyMutationInput {
-  qty: Int
+  descript: String
   info: String
   warning: String
+  qty: Int
+  sort: Int
 }
 
 input BatchUpdateManyWithoutDealInput {
@@ -1330,6 +1282,15 @@ input BatchUpdateManyWithoutProcsInput {
   upsert: [BatchUpsertWithWhereUniqueWithoutProcsInput!]
 }
 
+input BatchUpdateOneWithoutBpStatInput {
+  create: BatchCreateWithoutBpStatInput
+  connect: BatchWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: BatchUpdateWithoutBpStatDataInput
+  upsert: BatchUpsertWithoutBpStatInput
+}
+
 input BatchUpdateOneWithoutOpsInput {
   create: BatchCreateWithoutOpsInput
   connect: BatchWhereUniqueInput
@@ -1348,10 +1309,26 @@ input BatchUpdateOneWithoutWorkpieceInput {
   upsert: BatchUpsertWithoutWorkpieceInput
 }
 
-input BatchUpdateWithoutDealDataInput {
-  qty: Int
+input BatchUpdateWithoutBpStatDataInput {
+  descript: String
   info: String
   warning: String
+  qty: Int
+  sort: Int
+  deal: DealUpdateOneWithoutBatchesInput
+  model: ModelUpdateOneRequiredWithoutBatchesInput
+  ops: OpUpdateManyWithoutBatchInput
+  procs: ProcUpdateManyWithoutBatchesInput
+  workpiece: WorkpieceUpdateOneWithoutBatchInput
+}
+
+input BatchUpdateWithoutDealDataInput {
+  descript: String
+  info: String
+  warning: String
+  qty: Int
+  sort: Int
+  bpStat: BpStatUpdateOneWithoutBatchInput
   model: ModelUpdateOneRequiredWithoutBatchesInput
   ops: OpUpdateManyWithoutBatchInput
   procs: ProcUpdateManyWithoutBatchesInput
@@ -1359,9 +1336,12 @@ input BatchUpdateWithoutDealDataInput {
 }
 
 input BatchUpdateWithoutModelDataInput {
-  qty: Int
+  descript: String
   info: String
   warning: String
+  qty: Int
+  sort: Int
+  bpStat: BpStatUpdateOneWithoutBatchInput
   deal: DealUpdateOneWithoutBatchesInput
   ops: OpUpdateManyWithoutBatchInput
   procs: ProcUpdateManyWithoutBatchesInput
@@ -1369,9 +1349,12 @@ input BatchUpdateWithoutModelDataInput {
 }
 
 input BatchUpdateWithoutOpsDataInput {
-  qty: Int
+  descript: String
   info: String
   warning: String
+  qty: Int
+  sort: Int
+  bpStat: BpStatUpdateOneWithoutBatchInput
   deal: DealUpdateOneWithoutBatchesInput
   model: ModelUpdateOneRequiredWithoutBatchesInput
   procs: ProcUpdateManyWithoutBatchesInput
@@ -1379,9 +1362,12 @@ input BatchUpdateWithoutOpsDataInput {
 }
 
 input BatchUpdateWithoutProcsDataInput {
-  qty: Int
+  descript: String
   info: String
   warning: String
+  qty: Int
+  sort: Int
+  bpStat: BpStatUpdateOneWithoutBatchInput
   deal: DealUpdateOneWithoutBatchesInput
   model: ModelUpdateOneRequiredWithoutBatchesInput
   ops: OpUpdateManyWithoutBatchInput
@@ -1389,9 +1375,12 @@ input BatchUpdateWithoutProcsDataInput {
 }
 
 input BatchUpdateWithoutWorkpieceDataInput {
-  qty: Int
+  descript: String
   info: String
   warning: String
+  qty: Int
+  sort: Int
+  bpStat: BpStatUpdateOneWithoutBatchInput
   deal: DealUpdateOneWithoutBatchesInput
   model: ModelUpdateOneRequiredWithoutBatchesInput
   ops: OpUpdateManyWithoutBatchInput
@@ -1411,6 +1400,11 @@ input BatchUpdateWithWhereUniqueWithoutModelInput {
 input BatchUpdateWithWhereUniqueWithoutProcsInput {
   where: BatchWhereUniqueInput!
   data: BatchUpdateWithoutProcsDataInput!
+}
+
+input BatchUpsertWithoutBpStatInput {
+  update: BatchUpdateWithoutBpStatDataInput!
+  create: BatchCreateWithoutBpStatInput!
 }
 
 input BatchUpsertWithoutOpsInput {
@@ -1490,28 +1484,46 @@ input BatchWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
-  qty: Int
+  descript: String
 
   """All values that are not equal to given value."""
-  qty_not: Int
+  descript_not: String
 
   """All values that are contained in given list."""
-  qty_in: [Int!]
+  descript_in: [String!]
 
   """All values that are not contained in given list."""
-  qty_not_in: [Int!]
+  descript_not_in: [String!]
 
   """All values less than the given value."""
-  qty_lt: Int
+  descript_lt: String
 
   """All values less than or equal the given value."""
-  qty_lte: Int
+  descript_lte: String
 
   """All values greater than the given value."""
-  qty_gt: Int
+  descript_gt: String
 
   """All values greater than or equal the given value."""
-  qty_gte: Int
+  descript_gte: String
+
+  """All values containing the given string."""
+  descript_contains: String
+
+  """All values not containing the given string."""
+  descript_not_contains: String
+
+  """All values starting with the given string."""
+  descript_starts_with: String
+
+  """All values not starting with the given string."""
+  descript_not_starts_with: String
+
+  """All values ending with the given string."""
+  descript_ends_with: String
+
+  """All values not ending with the given string."""
+  descript_not_ends_with: String
   info: String
 
   """All values that are not equal to given value."""
@@ -1592,6 +1604,51 @@ input BatchWhereInput {
 
   """All values not ending with the given string."""
   warning_not_ends_with: String
+  qty: Int
+
+  """All values that are not equal to given value."""
+  qty_not: Int
+
+  """All values that are contained in given list."""
+  qty_in: [Int!]
+
+  """All values that are not contained in given list."""
+  qty_not_in: [Int!]
+
+  """All values less than the given value."""
+  qty_lt: Int
+
+  """All values less than or equal the given value."""
+  qty_lte: Int
+
+  """All values greater than the given value."""
+  qty_gt: Int
+
+  """All values greater than or equal the given value."""
+  qty_gte: Int
+  sort: Int
+
+  """All values that are not equal to given value."""
+  sort_not: Int
+
+  """All values that are contained in given list."""
+  sort_in: [Int!]
+
+  """All values that are not contained in given list."""
+  sort_not_in: [Int!]
+
+  """All values less than the given value."""
+  sort_lt: Int
+
+  """All values less than or equal the given value."""
+  sort_lte: Int
+
+  """All values greater than the given value."""
+  sort_gt: Int
+
+  """All values greater than or equal the given value."""
+  sort_gte: Int
+  bpStat: BpStatWhereInput
   deal: DealWhereInput
   model: ModelWhereInput
   ops_every: OpWhereInput
@@ -1604,6 +1661,450 @@ input BatchWhereInput {
 }
 
 input BatchWhereUniqueInput {
+  id: ID
+}
+
+type BpStat implements Node {
+  id: ID!
+  autoPlanCost: Boolean
+  autoPlanLabor: Boolean
+  autoPlanRevenue: Boolean
+  factCost: Float
+  factLabor: Float
+  factRevenue: Float
+  planCost: Float
+  planLabor: Float
+  planRevenue: Float
+  appoint: Appoint
+  batch: Batch
+}
+
+"""A connection to a list of items."""
+type BpStatConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [BpStatEdge]!
+  aggregate: AggregateBpStat!
+}
+
+input BpStatCreateInput {
+  autoPlanCost: Boolean
+  autoPlanLabor: Boolean
+  autoPlanRevenue: Boolean
+  factCost: Float
+  factLabor: Float
+  factRevenue: Float
+  planCost: Float
+  planLabor: Float
+  planRevenue: Float
+  appoint: AppointCreateOneWithoutBpStatInput
+  batch: BatchCreateOneWithoutBpStatInput
+}
+
+input BpStatCreateOneWithoutAppointInput {
+  create: BpStatCreateWithoutAppointInput
+  connect: BpStatWhereUniqueInput
+}
+
+input BpStatCreateOneWithoutBatchInput {
+  create: BpStatCreateWithoutBatchInput
+  connect: BpStatWhereUniqueInput
+}
+
+input BpStatCreateWithoutAppointInput {
+  autoPlanCost: Boolean
+  autoPlanLabor: Boolean
+  autoPlanRevenue: Boolean
+  factCost: Float
+  factLabor: Float
+  factRevenue: Float
+  planCost: Float
+  planLabor: Float
+  planRevenue: Float
+  batch: BatchCreateOneWithoutBpStatInput
+}
+
+input BpStatCreateWithoutBatchInput {
+  autoPlanCost: Boolean
+  autoPlanLabor: Boolean
+  autoPlanRevenue: Boolean
+  factCost: Float
+  factLabor: Float
+  factRevenue: Float
+  planCost: Float
+  planLabor: Float
+  planRevenue: Float
+  appoint: AppointCreateOneWithoutBpStatInput
+}
+
+"""An edge in a connection."""
+type BpStatEdge {
+  """The item at the end of the edge."""
+  node: BpStat!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum BpStatOrderByInput {
+  id_ASC
+  id_DESC
+  autoPlanCost_ASC
+  autoPlanCost_DESC
+  autoPlanLabor_ASC
+  autoPlanLabor_DESC
+  autoPlanRevenue_ASC
+  autoPlanRevenue_DESC
+  factCost_ASC
+  factCost_DESC
+  factLabor_ASC
+  factLabor_DESC
+  factRevenue_ASC
+  factRevenue_DESC
+  planCost_ASC
+  planCost_DESC
+  planLabor_ASC
+  planLabor_DESC
+  planRevenue_ASC
+  planRevenue_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type BpStatPreviousValues {
+  id: ID!
+  autoPlanCost: Boolean
+  autoPlanLabor: Boolean
+  autoPlanRevenue: Boolean
+  factCost: Float
+  factLabor: Float
+  factRevenue: Float
+  planCost: Float
+  planLabor: Float
+  planRevenue: Float
+}
+
+type BpStatSubscriptionPayload {
+  mutation: MutationType!
+  node: BpStat
+  updatedFields: [String!]
+  previousValues: BpStatPreviousValues
+}
+
+input BpStatSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [BpStatSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [BpStatSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [BpStatSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: BpStatWhereInput
+}
+
+input BpStatUpdateInput {
+  autoPlanCost: Boolean
+  autoPlanLabor: Boolean
+  autoPlanRevenue: Boolean
+  factCost: Float
+  factLabor: Float
+  factRevenue: Float
+  planCost: Float
+  planLabor: Float
+  planRevenue: Float
+  appoint: AppointUpdateOneWithoutBpStatInput
+  batch: BatchUpdateOneWithoutBpStatInput
+}
+
+input BpStatUpdateManyMutationInput {
+  autoPlanCost: Boolean
+  autoPlanLabor: Boolean
+  autoPlanRevenue: Boolean
+  factCost: Float
+  factLabor: Float
+  factRevenue: Float
+  planCost: Float
+  planLabor: Float
+  planRevenue: Float
+}
+
+input BpStatUpdateOneWithoutAppointInput {
+  create: BpStatCreateWithoutAppointInput
+  connect: BpStatWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: BpStatUpdateWithoutAppointDataInput
+  upsert: BpStatUpsertWithoutAppointInput
+}
+
+input BpStatUpdateOneWithoutBatchInput {
+  create: BpStatCreateWithoutBatchInput
+  connect: BpStatWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: BpStatUpdateWithoutBatchDataInput
+  upsert: BpStatUpsertWithoutBatchInput
+}
+
+input BpStatUpdateWithoutAppointDataInput {
+  autoPlanCost: Boolean
+  autoPlanLabor: Boolean
+  autoPlanRevenue: Boolean
+  factCost: Float
+  factLabor: Float
+  factRevenue: Float
+  planCost: Float
+  planLabor: Float
+  planRevenue: Float
+  batch: BatchUpdateOneWithoutBpStatInput
+}
+
+input BpStatUpdateWithoutBatchDataInput {
+  autoPlanCost: Boolean
+  autoPlanLabor: Boolean
+  autoPlanRevenue: Boolean
+  factCost: Float
+  factLabor: Float
+  factRevenue: Float
+  planCost: Float
+  planLabor: Float
+  planRevenue: Float
+  appoint: AppointUpdateOneWithoutBpStatInput
+}
+
+input BpStatUpsertWithoutAppointInput {
+  update: BpStatUpdateWithoutAppointDataInput!
+  create: BpStatCreateWithoutAppointInput!
+}
+
+input BpStatUpsertWithoutBatchInput {
+  update: BpStatUpdateWithoutBatchDataInput!
+  create: BpStatCreateWithoutBatchInput!
+}
+
+input BpStatWhereInput {
+  """Logical AND on all given filters."""
+  AND: [BpStatWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [BpStatWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [BpStatWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  autoPlanCost: Boolean
+
+  """All values that are not equal to given value."""
+  autoPlanCost_not: Boolean
+  autoPlanLabor: Boolean
+
+  """All values that are not equal to given value."""
+  autoPlanLabor_not: Boolean
+  autoPlanRevenue: Boolean
+
+  """All values that are not equal to given value."""
+  autoPlanRevenue_not: Boolean
+  factCost: Float
+
+  """All values that are not equal to given value."""
+  factCost_not: Float
+
+  """All values that are contained in given list."""
+  factCost_in: [Float!]
+
+  """All values that are not contained in given list."""
+  factCost_not_in: [Float!]
+
+  """All values less than the given value."""
+  factCost_lt: Float
+
+  """All values less than or equal the given value."""
+  factCost_lte: Float
+
+  """All values greater than the given value."""
+  factCost_gt: Float
+
+  """All values greater than or equal the given value."""
+  factCost_gte: Float
+  factLabor: Float
+
+  """All values that are not equal to given value."""
+  factLabor_not: Float
+
+  """All values that are contained in given list."""
+  factLabor_in: [Float!]
+
+  """All values that are not contained in given list."""
+  factLabor_not_in: [Float!]
+
+  """All values less than the given value."""
+  factLabor_lt: Float
+
+  """All values less than or equal the given value."""
+  factLabor_lte: Float
+
+  """All values greater than the given value."""
+  factLabor_gt: Float
+
+  """All values greater than or equal the given value."""
+  factLabor_gte: Float
+  factRevenue: Float
+
+  """All values that are not equal to given value."""
+  factRevenue_not: Float
+
+  """All values that are contained in given list."""
+  factRevenue_in: [Float!]
+
+  """All values that are not contained in given list."""
+  factRevenue_not_in: [Float!]
+
+  """All values less than the given value."""
+  factRevenue_lt: Float
+
+  """All values less than or equal the given value."""
+  factRevenue_lte: Float
+
+  """All values greater than the given value."""
+  factRevenue_gt: Float
+
+  """All values greater than or equal the given value."""
+  factRevenue_gte: Float
+  planCost: Float
+
+  """All values that are not equal to given value."""
+  planCost_not: Float
+
+  """All values that are contained in given list."""
+  planCost_in: [Float!]
+
+  """All values that are not contained in given list."""
+  planCost_not_in: [Float!]
+
+  """All values less than the given value."""
+  planCost_lt: Float
+
+  """All values less than or equal the given value."""
+  planCost_lte: Float
+
+  """All values greater than the given value."""
+  planCost_gt: Float
+
+  """All values greater than or equal the given value."""
+  planCost_gte: Float
+  planLabor: Float
+
+  """All values that are not equal to given value."""
+  planLabor_not: Float
+
+  """All values that are contained in given list."""
+  planLabor_in: [Float!]
+
+  """All values that are not contained in given list."""
+  planLabor_not_in: [Float!]
+
+  """All values less than the given value."""
+  planLabor_lt: Float
+
+  """All values less than or equal the given value."""
+  planLabor_lte: Float
+
+  """All values greater than the given value."""
+  planLabor_gt: Float
+
+  """All values greater than or equal the given value."""
+  planLabor_gte: Float
+  planRevenue: Float
+
+  """All values that are not equal to given value."""
+  planRevenue_not: Float
+
+  """All values that are contained in given list."""
+  planRevenue_in: [Float!]
+
+  """All values that are not contained in given list."""
+  planRevenue_not_in: [Float!]
+
+  """All values less than the given value."""
+  planRevenue_lt: Float
+
+  """All values less than or equal the given value."""
+  planRevenue_lte: Float
+
+  """All values greater than the given value."""
+  planRevenue_gt: Float
+
+  """All values greater than or equal the given value."""
+  planRevenue_gte: Float
+  appoint: AppointWhereInput
+  batch: BatchWhereInput
+}
+
+input BpStatWhereUniqueInput {
   id: ID
 }
 
@@ -4721,10 +5222,10 @@ input EventWhereUniqueInput {
 type Exec implements Node {
   id: ID!
   amoUserId: Int
+  org: Org
   person: Person
   appoints(where: AppointWhereInput, orderBy: AppointOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Appoint!]
   opTypes(where: OpTypeWhereInput, orderBy: OpTypeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OpType!]
-  tasks(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Task!]
 }
 
 """A connection to a list of items."""
@@ -4739,10 +5240,10 @@ type ExecConnection {
 
 input ExecCreateInput {
   amoUserId: Int
+  org: OrgCreateOneWithoutExecInput
   person: PersonCreateOneWithoutExecInput
   appoints: AppointCreateManyWithoutExecInput
   opTypes: OpTypeCreateManyWithoutExecsInput
-  tasks: TaskCreateManyWithoutExecInput
 }
 
 input ExecCreateManyWithoutOpTypesInput {
@@ -4755,40 +5256,40 @@ input ExecCreateOneWithoutAppointsInput {
   connect: ExecWhereUniqueInput
 }
 
+input ExecCreateOneWithoutOrgInput {
+  create: ExecCreateWithoutOrgInput
+  connect: ExecWhereUniqueInput
+}
+
 input ExecCreateOneWithoutPersonInput {
   create: ExecCreateWithoutPersonInput
   connect: ExecWhereUniqueInput
 }
 
-input ExecCreateOneWithoutTasksInput {
-  create: ExecCreateWithoutTasksInput
-  connect: ExecWhereUniqueInput
-}
-
 input ExecCreateWithoutAppointsInput {
   amoUserId: Int
+  org: OrgCreateOneWithoutExecInput
   person: PersonCreateOneWithoutExecInput
   opTypes: OpTypeCreateManyWithoutExecsInput
-  tasks: TaskCreateManyWithoutExecInput
 }
 
 input ExecCreateWithoutOpTypesInput {
   amoUserId: Int
+  org: OrgCreateOneWithoutExecInput
   person: PersonCreateOneWithoutExecInput
   appoints: AppointCreateManyWithoutExecInput
-  tasks: TaskCreateManyWithoutExecInput
+}
+
+input ExecCreateWithoutOrgInput {
+  amoUserId: Int
+  person: PersonCreateOneWithoutExecInput
+  appoints: AppointCreateManyWithoutExecInput
+  opTypes: OpTypeCreateManyWithoutExecsInput
 }
 
 input ExecCreateWithoutPersonInput {
   amoUserId: Int
-  appoints: AppointCreateManyWithoutExecInput
-  opTypes: OpTypeCreateManyWithoutExecsInput
-  tasks: TaskCreateManyWithoutExecInput
-}
-
-input ExecCreateWithoutTasksInput {
-  amoUserId: Int
-  person: PersonCreateOneWithoutExecInput
+  org: OrgCreateOneWithoutExecInput
   appoints: AppointCreateManyWithoutExecInput
   opTypes: OpTypeCreateManyWithoutExecsInput
 }
@@ -4859,10 +5360,10 @@ input ExecSubscriptionWhereInput {
 
 input ExecUpdateInput {
   amoUserId: Int
+  org: OrgUpdateOneWithoutExecInput
   person: PersonUpdateOneWithoutExecInput
   appoints: AppointUpdateManyWithoutExecInput
   opTypes: OpTypeUpdateManyWithoutExecsInput
-  tasks: TaskUpdateManyWithoutExecInput
 }
 
 input ExecUpdateManyMutationInput {
@@ -4885,11 +5386,13 @@ input ExecUpdateOneRequiredWithoutAppointsInput {
   upsert: ExecUpsertWithoutAppointsInput
 }
 
-input ExecUpdateOneRequiredWithoutTasksInput {
-  create: ExecCreateWithoutTasksInput
+input ExecUpdateOneWithoutOrgInput {
+  create: ExecCreateWithoutOrgInput
   connect: ExecWhereUniqueInput
-  update: ExecUpdateWithoutTasksDataInput
-  upsert: ExecUpsertWithoutTasksInput
+  disconnect: Boolean
+  delete: Boolean
+  update: ExecUpdateWithoutOrgDataInput
+  upsert: ExecUpsertWithoutOrgInput
 }
 
 input ExecUpdateOneWithoutPersonInput {
@@ -4903,28 +5406,28 @@ input ExecUpdateOneWithoutPersonInput {
 
 input ExecUpdateWithoutAppointsDataInput {
   amoUserId: Int
+  org: OrgUpdateOneWithoutExecInput
   person: PersonUpdateOneWithoutExecInput
   opTypes: OpTypeUpdateManyWithoutExecsInput
-  tasks: TaskUpdateManyWithoutExecInput
 }
 
 input ExecUpdateWithoutOpTypesDataInput {
   amoUserId: Int
+  org: OrgUpdateOneWithoutExecInput
   person: PersonUpdateOneWithoutExecInput
   appoints: AppointUpdateManyWithoutExecInput
-  tasks: TaskUpdateManyWithoutExecInput
+}
+
+input ExecUpdateWithoutOrgDataInput {
+  amoUserId: Int
+  person: PersonUpdateOneWithoutExecInput
+  appoints: AppointUpdateManyWithoutExecInput
+  opTypes: OpTypeUpdateManyWithoutExecsInput
 }
 
 input ExecUpdateWithoutPersonDataInput {
   amoUserId: Int
-  appoints: AppointUpdateManyWithoutExecInput
-  opTypes: OpTypeUpdateManyWithoutExecsInput
-  tasks: TaskUpdateManyWithoutExecInput
-}
-
-input ExecUpdateWithoutTasksDataInput {
-  amoUserId: Int
-  person: PersonUpdateOneWithoutExecInput
+  org: OrgUpdateOneWithoutExecInput
   appoints: AppointUpdateManyWithoutExecInput
   opTypes: OpTypeUpdateManyWithoutExecsInput
 }
@@ -4939,14 +5442,14 @@ input ExecUpsertWithoutAppointsInput {
   create: ExecCreateWithoutAppointsInput!
 }
 
+input ExecUpsertWithoutOrgInput {
+  update: ExecUpdateWithoutOrgDataInput!
+  create: ExecCreateWithoutOrgInput!
+}
+
 input ExecUpsertWithoutPersonInput {
   update: ExecUpdateWithoutPersonDataInput!
   create: ExecCreateWithoutPersonInput!
-}
-
-input ExecUpsertWithoutTasksInput {
-  update: ExecUpdateWithoutTasksDataInput!
-  create: ExecCreateWithoutTasksInput!
 }
 
 input ExecUpsertWithWhereUniqueWithoutOpTypesInput {
@@ -5026,6 +5529,7 @@ input ExecWhereInput {
 
   """All values greater than or equal the given value."""
   amoUserId_gte: Int
+  org: OrgWhereInput
   person: PersonWhereInput
   appoints_every: AppointWhereInput
   appoints_some: AppointWhereInput
@@ -5033,9 +5537,6 @@ input ExecWhereInput {
   opTypes_every: OpTypeWhereInput
   opTypes_some: OpTypeWhereInput
   opTypes_none: OpTypeWhereInput
-  tasks_every: TaskWhereInput
-  tasks_some: TaskWhereInput
-  tasks_none: TaskWhereInput
 }
 
 input ExecWhereUniqueInput {
@@ -6269,6 +6770,7 @@ input ModelWhereUniqueInput {
 type Mutation {
   createAppoint(data: AppointCreateInput!): Appoint!
   createBatch(data: BatchCreateInput!): Batch!
+  createBpStat(data: BpStatCreateInput!): BpStat!
   createDeal(data: DealCreateInput!): Deal!
   createDept(data: DeptCreateInput!): Dept!
   createDrawing(data: DrawingCreateInput!): Drawing!
@@ -6300,6 +6802,7 @@ type Mutation {
   createDealStatus(data: DealStatusCreateInput!): DealStatus!
   updateAppoint(data: AppointUpdateInput!, where: AppointWhereUniqueInput!): Appoint
   updateBatch(data: BatchUpdateInput!, where: BatchWhereUniqueInput!): Batch
+  updateBpStat(data: BpStatUpdateInput!, where: BpStatWhereUniqueInput!): BpStat
   updateDeal(data: DealUpdateInput!, where: DealWhereUniqueInput!): Deal
   updateDept(data: DeptUpdateInput!, where: DeptWhereUniqueInput!): Dept
   updateDrawing(data: DrawingUpdateInput!, where: DrawingWhereUniqueInput!): Drawing
@@ -6331,6 +6834,7 @@ type Mutation {
   updateDealStatus(data: DealStatusUpdateInput!, where: DealStatusWhereUniqueInput!): DealStatus
   deleteAppoint(where: AppointWhereUniqueInput!): Appoint
   deleteBatch(where: BatchWhereUniqueInput!): Batch
+  deleteBpStat(where: BpStatWhereUniqueInput!): BpStat
   deleteDeal(where: DealWhereUniqueInput!): Deal
   deleteDept(where: DeptWhereUniqueInput!): Dept
   deleteDrawing(where: DrawingWhereUniqueInput!): Drawing
@@ -6362,6 +6866,7 @@ type Mutation {
   deleteDealStatus(where: DealStatusWhereUniqueInput!): DealStatus
   upsertAppoint(where: AppointWhereUniqueInput!, create: AppointCreateInput!, update: AppointUpdateInput!): Appoint!
   upsertBatch(where: BatchWhereUniqueInput!, create: BatchCreateInput!, update: BatchUpdateInput!): Batch!
+  upsertBpStat(where: BpStatWhereUniqueInput!, create: BpStatCreateInput!, update: BpStatUpdateInput!): BpStat!
   upsertDeal(where: DealWhereUniqueInput!, create: DealCreateInput!, update: DealUpdateInput!): Deal!
   upsertDept(where: DeptWhereUniqueInput!, create: DeptCreateInput!, update: DeptUpdateInput!): Dept!
   upsertDrawing(where: DrawingWhereUniqueInput!, create: DrawingCreateInput!, update: DrawingUpdateInput!): Drawing!
@@ -6391,8 +6896,8 @@ type Mutation {
   upsertAccount(where: AccountWhereUniqueInput!, create: AccountCreateInput!, update: AccountUpdateInput!): Account!
   upsertDoc(where: DocWhereUniqueInput!, create: DocCreateInput!, update: DocUpdateInput!): Doc!
   upsertDealStatus(where: DealStatusWhereUniqueInput!, create: DealStatusCreateInput!, update: DealStatusUpdateInput!): DealStatus!
-  updateManyAppoints(data: AppointUpdateManyMutationInput!, where: AppointWhereInput): BatchPayload!
   updateManyBatches(data: BatchUpdateManyMutationInput!, where: BatchWhereInput): BatchPayload!
+  updateManyBpStats(data: BpStatUpdateManyMutationInput!, where: BpStatWhereInput): BatchPayload!
   updateManyDeals(data: DealUpdateManyMutationInput!, where: DealWhereInput): BatchPayload!
   updateManyDepts(data: DeptUpdateManyMutationInput!, where: DeptWhereInput): BatchPayload!
   updateManyDrawings(data: DrawingUpdateManyMutationInput!, where: DrawingWhereInput): BatchPayload!
@@ -6424,6 +6929,7 @@ type Mutation {
   updateManyDealStatuses(data: DealStatusUpdateManyMutationInput!, where: DealStatusWhereInput): BatchPayload!
   deleteManyAppoints(where: AppointWhereInput): BatchPayload!
   deleteManyBatches(where: BatchWhereInput): BatchPayload!
+  deleteManyBpStats(where: BpStatWhereInput): BatchPayload!
   deleteManyDeals(where: DealWhereInput): BatchPayload!
   deleteManyDepts(where: DeptWhereInput): BatchPayload!
   deleteManyDrawings(where: DrawingWhereInput): BatchPayload!
@@ -6470,8 +6976,9 @@ interface Node {
 type Op implements Node {
   id: ID!
   dealLabor: Float
-  opType: OpType!
   description: String
+  laborPrice: Float
+  opType: OpType!
   appoints(where: AppointWhereInput, orderBy: AppointOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Appoint!]
   batch: Batch
   proc: Proc
@@ -6495,6 +7002,7 @@ type OpConnection {
 input OpCreateInput {
   dealLabor: Float
   description: String
+  laborPrice: Float
   opType: OpTypeCreateOneWithoutOpsInput!
   appoints: AppointCreateManyWithoutOpInput
   batch: BatchCreateOneWithoutOpsInput
@@ -6524,6 +7032,7 @@ input OpCreateOneWithoutAppointsInput {
 input OpCreateWithoutAppointsInput {
   dealLabor: Float
   description: String
+  laborPrice: Float
   opType: OpTypeCreateOneWithoutOpsInput!
   batch: BatchCreateOneWithoutOpsInput
   proc: ProcCreateOneWithoutOpsInput
@@ -6532,6 +7041,7 @@ input OpCreateWithoutAppointsInput {
 input OpCreateWithoutBatchInput {
   dealLabor: Float
   description: String
+  laborPrice: Float
   opType: OpTypeCreateOneWithoutOpsInput!
   appoints: AppointCreateManyWithoutOpInput
   proc: ProcCreateOneWithoutOpsInput
@@ -6540,6 +7050,7 @@ input OpCreateWithoutBatchInput {
 input OpCreateWithoutOpTypeInput {
   dealLabor: Float
   description: String
+  laborPrice: Float
   appoints: AppointCreateManyWithoutOpInput
   batch: BatchCreateOneWithoutOpsInput
   proc: ProcCreateOneWithoutOpsInput
@@ -6548,6 +7059,7 @@ input OpCreateWithoutOpTypeInput {
 input OpCreateWithoutProcInput {
   dealLabor: Float
   description: String
+  laborPrice: Float
   opType: OpTypeCreateOneWithoutOpsInput!
   appoints: AppointCreateManyWithoutOpInput
   batch: BatchCreateOneWithoutOpsInput
@@ -6569,6 +7081,8 @@ enum OpOrderByInput {
   dealLabor_DESC
   description_ASC
   description_DESC
+  laborPrice_ASC
+  laborPrice_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -6579,6 +7093,7 @@ type OpPreviousValues {
   id: ID!
   dealLabor: Float
   description: String
+  laborPrice: Float
 }
 
 type OpSubscriptionPayload {
@@ -6937,6 +7452,7 @@ input OpTypeWhereUniqueInput {
 input OpUpdateInput {
   dealLabor: Float
   description: String
+  laborPrice: Float
   opType: OpTypeUpdateOneRequiredWithoutOpsInput
   appoints: AppointUpdateManyWithoutOpInput
   batch: BatchUpdateOneWithoutOpsInput
@@ -6946,6 +7462,7 @@ input OpUpdateInput {
 input OpUpdateManyMutationInput {
   dealLabor: Float
   description: String
+  laborPrice: Float
 }
 
 input OpUpdateManyWithoutBatchInput {
@@ -6985,6 +7502,7 @@ input OpUpdateOneRequiredWithoutAppointsInput {
 input OpUpdateWithoutAppointsDataInput {
   dealLabor: Float
   description: String
+  laborPrice: Float
   opType: OpTypeUpdateOneRequiredWithoutOpsInput
   batch: BatchUpdateOneWithoutOpsInput
   proc: ProcUpdateOneWithoutOpsInput
@@ -6993,6 +7511,7 @@ input OpUpdateWithoutAppointsDataInput {
 input OpUpdateWithoutBatchDataInput {
   dealLabor: Float
   description: String
+  laborPrice: Float
   opType: OpTypeUpdateOneRequiredWithoutOpsInput
   appoints: AppointUpdateManyWithoutOpInput
   proc: ProcUpdateOneWithoutOpsInput
@@ -7001,6 +7520,7 @@ input OpUpdateWithoutBatchDataInput {
 input OpUpdateWithoutOpTypeDataInput {
   dealLabor: Float
   description: String
+  laborPrice: Float
   appoints: AppointUpdateManyWithoutOpInput
   batch: BatchUpdateOneWithoutOpsInput
   proc: ProcUpdateOneWithoutOpsInput
@@ -7009,6 +7529,7 @@ input OpUpdateWithoutOpTypeDataInput {
 input OpUpdateWithoutProcDataInput {
   dealLabor: Float
   description: String
+  laborPrice: Float
   opType: OpTypeUpdateOneRequiredWithoutOpsInput
   appoints: AppointUpdateManyWithoutOpInput
   batch: BatchUpdateOneWithoutOpsInput
@@ -7163,6 +7684,28 @@ input OpWhereInput {
 
   """All values not ending with the given string."""
   description_not_ends_with: String
+  laborPrice: Float
+
+  """All values that are not equal to given value."""
+  laborPrice_not: Float
+
+  """All values that are contained in given list."""
+  laborPrice_in: [Float!]
+
+  """All values that are not contained in given list."""
+  laborPrice_not_in: [Float!]
+
+  """All values less than the given value."""
+  laborPrice_lt: Float
+
+  """All values less than or equal the given value."""
+  laborPrice_lte: Float
+
+  """All values greater than the given value."""
+  laborPrice_gt: Float
+
+  """All values greater than or equal the given value."""
+  laborPrice_gte: Float
   opType: OpTypeWhereInput
   appoints_every: AppointWhereInput
   appoints_some: AppointWhereInput
@@ -7821,6 +8364,7 @@ type Org implements Node {
   docs(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Doc!]
   employees(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Employee!]
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry!]
+  exec: Exec
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order!]
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
 }
@@ -7846,6 +8390,7 @@ input OrgCreateInput {
   docs: DocCreateManyWithoutOrgInput
   employees: EmployeeCreateManyWithoutOrgInput
   enquiries: EnquiryCreateManyWithoutOrgInput
+  exec: ExecCreateOneWithoutOrgInput
   orders: OrderCreateManyWithoutOrgInput
   payments: PaymentCreateManyWithoutOrgInput
 }
@@ -7870,6 +8415,11 @@ input OrgCreateOneWithoutEnquiriesInput {
   connect: OrgWhereUniqueInput
 }
 
+input OrgCreateOneWithoutExecInput {
+  create: OrgCreateWithoutExecInput
+  connect: OrgWhereUniqueInput
+}
+
 input OrgCreateOneWithoutOrdersInput {
   create: OrgCreateWithoutOrdersInput
   connect: OrgWhereUniqueInput
@@ -7890,6 +8440,7 @@ input OrgCreateWithoutDealsInput {
   docs: DocCreateManyWithoutOrgInput
   employees: EmployeeCreateManyWithoutOrgInput
   enquiries: EnquiryCreateManyWithoutOrgInput
+  exec: ExecCreateOneWithoutOrgInput
   orders: OrderCreateManyWithoutOrgInput
   payments: PaymentCreateManyWithoutOrgInput
 }
@@ -7904,6 +8455,7 @@ input OrgCreateWithoutDocsInput {
   deals: DealCreateManyWithoutOrgInput
   employees: EmployeeCreateManyWithoutOrgInput
   enquiries: EnquiryCreateManyWithoutOrgInput
+  exec: ExecCreateOneWithoutOrgInput
   orders: OrderCreateManyWithoutOrgInput
   payments: PaymentCreateManyWithoutOrgInput
 }
@@ -7918,6 +8470,7 @@ input OrgCreateWithoutEmployeesInput {
   deals: DealCreateManyWithoutOrgInput
   docs: DocCreateManyWithoutOrgInput
   enquiries: EnquiryCreateManyWithoutOrgInput
+  exec: ExecCreateOneWithoutOrgInput
   orders: OrderCreateManyWithoutOrgInput
   payments: PaymentCreateManyWithoutOrgInput
 }
@@ -7932,6 +8485,22 @@ input OrgCreateWithoutEnquiriesInput {
   deals: DealCreateManyWithoutOrgInput
   docs: DocCreateManyWithoutOrgInput
   employees: EmployeeCreateManyWithoutOrgInput
+  exec: ExecCreateOneWithoutOrgInput
+  orders: OrderCreateManyWithoutOrgInput
+  payments: PaymentCreateManyWithoutOrgInput
+}
+
+input OrgCreateWithoutExecInput {
+  inn: String
+  moedeloId: String
+  amoId: Int
+  legalAddress: String
+  name: String!
+  ulName: String
+  deals: DealCreateManyWithoutOrgInput
+  docs: DocCreateManyWithoutOrgInput
+  employees: EmployeeCreateManyWithoutOrgInput
+  enquiries: EnquiryCreateManyWithoutOrgInput
   orders: OrderCreateManyWithoutOrgInput
   payments: PaymentCreateManyWithoutOrgInput
 }
@@ -7947,6 +8516,7 @@ input OrgCreateWithoutOrdersInput {
   docs: DocCreateManyWithoutOrgInput
   employees: EmployeeCreateManyWithoutOrgInput
   enquiries: EnquiryCreateManyWithoutOrgInput
+  exec: ExecCreateOneWithoutOrgInput
   payments: PaymentCreateManyWithoutOrgInput
 }
 
@@ -7961,6 +8531,7 @@ input OrgCreateWithoutPaymentsInput {
   docs: DocCreateManyWithoutOrgInput
   employees: EmployeeCreateManyWithoutOrgInput
   enquiries: EnquiryCreateManyWithoutOrgInput
+  exec: ExecCreateOneWithoutOrgInput
   orders: OrderCreateManyWithoutOrgInput
 }
 
@@ -8054,6 +8625,7 @@ input OrgUpdateInput {
   docs: DocUpdateManyWithoutOrgInput
   employees: EmployeeUpdateManyWithoutOrgInput
   enquiries: EnquiryUpdateManyWithoutOrgInput
+  exec: ExecUpdateOneWithoutOrgInput
   orders: OrderUpdateManyWithoutOrgInput
   payments: PaymentUpdateManyWithoutOrgInput
 }
@@ -8101,6 +8673,15 @@ input OrgUpdateOneWithoutEnquiriesInput {
   upsert: OrgUpsertWithoutEnquiriesInput
 }
 
+input OrgUpdateOneWithoutExecInput {
+  create: OrgCreateWithoutExecInput
+  connect: OrgWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: OrgUpdateWithoutExecDataInput
+  upsert: OrgUpsertWithoutExecInput
+}
+
 input OrgUpdateOneWithoutOrdersInput {
   create: OrgCreateWithoutOrdersInput
   connect: OrgWhereUniqueInput
@@ -8129,6 +8710,7 @@ input OrgUpdateWithoutDealsDataInput {
   docs: DocUpdateManyWithoutOrgInput
   employees: EmployeeUpdateManyWithoutOrgInput
   enquiries: EnquiryUpdateManyWithoutOrgInput
+  exec: ExecUpdateOneWithoutOrgInput
   orders: OrderUpdateManyWithoutOrgInput
   payments: PaymentUpdateManyWithoutOrgInput
 }
@@ -8143,6 +8725,7 @@ input OrgUpdateWithoutDocsDataInput {
   deals: DealUpdateManyWithoutOrgInput
   employees: EmployeeUpdateManyWithoutOrgInput
   enquiries: EnquiryUpdateManyWithoutOrgInput
+  exec: ExecUpdateOneWithoutOrgInput
   orders: OrderUpdateManyWithoutOrgInput
   payments: PaymentUpdateManyWithoutOrgInput
 }
@@ -8157,6 +8740,7 @@ input OrgUpdateWithoutEmployeesDataInput {
   deals: DealUpdateManyWithoutOrgInput
   docs: DocUpdateManyWithoutOrgInput
   enquiries: EnquiryUpdateManyWithoutOrgInput
+  exec: ExecUpdateOneWithoutOrgInput
   orders: OrderUpdateManyWithoutOrgInput
   payments: PaymentUpdateManyWithoutOrgInput
 }
@@ -8171,6 +8755,22 @@ input OrgUpdateWithoutEnquiriesDataInput {
   deals: DealUpdateManyWithoutOrgInput
   docs: DocUpdateManyWithoutOrgInput
   employees: EmployeeUpdateManyWithoutOrgInput
+  exec: ExecUpdateOneWithoutOrgInput
+  orders: OrderUpdateManyWithoutOrgInput
+  payments: PaymentUpdateManyWithoutOrgInput
+}
+
+input OrgUpdateWithoutExecDataInput {
+  inn: String
+  moedeloId: String
+  amoId: Int
+  legalAddress: String
+  name: String
+  ulName: String
+  deals: DealUpdateManyWithoutOrgInput
+  docs: DocUpdateManyWithoutOrgInput
+  employees: EmployeeUpdateManyWithoutOrgInput
+  enquiries: EnquiryUpdateManyWithoutOrgInput
   orders: OrderUpdateManyWithoutOrgInput
   payments: PaymentUpdateManyWithoutOrgInput
 }
@@ -8186,6 +8786,7 @@ input OrgUpdateWithoutOrdersDataInput {
   docs: DocUpdateManyWithoutOrgInput
   employees: EmployeeUpdateManyWithoutOrgInput
   enquiries: EnquiryUpdateManyWithoutOrgInput
+  exec: ExecUpdateOneWithoutOrgInput
   payments: PaymentUpdateManyWithoutOrgInput
 }
 
@@ -8200,6 +8801,7 @@ input OrgUpdateWithoutPaymentsDataInput {
   docs: DocUpdateManyWithoutOrgInput
   employees: EmployeeUpdateManyWithoutOrgInput
   enquiries: EnquiryUpdateManyWithoutOrgInput
+  exec: ExecUpdateOneWithoutOrgInput
   orders: OrderUpdateManyWithoutOrgInput
 }
 
@@ -8221,6 +8823,11 @@ input OrgUpsertWithoutEmployeesInput {
 input OrgUpsertWithoutEnquiriesInput {
   update: OrgUpdateWithoutEnquiriesDataInput!
   create: OrgCreateWithoutEnquiriesInput!
+}
+
+input OrgUpsertWithoutExecInput {
+  update: OrgUpdateWithoutExecDataInput!
+  create: OrgCreateWithoutExecInput!
 }
 
 input OrgUpsertWithoutOrdersInput {
@@ -8516,6 +9123,7 @@ input OrgWhereInput {
   enquiries_every: EnquiryWhereInput
   enquiries_some: EnquiryWhereInput
   enquiries_none: EnquiryWhereInput
+  exec: ExecWhereInput
   orders_every: OrderWhereInput
   orders_some: OrderWhereInput
   orders_none: OrderWhereInput
@@ -10855,6 +11463,7 @@ input ProdWhereUniqueInput {
 type Query {
   appoints(where: AppointWhereInput, orderBy: AppointOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Appoint]!
   batches(where: BatchWhereInput, orderBy: BatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Batch]!
+  bpStats(where: BpStatWhereInput, orderBy: BpStatOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [BpStat]!
   deals(where: DealWhereInput, orderBy: DealOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Deal]!
   depts(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Dept]!
   drawings(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Drawing]!
@@ -10886,6 +11495,7 @@ type Query {
   dealStatuses(where: DealStatusWhereInput, orderBy: DealStatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [DealStatus]!
   appoint(where: AppointWhereUniqueInput!): Appoint
   batch(where: BatchWhereUniqueInput!): Batch
+  bpStat(where: BpStatWhereUniqueInput!): BpStat
   deal(where: DealWhereUniqueInput!): Deal
   dept(where: DeptWhereUniqueInput!): Dept
   drawing(where: DrawingWhereUniqueInput!): Drawing
@@ -10917,6 +11527,7 @@ type Query {
   dealStatus(where: DealStatusWhereUniqueInput!): DealStatus
   appointsConnection(where: AppointWhereInput, orderBy: AppointOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AppointConnection!
   batchesConnection(where: BatchWhereInput, orderBy: BatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BatchConnection!
+  bpStatsConnection(where: BpStatWhereInput, orderBy: BpStatOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BpStatConnection!
   dealsConnection(where: DealWhereInput, orderBy: DealOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DealConnection!
   deptsConnection(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DeptConnection!
   drawingsConnection(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DrawingConnection!
@@ -11500,6 +12111,7 @@ input StatusWhereUniqueInput {
 type Subscription {
   appoint(where: AppointSubscriptionWhereInput): AppointSubscriptionPayload
   batch(where: BatchSubscriptionWhereInput): BatchSubscriptionPayload
+  bpStat(where: BpStatSubscriptionWhereInput): BpStatSubscriptionPayload
   deal(where: DealSubscriptionWhereInput): DealSubscriptionPayload
   dept(where: DeptSubscriptionWhereInput): DeptSubscriptionPayload
   drawing(where: DrawingSubscriptionWhereInput): DrawingSubscriptionPayload
@@ -11539,7 +12151,6 @@ type Task implements Node {
   text: String
   to: DateTime
   appoint: Appoint!
-  exec: Exec!
 }
 
 """A connection to a list of items."""
@@ -11559,16 +12170,10 @@ input TaskCreateInput {
   text: String
   to: DateTime
   appoint: AppointCreateOneWithoutTasksInput!
-  exec: ExecCreateOneWithoutTasksInput!
 }
 
 input TaskCreateManyWithoutAppointInput {
   create: [TaskCreateWithoutAppointInput!]
-  connect: [TaskWhereUniqueInput!]
-}
-
-input TaskCreateManyWithoutExecInput {
-  create: [TaskCreateWithoutExecInput!]
   connect: [TaskWhereUniqueInput!]
 }
 
@@ -11578,16 +12183,6 @@ input TaskCreateWithoutAppointInput {
   status: TaskStatus!
   text: String
   to: DateTime
-  exec: ExecCreateOneWithoutTasksInput!
-}
-
-input TaskCreateWithoutExecInput {
-  end: DateTime
-  from: DateTime!
-  status: TaskStatus!
-  text: String
-  to: DateTime
-  appoint: AppointCreateOneWithoutTasksInput!
 }
 
 """An edge in a connection."""
@@ -11682,7 +12277,6 @@ input TaskUpdateInput {
   text: String
   to: DateTime
   appoint: AppointUpdateOneRequiredWithoutTasksInput
-  exec: ExecUpdateOneRequiredWithoutTasksInput
 }
 
 input TaskUpdateManyMutationInput {
@@ -11702,31 +12296,12 @@ input TaskUpdateManyWithoutAppointInput {
   upsert: [TaskUpsertWithWhereUniqueWithoutAppointInput!]
 }
 
-input TaskUpdateManyWithoutExecInput {
-  create: [TaskCreateWithoutExecInput!]
-  connect: [TaskWhereUniqueInput!]
-  disconnect: [TaskWhereUniqueInput!]
-  delete: [TaskWhereUniqueInput!]
-  update: [TaskUpdateWithWhereUniqueWithoutExecInput!]
-  upsert: [TaskUpsertWithWhereUniqueWithoutExecInput!]
-}
-
 input TaskUpdateWithoutAppointDataInput {
   end: DateTime
   from: DateTime
   status: TaskStatus
   text: String
   to: DateTime
-  exec: ExecUpdateOneRequiredWithoutTasksInput
-}
-
-input TaskUpdateWithoutExecDataInput {
-  end: DateTime
-  from: DateTime
-  status: TaskStatus
-  text: String
-  to: DateTime
-  appoint: AppointUpdateOneRequiredWithoutTasksInput
 }
 
 input TaskUpdateWithWhereUniqueWithoutAppointInput {
@@ -11734,21 +12309,10 @@ input TaskUpdateWithWhereUniqueWithoutAppointInput {
   data: TaskUpdateWithoutAppointDataInput!
 }
 
-input TaskUpdateWithWhereUniqueWithoutExecInput {
-  where: TaskWhereUniqueInput!
-  data: TaskUpdateWithoutExecDataInput!
-}
-
 input TaskUpsertWithWhereUniqueWithoutAppointInput {
   where: TaskWhereUniqueInput!
   update: TaskUpdateWithoutAppointDataInput!
   create: TaskCreateWithoutAppointInput!
-}
-
-input TaskUpsertWithWhereUniqueWithoutExecInput {
-  where: TaskWhereUniqueInput!
-  update: TaskUpdateWithoutExecDataInput!
-  create: TaskCreateWithoutExecInput!
 }
 
 input TaskWhereInput {
@@ -11917,7 +12481,6 @@ input TaskWhereInput {
   """All values greater than or equal the given value."""
   to_gte: DateTime
   appoint: AppointWhereInput
-  exec: ExecWhereInput
 }
 
 input TaskWhereUniqueInput {

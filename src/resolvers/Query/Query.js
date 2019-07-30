@@ -77,7 +77,7 @@ const Query = {
 	},
 
 	opTypes(_, __, ctx, info) {
-		return ctx.db.query.opTypes({}, info)
+		return ctx.db.query.opTypes({ orderBy: 'name_ASC' }, info)
 	},
         
 	order(_, { id }, ctx, info) {

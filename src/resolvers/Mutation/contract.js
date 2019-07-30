@@ -39,7 +39,8 @@ const createComOffer = async (_, { dealId, date = toLocalDateString(new Date()) 
   const { amoId, date: dealDate, batches: dealBatches } = await db.query.deal({ where: { id: dealId }}, `{
     amoId
     date
-    batches {
+    batches (orderBy: sort_ASC) {
+      descript
       info
       qty
       warning
@@ -70,6 +71,7 @@ const createComOffer = async (_, { dealId, date = toLocalDateString(new Date()) 
       }
 		}
   }`)
+
   const genOpTemplateData = ({
     dealLabor=0,
     description='',
@@ -77,13 +79,15 @@ const createComOffer = async (_, { dealId, date = toLocalDateString(new Date()) 
   }, batchNum, num) => ({
     num: batchNum + '.' + num,
     op: opType.name,
-    hrs: dealLabor,
+    labor: dealLabor ? `(${dealLabor}ч)` : '',
     description,
-    price: currency(dealLabor*opType.laborPrice)
-	})
+    price: dealLabor ? currency(dealLabor*opType.laborPrice) : ''
+  })
+  
 	const batches = dealBatches.map(({
 		info,
-		qty,
+    qty,
+    descript,
 		warning,
 		model,
 		procs,
@@ -92,11 +96,13 @@ const createComOffer = async (_, { dealId, date = toLocalDateString(new Date()) 
 		const batchNum = i + 1
 		const ops = procs[0]
 			&& procs[0].ops.filter(op => op.opType.opClass === 'MACHINING')
-			|| []
+      || []
+    console.log('model.name, ops > ', model.name, ops)
 		const amount = ops.reduce((sum, op) => sum += (op.dealLabor || 0)*op.opType.laborPrice, 0)
 		return {
 			amount: currency(amount),
-			num: batchNum,
+      num: batchNum,
+      descript,
 			info,
 			qty,
 			sum: currency(qty*amount),
@@ -113,7 +119,7 @@ const createComOffer = async (_, { dealId, date = toLocalDateString(new Date()) 
 				fOp: genOpTemplateData(ops[0], batchNum, 1), // firstOp
 				lOp: genOpTemplateData(ops[ops.length - 1], batchNum, ops.length), // lastOp
 			},
-			...ops.length > 3 && {
+			...ops.length > 2 && {
 				iOps: ops.slice(1,-1).map((op, i) => genOpTemplateData(op, batchNum, i + 2)) // intermediateOps
 			},
 		}

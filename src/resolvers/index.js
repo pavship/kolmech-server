@@ -3,6 +3,7 @@ const { Query } = require('./Query/Query')
 const { orgQueries } = require('./Query/orgQueries')
 const { Subscription } = require('./Subscription')
 const { amo } = require('./Mutation/amo')
+const { appoint } = require('./Mutation/appoint')
 const { auth } = require('./Mutation/auth')
 const { batch } = require('./Mutation/batch')
 const { contract } = require('./Mutation/contract')
@@ -36,6 +37,7 @@ module.exports = {
   },
   Mutation: {
     ...amo,
+    ...appoint,
     ...auth,
     ...batch,
     ...contract,
