@@ -7,6 +7,7 @@ type Account {				# payment account including bank accounts and cashboxes
 
 type Appoint {
 	id: ID! @unique
+	laborCost: Float
 	bpStat: BpStat @relation(name: "AppointBpStat" onDelete: CASCADE)
 	exec: Exec!
 	op: Op! @relation(name: "OpAppoints")
@@ -31,6 +32,7 @@ type Batch {
 	sort: Int
 	bpStat: BpStat @relation(name: "BatchBpStat" onDelete: CASCADE)
 	deal: Deal @relation(name: "DealBatches")
+	elements: [Element!]! @relation(name: "BatchElements" onDelete: CASCADE)
 	model: Model!
 	ops: [Op!]! @relation(name: "BatchOps" onDelete: CASCADE)
 	procs: [Proc!]! @relation(name: "BatchesProcs" onDelete: CASCADE)
@@ -95,6 +97,14 @@ type Drawing {
 	files: [File!]! @relation(name: "DrawingFiles" onDelete: CASCADE)
 	model: Model @relation(name: "ModelDrawings")
 	workpiece: Workpiece @relation(name: "WorkpieceDrawing")
+}
+
+type Element {					# elements: [Element!]! @relation of Models
+	id: ID! @unique
+	sort: Int
+	batch: Batch @relation(name: "BatchElements")
+	op: Op @relation(name: "OpElement" onDelete: CASCADE)
+	proc: Proc @relation(name: "ProcElement" onDelete: CASCADE)
 }
 
 type Employee {
@@ -181,6 +191,7 @@ type Op {
 	dealLabor: Float
 	description: String
 	laborPrice: Float
+	element: Element @relation(name: "OpElement")
 	opType: OpType!
 	appoints: [Appoint!]! @relation(name: "OpAppoints" onDelete: CASCADE)
 	batch: Batch @relation(name: "BatchOps")
@@ -189,6 +200,7 @@ type Op {
 
 type OpType {
 	id: ID! @unique
+	laborCost: Float
 	laborPrice: Float
 	name: String!
 	execs: [Exec!]!
@@ -266,6 +278,7 @@ type Person {
 type Proc {					# technical process
 	id: ID! @unique
 	name: String!
+	element: Element @relation(name: "ProcElement")
 	batches: [Batch!]! @relation(name: "BatchesProcs")
 	model: Model!
 	ops: [Op!]! @relation(name: "ProcOps" onDelete: CASCADE)

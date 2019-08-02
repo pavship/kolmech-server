@@ -115,6 +115,7 @@ type Subscription {
 
 input AppointInput {
   id: ID
+  laborCost: Float
   exec: [ExecInput]
   execId: ID
   bpStat: BpStatInput
@@ -129,6 +130,7 @@ input BatchInput {
   warning: String
   sort: Int
   bpStat: BpStatInput
+  elements: [ElementInput]
   model: ModelInput
   ops: [OpInput!]
   procs: [ProcInput!]
@@ -157,6 +159,12 @@ input DealInput {
 input DrawingInput {
   id: ID
   name: String
+}
+
+input ElementInput {
+  id: ID
+  op: OpInput
+  proc: ProcInput
 }
 
 input EmployeeInput {

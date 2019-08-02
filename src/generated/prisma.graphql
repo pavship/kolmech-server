@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Mon Jul 29 2019 22:46:40 GMT+0300 (GMT+03:00)
+# timestamp: Thu Aug 01 2019 22:14:18 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -334,6 +334,10 @@ type AggregateDrawing {
   count: Int!
 }
 
+type AggregateElement {
+  count: Int!
+}
+
 type AggregateEmployee {
   count: Int!
 }
@@ -424,6 +428,7 @@ type AggregateWorkpiece {
 
 type Appoint implements Node {
   id: ID!
+  laborCost: Float
   bpStat: BpStat
   exec: Exec!
   op: Op!
@@ -441,6 +446,7 @@ type AppointConnection {
 }
 
 input AppointCreateInput {
+  laborCost: Float
   bpStat: BpStatCreateOneWithoutAppointInput
   exec: ExecCreateOneWithoutAppointsInput!
   op: OpCreateOneWithoutAppointsInput!
@@ -468,24 +474,28 @@ input AppointCreateOneWithoutTasksInput {
 }
 
 input AppointCreateWithoutBpStatInput {
+  laborCost: Float
   exec: ExecCreateOneWithoutAppointsInput!
   op: OpCreateOneWithoutAppointsInput!
   tasks: TaskCreateManyWithoutAppointInput
 }
 
 input AppointCreateWithoutExecInput {
+  laborCost: Float
   bpStat: BpStatCreateOneWithoutAppointInput
   op: OpCreateOneWithoutAppointsInput!
   tasks: TaskCreateManyWithoutAppointInput
 }
 
 input AppointCreateWithoutOpInput {
+  laborCost: Float
   bpStat: BpStatCreateOneWithoutAppointInput
   exec: ExecCreateOneWithoutAppointsInput!
   tasks: TaskCreateManyWithoutAppointInput
 }
 
 input AppointCreateWithoutTasksInput {
+  laborCost: Float
   bpStat: BpStatCreateOneWithoutAppointInput
   exec: ExecCreateOneWithoutAppointsInput!
   op: OpCreateOneWithoutAppointsInput!
@@ -503,6 +513,8 @@ type AppointEdge {
 enum AppointOrderByInput {
   id_ASC
   id_DESC
+  laborCost_ASC
+  laborCost_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -511,6 +523,7 @@ enum AppointOrderByInput {
 
 type AppointPreviousValues {
   id: ID!
+  laborCost: Float
 }
 
 type AppointSubscriptionPayload {
@@ -553,10 +566,15 @@ input AppointSubscriptionWhereInput {
 }
 
 input AppointUpdateInput {
+  laborCost: Float
   bpStat: BpStatUpdateOneWithoutAppointInput
   exec: ExecUpdateOneRequiredWithoutAppointsInput
   op: OpUpdateOneRequiredWithoutAppointsInput
   tasks: TaskUpdateManyWithoutAppointInput
+}
+
+input AppointUpdateManyMutationInput {
+  laborCost: Float
 }
 
 input AppointUpdateManyWithoutExecInput {
@@ -594,24 +612,28 @@ input AppointUpdateOneWithoutBpStatInput {
 }
 
 input AppointUpdateWithoutBpStatDataInput {
+  laborCost: Float
   exec: ExecUpdateOneRequiredWithoutAppointsInput
   op: OpUpdateOneRequiredWithoutAppointsInput
   tasks: TaskUpdateManyWithoutAppointInput
 }
 
 input AppointUpdateWithoutExecDataInput {
+  laborCost: Float
   bpStat: BpStatUpdateOneWithoutAppointInput
   op: OpUpdateOneRequiredWithoutAppointsInput
   tasks: TaskUpdateManyWithoutAppointInput
 }
 
 input AppointUpdateWithoutOpDataInput {
+  laborCost: Float
   bpStat: BpStatUpdateOneWithoutAppointInput
   exec: ExecUpdateOneRequiredWithoutAppointsInput
   tasks: TaskUpdateManyWithoutAppointInput
 }
 
 input AppointUpdateWithoutTasksDataInput {
+  laborCost: Float
   bpStat: BpStatUpdateOneWithoutAppointInput
   exec: ExecUpdateOneRequiredWithoutAppointsInput
   op: OpUpdateOneRequiredWithoutAppointsInput
@@ -698,6 +720,28 @@ input AppointWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  laborCost: Float
+
+  """All values that are not equal to given value."""
+  laborCost_not: Float
+
+  """All values that are contained in given list."""
+  laborCost_in: [Float!]
+
+  """All values that are not contained in given list."""
+  laborCost_not_in: [Float!]
+
+  """All values less than the given value."""
+  laborCost_lt: Float
+
+  """All values less than or equal the given value."""
+  laborCost_lte: Float
+
+  """All values greater than the given value."""
+  laborCost_gt: Float
+
+  """All values greater than or equal the given value."""
+  laborCost_gte: Float
   bpStat: BpStatWhereInput
   exec: ExecWhereInput
   op: OpWhereInput
@@ -1014,6 +1058,7 @@ type Batch implements Node {
   sort: Int
   bpStat: BpStat
   deal: Deal
+  elements(where: ElementWhereInput, orderBy: ElementOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Element!]
   model: Model!
   ops(where: OpWhereInput, orderBy: OpOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Op!]
   procs(where: ProcWhereInput, orderBy: ProcOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Proc!]
@@ -1038,6 +1083,7 @@ input BatchCreateInput {
   sort: Int
   bpStat: BpStatCreateOneWithoutBatchInput
   deal: DealCreateOneWithoutBatchesInput
+  elements: ElementCreateManyWithoutBatchInput
   model: ModelCreateOneWithoutBatchesInput!
   ops: OpCreateManyWithoutBatchInput
   procs: ProcCreateManyWithoutBatchesInput
@@ -1064,6 +1110,11 @@ input BatchCreateOneWithoutBpStatInput {
   connect: BatchWhereUniqueInput
 }
 
+input BatchCreateOneWithoutElementsInput {
+  create: BatchCreateWithoutElementsInput
+  connect: BatchWhereUniqueInput
+}
+
 input BatchCreateOneWithoutOpsInput {
   create: BatchCreateWithoutOpsInput
   connect: BatchWhereUniqueInput
@@ -1081,6 +1132,7 @@ input BatchCreateWithoutBpStatInput {
   qty: Int
   sort: Int
   deal: DealCreateOneWithoutBatchesInput
+  elements: ElementCreateManyWithoutBatchInput
   model: ModelCreateOneWithoutBatchesInput!
   ops: OpCreateManyWithoutBatchInput
   procs: ProcCreateManyWithoutBatchesInput
@@ -1094,6 +1146,21 @@ input BatchCreateWithoutDealInput {
   qty: Int
   sort: Int
   bpStat: BpStatCreateOneWithoutBatchInput
+  elements: ElementCreateManyWithoutBatchInput
+  model: ModelCreateOneWithoutBatchesInput!
+  ops: OpCreateManyWithoutBatchInput
+  procs: ProcCreateManyWithoutBatchesInput
+  workpiece: WorkpieceCreateOneWithoutBatchInput
+}
+
+input BatchCreateWithoutElementsInput {
+  descript: String
+  info: String
+  warning: String
+  qty: Int
+  sort: Int
+  bpStat: BpStatCreateOneWithoutBatchInput
+  deal: DealCreateOneWithoutBatchesInput
   model: ModelCreateOneWithoutBatchesInput!
   ops: OpCreateManyWithoutBatchInput
   procs: ProcCreateManyWithoutBatchesInput
@@ -1108,6 +1175,7 @@ input BatchCreateWithoutModelInput {
   sort: Int
   bpStat: BpStatCreateOneWithoutBatchInput
   deal: DealCreateOneWithoutBatchesInput
+  elements: ElementCreateManyWithoutBatchInput
   ops: OpCreateManyWithoutBatchInput
   procs: ProcCreateManyWithoutBatchesInput
   workpiece: WorkpieceCreateOneWithoutBatchInput
@@ -1121,6 +1189,7 @@ input BatchCreateWithoutOpsInput {
   sort: Int
   bpStat: BpStatCreateOneWithoutBatchInput
   deal: DealCreateOneWithoutBatchesInput
+  elements: ElementCreateManyWithoutBatchInput
   model: ModelCreateOneWithoutBatchesInput!
   procs: ProcCreateManyWithoutBatchesInput
   workpiece: WorkpieceCreateOneWithoutBatchInput
@@ -1134,6 +1203,7 @@ input BatchCreateWithoutProcsInput {
   sort: Int
   bpStat: BpStatCreateOneWithoutBatchInput
   deal: DealCreateOneWithoutBatchesInput
+  elements: ElementCreateManyWithoutBatchInput
   model: ModelCreateOneWithoutBatchesInput!
   ops: OpCreateManyWithoutBatchInput
   workpiece: WorkpieceCreateOneWithoutBatchInput
@@ -1147,6 +1217,7 @@ input BatchCreateWithoutWorkpieceInput {
   sort: Int
   bpStat: BpStatCreateOneWithoutBatchInput
   deal: DealCreateOneWithoutBatchesInput
+  elements: ElementCreateManyWithoutBatchInput
   model: ModelCreateOneWithoutBatchesInput!
   ops: OpCreateManyWithoutBatchInput
   procs: ProcCreateManyWithoutBatchesInput
@@ -1241,6 +1312,7 @@ input BatchUpdateInput {
   sort: Int
   bpStat: BpStatUpdateOneWithoutBatchInput
   deal: DealUpdateOneWithoutBatchesInput
+  elements: ElementUpdateManyWithoutBatchInput
   model: ModelUpdateOneRequiredWithoutBatchesInput
   ops: OpUpdateManyWithoutBatchInput
   procs: ProcUpdateManyWithoutBatchesInput
@@ -1291,6 +1363,15 @@ input BatchUpdateOneWithoutBpStatInput {
   upsert: BatchUpsertWithoutBpStatInput
 }
 
+input BatchUpdateOneWithoutElementsInput {
+  create: BatchCreateWithoutElementsInput
+  connect: BatchWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: BatchUpdateWithoutElementsDataInput
+  upsert: BatchUpsertWithoutElementsInput
+}
+
 input BatchUpdateOneWithoutOpsInput {
   create: BatchCreateWithoutOpsInput
   connect: BatchWhereUniqueInput
@@ -1316,6 +1397,7 @@ input BatchUpdateWithoutBpStatDataInput {
   qty: Int
   sort: Int
   deal: DealUpdateOneWithoutBatchesInput
+  elements: ElementUpdateManyWithoutBatchInput
   model: ModelUpdateOneRequiredWithoutBatchesInput
   ops: OpUpdateManyWithoutBatchInput
   procs: ProcUpdateManyWithoutBatchesInput
@@ -1329,6 +1411,21 @@ input BatchUpdateWithoutDealDataInput {
   qty: Int
   sort: Int
   bpStat: BpStatUpdateOneWithoutBatchInput
+  elements: ElementUpdateManyWithoutBatchInput
+  model: ModelUpdateOneRequiredWithoutBatchesInput
+  ops: OpUpdateManyWithoutBatchInput
+  procs: ProcUpdateManyWithoutBatchesInput
+  workpiece: WorkpieceUpdateOneWithoutBatchInput
+}
+
+input BatchUpdateWithoutElementsDataInput {
+  descript: String
+  info: String
+  warning: String
+  qty: Int
+  sort: Int
+  bpStat: BpStatUpdateOneWithoutBatchInput
+  deal: DealUpdateOneWithoutBatchesInput
   model: ModelUpdateOneRequiredWithoutBatchesInput
   ops: OpUpdateManyWithoutBatchInput
   procs: ProcUpdateManyWithoutBatchesInput
@@ -1343,6 +1440,7 @@ input BatchUpdateWithoutModelDataInput {
   sort: Int
   bpStat: BpStatUpdateOneWithoutBatchInput
   deal: DealUpdateOneWithoutBatchesInput
+  elements: ElementUpdateManyWithoutBatchInput
   ops: OpUpdateManyWithoutBatchInput
   procs: ProcUpdateManyWithoutBatchesInput
   workpiece: WorkpieceUpdateOneWithoutBatchInput
@@ -1356,6 +1454,7 @@ input BatchUpdateWithoutOpsDataInput {
   sort: Int
   bpStat: BpStatUpdateOneWithoutBatchInput
   deal: DealUpdateOneWithoutBatchesInput
+  elements: ElementUpdateManyWithoutBatchInput
   model: ModelUpdateOneRequiredWithoutBatchesInput
   procs: ProcUpdateManyWithoutBatchesInput
   workpiece: WorkpieceUpdateOneWithoutBatchInput
@@ -1369,6 +1468,7 @@ input BatchUpdateWithoutProcsDataInput {
   sort: Int
   bpStat: BpStatUpdateOneWithoutBatchInput
   deal: DealUpdateOneWithoutBatchesInput
+  elements: ElementUpdateManyWithoutBatchInput
   model: ModelUpdateOneRequiredWithoutBatchesInput
   ops: OpUpdateManyWithoutBatchInput
   workpiece: WorkpieceUpdateOneWithoutBatchInput
@@ -1382,6 +1482,7 @@ input BatchUpdateWithoutWorkpieceDataInput {
   sort: Int
   bpStat: BpStatUpdateOneWithoutBatchInput
   deal: DealUpdateOneWithoutBatchesInput
+  elements: ElementUpdateManyWithoutBatchInput
   model: ModelUpdateOneRequiredWithoutBatchesInput
   ops: OpUpdateManyWithoutBatchInput
   procs: ProcUpdateManyWithoutBatchesInput
@@ -1405,6 +1506,11 @@ input BatchUpdateWithWhereUniqueWithoutProcsInput {
 input BatchUpsertWithoutBpStatInput {
   update: BatchUpdateWithoutBpStatDataInput!
   create: BatchCreateWithoutBpStatInput!
+}
+
+input BatchUpsertWithoutElementsInput {
+  update: BatchUpdateWithoutElementsDataInput!
+  create: BatchCreateWithoutElementsInput!
 }
 
 input BatchUpsertWithoutOpsInput {
@@ -1650,6 +1756,9 @@ input BatchWhereInput {
   sort_gte: Int
   bpStat: BpStatWhereInput
   deal: DealWhereInput
+  elements_every: ElementWhereInput
+  elements_some: ElementWhereInput
+  elements_none: ElementWhereInput
   model: ModelWhereInput
   ops_every: OpWhereInput
   ops_some: OpWhereInput
@@ -3773,6 +3882,285 @@ input DrawingWhereInput {
 }
 
 input DrawingWhereUniqueInput {
+  id: ID
+}
+
+type Element implements Node {
+  id: ID!
+  sort: Int
+  batch: Batch
+  op: Op
+  proc: Proc
+}
+
+"""A connection to a list of items."""
+type ElementConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ElementEdge]!
+  aggregate: AggregateElement!
+}
+
+input ElementCreateInput {
+  sort: Int
+  batch: BatchCreateOneWithoutElementsInput
+  op: OpCreateOneWithoutElementInput
+  proc: ProcCreateOneWithoutElementInput
+}
+
+input ElementCreateManyWithoutBatchInput {
+  create: [ElementCreateWithoutBatchInput!]
+  connect: [ElementWhereUniqueInput!]
+}
+
+input ElementCreateOneWithoutOpInput {
+  create: ElementCreateWithoutOpInput
+  connect: ElementWhereUniqueInput
+}
+
+input ElementCreateOneWithoutProcInput {
+  create: ElementCreateWithoutProcInput
+  connect: ElementWhereUniqueInput
+}
+
+input ElementCreateWithoutBatchInput {
+  sort: Int
+  op: OpCreateOneWithoutElementInput
+  proc: ProcCreateOneWithoutElementInput
+}
+
+input ElementCreateWithoutOpInput {
+  sort: Int
+  batch: BatchCreateOneWithoutElementsInput
+  proc: ProcCreateOneWithoutElementInput
+}
+
+input ElementCreateWithoutProcInput {
+  sort: Int
+  batch: BatchCreateOneWithoutElementsInput
+  op: OpCreateOneWithoutElementInput
+}
+
+"""An edge in a connection."""
+type ElementEdge {
+  """The item at the end of the edge."""
+  node: Element!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum ElementOrderByInput {
+  id_ASC
+  id_DESC
+  sort_ASC
+  sort_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type ElementPreviousValues {
+  id: ID!
+  sort: Int
+}
+
+type ElementSubscriptionPayload {
+  mutation: MutationType!
+  node: Element
+  updatedFields: [String!]
+  previousValues: ElementPreviousValues
+}
+
+input ElementSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ElementSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ElementSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ElementSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ElementWhereInput
+}
+
+input ElementUpdateInput {
+  sort: Int
+  batch: BatchUpdateOneWithoutElementsInput
+  op: OpUpdateOneWithoutElementInput
+  proc: ProcUpdateOneWithoutElementInput
+}
+
+input ElementUpdateManyMutationInput {
+  sort: Int
+}
+
+input ElementUpdateManyWithoutBatchInput {
+  create: [ElementCreateWithoutBatchInput!]
+  connect: [ElementWhereUniqueInput!]
+  disconnect: [ElementWhereUniqueInput!]
+  delete: [ElementWhereUniqueInput!]
+  update: [ElementUpdateWithWhereUniqueWithoutBatchInput!]
+  upsert: [ElementUpsertWithWhereUniqueWithoutBatchInput!]
+}
+
+input ElementUpdateOneWithoutOpInput {
+  create: ElementCreateWithoutOpInput
+  connect: ElementWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: ElementUpdateWithoutOpDataInput
+  upsert: ElementUpsertWithoutOpInput
+}
+
+input ElementUpdateOneWithoutProcInput {
+  create: ElementCreateWithoutProcInput
+  connect: ElementWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: ElementUpdateWithoutProcDataInput
+  upsert: ElementUpsertWithoutProcInput
+}
+
+input ElementUpdateWithoutBatchDataInput {
+  sort: Int
+  op: OpUpdateOneWithoutElementInput
+  proc: ProcUpdateOneWithoutElementInput
+}
+
+input ElementUpdateWithoutOpDataInput {
+  sort: Int
+  batch: BatchUpdateOneWithoutElementsInput
+  proc: ProcUpdateOneWithoutElementInput
+}
+
+input ElementUpdateWithoutProcDataInput {
+  sort: Int
+  batch: BatchUpdateOneWithoutElementsInput
+  op: OpUpdateOneWithoutElementInput
+}
+
+input ElementUpdateWithWhereUniqueWithoutBatchInput {
+  where: ElementWhereUniqueInput!
+  data: ElementUpdateWithoutBatchDataInput!
+}
+
+input ElementUpsertWithoutOpInput {
+  update: ElementUpdateWithoutOpDataInput!
+  create: ElementCreateWithoutOpInput!
+}
+
+input ElementUpsertWithoutProcInput {
+  update: ElementUpdateWithoutProcDataInput!
+  create: ElementCreateWithoutProcInput!
+}
+
+input ElementUpsertWithWhereUniqueWithoutBatchInput {
+  where: ElementWhereUniqueInput!
+  update: ElementUpdateWithoutBatchDataInput!
+  create: ElementCreateWithoutBatchInput!
+}
+
+input ElementWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ElementWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ElementWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ElementWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  sort: Int
+
+  """All values that are not equal to given value."""
+  sort_not: Int
+
+  """All values that are contained in given list."""
+  sort_in: [Int!]
+
+  """All values that are not contained in given list."""
+  sort_not_in: [Int!]
+
+  """All values less than the given value."""
+  sort_lt: Int
+
+  """All values less than or equal the given value."""
+  sort_lte: Int
+
+  """All values greater than the given value."""
+  sort_gt: Int
+
+  """All values greater than or equal the given value."""
+  sort_gte: Int
+  batch: BatchWhereInput
+  op: OpWhereInput
+  proc: ProcWhereInput
+}
+
+input ElementWhereUniqueInput {
   id: ID
 }
 
@@ -6774,6 +7162,7 @@ type Mutation {
   createDeal(data: DealCreateInput!): Deal!
   createDept(data: DeptCreateInput!): Dept!
   createDrawing(data: DrawingCreateInput!): Drawing!
+  createElement(data: ElementCreateInput!): Element!
   createEmployee(data: EmployeeCreateInput!): Employee!
   createEnquiry(data: EnquiryCreateInput!): Enquiry!
   createEvent(data: EventCreateInput!): Event!
@@ -6806,6 +7195,7 @@ type Mutation {
   updateDeal(data: DealUpdateInput!, where: DealWhereUniqueInput!): Deal
   updateDept(data: DeptUpdateInput!, where: DeptWhereUniqueInput!): Dept
   updateDrawing(data: DrawingUpdateInput!, where: DrawingWhereUniqueInput!): Drawing
+  updateElement(data: ElementUpdateInput!, where: ElementWhereUniqueInput!): Element
   updateEmployee(data: EmployeeUpdateInput!, where: EmployeeWhereUniqueInput!): Employee
   updateEnquiry(data: EnquiryUpdateInput!, where: EnquiryWhereUniqueInput!): Enquiry
   updateEvent(data: EventUpdateInput!, where: EventWhereUniqueInput!): Event
@@ -6838,6 +7228,7 @@ type Mutation {
   deleteDeal(where: DealWhereUniqueInput!): Deal
   deleteDept(where: DeptWhereUniqueInput!): Dept
   deleteDrawing(where: DrawingWhereUniqueInput!): Drawing
+  deleteElement(where: ElementWhereUniqueInput!): Element
   deleteEmployee(where: EmployeeWhereUniqueInput!): Employee
   deleteEnquiry(where: EnquiryWhereUniqueInput!): Enquiry
   deleteEvent(where: EventWhereUniqueInput!): Event
@@ -6870,6 +7261,7 @@ type Mutation {
   upsertDeal(where: DealWhereUniqueInput!, create: DealCreateInput!, update: DealUpdateInput!): Deal!
   upsertDept(where: DeptWhereUniqueInput!, create: DeptCreateInput!, update: DeptUpdateInput!): Dept!
   upsertDrawing(where: DrawingWhereUniqueInput!, create: DrawingCreateInput!, update: DrawingUpdateInput!): Drawing!
+  upsertElement(where: ElementWhereUniqueInput!, create: ElementCreateInput!, update: ElementUpdateInput!): Element!
   upsertEmployee(where: EmployeeWhereUniqueInput!, create: EmployeeCreateInput!, update: EmployeeUpdateInput!): Employee!
   upsertEnquiry(where: EnquiryWhereUniqueInput!, create: EnquiryCreateInput!, update: EnquiryUpdateInput!): Enquiry!
   upsertEvent(where: EventWhereUniqueInput!, create: EventCreateInput!, update: EventUpdateInput!): Event!
@@ -6896,11 +7288,13 @@ type Mutation {
   upsertAccount(where: AccountWhereUniqueInput!, create: AccountCreateInput!, update: AccountUpdateInput!): Account!
   upsertDoc(where: DocWhereUniqueInput!, create: DocCreateInput!, update: DocUpdateInput!): Doc!
   upsertDealStatus(where: DealStatusWhereUniqueInput!, create: DealStatusCreateInput!, update: DealStatusUpdateInput!): DealStatus!
+  updateManyAppoints(data: AppointUpdateManyMutationInput!, where: AppointWhereInput): BatchPayload!
   updateManyBatches(data: BatchUpdateManyMutationInput!, where: BatchWhereInput): BatchPayload!
   updateManyBpStats(data: BpStatUpdateManyMutationInput!, where: BpStatWhereInput): BatchPayload!
   updateManyDeals(data: DealUpdateManyMutationInput!, where: DealWhereInput): BatchPayload!
   updateManyDepts(data: DeptUpdateManyMutationInput!, where: DeptWhereInput): BatchPayload!
   updateManyDrawings(data: DrawingUpdateManyMutationInput!, where: DrawingWhereInput): BatchPayload!
+  updateManyElements(data: ElementUpdateManyMutationInput!, where: ElementWhereInput): BatchPayload!
   updateManyEmployees(data: EmployeeUpdateManyMutationInput!, where: EmployeeWhereInput): BatchPayload!
   updateManyEnquiries(data: EnquiryUpdateManyMutationInput!, where: EnquiryWhereInput): BatchPayload!
   updateManyEvents(data: EventUpdateManyMutationInput!, where: EventWhereInput): BatchPayload!
@@ -6933,6 +7327,7 @@ type Mutation {
   deleteManyDeals(where: DealWhereInput): BatchPayload!
   deleteManyDepts(where: DeptWhereInput): BatchPayload!
   deleteManyDrawings(where: DrawingWhereInput): BatchPayload!
+  deleteManyElements(where: ElementWhereInput): BatchPayload!
   deleteManyEmployees(where: EmployeeWhereInput): BatchPayload!
   deleteManyEnquiries(where: EnquiryWhereInput): BatchPayload!
   deleteManyEvents(where: EventWhereInput): BatchPayload!
@@ -6978,6 +7373,7 @@ type Op implements Node {
   dealLabor: Float
   description: String
   laborPrice: Float
+  element: Element
   opType: OpType!
   appoints(where: AppointWhereInput, orderBy: AppointOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Appoint!]
   batch: Batch
@@ -7003,6 +7399,7 @@ input OpCreateInput {
   dealLabor: Float
   description: String
   laborPrice: Float
+  element: ElementCreateOneWithoutOpInput
   opType: OpTypeCreateOneWithoutOpsInput!
   appoints: AppointCreateManyWithoutOpInput
   batch: BatchCreateOneWithoutOpsInput
@@ -7029,10 +7426,16 @@ input OpCreateOneWithoutAppointsInput {
   connect: OpWhereUniqueInput
 }
 
+input OpCreateOneWithoutElementInput {
+  create: OpCreateWithoutElementInput
+  connect: OpWhereUniqueInput
+}
+
 input OpCreateWithoutAppointsInput {
   dealLabor: Float
   description: String
   laborPrice: Float
+  element: ElementCreateOneWithoutOpInput
   opType: OpTypeCreateOneWithoutOpsInput!
   batch: BatchCreateOneWithoutOpsInput
   proc: ProcCreateOneWithoutOpsInput
@@ -7042,8 +7445,19 @@ input OpCreateWithoutBatchInput {
   dealLabor: Float
   description: String
   laborPrice: Float
+  element: ElementCreateOneWithoutOpInput
   opType: OpTypeCreateOneWithoutOpsInput!
   appoints: AppointCreateManyWithoutOpInput
+  proc: ProcCreateOneWithoutOpsInput
+}
+
+input OpCreateWithoutElementInput {
+  dealLabor: Float
+  description: String
+  laborPrice: Float
+  opType: OpTypeCreateOneWithoutOpsInput!
+  appoints: AppointCreateManyWithoutOpInput
+  batch: BatchCreateOneWithoutOpsInput
   proc: ProcCreateOneWithoutOpsInput
 }
 
@@ -7051,6 +7465,7 @@ input OpCreateWithoutOpTypeInput {
   dealLabor: Float
   description: String
   laborPrice: Float
+  element: ElementCreateOneWithoutOpInput
   appoints: AppointCreateManyWithoutOpInput
   batch: BatchCreateOneWithoutOpsInput
   proc: ProcCreateOneWithoutOpsInput
@@ -7060,6 +7475,7 @@ input OpCreateWithoutProcInput {
   dealLabor: Float
   description: String
   laborPrice: Float
+  element: ElementCreateOneWithoutOpInput
   opType: OpTypeCreateOneWithoutOpsInput!
   appoints: AppointCreateManyWithoutOpInput
   batch: BatchCreateOneWithoutOpsInput
@@ -7137,6 +7553,7 @@ input OpSubscriptionWhereInput {
 
 type OpType implements Node {
   id: ID!
+  laborCost: Float
   laborPrice: Float
   name: String!
   execs(where: ExecWhereInput, orderBy: ExecOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Exec!]
@@ -7155,6 +7572,7 @@ type OpTypeConnection {
 }
 
 input OpTypeCreateInput {
+  laborCost: Float
   laborPrice: Float
   name: String!
   opClass: OpClass
@@ -7173,6 +7591,7 @@ input OpTypeCreateOneWithoutOpsInput {
 }
 
 input OpTypeCreateWithoutExecsInput {
+  laborCost: Float
   laborPrice: Float
   name: String!
   opClass: OpClass
@@ -7180,6 +7599,7 @@ input OpTypeCreateWithoutExecsInput {
 }
 
 input OpTypeCreateWithoutOpsInput {
+  laborCost: Float
   laborPrice: Float
   name: String!
   opClass: OpClass
@@ -7198,6 +7618,8 @@ type OpTypeEdge {
 enum OpTypeOrderByInput {
   id_ASC
   id_DESC
+  laborCost_ASC
+  laborCost_DESC
   laborPrice_ASC
   laborPrice_DESC
   name_ASC
@@ -7212,6 +7634,7 @@ enum OpTypeOrderByInput {
 
 type OpTypePreviousValues {
   id: ID!
+  laborCost: Float
   laborPrice: Float
   name: String!
   opClass: OpClass
@@ -7257,6 +7680,7 @@ input OpTypeSubscriptionWhereInput {
 }
 
 input OpTypeUpdateInput {
+  laborCost: Float
   laborPrice: Float
   name: String
   opClass: OpClass
@@ -7265,6 +7689,7 @@ input OpTypeUpdateInput {
 }
 
 input OpTypeUpdateManyMutationInput {
+  laborCost: Float
   laborPrice: Float
   name: String
   opClass: OpClass
@@ -7287,6 +7712,7 @@ input OpTypeUpdateOneRequiredWithoutOpsInput {
 }
 
 input OpTypeUpdateWithoutExecsDataInput {
+  laborCost: Float
   laborPrice: Float
   name: String
   opClass: OpClass
@@ -7294,6 +7720,7 @@ input OpTypeUpdateWithoutExecsDataInput {
 }
 
 input OpTypeUpdateWithoutOpsDataInput {
+  laborCost: Float
   laborPrice: Float
   name: String
   opClass: OpClass
@@ -7365,6 +7792,28 @@ input OpTypeWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  laborCost: Float
+
+  """All values that are not equal to given value."""
+  laborCost_not: Float
+
+  """All values that are contained in given list."""
+  laborCost_in: [Float!]
+
+  """All values that are not contained in given list."""
+  laborCost_not_in: [Float!]
+
+  """All values less than the given value."""
+  laborCost_lt: Float
+
+  """All values less than or equal the given value."""
+  laborCost_lte: Float
+
+  """All values greater than the given value."""
+  laborCost_gt: Float
+
+  """All values greater than or equal the given value."""
+  laborCost_gte: Float
   laborPrice: Float
 
   """All values that are not equal to given value."""
@@ -7453,6 +7902,7 @@ input OpUpdateInput {
   dealLabor: Float
   description: String
   laborPrice: Float
+  element: ElementUpdateOneWithoutOpInput
   opType: OpTypeUpdateOneRequiredWithoutOpsInput
   appoints: AppointUpdateManyWithoutOpInput
   batch: BatchUpdateOneWithoutOpsInput
@@ -7499,10 +7949,20 @@ input OpUpdateOneRequiredWithoutAppointsInput {
   upsert: OpUpsertWithoutAppointsInput
 }
 
+input OpUpdateOneWithoutElementInput {
+  create: OpCreateWithoutElementInput
+  connect: OpWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: OpUpdateWithoutElementDataInput
+  upsert: OpUpsertWithoutElementInput
+}
+
 input OpUpdateWithoutAppointsDataInput {
   dealLabor: Float
   description: String
   laborPrice: Float
+  element: ElementUpdateOneWithoutOpInput
   opType: OpTypeUpdateOneRequiredWithoutOpsInput
   batch: BatchUpdateOneWithoutOpsInput
   proc: ProcUpdateOneWithoutOpsInput
@@ -7512,8 +7972,19 @@ input OpUpdateWithoutBatchDataInput {
   dealLabor: Float
   description: String
   laborPrice: Float
+  element: ElementUpdateOneWithoutOpInput
   opType: OpTypeUpdateOneRequiredWithoutOpsInput
   appoints: AppointUpdateManyWithoutOpInput
+  proc: ProcUpdateOneWithoutOpsInput
+}
+
+input OpUpdateWithoutElementDataInput {
+  dealLabor: Float
+  description: String
+  laborPrice: Float
+  opType: OpTypeUpdateOneRequiredWithoutOpsInput
+  appoints: AppointUpdateManyWithoutOpInput
+  batch: BatchUpdateOneWithoutOpsInput
   proc: ProcUpdateOneWithoutOpsInput
 }
 
@@ -7521,6 +7992,7 @@ input OpUpdateWithoutOpTypeDataInput {
   dealLabor: Float
   description: String
   laborPrice: Float
+  element: ElementUpdateOneWithoutOpInput
   appoints: AppointUpdateManyWithoutOpInput
   batch: BatchUpdateOneWithoutOpsInput
   proc: ProcUpdateOneWithoutOpsInput
@@ -7530,6 +8002,7 @@ input OpUpdateWithoutProcDataInput {
   dealLabor: Float
   description: String
   laborPrice: Float
+  element: ElementUpdateOneWithoutOpInput
   opType: OpTypeUpdateOneRequiredWithoutOpsInput
   appoints: AppointUpdateManyWithoutOpInput
   batch: BatchUpdateOneWithoutOpsInput
@@ -7553,6 +8026,11 @@ input OpUpdateWithWhereUniqueWithoutProcInput {
 input OpUpsertWithoutAppointsInput {
   update: OpUpdateWithoutAppointsDataInput!
   create: OpCreateWithoutAppointsInput!
+}
+
+input OpUpsertWithoutElementInput {
+  update: OpUpdateWithoutElementDataInput!
+  create: OpCreateWithoutElementInput!
 }
 
 input OpUpsertWithWhereUniqueWithoutBatchInput {
@@ -7706,6 +8184,7 @@ input OpWhereInput {
 
   """All values greater than or equal the given value."""
   laborPrice_gte: Float
+  element: ElementWhereInput
   opType: OpTypeWhereInput
   appoints_every: AppointWhereInput
   appoints_some: AppointWhereInput
@@ -10585,6 +11064,7 @@ input PersonWhereUniqueInput {
 type Proc implements Node {
   id: ID!
   name: String!
+  element: Element
   batches(where: BatchWhereInput, orderBy: BatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Batch!]
   model: Model!
   ops(where: OpWhereInput, orderBy: OpOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Op!]
@@ -10602,6 +11082,7 @@ type ProcConnection {
 
 input ProcCreateInput {
   name: String!
+  element: ElementCreateOneWithoutProcInput
   batches: BatchCreateManyWithoutProcsInput
   model: ModelCreateOneWithoutProcsInput!
   ops: OpCreateManyWithoutProcInput
@@ -10617,6 +11098,11 @@ input ProcCreateManyWithoutModelInput {
   connect: [ProcWhereUniqueInput!]
 }
 
+input ProcCreateOneWithoutElementInput {
+  create: ProcCreateWithoutElementInput
+  connect: ProcWhereUniqueInput
+}
+
 input ProcCreateOneWithoutOpsInput {
   create: ProcCreateWithoutOpsInput
   connect: ProcWhereUniqueInput
@@ -10624,18 +11110,28 @@ input ProcCreateOneWithoutOpsInput {
 
 input ProcCreateWithoutBatchesInput {
   name: String!
+  element: ElementCreateOneWithoutProcInput
+  model: ModelCreateOneWithoutProcsInput!
+  ops: OpCreateManyWithoutProcInput
+}
+
+input ProcCreateWithoutElementInput {
+  name: String!
+  batches: BatchCreateManyWithoutProcsInput
   model: ModelCreateOneWithoutProcsInput!
   ops: OpCreateManyWithoutProcInput
 }
 
 input ProcCreateWithoutModelInput {
   name: String!
+  element: ElementCreateOneWithoutProcInput
   batches: BatchCreateManyWithoutProcsInput
   ops: OpCreateManyWithoutProcInput
 }
 
 input ProcCreateWithoutOpsInput {
   name: String!
+  element: ElementCreateOneWithoutProcInput
   batches: BatchCreateManyWithoutProcsInput
   model: ModelCreateOneWithoutProcsInput!
 }
@@ -10706,6 +11202,7 @@ input ProcSubscriptionWhereInput {
 
 input ProcUpdateInput {
   name: String
+  element: ElementUpdateOneWithoutProcInput
   batches: BatchUpdateManyWithoutProcsInput
   model: ModelUpdateOneRequiredWithoutProcsInput
   ops: OpUpdateManyWithoutProcInput
@@ -10733,6 +11230,15 @@ input ProcUpdateManyWithoutModelInput {
   upsert: [ProcUpsertWithWhereUniqueWithoutModelInput!]
 }
 
+input ProcUpdateOneWithoutElementInput {
+  create: ProcCreateWithoutElementInput
+  connect: ProcWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: ProcUpdateWithoutElementDataInput
+  upsert: ProcUpsertWithoutElementInput
+}
+
 input ProcUpdateOneWithoutOpsInput {
   create: ProcCreateWithoutOpsInput
   connect: ProcWhereUniqueInput
@@ -10744,18 +11250,28 @@ input ProcUpdateOneWithoutOpsInput {
 
 input ProcUpdateWithoutBatchesDataInput {
   name: String
+  element: ElementUpdateOneWithoutProcInput
+  model: ModelUpdateOneRequiredWithoutProcsInput
+  ops: OpUpdateManyWithoutProcInput
+}
+
+input ProcUpdateWithoutElementDataInput {
+  name: String
+  batches: BatchUpdateManyWithoutProcsInput
   model: ModelUpdateOneRequiredWithoutProcsInput
   ops: OpUpdateManyWithoutProcInput
 }
 
 input ProcUpdateWithoutModelDataInput {
   name: String
+  element: ElementUpdateOneWithoutProcInput
   batches: BatchUpdateManyWithoutProcsInput
   ops: OpUpdateManyWithoutProcInput
 }
 
 input ProcUpdateWithoutOpsDataInput {
   name: String
+  element: ElementUpdateOneWithoutProcInput
   batches: BatchUpdateManyWithoutProcsInput
   model: ModelUpdateOneRequiredWithoutProcsInput
 }
@@ -10768,6 +11284,11 @@ input ProcUpdateWithWhereUniqueWithoutBatchesInput {
 input ProcUpdateWithWhereUniqueWithoutModelInput {
   where: ProcWhereUniqueInput!
   data: ProcUpdateWithoutModelDataInput!
+}
+
+input ProcUpsertWithoutElementInput {
+  update: ProcUpdateWithoutElementDataInput!
+  create: ProcCreateWithoutElementInput!
 }
 
 input ProcUpsertWithoutOpsInput {
@@ -10876,6 +11397,7 @@ input ProcWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
+  element: ElementWhereInput
   batches_every: BatchWhereInput
   batches_some: BatchWhereInput
   batches_none: BatchWhereInput
@@ -11467,6 +11989,7 @@ type Query {
   deals(where: DealWhereInput, orderBy: DealOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Deal]!
   depts(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Dept]!
   drawings(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Drawing]!
+  elements(where: ElementWhereInput, orderBy: ElementOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Element]!
   employees(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Employee]!
   enquiries(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Enquiry]!
   events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event]!
@@ -11499,6 +12022,7 @@ type Query {
   deal(where: DealWhereUniqueInput!): Deal
   dept(where: DeptWhereUniqueInput!): Dept
   drawing(where: DrawingWhereUniqueInput!): Drawing
+  element(where: ElementWhereUniqueInput!): Element
   employee(where: EmployeeWhereUniqueInput!): Employee
   enquiry(where: EnquiryWhereUniqueInput!): Enquiry
   event(where: EventWhereUniqueInput!): Event
@@ -11531,6 +12055,7 @@ type Query {
   dealsConnection(where: DealWhereInput, orderBy: DealOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DealConnection!
   deptsConnection(where: DeptWhereInput, orderBy: DeptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DeptConnection!
   drawingsConnection(where: DrawingWhereInput, orderBy: DrawingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DrawingConnection!
+  elementsConnection(where: ElementWhereInput, orderBy: ElementOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ElementConnection!
   employeesConnection(where: EmployeeWhereInput, orderBy: EmployeeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EmployeeConnection!
   enquiriesConnection(where: EnquiryWhereInput, orderBy: EnquiryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EnquiryConnection!
   eventsConnection(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EventConnection!
@@ -12115,6 +12640,7 @@ type Subscription {
   deal(where: DealSubscriptionWhereInput): DealSubscriptionPayload
   dept(where: DeptSubscriptionWhereInput): DeptSubscriptionPayload
   drawing(where: DrawingSubscriptionWhereInput): DrawingSubscriptionPayload
+  element(where: ElementSubscriptionWhereInput): ElementSubscriptionPayload
   employee(where: EmployeeSubscriptionWhereInput): EmployeeSubscriptionPayload
   enquiry(where: EnquirySubscriptionWhereInput): EnquirySubscriptionPayload
   event(where: EventSubscriptionWhereInput): EventSubscriptionPayload
