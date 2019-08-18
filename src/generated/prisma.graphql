@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Sun Aug 11 2019 23:43:03 GMT+0300 (GMT+03:00)
+# timestamp: Sun Aug 18 2019 21:57:25 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -7382,6 +7382,7 @@ type Op implements Node {
 
 enum OpClass {
   MACHINING
+  SUPPLIER
   SURVEY
 }
 
