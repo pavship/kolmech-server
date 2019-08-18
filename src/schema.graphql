@@ -28,6 +28,7 @@ type Query {
   payments: [Payment!]!
   statuses: [Status!]!
   task: Task!
+  tasks: [Task!]!
 }
 
 type Mutation {
@@ -119,6 +120,7 @@ input AppointInput {
   exec: [ExecInput]
   execId: ID
   bpStat: BpStatInput
+  tasks: [TaskInput]
 }
 
 input BatchInput {
@@ -163,6 +165,7 @@ input DrawingInput {
 
 input ElementInput {
   id: ID
+  sort: Int
   op: OpInput
   proc: ProcInput
 }
@@ -268,6 +271,7 @@ input TaskInput {
   delete: Boolean
   end: DateTime
 	from: DateTime
+  order: Int
 	status: TaskStatus
 	text: String
 	to: DateTime

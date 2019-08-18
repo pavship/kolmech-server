@@ -318,6 +318,7 @@ type Task {
 	id: ID! @unique
 	end: DateTime
 	from: DateTime!
+	order: Int!
 	status: TaskStatus!
 	text: String
 	to: DateTime

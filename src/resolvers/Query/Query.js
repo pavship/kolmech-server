@@ -108,6 +108,10 @@ const Query = {
 		return ctx.db.query.statuses({ orderBy: 'stage_ASC' }, info)
 	},
 
+	tasks(_, __, ctx, info) {
+		return ctx.db.query.tasks({}, info)
+	},
+
 	payments(_, __, ctx, info) {
 		return ctx.db.query.payments({ orderBy: 'dateLocal_DESC' }, info)
 	},

@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Thu Aug 01 2019 22:14:18 GMT+0300 (GMT+03:00)
+# timestamp: Sun Aug 11 2019 23:43:03 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -12673,6 +12673,7 @@ type Task implements Node {
   id: ID!
   end: DateTime
   from: DateTime!
+  order: Int!
   status: TaskStatus!
   text: String
   to: DateTime
@@ -12692,6 +12693,7 @@ type TaskConnection {
 input TaskCreateInput {
   end: DateTime
   from: DateTime!
+  order: Int!
   status: TaskStatus!
   text: String
   to: DateTime
@@ -12706,6 +12708,7 @@ input TaskCreateManyWithoutAppointInput {
 input TaskCreateWithoutAppointInput {
   end: DateTime
   from: DateTime!
+  order: Int!
   status: TaskStatus!
   text: String
   to: DateTime
@@ -12727,6 +12730,8 @@ enum TaskOrderByInput {
   end_DESC
   from_ASC
   from_DESC
+  order_ASC
+  order_DESC
   status_ASC
   status_DESC
   text_ASC
@@ -12743,6 +12748,7 @@ type TaskPreviousValues {
   id: ID!
   end: DateTime
   from: DateTime!
+  order: Int!
   status: TaskStatus!
   text: String
   to: DateTime
@@ -12799,6 +12805,7 @@ input TaskSubscriptionWhereInput {
 input TaskUpdateInput {
   end: DateTime
   from: DateTime
+  order: Int
   status: TaskStatus
   text: String
   to: DateTime
@@ -12808,6 +12815,7 @@ input TaskUpdateInput {
 input TaskUpdateManyMutationInput {
   end: DateTime
   from: DateTime
+  order: Int
   status: TaskStatus
   text: String
   to: DateTime
@@ -12825,6 +12833,7 @@ input TaskUpdateManyWithoutAppointInput {
 input TaskUpdateWithoutAppointDataInput {
   end: DateTime
   from: DateTime
+  order: Int
   status: TaskStatus
   text: String
   to: DateTime
@@ -12934,6 +12943,28 @@ input TaskWhereInput {
 
   """All values greater than or equal the given value."""
   from_gte: DateTime
+  order: Int
+
+  """All values that are not equal to given value."""
+  order_not: Int
+
+  """All values that are contained in given list."""
+  order_in: [Int!]
+
+  """All values that are not contained in given list."""
+  order_not_in: [Int!]
+
+  """All values less than the given value."""
+  order_lt: Int
+
+  """All values less than or equal the given value."""
+  order_lte: Int
+
+  """All values greater than the given value."""
+  order_gt: Int
+
+  """All values greater than or equal the given value."""
+  order_gte: Int
   status: TaskStatus
 
   """All values that are not equal to given value."""
