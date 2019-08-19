@@ -21,6 +21,7 @@ type Article {					# payment articles
 	isIncome: Boolean
 	isLoan: Boolean
 	relations: [String!]!	#serves to show related form fields
+	payments: [Payment!]! @relation(name: "PaymentArticle")
 }
 
 type Batch {
@@ -246,7 +247,7 @@ type Payment {
 	createdAt: DateTime!
 	updatedAt: DateTime!
 	amount: Float
-	article: Article
+	article: Article @relation(name: "PaymentArticle")
 	isIncome: Boolean		# only to specify bank payments
 	purpose: String
 	tochkaId: String

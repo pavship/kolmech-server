@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Sun Aug 18 2019 21:57:25 GMT+0300 (GMT+03:00)
+# timestamp: Mon Aug 19 2019 03:02:21 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -761,6 +761,7 @@ type Article implements Node {
   isIncome: Boolean
   isLoan: Boolean
   relations: [String!]!
+  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
 }
 
 """A connection to a list of items."""
@@ -779,15 +780,24 @@ input ArticleCreateInput {
   isIncome: Boolean
   isLoan: Boolean
   relations: ArticleCreaterelationsInput
+  payments: PaymentCreateManyWithoutArticleInput
 }
 
-input ArticleCreateOneInput {
-  create: ArticleCreateInput
+input ArticleCreateOneWithoutPaymentsInput {
+  create: ArticleCreateWithoutPaymentsInput
   connect: ArticleWhereUniqueInput
 }
 
 input ArticleCreaterelationsInput {
   set: [String!]
+}
+
+input ArticleCreateWithoutPaymentsInput {
+  name: String
+  rusName: String
+  isIncome: Boolean
+  isLoan: Boolean
+  relations: ArticleCreaterelationsInput
 }
 
 """An edge in a connection."""
@@ -864,20 +874,13 @@ input ArticleSubscriptionWhereInput {
   node: ArticleWhereInput
 }
 
-input ArticleUpdateDataInput {
-  name: String
-  rusName: String
-  isIncome: Boolean
-  isLoan: Boolean
-  relations: ArticleUpdaterelationsInput
-}
-
 input ArticleUpdateInput {
   name: String
   rusName: String
   isIncome: Boolean
   isLoan: Boolean
   relations: ArticleUpdaterelationsInput
+  payments: PaymentUpdateManyWithoutArticleInput
 }
 
 input ArticleUpdateManyMutationInput {
@@ -888,22 +891,30 @@ input ArticleUpdateManyMutationInput {
   relations: ArticleUpdaterelationsInput
 }
 
-input ArticleUpdateOneInput {
-  create: ArticleCreateInput
+input ArticleUpdateOneWithoutPaymentsInput {
+  create: ArticleCreateWithoutPaymentsInput
   connect: ArticleWhereUniqueInput
   disconnect: Boolean
   delete: Boolean
-  update: ArticleUpdateDataInput
-  upsert: ArticleUpsertNestedInput
+  update: ArticleUpdateWithoutPaymentsDataInput
+  upsert: ArticleUpsertWithoutPaymentsInput
 }
 
 input ArticleUpdaterelationsInput {
   set: [String!]
 }
 
-input ArticleUpsertNestedInput {
-  update: ArticleUpdateDataInput!
-  create: ArticleCreateInput!
+input ArticleUpdateWithoutPaymentsDataInput {
+  name: String
+  rusName: String
+  isIncome: Boolean
+  isLoan: Boolean
+  relations: ArticleUpdaterelationsInput
+}
+
+input ArticleUpsertWithoutPaymentsInput {
+  update: ArticleUpdateWithoutPaymentsDataInput!
+  create: ArticleCreateWithoutPaymentsInput!
 }
 
 input ArticleWhereInput {
@@ -1043,6 +1054,9 @@ input ArticleWhereInput {
 
   """All values that are not equal to given value."""
   isLoan_not: Boolean
+  payments_every: PaymentWhereInput
+  payments_some: PaymentWhereInput
+  payments_none: PaymentWhereInput
 }
 
 input ArticleWhereUniqueInput {
@@ -7157,6 +7171,7 @@ input ModelWhereUniqueInput {
 
 type Mutation {
   createAppoint(data: AppointCreateInput!): Appoint!
+  createArticle(data: ArticleCreateInput!): Article!
   createBatch(data: BatchCreateInput!): Batch!
   createBpStat(data: BpStatCreateInput!): BpStat!
   createDeal(data: DealCreateInput!): Deal!
@@ -7184,12 +7199,12 @@ type Mutation {
   createTel(data: TelCreateInput!): Tel!
   createUser(data: UserCreateInput!): User!
   createWorkpiece(data: WorkpieceCreateInput!): Workpiece!
-  createArticle(data: ArticleCreateInput!): Article!
   createStatus(data: StatusCreateInput!): Status!
   createAccount(data: AccountCreateInput!): Account!
   createDoc(data: DocCreateInput!): Doc!
   createDealStatus(data: DealStatusCreateInput!): DealStatus!
   updateAppoint(data: AppointUpdateInput!, where: AppointWhereUniqueInput!): Appoint
+  updateArticle(data: ArticleUpdateInput!, where: ArticleWhereUniqueInput!): Article
   updateBatch(data: BatchUpdateInput!, where: BatchWhereUniqueInput!): Batch
   updateBpStat(data: BpStatUpdateInput!, where: BpStatWhereUniqueInput!): BpStat
   updateDeal(data: DealUpdateInput!, where: DealWhereUniqueInput!): Deal
@@ -7217,12 +7232,12 @@ type Mutation {
   updateTel(data: TelUpdateInput!, where: TelWhereUniqueInput!): Tel
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateWorkpiece(data: WorkpieceUpdateInput!, where: WorkpieceWhereUniqueInput!): Workpiece
-  updateArticle(data: ArticleUpdateInput!, where: ArticleWhereUniqueInput!): Article
   updateStatus(data: StatusUpdateInput!, where: StatusWhereUniqueInput!): Status
   updateAccount(data: AccountUpdateInput!, where: AccountWhereUniqueInput!): Account
   updateDoc(data: DocUpdateInput!, where: DocWhereUniqueInput!): Doc
   updateDealStatus(data: DealStatusUpdateInput!, where: DealStatusWhereUniqueInput!): DealStatus
   deleteAppoint(where: AppointWhereUniqueInput!): Appoint
+  deleteArticle(where: ArticleWhereUniqueInput!): Article
   deleteBatch(where: BatchWhereUniqueInput!): Batch
   deleteBpStat(where: BpStatWhereUniqueInput!): BpStat
   deleteDeal(where: DealWhereUniqueInput!): Deal
@@ -7250,12 +7265,12 @@ type Mutation {
   deleteTel(where: TelWhereUniqueInput!): Tel
   deleteUser(where: UserWhereUniqueInput!): User
   deleteWorkpiece(where: WorkpieceWhereUniqueInput!): Workpiece
-  deleteArticle(where: ArticleWhereUniqueInput!): Article
   deleteStatus(where: StatusWhereUniqueInput!): Status
   deleteAccount(where: AccountWhereUniqueInput!): Account
   deleteDoc(where: DocWhereUniqueInput!): Doc
   deleteDealStatus(where: DealStatusWhereUniqueInput!): DealStatus
   upsertAppoint(where: AppointWhereUniqueInput!, create: AppointCreateInput!, update: AppointUpdateInput!): Appoint!
+  upsertArticle(where: ArticleWhereUniqueInput!, create: ArticleCreateInput!, update: ArticleUpdateInput!): Article!
   upsertBatch(where: BatchWhereUniqueInput!, create: BatchCreateInput!, update: BatchUpdateInput!): Batch!
   upsertBpStat(where: BpStatWhereUniqueInput!, create: BpStatCreateInput!, update: BpStatUpdateInput!): BpStat!
   upsertDeal(where: DealWhereUniqueInput!, create: DealCreateInput!, update: DealUpdateInput!): Deal!
@@ -7283,12 +7298,12 @@ type Mutation {
   upsertTel(where: TelWhereUniqueInput!, create: TelCreateInput!, update: TelUpdateInput!): Tel!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertWorkpiece(where: WorkpieceWhereUniqueInput!, create: WorkpieceCreateInput!, update: WorkpieceUpdateInput!): Workpiece!
-  upsertArticle(where: ArticleWhereUniqueInput!, create: ArticleCreateInput!, update: ArticleUpdateInput!): Article!
   upsertStatus(where: StatusWhereUniqueInput!, create: StatusCreateInput!, update: StatusUpdateInput!): Status!
   upsertAccount(where: AccountWhereUniqueInput!, create: AccountCreateInput!, update: AccountUpdateInput!): Account!
   upsertDoc(where: DocWhereUniqueInput!, create: DocCreateInput!, update: DocUpdateInput!): Doc!
   upsertDealStatus(where: DealStatusWhereUniqueInput!, create: DealStatusCreateInput!, update: DealStatusUpdateInput!): DealStatus!
   updateManyAppoints(data: AppointUpdateManyMutationInput!, where: AppointWhereInput): BatchPayload!
+  updateManyArticles(data: ArticleUpdateManyMutationInput!, where: ArticleWhereInput): BatchPayload!
   updateManyBatches(data: BatchUpdateManyMutationInput!, where: BatchWhereInput): BatchPayload!
   updateManyBpStats(data: BpStatUpdateManyMutationInput!, where: BpStatWhereInput): BatchPayload!
   updateManyDeals(data: DealUpdateManyMutationInput!, where: DealWhereInput): BatchPayload!
@@ -7316,12 +7331,12 @@ type Mutation {
   updateManyTels(data: TelUpdateManyMutationInput!, where: TelWhereInput): BatchPayload!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyWorkpieces(data: WorkpieceUpdateManyMutationInput!, where: WorkpieceWhereInput): BatchPayload!
-  updateManyArticles(data: ArticleUpdateManyMutationInput!, where: ArticleWhereInput): BatchPayload!
   updateManyStatuses(data: StatusUpdateManyMutationInput!, where: StatusWhereInput): BatchPayload!
   updateManyAccounts(data: AccountUpdateManyMutationInput!, where: AccountWhereInput): BatchPayload!
   updateManyDocs(data: DocUpdateManyMutationInput!, where: DocWhereInput): BatchPayload!
   updateManyDealStatuses(data: DealStatusUpdateManyMutationInput!, where: DealStatusWhereInput): BatchPayload!
   deleteManyAppoints(where: AppointWhereInput): BatchPayload!
+  deleteManyArticles(where: ArticleWhereInput): BatchPayload!
   deleteManyBatches(where: BatchWhereInput): BatchPayload!
   deleteManyBpStats(where: BpStatWhereInput): BatchPayload!
   deleteManyDeals(where: DealWhereInput): BatchPayload!
@@ -7349,7 +7364,6 @@ type Mutation {
   deleteManyTels(where: TelWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyWorkpieces(where: WorkpieceWhereInput): BatchPayload!
-  deleteManyArticles(where: ArticleWhereInput): BatchPayload!
   deleteManyStatuses(where: StatusWhereInput): BatchPayload!
   deleteManyAccounts(where: AccountWhereInput): BatchPayload!
   deleteManyDocs(where: DocWhereInput): BatchPayload!
@@ -9666,7 +9680,7 @@ input PaymentCreateInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
-  article: ArticleCreateOneInput
+  article: ArticleCreateOneWithoutPaymentsInput
   account: AccountCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
   org: OrgCreateOneWithoutPaymentsInput
@@ -9677,6 +9691,11 @@ input PaymentCreateInput {
 
 input PaymentCreateManyWithoutAccountInput {
   create: [PaymentCreateWithoutAccountInput!]
+  connect: [PaymentWhereUniqueInput!]
+}
+
+input PaymentCreateManyWithoutArticleInput {
+  create: [PaymentCreateWithoutArticleInput!]
   connect: [PaymentWhereUniqueInput!]
 }
 
@@ -9711,7 +9730,21 @@ input PaymentCreateWithoutAccountInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
-  article: ArticleCreateOneInput
+  article: ArticleCreateOneWithoutPaymentsInput
+  equipment: EquipmentCreateOneWithoutPaymentsInput
+  org: OrgCreateOneWithoutPaymentsInput
+  person: PersonCreateOneWithoutPaymentsInput
+  createdBy: UserCreateOneWithoutCreatedPaymentsInput
+  updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
+}
+
+input PaymentCreateWithoutArticleInput {
+  dateLocal: DateTime!
+  amount: Float
+  isIncome: Boolean
+  purpose: String
+  tochkaId: String
+  account: AccountCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
   org: OrgCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
@@ -9725,7 +9758,7 @@ input PaymentCreateWithoutCreatedByInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
-  article: ArticleCreateOneInput
+  article: ArticleCreateOneWithoutPaymentsInput
   account: AccountCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
   org: OrgCreateOneWithoutPaymentsInput
@@ -9739,7 +9772,7 @@ input PaymentCreateWithoutEquipmentInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
-  article: ArticleCreateOneInput
+  article: ArticleCreateOneWithoutPaymentsInput
   account: AccountCreateOneWithoutPaymentsInput
   org: OrgCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
@@ -9753,7 +9786,7 @@ input PaymentCreateWithoutOrgInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
-  article: ArticleCreateOneInput
+  article: ArticleCreateOneWithoutPaymentsInput
   account: AccountCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
@@ -9767,7 +9800,7 @@ input PaymentCreateWithoutPersonInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
-  article: ArticleCreateOneInput
+  article: ArticleCreateOneWithoutPaymentsInput
   account: AccountCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
   org: OrgCreateOneWithoutPaymentsInput
@@ -9781,7 +9814,7 @@ input PaymentCreateWithoutUpdatedByInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
-  article: ArticleCreateOneInput
+  article: ArticleCreateOneWithoutPaymentsInput
   account: AccountCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
   org: OrgCreateOneWithoutPaymentsInput
@@ -9873,7 +9906,7 @@ input PaymentUpdateInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
-  article: ArticleUpdateOneInput
+  article: ArticleUpdateOneWithoutPaymentsInput
   account: AccountUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
   org: OrgUpdateOneWithoutPaymentsInput
@@ -9897,6 +9930,15 @@ input PaymentUpdateManyWithoutAccountInput {
   delete: [PaymentWhereUniqueInput!]
   update: [PaymentUpdateWithWhereUniqueWithoutAccountInput!]
   upsert: [PaymentUpsertWithWhereUniqueWithoutAccountInput!]
+}
+
+input PaymentUpdateManyWithoutArticleInput {
+  create: [PaymentCreateWithoutArticleInput!]
+  connect: [PaymentWhereUniqueInput!]
+  disconnect: [PaymentWhereUniqueInput!]
+  delete: [PaymentWhereUniqueInput!]
+  update: [PaymentUpdateWithWhereUniqueWithoutArticleInput!]
+  upsert: [PaymentUpsertWithWhereUniqueWithoutArticleInput!]
 }
 
 input PaymentUpdateManyWithoutCreatedByInput {
@@ -9950,7 +9992,21 @@ input PaymentUpdateWithoutAccountDataInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
-  article: ArticleUpdateOneInput
+  article: ArticleUpdateOneWithoutPaymentsInput
+  equipment: EquipmentUpdateOneWithoutPaymentsInput
+  org: OrgUpdateOneWithoutPaymentsInput
+  person: PersonUpdateOneWithoutPaymentsInput
+  createdBy: UserUpdateOneWithoutCreatedPaymentsInput
+  updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
+}
+
+input PaymentUpdateWithoutArticleDataInput {
+  dateLocal: DateTime
+  amount: Float
+  isIncome: Boolean
+  purpose: String
+  tochkaId: String
+  account: AccountUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
   org: OrgUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
@@ -9964,7 +10020,7 @@ input PaymentUpdateWithoutCreatedByDataInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
-  article: ArticleUpdateOneInput
+  article: ArticleUpdateOneWithoutPaymentsInput
   account: AccountUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
   org: OrgUpdateOneWithoutPaymentsInput
@@ -9978,7 +10034,7 @@ input PaymentUpdateWithoutEquipmentDataInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
-  article: ArticleUpdateOneInput
+  article: ArticleUpdateOneWithoutPaymentsInput
   account: AccountUpdateOneWithoutPaymentsInput
   org: OrgUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
@@ -9992,7 +10048,7 @@ input PaymentUpdateWithoutOrgDataInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
-  article: ArticleUpdateOneInput
+  article: ArticleUpdateOneWithoutPaymentsInput
   account: AccountUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
@@ -10006,7 +10062,7 @@ input PaymentUpdateWithoutPersonDataInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
-  article: ArticleUpdateOneInput
+  article: ArticleUpdateOneWithoutPaymentsInput
   account: AccountUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
   org: OrgUpdateOneWithoutPaymentsInput
@@ -10020,7 +10076,7 @@ input PaymentUpdateWithoutUpdatedByDataInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
-  article: ArticleUpdateOneInput
+  article: ArticleUpdateOneWithoutPaymentsInput
   account: AccountUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
   org: OrgUpdateOneWithoutPaymentsInput
@@ -10031,6 +10087,11 @@ input PaymentUpdateWithoutUpdatedByDataInput {
 input PaymentUpdateWithWhereUniqueWithoutAccountInput {
   where: PaymentWhereUniqueInput!
   data: PaymentUpdateWithoutAccountDataInput!
+}
+
+input PaymentUpdateWithWhereUniqueWithoutArticleInput {
+  where: PaymentWhereUniqueInput!
+  data: PaymentUpdateWithoutArticleDataInput!
 }
 
 input PaymentUpdateWithWhereUniqueWithoutCreatedByInput {
@@ -10062,6 +10123,12 @@ input PaymentUpsertWithWhereUniqueWithoutAccountInput {
   where: PaymentWhereUniqueInput!
   update: PaymentUpdateWithoutAccountDataInput!
   create: PaymentCreateWithoutAccountInput!
+}
+
+input PaymentUpsertWithWhereUniqueWithoutArticleInput {
+  where: PaymentWhereUniqueInput!
+  update: PaymentUpdateWithoutArticleDataInput!
+  create: PaymentCreateWithoutArticleInput!
 }
 
 input PaymentUpsertWithWhereUniqueWithoutCreatedByInput {
@@ -11985,6 +12052,7 @@ input ProdWhereUniqueInput {
 
 type Query {
   appoints(where: AppointWhereInput, orderBy: AppointOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Appoint]!
+  articles(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Article]!
   batches(where: BatchWhereInput, orderBy: BatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Batch]!
   bpStats(where: BpStatWhereInput, orderBy: BpStatOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [BpStat]!
   deals(where: DealWhereInput, orderBy: DealOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Deal]!
@@ -12012,12 +12080,12 @@ type Query {
   tels(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tel]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   workpieces(where: WorkpieceWhereInput, orderBy: WorkpieceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Workpiece]!
-  articles(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Article]!
   statuses(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Status]!
   accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account]!
   docs(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Doc]!
   dealStatuses(where: DealStatusWhereInput, orderBy: DealStatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [DealStatus]!
   appoint(where: AppointWhereUniqueInput!): Appoint
+  article(where: ArticleWhereUniqueInput!): Article
   batch(where: BatchWhereUniqueInput!): Batch
   bpStat(where: BpStatWhereUniqueInput!): BpStat
   deal(where: DealWhereUniqueInput!): Deal
@@ -12045,12 +12113,12 @@ type Query {
   tel(where: TelWhereUniqueInput!): Tel
   user(where: UserWhereUniqueInput!): User
   workpiece(where: WorkpieceWhereUniqueInput!): Workpiece
-  article(where: ArticleWhereUniqueInput!): Article
   status(where: StatusWhereUniqueInput!): Status
   account(where: AccountWhereUniqueInput!): Account
   doc(where: DocWhereUniqueInput!): Doc
   dealStatus(where: DealStatusWhereUniqueInput!): DealStatus
   appointsConnection(where: AppointWhereInput, orderBy: AppointOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AppointConnection!
+  articlesConnection(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ArticleConnection!
   batchesConnection(where: BatchWhereInput, orderBy: BatchOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BatchConnection!
   bpStatsConnection(where: BpStatWhereInput, orderBy: BpStatOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BpStatConnection!
   dealsConnection(where: DealWhereInput, orderBy: DealOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DealConnection!
@@ -12078,7 +12146,6 @@ type Query {
   telsConnection(where: TelWhereInput, orderBy: TelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TelConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   workpiecesConnection(where: WorkpieceWhereInput, orderBy: WorkpieceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WorkpieceConnection!
-  articlesConnection(where: ArticleWhereInput, orderBy: ArticleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ArticleConnection!
   statusesConnection(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StatusConnection!
   accountsConnection(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AccountConnection!
   docsConnection(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DocConnection!
@@ -12636,6 +12703,7 @@ input StatusWhereUniqueInput {
 
 type Subscription {
   appoint(where: AppointSubscriptionWhereInput): AppointSubscriptionPayload
+  article(where: ArticleSubscriptionWhereInput): ArticleSubscriptionPayload
   batch(where: BatchSubscriptionWhereInput): BatchSubscriptionPayload
   bpStat(where: BpStatSubscriptionWhereInput): BpStatSubscriptionPayload
   deal(where: DealSubscriptionWhereInput): DealSubscriptionPayload
@@ -12663,7 +12731,6 @@ type Subscription {
   tel(where: TelSubscriptionWhereInput): TelSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   workpiece(where: WorkpieceSubscriptionWhereInput): WorkpieceSubscriptionPayload
-  article(where: ArticleSubscriptionWhereInput): ArticleSubscriptionPayload
   status(where: StatusSubscriptionWhereInput): StatusSubscriptionPayload
   account(where: AccountSubscriptionWhereInput): AccountSubscriptionPayload
   doc(where: DocSubscriptionWhereInput): DocSubscriptionPayload

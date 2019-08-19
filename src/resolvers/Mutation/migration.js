@@ -208,6 +208,7 @@ const migration = {
 		const articles = [
 			{ name: 'administrative', rusName: 'Административные расходы'},
 			{ name: 'commercial', rusName: 'Коммерческие расходы'},
+			{ name: 'consumables', rusName: 'Расходники', relations: { set: ['EQUIPMENT'] }},
 			{ name: 'hh', rusName: 'Подбор персонала'},
 			{ name: 'lend', rusName: 'Займ (Выдача)', isLoan: true},
 			{ name: 'loan', rusName: 'Займ (Получение)', isLoan: true, isIncome: true},
