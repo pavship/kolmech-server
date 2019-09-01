@@ -1,3 +1,4 @@
+const { generateMutationObject } = require('../utils')
 const fetch = require('node-fetch')
 const axios = require('axios')
 const moedeloBaseUrl = 'https://restapi.moedelo.org/kontragents/api/v1/kontragent'
@@ -156,6 +157,15 @@ const mergeOrg = async (_, { id, inn }, ctx, info) => {
 	}, info)
 }
 
+const upsertOrg = async (_, { input }, ctx, info) => {
+	const { db } = ctx
+	console.log('input > ', JSON.stringify(input, null, 2))
+	const mutationObj = await generateMutationObject(input, 'org', ctx)
+	console.log('mutationObj > ', JSON.stringify(mutationObj, null, 2))
+	if (!input.id) return db.mutation.createOrg(mutationObj, info)
+		else return db.mutation.updateOrg(mutationObj, info)
+}
+
 const upsertOrgsByInn = async (_, inns, ctx, info) => {
 	const { userId, db } = ctx
 	let moeDeloOrgs = await getMoeDeloOrgs(_, {}, ctx, '{ moedeloId inn name }')
@@ -198,6 +208,7 @@ module.exports = {
 		deleteAllOrgs,
 		getMoeDeloOrgs,
 		mergeOrg,
+		upsertOrg,
 		upsertOrgsByInn,
 	}
 }

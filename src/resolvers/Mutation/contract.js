@@ -58,19 +58,32 @@ const createComOffer = async (_, { dealId, date = toLocalDateString(new Date()) 
           name
         }
       }
-      procs {
-        ops {
-          dealLabor
-          description
-          opType {
-            name
-            laborPrice
-						opClass
+      elements {
+        proc {
+          ops {
+            dealLabor
+            description
+            opType {
+              name
+              laborPrice
+              opClass
+            }
           }
         }
       }
 		}
   }`)
+          // procs {
+          //   ops {
+          //     dealLabor
+          //     description
+          //     opType {
+          //       name
+          //       laborPrice
+          // 			opClass
+          //     }
+          //   }
+          // }
 
   const genOpTemplateData = ({
     dealLabor=0,
@@ -90,13 +103,17 @@ const createComOffer = async (_, { dealId, date = toLocalDateString(new Date()) 
     descript,
 		warning,
 		model,
-		procs,
+		elements,
 		workpiece
 	}, i) => {
 		const batchNum = i + 1
-		const ops = procs[0]
-			&& procs[0].ops.filter(op => op.opType.opClass === 'MACHINING')
-      || []
+		// const ops = procs[0]
+		// 	&& procs[0].ops.filter(op => op.opType.opClass === 'MACHINING')
+    //   || []
+		const ops = elements.reduce((ops, e) => {
+      ops = e.proc ? [ ...ops, ...e.proc.ops ] : ops
+      return ops
+    },[])
     console.log('model.name, ops > ', model.name, ops)
 		const amount = ops.reduce((sum, op) => sum += (op.dealLabor || 0)*op.opType.laborPrice, 0)
 		return {

@@ -69,6 +69,7 @@ type Mutation {
   upsertBatch(input: BatchInput!): Batch
   upsertDeal(input: DealInput!): Deal
   upsertOrder(id: ID, enquiryId: ID, dateLocal: String!, qty: Int, amount: Float): Order
+  upsertOrg(input: OrgInput!): Org
   upsertOrgsByInn(inns: [String!]!): [Org!]!
   upsertPayment(input: PaymentInput!): Payment
   upsertPerson(input: PersonInput!): Person
@@ -216,7 +217,13 @@ input OpInput {
 
 input OpTypeInput {
   id: ID
+  disconnect: Boolean
   opTypeId: ID
+}
+
+input OrgInput {
+  id: ID
+  exec: ExecInput
 }
 
 input PaymentInput {

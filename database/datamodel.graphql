@@ -150,7 +150,7 @@ type Equipment {
 type Exec {
 	id: ID! @unique
 	amoUserId: Int
-	org: Org
+	org: Org @relation(name: "OrgExec")
 	person: Person
 	appoints: [Appoint!]!
 	opTypes: [OpType!]!
@@ -236,7 +236,7 @@ type Org {
 	docs: [Doc!]!
 	employees: [Employee!]!
 	enquiries: [Enquiry!]! @relation(name: "OrgEnquiries")
-	exec: Exec
+	exec: Exec @relation(name: "OrgExec", onDelete: CASCADE)
 	orders: [Order!]! @relation(name: "OrgOrders")
 	payments: [Payment!]!
 }
