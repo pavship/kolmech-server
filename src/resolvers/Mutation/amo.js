@@ -1,6 +1,6 @@
 
 const axios = require('axios')
-const AmoCRM = require( 'amocrm-js' );
+const AmoCRM = require( 'amocrm-js' )
 
 const crm = new AmoCRM({
   domain: process.env.AMO_DOMAIN,
@@ -79,7 +79,42 @@ const createAmoTask = async(_, { dealId, date }, ctx, info) => {
     console.log('error > ', error)
   }
 }
-// async login
+
+const getAmoCompany = async(_1, { amoId }, ctx, info) => {
+  try {
+    const amo = await amoConnect(ctx)
+    const { data: {_embedded: { items: [ company ] }}} = await amo.get(`api/v2/companies?id=${amoId}`)
+    let mainContactId = company.contacts.id ? company.contacts.id[0] : ''
+    let leads = null
+    console.log('company.leads._links > ', company.leads._links)
+    if (company.leads.id) {
+      const { data } = await amo.get(company.leads._links.self.href.slice(1))
+      leads = data._embedded.items
+      const mainContacts = leads
+        .filter(l => !!l.main_contact.id)
+        .map(l => l.main_contact)
+        .reduce((res, c) => {
+          (res.find(ar => ar[0].id === c.id) || (res[res.length] = [])).push(c)
+          return res
+        }, [])
+        .sort((a, b) => b.length - a.length)
+      const mainContact = mainContacts ? mainContacts[0][0] : null
+      if (mainContact) mainContactId = mainContact.id
+    }
+    console.log('mainContactId > ', mainContactId)
+    const mainContact = mainContactId ?
+      (await amo.get(`api/v2/contacts?id=${mainContactId}`)).data._embedded.items[0]
+      : null
+    return {
+      ...company,
+      ...mainContact && { mainContact }
+    }
+  } catch (err) {
+    console.log('getAmoCompany request error > ', err)
+    throw err
+  }
+}
+
 const syncWithAmoContacts = async(_, __, ctx, info) => {
   try {
     const { userId, db } = ctx
@@ -152,5 +187,6 @@ module.exports = {
     createAmoTask,
     syncWithAmoContacts
   },
+  getAmoCompany,
   amoConnect
 }

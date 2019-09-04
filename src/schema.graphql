@@ -41,7 +41,6 @@ type Mutation {
   checkOrgs: [String]
   connectDealToOrg(dealId: ID!, orgId: ID!): Deal
   createAmoTask (dealId: ID!, date: String): StatusPayload
-  
   createDrawings(modelId: ID!, files: [Upload!]!): [Drawing!]!
   createEnquiry(dateLocal: String!, orgId: ID!, modelId: ID!, qty: Int!): Enquiry
   createEnquiryEvent(enquiryId: ID!, htmlText: String, statusId: ID, doc: DocCreateInput): Event
@@ -84,7 +83,7 @@ type Mutation {
   # file creation
   createComOffer (dealId: ID!, date: String): StatusPayload
   createContract (id: ID!, date: String): StatusPayload
-  createPostEnvelopeAddressInsert (orgId: ID!): StatusPayload
+  createPostEnvelopeAddressInsert (orgId: ID, amoId: Int, dealId: ID): StatusPayload
   # db migration scripts:
   importModels: BatchPayload!
   connectEnquiriesToDocsAndStatus: BatchPayload!

@@ -3,6 +3,7 @@ var JSZip = require('jszip')
 var Docxtemplater = require('docxtemplater')
 const { toLocalDateString } = require('../../utils/dates')
 const { upsertOrgFolder, upsertOrgDealFolder, getResourceDownloadUrl, getResourceUploadUrl } = require('./disk')
+const { getAmoCompany } = require('./amo')
 const { currency } = require('../../utils/format')
 
 const { writeFileSync } = require('fs')
@@ -230,22 +231,34 @@ const createContract = async (_, { id, date = toLocalDateString(new Date()) }, {
   return { statusText: 'OK' }
 }
 
-const createPostEnvelopeAddressInsert = async (_, { orgId }, ctx, info) => {
+const createPostEnvelopeAddressInsert = async (_, { orgId: orgIdArg, amoId: amoIdArg, dealId }, ctx, info) => {
   const { db } = ctx
-  const { amoId, name } = await db.query.org({ where: { id: orgId }}, '{ amoId name }')
+  let data = null
+  if (orgIdArg) data = await db.query.org({ where: { id: orgIdArg }}, '{ amoId ulName }')
+  if (amoIdArg) [ data ] = await db.query.orgs({ where: { amoId: amoIdArg }}, '{ id ulName }')
+  const orgId = orgIdArg || data.id
+  const amoId = amoIdArg || data.amoId
+  const { ulName } = data
+  const company = await getAmoCompany(_, { amoId }, ctx, info)
+  // console.log('company.mainContact > ', company.mainContact)
   const date = toLocalDateString(new Date())
+  console.log('company > ', company)
+  const postAddressCustomField = company.custom_fields.find(f => f.name === 'Почтовый адрес')
+  const postAddress = postAddressCustomField ? postAddressCustomField.values[0].value : ''
+  const companyTelCustomField = company.custom_fields.find(f => f.name === 'Телефон')
+  const contactTelCustomField = company.mainContact.custom_fields.find(f => f.name === 'Телефон')
   const templateDownloadUrl = await getResourceDownloadUrl('/Шаблоны документов/Корреспонденция/Конверт С4/template_ip.docx')
   const { data: template } = await axios.get( templateDownloadUrl, { responseType: 'arraybuffer'} )
   const docx = generateDocx(template, {
-    kontr_short: name,
-    // kontr_zip: '140408',
-    // kontr_post_address: 'г.Пермь, ул. Глазовская 1-174',
-    // kontr_tel: '+7 925 1234567',
-    // kontr_manager: 'Аликин Никита',
-    // kontr_manager_tel: '+7 925 1234567',
+    kontr_short: ulName,
+    kontr_zip: postAddress.slice(0,6),
+    kontr_post_address: postAddress.slice(postAddress.indexOf(' ') + 1),
+    kontr_tel: companyTelCustomField ? companyTelCustomField.values[0].value : '',
+    kontr_manager: company.mainContact.name,
+    kontr_manager_tel: contactTelCustomField ? contactTelCustomField.values[0].value : '',
   })
 	const orgFolderPath = await upsertOrgFolder(orgId, ctx)
-	const uploadUrl = await getResourceUploadUrl(`${orgFolderPath}/${date}_Адресное почтовое вложение_${amoId}.docx`)
+	const uploadUrl = await getResourceUploadUrl(`${orgFolderPath}/${date}_Почтовое вложение_${amoId}.docx`)
 	await axios.put( uploadUrl, docx, { responseType: 'arraybuffer'} )
   return { statusText: 'OK' }
 }
