@@ -72,7 +72,7 @@ const createOrg = async (_, { inn }, ctx, info) => {
 		where: { id: foundOrg.id },
 		data: {
 			moedeloId,
-			name,
+			ulName: name,
 			legalAddress
 		}
 	}, info)
@@ -81,6 +81,7 @@ const createOrg = async (_, { inn }, ctx, info) => {
 			inn,
 			moedeloId,
 			name,
+			ulName: name,
 			legalAddress
 		}
 	}, info)

@@ -234,11 +234,11 @@ const createContract = async (_, { id, date = toLocalDateString(new Date()) }, {
 const createPostEnvelopeAddressInsert = async (_, { orgId: orgIdArg, amoId: amoIdArg, dealId }, ctx, info) => {
   const { db } = ctx
   let data = null
-  if (orgIdArg) data = await db.query.org({ where: { id: orgIdArg }}, '{ amoId ulName }')
-  if (amoIdArg) [ data ] = await db.query.orgs({ where: { amoId: amoIdArg }}, '{ id ulName }')
+  if (orgIdArg) data = await db.query.org({ where: { id: orgIdArg }}, '{ amoId name ulName }')
+  if (amoIdArg) [ data ] = await db.query.orgs({ where: { amoId: amoIdArg }}, '{ id name ulName }')
   const orgId = orgIdArg || data.id
   const amoId = amoIdArg || data.amoId
-  const { ulName } = data
+  const { name, ulName } = data
   const company = await getAmoCompany(_, { amoId }, ctx, info)
   // console.log('company.mainContact > ', company.mainContact)
   const date = toLocalDateString(new Date())
@@ -250,7 +250,7 @@ const createPostEnvelopeAddressInsert = async (_, { orgId: orgIdArg, amoId: amoI
   const templateDownloadUrl = await getResourceDownloadUrl('/Шаблоны документов/Корреспонденция/Конверт С4/template_ip.docx')
   const { data: template } = await axios.get( templateDownloadUrl, { responseType: 'arraybuffer'} )
   const docx = generateDocx(template, {
-    kontr_short: ulName,
+    kontr_short: ulName || name,
     kontr_zip: postAddress.slice(0,6),
     kontr_post_address: postAddress.slice(postAddress.indexOf(' ') + 1),
     kontr_tel: companyTelCustomField ? companyTelCustomField.values[0].value : '',
