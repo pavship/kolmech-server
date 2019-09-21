@@ -4,6 +4,7 @@ var Docxtemplater = require('docxtemplater')
 const { toLocalDateString } = require('../../utils/dates')
 const { upsertOrgFolder, upsertOrgDealFolder, getResourceDownloadUrl, getResourceUploadUrl } = require('./disk')
 const { getAmoCompany } = require('./amo')
+const { org: { createOrg } } = require('./org')
 const { currency } = require('../../utils/format')
 
 const { writeFileSync } = require('fs')
@@ -234,15 +235,28 @@ const createContract = async (_, { id, date = toLocalDateString(new Date()) }, {
 const createPostEnvelopeAddressInsert = async (_, { orgId: orgIdArg, amoId: amoIdArg, dealId }, ctx, info) => {
   const { db } = ctx
   let data = null
-  if (orgIdArg) data = await db.query.org({ where: { id: orgIdArg }}, '{ amoId name ulName }')
-  if (amoIdArg) [ data ] = await db.query.orgs({ where: { amoId: amoIdArg }}, '{ id name ulName }')
+  let company = null
+  if (orgIdArg) {
+    data = await db.query.org({ where: { id: orgIdArg }}, '{ amoId name ulName }')
+    company = await getAmoCompany(_, { amoId: data.amoId }, ctx, info)
+  }
+  if (amoIdArg) {
+    [ data ] = await db.query.orgs({ where: { amoId: amoIdArg }}, '{ id name ulName }')
+    company = await getAmoCompany(_, { amoId: amoIdArg }, ctx, info)
+    if (!data) {
+      const innCustomField = company.custom_fields.find(f => f.name === 'ИНН')
+      const inn = innCustomField ? innCustomField.values[0].value : ''
+      if (inn) data = await createOrg(_, { inn }, ctx, '{ id name ulName }')
+    }
+  }
+  // console.log('company > ', company)
   const orgId = orgIdArg || data.id
   const amoId = amoIdArg || data.amoId
   const { name, ulName } = data
-  const company = await getAmoCompany(_, { amoId }, ctx, info)
+  console.log('orgId, amoId, name, ulName > ', orgId, amoId, name, ulName)
+  // const company = await getAmoCompany(_, { amoId }, ctx, info)
   // console.log('company.mainContact > ', company.mainContact)
   const date = toLocalDateString(new Date())
-  console.log('company > ', company)
   const postAddressCustomField = company.custom_fields.find(f => f.name === 'Почтовый адрес')
   const postAddress = postAddressCustomField ? postAddressCustomField.values[0].value : ''
   const companyTelCustomField = company.custom_fields.find(f => f.name === 'Телефон')

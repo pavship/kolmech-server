@@ -1,6 +1,8 @@
 const { generateMutationObject } = require('../utils')
 const fetch = require('node-fetch')
 const axios = require('axios')
+const { getAmoCompany } = require('./amo')
+
 const moedeloBaseUrl = 'https://restapi.moedelo.org/kontragents/api/v1/kontragent'
 
 const headers = {
@@ -59,10 +61,9 @@ const checkOrgs = async (_, __, ctx, info) => {
 
 const createOrg = async (_, { inn }, ctx, info) => {
 	const { db } = ctx
-	// org found in db will be updated from MoeDelo server and then returned
+	// org found in db will be updated acoording to MoeDelo and AmoCRM and then returned
 	const foundOrg = await db.query.org({ where: { inn } }, info)
-	// Check if contractor exists in the Moedelo
-	// @ts-ignore
+	const foundAmoCompany = await getAmoCompany(_, { query: inn }, ctx, info)
 	const orgs = await getMoeDeloOrgs(_, {}, ctx, info)
 	const existingOrg = orgs.find(o => o.inn === inn)
 	let createdOrg = null
@@ -71,16 +72,19 @@ const createOrg = async (_, { inn }, ctx, info) => {
 	if (foundOrg) return db.mutation.updateOrg({
 		where: { id: foundOrg.id },
 		data: {
+			...foundAmoCompany && { amoId: foundAmoCompany.id },
 			moedeloId,
+			name: foundAmoCompany ? foundAmoCompany.name : name,
 			ulName: name,
-			legalAddress
+			legalAddress,
 		}
 	}, info)
 	return db.mutation.createOrg({
 		data: {
+			...foundAmoCompany && { amoId: foundAmoCompany.id },
 			inn,
 			moedeloId,
-			name,
+			name: foundAmoCompany ? foundAmoCompany.name : name,
 			ulName: name,
 			legalAddress
 		}

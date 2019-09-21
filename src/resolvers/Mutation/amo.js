@@ -80,10 +80,13 @@ const createAmoTask = async(_, { dealId, date }, ctx, info) => {
   }
 }
 
-const getAmoCompany = async(_1, { amoId }, ctx, info) => {
+const getAmoCompany = async(_1, { amoId, query }, ctx, info) => {
   try {
     const amo = await amoConnect(ctx)
-    const { data: {_embedded: { items: [ company ] }}} = await amo.get(`api/v2/companies?id=${amoId}`)
+    const { data: {_embedded: { items: [ company ] }}} = await amo.get(`api/v2/companies?${
+      amoId ? `id=${amoId}` :
+      query ? `query=${query}` : ''
+    }`)
     let mainContactId = company.contacts.id ? company.contacts.id[0] : ''
     let leads = null
     console.log('company.leads._links > ', company.leads._links)
