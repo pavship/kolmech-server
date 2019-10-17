@@ -22,6 +22,9 @@ const parseFullname = (fullname, err) => {
 	if (names.length > 1) names.splice(0, 2, names[1], names[0])
 	return names
 }
+const formatPhone = phone => {
+	return '+7 ' + phone.slice(2,5) + ' ' + phone.slice(5,8) + '-'  + phone.slice(8,10) + '-'  + phone.slice(-2)
+}
 const parsePhone = (phone, err, config) => {
 	const { country } = config
 	const numbers = phone.match(/\d+/g)
@@ -39,5 +42,6 @@ module.exports = {
 	currency,
 	parseOrThrow,
 	parseFullname,
-	parsePhone
+	formatPhone,
+	parsePhone,
 }

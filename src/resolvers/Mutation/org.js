@@ -64,8 +64,9 @@ const createOrg = async (_, { inn }, ctx, info) => {
 	// org found in db will be updated acoording to MoeDelo and AmoCRM and then returned
 	const foundOrg = await db.query.org({ where: { inn } }, info)
 	const foundAmoCompany = await getAmoCompany(_, { query: inn }, ctx, info)
-	const orgs = await getMoeDeloOrgs(_, {}, ctx, info)
-	const existingOrg = orgs.find(o => o.inn === inn)
+	const orgs = await getMoeDeloOrgs(_, { inn }, ctx, info)
+	if (orgs.length > 1) throw new Error(`There are duplicated orgs with inn: ${inn} in MoeDelo`)
+	const existingOrg = orgs[0]
 	let createdOrg = null
 	if (!existingOrg) createdOrg = await createMoeDeloOrg(inn)
 	const { moedeloId, name, legalAddress } = existingOrg || createdOrg
@@ -119,8 +120,11 @@ const deleteAllOrgs = async (_, __, ctx, info) => {
 	return ctx.db.mutation.deleteManyOrgs({ where: { id_in: orgs.map(o => o.id) } }, info)
 }
 
-const getMoeDeloOrgs = async (_, __, ctx, info) => {
-	const allOrgsResponse = await fetch(moedeloBaseUrl, {
+const getMoeDeloOrgs = async (_, { inn }, ctx, info) => {
+	const url = inn
+		? moedeloBaseUrl +'/?pageSize=5000' +'&inn=' + inn
+		: moedeloBaseUrl +'/?pageSize=5000'
+	const allOrgsResponse = await fetch(url, {
 		method: 'GET',
 		headers
 	})
@@ -176,11 +180,13 @@ const upsertOrgsByInn = async (_, inns, ctx, info) => {
 	let moeDeloOrgs = await getMoeDeloOrgs(_, {}, ctx, '{ moedeloId inn name }')
 	const existedOrgs = moeDeloOrgs.filter(o => inns.includes(o.inn))
 	const newInns = inns.filter(inn => moeDeloOrgs.findIndex(o => o.inn === inn) === -1)
+	console.log('newInns > ', newInns)
 	const createdOrgs = []
 	for (let inn of newInns) {
 		createdOrgs.push(await createMoeDeloOrg(inn))
 	}
 	moeDeloOrgs = [...existedOrgs, ...createdOrgs]
+	// moeDeloOrgs = [...existedOrgs]
 	return await Promise.all(moeDeloOrgs.map(({
 		inn,
 		legalAddress,

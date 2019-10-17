@@ -1,6 +1,6 @@
 const axios = require('axios')
 const { toLocalISOString } = require('../../utils/dates')
-const { org: { createOrg, getMoeDeloOrgs, upsertOrgsByInn } } = require('./org')
+const { org: { upsertOrgsByInn } } = require('./org')
 
 const headers = {
   'Authorization': `Bearer ${process.env.TOCHKA_API_TOKEN}`,
@@ -85,7 +85,6 @@ const tochka = {
       where: { account: { id: accountId } }
     }, '{ id dateLocal tochkaId }')
     const tochkaIds = payments.map(({ tochkaId }) => tochkaId)
-    // const toCreate = tochkaPayments.map( p => {
     const toCreate = tochkaPayments
       .filter(p => !tochkaIds.includes(p.tochkaId))
       .map(p => {

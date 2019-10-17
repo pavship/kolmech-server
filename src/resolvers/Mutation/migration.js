@@ -207,11 +207,14 @@ const migration = {
 	async populatePaymentArticles(_, __, ctx, info) {
 		const articles = [
 			{ name: 'administrative', rusName: 'Административные расходы'},
+			{ name: 'buildingMaintainance', rusName: 'Ремонт помещений'},
 			{ name: 'commercial', rusName: 'Коммерческие расходы'},
 			{ name: 'consumables', rusName: 'Расходники', relations: { set: ['EQUIPMENT'] }},
 			{ name: 'hh', rusName: 'Подбор персонала'},
 			{ name: 'lend', rusName: 'Займ (Выдача)', isLoan: true},
 			{ name: 'loan', rusName: 'Займ (Получение)', isLoan: true, isIncome: true},
+			{ name: 'equipmentInstallation', rusName: 'Подключение оборудования', relations: { set: ['EQUIPMENT'] }},
+			{ name: 'equipmentPurchase', rusName: 'Покупка оборудования', relations: { set: ['EQUIPMENT'] }},
 			{ name: 'maintainance', rusName: 'ТО Оборудования', relations: { set: ['EQUIPMENT'] }},
 			{ name: 'modernization', rusName: 'Модернизация оборудования', relations: { set: ['EQUIPMENT'] }},
 			{ name: 'nonCoreRevenue', rusName: 'Выручка (Неосновная деятельность)', isIncome: true},

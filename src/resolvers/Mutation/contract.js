@@ -2,10 +2,10 @@ const axios = require('axios')
 var JSZip = require('jszip')
 var Docxtemplater = require('docxtemplater')
 const { toLocalDateString } = require('../../utils/dates')
-const { upsertOrgFolder, upsertOrgDealFolder, getResourceDownloadUrl, getResourceUploadUrl } = require('./disk')
+const { upsertOrgFolder2, upsertOrgDealFolder, getResourceDownloadUrl, getResourceUploadUrl } = require('./disk')
 const { getAmoCompany } = require('./amo')
-const { org: { createOrg } } = require('./org')
-const { currency } = require('../../utils/format')
+const { org: { createOrg, getMoeDeloOrgs } } = require('./org')
+const { currency, formatPhone } = require('../../utils/format')
 
 const { writeFileSync } = require('fs')
 
@@ -243,17 +243,20 @@ const createPostEnvelopeAddressInsert = async (_, { orgId: orgIdArg, amoId: amoI
   if (amoIdArg) {
     [ data ] = await db.query.orgs({ where: { amoId: amoIdArg }}, '{ id name ulName }')
     company = await getAmoCompany(_, { amoId: amoIdArg }, ctx, info)
+    console.log('company > ', JSON.stringify(company, null, 2))
+    const innCustomField = company.custom_fields.find(f => f.name === 'ИНН')
+    const inn = innCustomField ? innCustomField.values[0].value : ''
+    console.log('inn > ', inn)
     if (!data) {
-      const innCustomField = company.custom_fields.find(f => f.name === 'ИНН')
-      const inn = innCustomField ? innCustomField.values[0].value : ''
       if (inn) data = await createOrg(_, { inn }, ctx, '{ id name ulName }')
+    } else {
+      [ data ] = await getMoeDeloOrgs(_, { inn }, ctx, '')
     }
   }
   // console.log('company > ', company)
-  const orgId = orgIdArg || data.id
   const amoId = amoIdArg || data.amoId
   const { name, ulName } = data
-  console.log('orgId, amoId, name, ulName > ', orgId, amoId, name, ulName)
+  console.log('amoId, name, ulName > ', amoId, name, ulName)
   // const company = await getAmoCompany(_, { amoId }, ctx, info)
   // console.log('company.mainContact > ', company.mainContact)
   const date = toLocalDateString(new Date())
@@ -261,17 +264,21 @@ const createPostEnvelopeAddressInsert = async (_, { orgId: orgIdArg, amoId: amoI
   const postAddress = postAddressCustomField ? postAddressCustomField.values[0].value : ''
   const companyTelCustomField = company.custom_fields.find(f => f.name === 'Телефон')
   const contactTelCustomField = company.mainContact.custom_fields.find(f => f.name === 'Телефон')
+  const kontr_manager_tel = contactTelCustomField ? formatPhone(contactTelCustomField.values[0].value) : ''
   const templateDownloadUrl = await getResourceDownloadUrl('/Шаблоны документов/Корреспонденция/Конверт С4/template_ip.docx')
   const { data: template } = await axios.get( templateDownloadUrl, { responseType: 'arraybuffer'} )
   const docx = generateDocx(template, {
     kontr_short: ulName || name,
     kontr_zip: postAddress.slice(0,6),
     kontr_post_address: postAddress.slice(postAddress.indexOf(' ') + 1),
-    kontr_tel: companyTelCustomField ? companyTelCustomField.values[0].value : '',
+    kontr_tel: companyTelCustomField ?
+      formatPhone(companyTelCustomField.values[0].value) :
+      kontr_manager_tel,
     kontr_manager: company.mainContact.name,
-    kontr_manager_tel: contactTelCustomField ? contactTelCustomField.values[0].value : '',
+    kontr_manager_tel,
   })
-	const orgFolderPath = await upsertOrgFolder(orgId, ctx)
+  const orgFolderPath = await upsertOrgFolder2(amoId, ctx)
+  console.log('orgFolderPath > ', orgFolderPath)
 	const uploadUrl = await getResourceUploadUrl(`${orgFolderPath}/${date}_Почтовое вложение_${amoId}.docx`)
 	await axios.put( uploadUrl, docx, { responseType: 'arraybuffer'} )
   return { statusText: 'OK' }

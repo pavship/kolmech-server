@@ -1,6 +1,7 @@
 
 const axios = require('axios')
 const qs = require('qs')
+const { getAmoCompany } = require('./amo')
 
 const baseURL = 'https://cloud-api.yandex.net/v1/disk/resources'
 
@@ -72,6 +73,21 @@ const upsertOrgFolder = async (orgId, ctx) => {
 	const org = await db.query.org({ where: { id: orgId }}, '{ amoId name }')
 	if (!org) throw new Error('Organization was not found in DB')
 	const { amoId, name } = org
+	const basePath = '/Компании'
+	const folderName = `${name}_${amoId}`
+	const oldFolderName = await getFolderName(basePath, amoId)
+	if (!oldFolderName)
+		{const {data: createFolderData} = await createFolder(`${basePath}/${folderName}`)
+			console.log('createFolderData > ', createFolderData)
+		}
+	else if (oldFolderName !== folderName)
+		await moveFolder(`${basePath}/${oldFolderName}`, `${basePath}/${folderName}`)
+	return `${basePath}/${folderName}`
+}
+
+const upsertOrgFolder2 = async (amoId, ctx) => {
+	const company = await getAmoCompany('_', { amoId }, ctx, 'info')
+	const { name } = company
 	const basePath = '/Компании'
 	const folderName = `${name}_${amoId}`
 	const oldFolderName = await getFolderName(basePath, amoId)
@@ -165,6 +181,7 @@ module.exports = {
 	getResourceDownloadUrl,
 	getResourceUploadUrl,
 	upsertOrgFolder,
+	upsertOrgFolder2,
 	upsertOrgDealFolder,
 	syncDiskFolders
 }
