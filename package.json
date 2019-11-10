@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "amocrm-js": "^1.0.6",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "bcryptjs": "2.4.3",
     "cuid": "^2.1.4",
     "docxtemplater": "^3.11.1",
