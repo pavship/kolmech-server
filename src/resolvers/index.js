@@ -27,6 +27,7 @@ const { employee } = require('./Mutation/employee')
 const { migration } = require('./Mutation/migration')
 const { mixed } = require('./Mutation/mixed')
 const { model } = require('./Mutation/model')
+const { mpProject } = require('./Mutation/mpProject')
 const { AuthPayload } = require('./AuthPayload')
 
 module.exports = {
@@ -61,6 +62,7 @@ module.exports = {
     ...migration,
     ...mixed,
     ...model,
+    ...mpProject,
   },
   Subscription,
   AuthPayload,

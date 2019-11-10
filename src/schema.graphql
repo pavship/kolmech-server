@@ -58,6 +58,7 @@ type Mutation {
   setDrawingsSortOrder(ids: [ID!]!): BatchPayload!
   syncDeals: BatchPayload
   syncDealStatuses: StatusPayload
+  syncMpProjects: StatusPayload
   syncWithAmoContacts: [Person!]
   syncWithTochkaPayments: BatchPayload
   updateEnquiry(input: EnquiryInput!): Enquiry

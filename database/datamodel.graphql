@@ -187,6 +187,15 @@ type Model {
   prods: [Prod!]! @relation(name: "ModelProds")
 }
 
+type MpProject {
+	id: ID! @unique
+	mpId: Int! @unique
+	Name: String!
+	Status: String
+	SuperProjectId: Int
+	TimeUpdated: String
+}
+
 type Op {
 	id: ID! @unique
 	dealLabor: Float
@@ -377,6 +386,11 @@ enum EventType {
 	COMMENT
 }
 
+enum ImgFor {
+	ORIGINAL
+	FEED_W792
+}
+
 enum TaskStatus {
 	ACTIVE
 	DELAYED
@@ -384,11 +398,6 @@ enum TaskStatus {
 	COMPLETED
 	REJECTED
 	CANCELLED
-}
-
-enum ImgFor {
-	ORIGINAL
-	FEED_W792
 }
 
 enum OpClass {

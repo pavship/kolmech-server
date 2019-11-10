@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Mon Aug 19 2019 03:02:21 GMT+0300 (GMT+03:00)
+# timestamp: Mon Nov 11 2019 00:49:32 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -367,6 +367,10 @@ type AggregateFileLink {
 }
 
 type AggregateModel {
+  count: Int!
+}
+
+type AggregateMpProject {
   count: Int!
 }
 
@@ -7169,6 +7173,345 @@ input ModelWhereUniqueInput {
   id: ID
 }
 
+type MpProject implements Node {
+  id: ID!
+  mpId: Int!
+  Name: String!
+  Status: String
+  SuperProjectId: Int
+  TimeUpdated: String
+}
+
+"""A connection to a list of items."""
+type MpProjectConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [MpProjectEdge]!
+  aggregate: AggregateMpProject!
+}
+
+input MpProjectCreateInput {
+  mpId: Int!
+  Name: String!
+  Status: String
+  SuperProjectId: Int
+  TimeUpdated: String
+}
+
+"""An edge in a connection."""
+type MpProjectEdge {
+  """The item at the end of the edge."""
+  node: MpProject!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum MpProjectOrderByInput {
+  id_ASC
+  id_DESC
+  mpId_ASC
+  mpId_DESC
+  Name_ASC
+  Name_DESC
+  Status_ASC
+  Status_DESC
+  SuperProjectId_ASC
+  SuperProjectId_DESC
+  TimeUpdated_ASC
+  TimeUpdated_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type MpProjectPreviousValues {
+  id: ID!
+  mpId: Int!
+  Name: String!
+  Status: String
+  SuperProjectId: Int
+  TimeUpdated: String
+}
+
+type MpProjectSubscriptionPayload {
+  mutation: MutationType!
+  node: MpProject
+  updatedFields: [String!]
+  previousValues: MpProjectPreviousValues
+}
+
+input MpProjectSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [MpProjectSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [MpProjectSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [MpProjectSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: MpProjectWhereInput
+}
+
+input MpProjectUpdateInput {
+  mpId: Int
+  Name: String
+  Status: String
+  SuperProjectId: Int
+  TimeUpdated: String
+}
+
+input MpProjectUpdateManyMutationInput {
+  mpId: Int
+  Name: String
+  Status: String
+  SuperProjectId: Int
+  TimeUpdated: String
+}
+
+input MpProjectWhereInput {
+  """Logical AND on all given filters."""
+  AND: [MpProjectWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [MpProjectWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [MpProjectWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  mpId: Int
+
+  """All values that are not equal to given value."""
+  mpId_not: Int
+
+  """All values that are contained in given list."""
+  mpId_in: [Int!]
+
+  """All values that are not contained in given list."""
+  mpId_not_in: [Int!]
+
+  """All values less than the given value."""
+  mpId_lt: Int
+
+  """All values less than or equal the given value."""
+  mpId_lte: Int
+
+  """All values greater than the given value."""
+  mpId_gt: Int
+
+  """All values greater than or equal the given value."""
+  mpId_gte: Int
+  Name: String
+
+  """All values that are not equal to given value."""
+  Name_not: String
+
+  """All values that are contained in given list."""
+  Name_in: [String!]
+
+  """All values that are not contained in given list."""
+  Name_not_in: [String!]
+
+  """All values less than the given value."""
+  Name_lt: String
+
+  """All values less than or equal the given value."""
+  Name_lte: String
+
+  """All values greater than the given value."""
+  Name_gt: String
+
+  """All values greater than or equal the given value."""
+  Name_gte: String
+
+  """All values containing the given string."""
+  Name_contains: String
+
+  """All values not containing the given string."""
+  Name_not_contains: String
+
+  """All values starting with the given string."""
+  Name_starts_with: String
+
+  """All values not starting with the given string."""
+  Name_not_starts_with: String
+
+  """All values ending with the given string."""
+  Name_ends_with: String
+
+  """All values not ending with the given string."""
+  Name_not_ends_with: String
+  Status: String
+
+  """All values that are not equal to given value."""
+  Status_not: String
+
+  """All values that are contained in given list."""
+  Status_in: [String!]
+
+  """All values that are not contained in given list."""
+  Status_not_in: [String!]
+
+  """All values less than the given value."""
+  Status_lt: String
+
+  """All values less than or equal the given value."""
+  Status_lte: String
+
+  """All values greater than the given value."""
+  Status_gt: String
+
+  """All values greater than or equal the given value."""
+  Status_gte: String
+
+  """All values containing the given string."""
+  Status_contains: String
+
+  """All values not containing the given string."""
+  Status_not_contains: String
+
+  """All values starting with the given string."""
+  Status_starts_with: String
+
+  """All values not starting with the given string."""
+  Status_not_starts_with: String
+
+  """All values ending with the given string."""
+  Status_ends_with: String
+
+  """All values not ending with the given string."""
+  Status_not_ends_with: String
+  SuperProjectId: Int
+
+  """All values that are not equal to given value."""
+  SuperProjectId_not: Int
+
+  """All values that are contained in given list."""
+  SuperProjectId_in: [Int!]
+
+  """All values that are not contained in given list."""
+  SuperProjectId_not_in: [Int!]
+
+  """All values less than the given value."""
+  SuperProjectId_lt: Int
+
+  """All values less than or equal the given value."""
+  SuperProjectId_lte: Int
+
+  """All values greater than the given value."""
+  SuperProjectId_gt: Int
+
+  """All values greater than or equal the given value."""
+  SuperProjectId_gte: Int
+  TimeUpdated: String
+
+  """All values that are not equal to given value."""
+  TimeUpdated_not: String
+
+  """All values that are contained in given list."""
+  TimeUpdated_in: [String!]
+
+  """All values that are not contained in given list."""
+  TimeUpdated_not_in: [String!]
+
+  """All values less than the given value."""
+  TimeUpdated_lt: String
+
+  """All values less than or equal the given value."""
+  TimeUpdated_lte: String
+
+  """All values greater than the given value."""
+  TimeUpdated_gt: String
+
+  """All values greater than or equal the given value."""
+  TimeUpdated_gte: String
+
+  """All values containing the given string."""
+  TimeUpdated_contains: String
+
+  """All values not containing the given string."""
+  TimeUpdated_not_contains: String
+
+  """All values starting with the given string."""
+  TimeUpdated_starts_with: String
+
+  """All values not starting with the given string."""
+  TimeUpdated_not_starts_with: String
+
+  """All values ending with the given string."""
+  TimeUpdated_ends_with: String
+
+  """All values not ending with the given string."""
+  TimeUpdated_not_ends_with: String
+}
+
+input MpProjectWhereUniqueInput {
+  id: ID
+  mpId: Int
+}
+
 type Mutation {
   createAppoint(data: AppointCreateInput!): Appoint!
   createArticle(data: ArticleCreateInput!): Article!
@@ -7186,6 +7529,7 @@ type Mutation {
   createFile(data: FileCreateInput!): File!
   createFileLink(data: FileLinkCreateInput!): FileLink!
   createModel(data: ModelCreateInput!): Model!
+  createMpProject(data: MpProjectCreateInput!): MpProject!
   createOp(data: OpCreateInput!): Op!
   createOpType(data: OpTypeCreateInput!): OpType!
   createOrder(data: OrderCreateInput!): Order!
@@ -7219,6 +7563,7 @@ type Mutation {
   updateFile(data: FileUpdateInput!, where: FileWhereUniqueInput!): File
   updateFileLink(data: FileLinkUpdateInput!, where: FileLinkWhereUniqueInput!): FileLink
   updateModel(data: ModelUpdateInput!, where: ModelWhereUniqueInput!): Model
+  updateMpProject(data: MpProjectUpdateInput!, where: MpProjectWhereUniqueInput!): MpProject
   updateOp(data: OpUpdateInput!, where: OpWhereUniqueInput!): Op
   updateOpType(data: OpTypeUpdateInput!, where: OpTypeWhereUniqueInput!): OpType
   updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
@@ -7252,6 +7597,7 @@ type Mutation {
   deleteFile(where: FileWhereUniqueInput!): File
   deleteFileLink(where: FileLinkWhereUniqueInput!): FileLink
   deleteModel(where: ModelWhereUniqueInput!): Model
+  deleteMpProject(where: MpProjectWhereUniqueInput!): MpProject
   deleteOp(where: OpWhereUniqueInput!): Op
   deleteOpType(where: OpTypeWhereUniqueInput!): OpType
   deleteOrder(where: OrderWhereUniqueInput!): Order
@@ -7285,6 +7631,7 @@ type Mutation {
   upsertFile(where: FileWhereUniqueInput!, create: FileCreateInput!, update: FileUpdateInput!): File!
   upsertFileLink(where: FileLinkWhereUniqueInput!, create: FileLinkCreateInput!, update: FileLinkUpdateInput!): FileLink!
   upsertModel(where: ModelWhereUniqueInput!, create: ModelCreateInput!, update: ModelUpdateInput!): Model!
+  upsertMpProject(where: MpProjectWhereUniqueInput!, create: MpProjectCreateInput!, update: MpProjectUpdateInput!): MpProject!
   upsertOp(where: OpWhereUniqueInput!, create: OpCreateInput!, update: OpUpdateInput!): Op!
   upsertOpType(where: OpTypeWhereUniqueInput!, create: OpTypeCreateInput!, update: OpTypeUpdateInput!): OpType!
   upsertOrder(where: OrderWhereUniqueInput!, create: OrderCreateInput!, update: OrderUpdateInput!): Order!
@@ -7318,6 +7665,7 @@ type Mutation {
   updateManyFiles(data: FileUpdateManyMutationInput!, where: FileWhereInput): BatchPayload!
   updateManyFileLinks(data: FileLinkUpdateManyMutationInput!, where: FileLinkWhereInput): BatchPayload!
   updateManyModels(data: ModelUpdateManyMutationInput!, where: ModelWhereInput): BatchPayload!
+  updateManyMpProjects(data: MpProjectUpdateManyMutationInput!, where: MpProjectWhereInput): BatchPayload!
   updateManyOps(data: OpUpdateManyMutationInput!, where: OpWhereInput): BatchPayload!
   updateManyOpTypes(data: OpTypeUpdateManyMutationInput!, where: OpTypeWhereInput): BatchPayload!
   updateManyOrders(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
@@ -7351,6 +7699,7 @@ type Mutation {
   deleteManyFiles(where: FileWhereInput): BatchPayload!
   deleteManyFileLinks(where: FileLinkWhereInput): BatchPayload!
   deleteManyModels(where: ModelWhereInput): BatchPayload!
+  deleteManyMpProjects(where: MpProjectWhereInput): BatchPayload!
   deleteManyOps(where: OpWhereInput): BatchPayload!
   deleteManyOpTypes(where: OpTypeWhereInput): BatchPayload!
   deleteManyOrders(where: OrderWhereInput): BatchPayload!
@@ -12067,6 +12416,7 @@ type Query {
   files(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [File]!
   fileLinks(where: FileLinkWhereInput, orderBy: FileLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [FileLink]!
   models(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Model]!
+  mpProjects(where: MpProjectWhereInput, orderBy: MpProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MpProject]!
   ops(where: OpWhereInput, orderBy: OpOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Op]!
   opTypes(where: OpTypeWhereInput, orderBy: OpTypeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OpType]!
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
@@ -12100,6 +12450,7 @@ type Query {
   file(where: FileWhereUniqueInput!): File
   fileLink(where: FileLinkWhereUniqueInput!): FileLink
   model(where: ModelWhereUniqueInput!): Model
+  mpProject(where: MpProjectWhereUniqueInput!): MpProject
   op(where: OpWhereUniqueInput!): Op
   opType(where: OpTypeWhereUniqueInput!): OpType
   order(where: OrderWhereUniqueInput!): Order
@@ -12133,6 +12484,7 @@ type Query {
   filesConnection(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
   fileLinksConnection(where: FileLinkWhereInput, orderBy: FileLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileLinkConnection!
   modelsConnection(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ModelConnection!
+  mpProjectsConnection(where: MpProjectWhereInput, orderBy: MpProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): MpProjectConnection!
   opsConnection(where: OpWhereInput, orderBy: OpOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OpConnection!
   opTypesConnection(where: OpTypeWhereInput, orderBy: OpTypeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OpTypeConnection!
   ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
@@ -12718,6 +13070,7 @@ type Subscription {
   file(where: FileSubscriptionWhereInput): FileSubscriptionPayload
   fileLink(where: FileLinkSubscriptionWhereInput): FileLinkSubscriptionPayload
   model(where: ModelSubscriptionWhereInput): ModelSubscriptionPayload
+  mpProject(where: MpProjectSubscriptionWhereInput): MpProjectSubscriptionPayload
   op(where: OpSubscriptionWhereInput): OpSubscriptionPayload
   opType(where: OpTypeSubscriptionWhereInput): OpTypeSubscriptionPayload
   order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
