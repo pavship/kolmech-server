@@ -221,10 +221,11 @@ const migration = {
 			{ name: 'otherExpenses', rusName: 'Прочие расходы'},
 			{ name: 'repair', rusName: 'Ремонт оборудования', relations: { set: ['EQUIPMENT'] }},
 			{ name: 'revenue', rusName: 'Выручка (Основная деятельность)', isIncome: true},
-			{ name: 'tools', rusName: 'Оснастка/Инструмент', relations: { set: ['EQUIPMENT'] }},
-			{ name: 'transport', rusName: 'Транспорт'},
 			{ name: 'salary', rusName: 'ЗП'},
+			{ name: 'subcontract', rusName: 'Субподряд'},
+			{ name: 'tools', rusName: 'Оснастка/Инструмент', relations: { set: ['EQUIPMENT'] }},
 			{ name: 'training', rusName: 'Обучение персонала'},
+			{ name: 'transport', rusName: 'Транспорт'},
 		]
 		const existing = await ctx.db.query.articles({}, '{ id name }')
 		const existingNames = existing.map(a => a.name)
