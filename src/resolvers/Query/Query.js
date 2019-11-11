@@ -103,6 +103,10 @@ const Query = {
 	modelProds(_, { modelId }, ctx, info) {
 		return ctx.db.query.prods({ where: { model: { id: modelId } } }, info)
 	},
+
+	mpProjects(_, __, ctx, info) {
+		return ctx.db.query.mpProjects({ orderBy: 'TimeUpdated_DESC' }, info)
+	},
 	
 	statuses(_, __, ctx, info) {
 		return ctx.db.query.statuses({ orderBy: 'stage_ASC' }, info)

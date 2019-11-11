@@ -18,6 +18,7 @@ type Query {
   model (id: ID!): Model
   models: [Model!]!
   modelProds(modelId: ID!): [Prod!]!
+  mpProjects: [MpProject!]!
   opTypes: [OpType!]!
   order (id: ID!): Order
   orgs: [Org!]!
@@ -230,8 +231,9 @@ input PaymentInput {
   id: ID
 	articleId: ID
 	equipmentId: ID
-	personId: ID
+  mpProjectId: ID
 	orgId: ID
+	personId: ID
   dateLocal: String
 	amount: Float
 	purpose: String

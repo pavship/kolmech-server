@@ -194,6 +194,7 @@ type MpProject {
 	Status: String
 	SuperProjectId: Int
 	TimeUpdated: String
+	payments: [Payment!]!
 }
 
 type Op {
@@ -262,6 +263,7 @@ type Payment {
 	tochkaId: String
 	account: Account
 	equipment: Equipment
+	mpProject: MpProject
 	org: Org
 	person: Person
 	createdBy: User @relation(name: "PaymentsCreatedByUser")

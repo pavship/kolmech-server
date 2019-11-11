@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Mon Nov 11 2019 00:49:32 GMT+0300 (GMT+03:00)
+# timestamp: Mon Nov 11 2019 02:33:53 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -7180,6 +7180,7 @@ type MpProject implements Node {
   Status: String
   SuperProjectId: Int
   TimeUpdated: String
+  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
 }
 
 """A connection to a list of items."""
@@ -7193,6 +7194,20 @@ type MpProjectConnection {
 }
 
 input MpProjectCreateInput {
+  mpId: Int!
+  Name: String!
+  Status: String
+  SuperProjectId: Int
+  TimeUpdated: String
+  payments: PaymentCreateManyWithoutMpProjectInput
+}
+
+input MpProjectCreateOneWithoutPaymentsInput {
+  create: MpProjectCreateWithoutPaymentsInput
+  connect: MpProjectWhereUniqueInput
+}
+
+input MpProjectCreateWithoutPaymentsInput {
   mpId: Int!
   Name: String!
   Status: String
@@ -7282,6 +7297,7 @@ input MpProjectUpdateInput {
   Status: String
   SuperProjectId: Int
   TimeUpdated: String
+  payments: PaymentUpdateManyWithoutMpProjectInput
 }
 
 input MpProjectUpdateManyMutationInput {
@@ -7290,6 +7306,28 @@ input MpProjectUpdateManyMutationInput {
   Status: String
   SuperProjectId: Int
   TimeUpdated: String
+}
+
+input MpProjectUpdateOneWithoutPaymentsInput {
+  create: MpProjectCreateWithoutPaymentsInput
+  connect: MpProjectWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: MpProjectUpdateWithoutPaymentsDataInput
+  upsert: MpProjectUpsertWithoutPaymentsInput
+}
+
+input MpProjectUpdateWithoutPaymentsDataInput {
+  mpId: Int
+  Name: String
+  Status: String
+  SuperProjectId: Int
+  TimeUpdated: String
+}
+
+input MpProjectUpsertWithoutPaymentsInput {
+  update: MpProjectUpdateWithoutPaymentsDataInput!
+  create: MpProjectCreateWithoutPaymentsInput!
 }
 
 input MpProjectWhereInput {
@@ -7505,6 +7543,9 @@ input MpProjectWhereInput {
 
   """All values not ending with the given string."""
   TimeUpdated_not_ends_with: String
+  payments_every: PaymentWhereInput
+  payments_some: PaymentWhereInput
+  payments_none: PaymentWhereInput
 }
 
 input MpProjectWhereUniqueInput {
@@ -10007,6 +10048,7 @@ type Payment implements Node {
   tochkaId: String
   account: Account
   equipment: Equipment
+  mpProject: MpProject
   org: Org
   person: Person
   createdBy: User
@@ -10032,6 +10074,7 @@ input PaymentCreateInput {
   article: ArticleCreateOneWithoutPaymentsInput
   account: AccountCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
+  mpProject: MpProjectCreateOneWithoutPaymentsInput
   org: OrgCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
   createdBy: UserCreateOneWithoutCreatedPaymentsInput
@@ -10058,6 +10101,11 @@ input PaymentCreateManyWithoutEquipmentInput {
   connect: [PaymentWhereUniqueInput!]
 }
 
+input PaymentCreateManyWithoutMpProjectInput {
+  create: [PaymentCreateWithoutMpProjectInput!]
+  connect: [PaymentWhereUniqueInput!]
+}
+
 input PaymentCreateManyWithoutOrgInput {
   create: [PaymentCreateWithoutOrgInput!]
   connect: [PaymentWhereUniqueInput!]
@@ -10081,6 +10129,7 @@ input PaymentCreateWithoutAccountInput {
   tochkaId: String
   article: ArticleCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
+  mpProject: MpProjectCreateOneWithoutPaymentsInput
   org: OrgCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
   createdBy: UserCreateOneWithoutCreatedPaymentsInput
@@ -10095,6 +10144,7 @@ input PaymentCreateWithoutArticleInput {
   tochkaId: String
   account: AccountCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
+  mpProject: MpProjectCreateOneWithoutPaymentsInput
   org: OrgCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
   createdBy: UserCreateOneWithoutCreatedPaymentsInput
@@ -10110,6 +10160,7 @@ input PaymentCreateWithoutCreatedByInput {
   article: ArticleCreateOneWithoutPaymentsInput
   account: AccountCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
+  mpProject: MpProjectCreateOneWithoutPaymentsInput
   org: OrgCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
   updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
@@ -10123,6 +10174,22 @@ input PaymentCreateWithoutEquipmentInput {
   tochkaId: String
   article: ArticleCreateOneWithoutPaymentsInput
   account: AccountCreateOneWithoutPaymentsInput
+  mpProject: MpProjectCreateOneWithoutPaymentsInput
+  org: OrgCreateOneWithoutPaymentsInput
+  person: PersonCreateOneWithoutPaymentsInput
+  createdBy: UserCreateOneWithoutCreatedPaymentsInput
+  updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
+}
+
+input PaymentCreateWithoutMpProjectInput {
+  dateLocal: DateTime!
+  amount: Float
+  isIncome: Boolean
+  purpose: String
+  tochkaId: String
+  article: ArticleCreateOneWithoutPaymentsInput
+  account: AccountCreateOneWithoutPaymentsInput
+  equipment: EquipmentCreateOneWithoutPaymentsInput
   org: OrgCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
   createdBy: UserCreateOneWithoutCreatedPaymentsInput
@@ -10138,6 +10205,7 @@ input PaymentCreateWithoutOrgInput {
   article: ArticleCreateOneWithoutPaymentsInput
   account: AccountCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
+  mpProject: MpProjectCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
   createdBy: UserCreateOneWithoutCreatedPaymentsInput
   updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
@@ -10152,6 +10220,7 @@ input PaymentCreateWithoutPersonInput {
   article: ArticleCreateOneWithoutPaymentsInput
   account: AccountCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
+  mpProject: MpProjectCreateOneWithoutPaymentsInput
   org: OrgCreateOneWithoutPaymentsInput
   createdBy: UserCreateOneWithoutCreatedPaymentsInput
   updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
@@ -10166,6 +10235,7 @@ input PaymentCreateWithoutUpdatedByInput {
   article: ArticleCreateOneWithoutPaymentsInput
   account: AccountCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
+  mpProject: MpProjectCreateOneWithoutPaymentsInput
   org: OrgCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
   createdBy: UserCreateOneWithoutCreatedPaymentsInput
@@ -10258,6 +10328,7 @@ input PaymentUpdateInput {
   article: ArticleUpdateOneWithoutPaymentsInput
   account: AccountUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
+  mpProject: MpProjectUpdateOneWithoutPaymentsInput
   org: OrgUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
@@ -10308,6 +10379,15 @@ input PaymentUpdateManyWithoutEquipmentInput {
   upsert: [PaymentUpsertWithWhereUniqueWithoutEquipmentInput!]
 }
 
+input PaymentUpdateManyWithoutMpProjectInput {
+  create: [PaymentCreateWithoutMpProjectInput!]
+  connect: [PaymentWhereUniqueInput!]
+  disconnect: [PaymentWhereUniqueInput!]
+  delete: [PaymentWhereUniqueInput!]
+  update: [PaymentUpdateWithWhereUniqueWithoutMpProjectInput!]
+  upsert: [PaymentUpsertWithWhereUniqueWithoutMpProjectInput!]
+}
+
 input PaymentUpdateManyWithoutOrgInput {
   create: [PaymentCreateWithoutOrgInput!]
   connect: [PaymentWhereUniqueInput!]
@@ -10343,6 +10423,7 @@ input PaymentUpdateWithoutAccountDataInput {
   tochkaId: String
   article: ArticleUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
+  mpProject: MpProjectUpdateOneWithoutPaymentsInput
   org: OrgUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
@@ -10357,6 +10438,7 @@ input PaymentUpdateWithoutArticleDataInput {
   tochkaId: String
   account: AccountUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
+  mpProject: MpProjectUpdateOneWithoutPaymentsInput
   org: OrgUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
@@ -10372,6 +10454,7 @@ input PaymentUpdateWithoutCreatedByDataInput {
   article: ArticleUpdateOneWithoutPaymentsInput
   account: AccountUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
+  mpProject: MpProjectUpdateOneWithoutPaymentsInput
   org: OrgUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
   updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
@@ -10385,6 +10468,22 @@ input PaymentUpdateWithoutEquipmentDataInput {
   tochkaId: String
   article: ArticleUpdateOneWithoutPaymentsInput
   account: AccountUpdateOneWithoutPaymentsInput
+  mpProject: MpProjectUpdateOneWithoutPaymentsInput
+  org: OrgUpdateOneWithoutPaymentsInput
+  person: PersonUpdateOneWithoutPaymentsInput
+  createdBy: UserUpdateOneWithoutCreatedPaymentsInput
+  updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
+}
+
+input PaymentUpdateWithoutMpProjectDataInput {
+  dateLocal: DateTime
+  amount: Float
+  isIncome: Boolean
+  purpose: String
+  tochkaId: String
+  article: ArticleUpdateOneWithoutPaymentsInput
+  account: AccountUpdateOneWithoutPaymentsInput
+  equipment: EquipmentUpdateOneWithoutPaymentsInput
   org: OrgUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
@@ -10400,6 +10499,7 @@ input PaymentUpdateWithoutOrgDataInput {
   article: ArticleUpdateOneWithoutPaymentsInput
   account: AccountUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
+  mpProject: MpProjectUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
   updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
@@ -10414,6 +10514,7 @@ input PaymentUpdateWithoutPersonDataInput {
   article: ArticleUpdateOneWithoutPaymentsInput
   account: AccountUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
+  mpProject: MpProjectUpdateOneWithoutPaymentsInput
   org: OrgUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
   updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
@@ -10428,6 +10529,7 @@ input PaymentUpdateWithoutUpdatedByDataInput {
   article: ArticleUpdateOneWithoutPaymentsInput
   account: AccountUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
+  mpProject: MpProjectUpdateOneWithoutPaymentsInput
   org: OrgUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
@@ -10451,6 +10553,11 @@ input PaymentUpdateWithWhereUniqueWithoutCreatedByInput {
 input PaymentUpdateWithWhereUniqueWithoutEquipmentInput {
   where: PaymentWhereUniqueInput!
   data: PaymentUpdateWithoutEquipmentDataInput!
+}
+
+input PaymentUpdateWithWhereUniqueWithoutMpProjectInput {
+  where: PaymentWhereUniqueInput!
+  data: PaymentUpdateWithoutMpProjectDataInput!
 }
 
 input PaymentUpdateWithWhereUniqueWithoutOrgInput {
@@ -10490,6 +10597,12 @@ input PaymentUpsertWithWhereUniqueWithoutEquipmentInput {
   where: PaymentWhereUniqueInput!
   update: PaymentUpdateWithoutEquipmentDataInput!
   create: PaymentCreateWithoutEquipmentInput!
+}
+
+input PaymentUpsertWithWhereUniqueWithoutMpProjectInput {
+  where: PaymentWhereUniqueInput!
+  update: PaymentUpdateWithoutMpProjectDataInput!
+  create: PaymentCreateWithoutMpProjectInput!
 }
 
 input PaymentUpsertWithWhereUniqueWithoutOrgInput {
@@ -10734,6 +10847,7 @@ input PaymentWhereInput {
   article: ArticleWhereInput
   account: AccountWhereInput
   equipment: EquipmentWhereInput
+  mpProject: MpProjectWhereInput
   org: OrgWhereInput
   person: PersonWhereInput
   createdBy: UserWhereInput
