@@ -35,7 +35,7 @@ const handleObj = async (obj = {}, objTypeName, ctx) => {
       if (!Object.keys(result[k][method]).length) delete result[k]
       return
     }
-    if (k.endsWith('Id') && ['amoId', 'moedeloId'].indexOf(k) === -1) {
+    if (k.endsWith('Id') && ['amoId', 'moedeloId', 'mpProjectId'].indexOf(k) === -1) {
       const typeName = k.slice(0, -2)
       return result[typeName] = {
         connect: {

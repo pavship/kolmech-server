@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Mon Nov 11 2019 02:33:53 GMT+0300 (GMT+03:00)
+# timestamp: Thu Nov 21 2019 22:37:22 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -7173,9 +7173,8 @@ input ModelWhereUniqueInput {
   id: ID
 }
 
-type MpProject implements Node {
-  id: ID!
-  mpId: Int!
+type MpProject {
+  Id: Int!
   Name: String!
   Status: String
   SuperProjectId: Int
@@ -7194,25 +7193,12 @@ type MpProjectConnection {
 }
 
 input MpProjectCreateInput {
-  mpId: Int!
+  Id: Int!
   Name: String!
   Status: String
   SuperProjectId: Int
   TimeUpdated: String
-  payments: PaymentCreateManyWithoutMpProjectInput
-}
-
-input MpProjectCreateOneWithoutPaymentsInput {
-  create: MpProjectCreateWithoutPaymentsInput
-  connect: MpProjectWhereUniqueInput
-}
-
-input MpProjectCreateWithoutPaymentsInput {
-  mpId: Int!
-  Name: String!
-  Status: String
-  SuperProjectId: Int
-  TimeUpdated: String
+  payments: PaymentCreateManyInput
 }
 
 """An edge in a connection."""
@@ -7225,10 +7211,8 @@ type MpProjectEdge {
 }
 
 enum MpProjectOrderByInput {
-  id_ASC
-  id_DESC
-  mpId_ASC
-  mpId_DESC
+  Id_ASC
+  Id_DESC
   Name_ASC
   Name_DESC
   Status_ASC
@@ -7237,6 +7221,8 @@ enum MpProjectOrderByInput {
   SuperProjectId_DESC
   TimeUpdated_ASC
   TimeUpdated_DESC
+  id_ASC
+  id_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -7244,8 +7230,7 @@ enum MpProjectOrderByInput {
 }
 
 type MpProjectPreviousValues {
-  id: ID!
-  mpId: Int!
+  Id: Int!
   Name: String!
   Status: String
   SuperProjectId: Int
@@ -7292,42 +7277,20 @@ input MpProjectSubscriptionWhereInput {
 }
 
 input MpProjectUpdateInput {
-  mpId: Int
+  Id: Int
   Name: String
   Status: String
   SuperProjectId: Int
   TimeUpdated: String
-  payments: PaymentUpdateManyWithoutMpProjectInput
+  payments: PaymentUpdateManyInput
 }
 
 input MpProjectUpdateManyMutationInput {
-  mpId: Int
+  Id: Int
   Name: String
   Status: String
   SuperProjectId: Int
   TimeUpdated: String
-}
-
-input MpProjectUpdateOneWithoutPaymentsInput {
-  create: MpProjectCreateWithoutPaymentsInput
-  connect: MpProjectWhereUniqueInput
-  disconnect: Boolean
-  delete: Boolean
-  update: MpProjectUpdateWithoutPaymentsDataInput
-  upsert: MpProjectUpsertWithoutPaymentsInput
-}
-
-input MpProjectUpdateWithoutPaymentsDataInput {
-  mpId: Int
-  Name: String
-  Status: String
-  SuperProjectId: Int
-  TimeUpdated: String
-}
-
-input MpProjectUpsertWithoutPaymentsInput {
-  update: MpProjectUpdateWithoutPaymentsDataInput!
-  create: MpProjectCreateWithoutPaymentsInput!
 }
 
 input MpProjectWhereInput {
@@ -7339,68 +7302,28 @@ input MpProjectWhereInput {
 
   """Logical NOT on all given filters combined by AND."""
   NOT: [MpProjectWhereInput!]
-  id: ID
+  Id: Int
 
   """All values that are not equal to given value."""
-  id_not: ID
+  Id_not: Int
 
   """All values that are contained in given list."""
-  id_in: [ID!]
+  Id_in: [Int!]
 
   """All values that are not contained in given list."""
-  id_not_in: [ID!]
+  Id_not_in: [Int!]
 
   """All values less than the given value."""
-  id_lt: ID
+  Id_lt: Int
 
   """All values less than or equal the given value."""
-  id_lte: ID
+  Id_lte: Int
 
   """All values greater than the given value."""
-  id_gt: ID
+  Id_gt: Int
 
   """All values greater than or equal the given value."""
-  id_gte: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values not ending with the given string."""
-  id_not_ends_with: ID
-  mpId: Int
-
-  """All values that are not equal to given value."""
-  mpId_not: Int
-
-  """All values that are contained in given list."""
-  mpId_in: [Int!]
-
-  """All values that are not contained in given list."""
-  mpId_not_in: [Int!]
-
-  """All values less than the given value."""
-  mpId_lt: Int
-
-  """All values less than or equal the given value."""
-  mpId_lte: Int
-
-  """All values greater than the given value."""
-  mpId_gt: Int
-
-  """All values greater than or equal the given value."""
-  mpId_gte: Int
+  Id_gte: Int
   Name: String
 
   """All values that are not equal to given value."""
@@ -7549,8 +7472,7 @@ input MpProjectWhereInput {
 }
 
 input MpProjectWhereUniqueInput {
-  id: ID
-  mpId: Int
+  Id: Int
 }
 
 type Mutation {
@@ -7575,7 +7497,6 @@ type Mutation {
   createOpType(data: OpTypeCreateInput!): OpType!
   createOrder(data: OrderCreateInput!): Order!
   createOrg(data: OrgCreateInput!): Org!
-  createPayment(data: PaymentCreateInput!): Payment!
   createPerson(data: PersonCreateInput!): Person!
   createProc(data: ProcCreateInput!): Proc!
   createProd(data: ProdCreateInput!): Prod!
@@ -7585,6 +7506,7 @@ type Mutation {
   createUser(data: UserCreateInput!): User!
   createWorkpiece(data: WorkpieceCreateInput!): Workpiece!
   createStatus(data: StatusCreateInput!): Status!
+  createPayment(data: PaymentCreateInput!): Payment!
   createAccount(data: AccountCreateInput!): Account!
   createDoc(data: DocCreateInput!): Doc!
   createDealStatus(data: DealStatusCreateInput!): DealStatus!
@@ -7609,7 +7531,6 @@ type Mutation {
   updateOpType(data: OpTypeUpdateInput!, where: OpTypeWhereUniqueInput!): OpType
   updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
   updateOrg(data: OrgUpdateInput!, where: OrgWhereUniqueInput!): Org
-  updatePayment(data: PaymentUpdateInput!, where: PaymentWhereUniqueInput!): Payment
   updatePerson(data: PersonUpdateInput!, where: PersonWhereUniqueInput!): Person
   updateProc(data: ProcUpdateInput!, where: ProcWhereUniqueInput!): Proc
   updateProd(data: ProdUpdateInput!, where: ProdWhereUniqueInput!): Prod
@@ -7619,6 +7540,7 @@ type Mutation {
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateWorkpiece(data: WorkpieceUpdateInput!, where: WorkpieceWhereUniqueInput!): Workpiece
   updateStatus(data: StatusUpdateInput!, where: StatusWhereUniqueInput!): Status
+  updatePayment(data: PaymentUpdateInput!, where: PaymentWhereUniqueInput!): Payment
   updateAccount(data: AccountUpdateInput!, where: AccountWhereUniqueInput!): Account
   updateDoc(data: DocUpdateInput!, where: DocWhereUniqueInput!): Doc
   updateDealStatus(data: DealStatusUpdateInput!, where: DealStatusWhereUniqueInput!): DealStatus
@@ -7643,7 +7565,6 @@ type Mutation {
   deleteOpType(where: OpTypeWhereUniqueInput!): OpType
   deleteOrder(where: OrderWhereUniqueInput!): Order
   deleteOrg(where: OrgWhereUniqueInput!): Org
-  deletePayment(where: PaymentWhereUniqueInput!): Payment
   deletePerson(where: PersonWhereUniqueInput!): Person
   deleteProc(where: ProcWhereUniqueInput!): Proc
   deleteProd(where: ProdWhereUniqueInput!): Prod
@@ -7653,6 +7574,7 @@ type Mutation {
   deleteUser(where: UserWhereUniqueInput!): User
   deleteWorkpiece(where: WorkpieceWhereUniqueInput!): Workpiece
   deleteStatus(where: StatusWhereUniqueInput!): Status
+  deletePayment(where: PaymentWhereUniqueInput!): Payment
   deleteAccount(where: AccountWhereUniqueInput!): Account
   deleteDoc(where: DocWhereUniqueInput!): Doc
   deleteDealStatus(where: DealStatusWhereUniqueInput!): DealStatus
@@ -7677,7 +7599,6 @@ type Mutation {
   upsertOpType(where: OpTypeWhereUniqueInput!, create: OpTypeCreateInput!, update: OpTypeUpdateInput!): OpType!
   upsertOrder(where: OrderWhereUniqueInput!, create: OrderCreateInput!, update: OrderUpdateInput!): Order!
   upsertOrg(where: OrgWhereUniqueInput!, create: OrgCreateInput!, update: OrgUpdateInput!): Org!
-  upsertPayment(where: PaymentWhereUniqueInput!, create: PaymentCreateInput!, update: PaymentUpdateInput!): Payment!
   upsertPerson(where: PersonWhereUniqueInput!, create: PersonCreateInput!, update: PersonUpdateInput!): Person!
   upsertProc(where: ProcWhereUniqueInput!, create: ProcCreateInput!, update: ProcUpdateInput!): Proc!
   upsertProd(where: ProdWhereUniqueInput!, create: ProdCreateInput!, update: ProdUpdateInput!): Prod!
@@ -7687,6 +7608,7 @@ type Mutation {
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertWorkpiece(where: WorkpieceWhereUniqueInput!, create: WorkpieceCreateInput!, update: WorkpieceUpdateInput!): Workpiece!
   upsertStatus(where: StatusWhereUniqueInput!, create: StatusCreateInput!, update: StatusUpdateInput!): Status!
+  upsertPayment(where: PaymentWhereUniqueInput!, create: PaymentCreateInput!, update: PaymentUpdateInput!): Payment!
   upsertAccount(where: AccountWhereUniqueInput!, create: AccountCreateInput!, update: AccountUpdateInput!): Account!
   upsertDoc(where: DocWhereUniqueInput!, create: DocCreateInput!, update: DocUpdateInput!): Doc!
   upsertDealStatus(where: DealStatusWhereUniqueInput!, create: DealStatusCreateInput!, update: DealStatusUpdateInput!): DealStatus!
@@ -7711,7 +7633,6 @@ type Mutation {
   updateManyOpTypes(data: OpTypeUpdateManyMutationInput!, where: OpTypeWhereInput): BatchPayload!
   updateManyOrders(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
   updateManyOrgs(data: OrgUpdateManyMutationInput!, where: OrgWhereInput): BatchPayload!
-  updateManyPayments(data: PaymentUpdateManyMutationInput!, where: PaymentWhereInput): BatchPayload!
   updateManyPersons(data: PersonUpdateManyMutationInput!, where: PersonWhereInput): BatchPayload!
   updateManyProcs(data: ProcUpdateManyMutationInput!, where: ProcWhereInput): BatchPayload!
   updateManyProds(data: ProdUpdateManyMutationInput!, where: ProdWhereInput): BatchPayload!
@@ -7721,6 +7642,7 @@ type Mutation {
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyWorkpieces(data: WorkpieceUpdateManyMutationInput!, where: WorkpieceWhereInput): BatchPayload!
   updateManyStatuses(data: StatusUpdateManyMutationInput!, where: StatusWhereInput): BatchPayload!
+  updateManyPayments(data: PaymentUpdateManyMutationInput!, where: PaymentWhereInput): BatchPayload!
   updateManyAccounts(data: AccountUpdateManyMutationInput!, where: AccountWhereInput): BatchPayload!
   updateManyDocs(data: DocUpdateManyMutationInput!, where: DocWhereInput): BatchPayload!
   updateManyDealStatuses(data: DealStatusUpdateManyMutationInput!, where: DealStatusWhereInput): BatchPayload!
@@ -7745,7 +7667,6 @@ type Mutation {
   deleteManyOpTypes(where: OpTypeWhereInput): BatchPayload!
   deleteManyOrders(where: OrderWhereInput): BatchPayload!
   deleteManyOrgs(where: OrgWhereInput): BatchPayload!
-  deleteManyPayments(where: PaymentWhereInput): BatchPayload!
   deleteManyPersons(where: PersonWhereInput): BatchPayload!
   deleteManyProcs(where: ProcWhereInput): BatchPayload!
   deleteManyProds(where: ProdWhereInput): BatchPayload!
@@ -7755,6 +7676,7 @@ type Mutation {
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyWorkpieces(where: WorkpieceWhereInput): BatchPayload!
   deleteManyStatuses(where: StatusWhereInput): BatchPayload!
+  deleteManyPayments(where: PaymentWhereInput): BatchPayload!
   deleteManyAccounts(where: AccountWhereInput): BatchPayload!
   deleteManyDocs(where: DocWhereInput): BatchPayload!
   deleteManyDealStatuses(where: DealStatusWhereInput): BatchPayload!
@@ -10048,7 +9970,7 @@ type Payment implements Node {
   tochkaId: String
   account: Account
   equipment: Equipment
-  mpProject: MpProject
+  mpProjectId: Int
   org: Org
   person: Person
   createdBy: User
@@ -10071,14 +9993,19 @@ input PaymentCreateInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
+  mpProjectId: Int
   article: ArticleCreateOneWithoutPaymentsInput
   account: AccountCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
-  mpProject: MpProjectCreateOneWithoutPaymentsInput
   org: OrgCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
   createdBy: UserCreateOneWithoutCreatedPaymentsInput
   updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
+}
+
+input PaymentCreateManyInput {
+  create: [PaymentCreateInput!]
+  connect: [PaymentWhereUniqueInput!]
 }
 
 input PaymentCreateManyWithoutAccountInput {
@@ -10098,11 +10025,6 @@ input PaymentCreateManyWithoutCreatedByInput {
 
 input PaymentCreateManyWithoutEquipmentInput {
   create: [PaymentCreateWithoutEquipmentInput!]
-  connect: [PaymentWhereUniqueInput!]
-}
-
-input PaymentCreateManyWithoutMpProjectInput {
-  create: [PaymentCreateWithoutMpProjectInput!]
   connect: [PaymentWhereUniqueInput!]
 }
 
@@ -10127,9 +10049,9 @@ input PaymentCreateWithoutAccountInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
+  mpProjectId: Int
   article: ArticleCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
-  mpProject: MpProjectCreateOneWithoutPaymentsInput
   org: OrgCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
   createdBy: UserCreateOneWithoutCreatedPaymentsInput
@@ -10142,9 +10064,9 @@ input PaymentCreateWithoutArticleInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
+  mpProjectId: Int
   account: AccountCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
-  mpProject: MpProjectCreateOneWithoutPaymentsInput
   org: OrgCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
   createdBy: UserCreateOneWithoutCreatedPaymentsInput
@@ -10157,10 +10079,10 @@ input PaymentCreateWithoutCreatedByInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
+  mpProjectId: Int
   article: ArticleCreateOneWithoutPaymentsInput
   account: AccountCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
-  mpProject: MpProjectCreateOneWithoutPaymentsInput
   org: OrgCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
   updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
@@ -10172,24 +10094,9 @@ input PaymentCreateWithoutEquipmentInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
+  mpProjectId: Int
   article: ArticleCreateOneWithoutPaymentsInput
   account: AccountCreateOneWithoutPaymentsInput
-  mpProject: MpProjectCreateOneWithoutPaymentsInput
-  org: OrgCreateOneWithoutPaymentsInput
-  person: PersonCreateOneWithoutPaymentsInput
-  createdBy: UserCreateOneWithoutCreatedPaymentsInput
-  updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
-}
-
-input PaymentCreateWithoutMpProjectInput {
-  dateLocal: DateTime!
-  amount: Float
-  isIncome: Boolean
-  purpose: String
-  tochkaId: String
-  article: ArticleCreateOneWithoutPaymentsInput
-  account: AccountCreateOneWithoutPaymentsInput
-  equipment: EquipmentCreateOneWithoutPaymentsInput
   org: OrgCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
   createdBy: UserCreateOneWithoutCreatedPaymentsInput
@@ -10202,10 +10109,10 @@ input PaymentCreateWithoutOrgInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
+  mpProjectId: Int
   article: ArticleCreateOneWithoutPaymentsInput
   account: AccountCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
-  mpProject: MpProjectCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
   createdBy: UserCreateOneWithoutCreatedPaymentsInput
   updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
@@ -10217,10 +10124,10 @@ input PaymentCreateWithoutPersonInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
+  mpProjectId: Int
   article: ArticleCreateOneWithoutPaymentsInput
   account: AccountCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
-  mpProject: MpProjectCreateOneWithoutPaymentsInput
   org: OrgCreateOneWithoutPaymentsInput
   createdBy: UserCreateOneWithoutCreatedPaymentsInput
   updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
@@ -10232,10 +10139,10 @@ input PaymentCreateWithoutUpdatedByInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
+  mpProjectId: Int
   article: ArticleCreateOneWithoutPaymentsInput
   account: AccountCreateOneWithoutPaymentsInput
   equipment: EquipmentCreateOneWithoutPaymentsInput
-  mpProject: MpProjectCreateOneWithoutPaymentsInput
   org: OrgCreateOneWithoutPaymentsInput
   person: PersonCreateOneWithoutPaymentsInput
   createdBy: UserCreateOneWithoutCreatedPaymentsInput
@@ -10267,6 +10174,8 @@ enum PaymentOrderByInput {
   purpose_DESC
   tochkaId_ASC
   tochkaId_DESC
+  mpProjectId_ASC
+  mpProjectId_DESC
 }
 
 type PaymentPreviousValues {
@@ -10278,6 +10187,7 @@ type PaymentPreviousValues {
   isIncome: Boolean
   purpose: String
   tochkaId: String
+  mpProjectId: Int
 }
 
 type PaymentSubscriptionPayload {
@@ -10319,20 +10229,45 @@ input PaymentSubscriptionWhereInput {
   node: PaymentWhereInput
 }
 
+input PaymentUpdateDataInput {
+  dateLocal: DateTime
+  amount: Float
+  isIncome: Boolean
+  purpose: String
+  tochkaId: String
+  mpProjectId: Int
+  article: ArticleUpdateOneWithoutPaymentsInput
+  account: AccountUpdateOneWithoutPaymentsInput
+  equipment: EquipmentUpdateOneWithoutPaymentsInput
+  org: OrgUpdateOneWithoutPaymentsInput
+  person: PersonUpdateOneWithoutPaymentsInput
+  createdBy: UserUpdateOneWithoutCreatedPaymentsInput
+  updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
+}
+
 input PaymentUpdateInput {
   dateLocal: DateTime
   amount: Float
   isIncome: Boolean
   purpose: String
   tochkaId: String
+  mpProjectId: Int
   article: ArticleUpdateOneWithoutPaymentsInput
   account: AccountUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
-  mpProject: MpProjectUpdateOneWithoutPaymentsInput
   org: OrgUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
   updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
+}
+
+input PaymentUpdateManyInput {
+  create: [PaymentCreateInput!]
+  connect: [PaymentWhereUniqueInput!]
+  disconnect: [PaymentWhereUniqueInput!]
+  delete: [PaymentWhereUniqueInput!]
+  update: [PaymentUpdateWithWhereUniqueNestedInput!]
+  upsert: [PaymentUpsertWithWhereUniqueNestedInput!]
 }
 
 input PaymentUpdateManyMutationInput {
@@ -10341,6 +10276,7 @@ input PaymentUpdateManyMutationInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
+  mpProjectId: Int
 }
 
 input PaymentUpdateManyWithoutAccountInput {
@@ -10379,15 +10315,6 @@ input PaymentUpdateManyWithoutEquipmentInput {
   upsert: [PaymentUpsertWithWhereUniqueWithoutEquipmentInput!]
 }
 
-input PaymentUpdateManyWithoutMpProjectInput {
-  create: [PaymentCreateWithoutMpProjectInput!]
-  connect: [PaymentWhereUniqueInput!]
-  disconnect: [PaymentWhereUniqueInput!]
-  delete: [PaymentWhereUniqueInput!]
-  update: [PaymentUpdateWithWhereUniqueWithoutMpProjectInput!]
-  upsert: [PaymentUpsertWithWhereUniqueWithoutMpProjectInput!]
-}
-
 input PaymentUpdateManyWithoutOrgInput {
   create: [PaymentCreateWithoutOrgInput!]
   connect: [PaymentWhereUniqueInput!]
@@ -10421,9 +10348,9 @@ input PaymentUpdateWithoutAccountDataInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
+  mpProjectId: Int
   article: ArticleUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
-  mpProject: MpProjectUpdateOneWithoutPaymentsInput
   org: OrgUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
@@ -10436,9 +10363,9 @@ input PaymentUpdateWithoutArticleDataInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
+  mpProjectId: Int
   account: AccountUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
-  mpProject: MpProjectUpdateOneWithoutPaymentsInput
   org: OrgUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
@@ -10451,10 +10378,10 @@ input PaymentUpdateWithoutCreatedByDataInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
+  mpProjectId: Int
   article: ArticleUpdateOneWithoutPaymentsInput
   account: AccountUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
-  mpProject: MpProjectUpdateOneWithoutPaymentsInput
   org: OrgUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
   updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
@@ -10466,24 +10393,9 @@ input PaymentUpdateWithoutEquipmentDataInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
+  mpProjectId: Int
   article: ArticleUpdateOneWithoutPaymentsInput
   account: AccountUpdateOneWithoutPaymentsInput
-  mpProject: MpProjectUpdateOneWithoutPaymentsInput
-  org: OrgUpdateOneWithoutPaymentsInput
-  person: PersonUpdateOneWithoutPaymentsInput
-  createdBy: UserUpdateOneWithoutCreatedPaymentsInput
-  updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
-}
-
-input PaymentUpdateWithoutMpProjectDataInput {
-  dateLocal: DateTime
-  amount: Float
-  isIncome: Boolean
-  purpose: String
-  tochkaId: String
-  article: ArticleUpdateOneWithoutPaymentsInput
-  account: AccountUpdateOneWithoutPaymentsInput
-  equipment: EquipmentUpdateOneWithoutPaymentsInput
   org: OrgUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
@@ -10496,10 +10408,10 @@ input PaymentUpdateWithoutOrgDataInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
+  mpProjectId: Int
   article: ArticleUpdateOneWithoutPaymentsInput
   account: AccountUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
-  mpProject: MpProjectUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
   updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
@@ -10511,10 +10423,10 @@ input PaymentUpdateWithoutPersonDataInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
+  mpProjectId: Int
   article: ArticleUpdateOneWithoutPaymentsInput
   account: AccountUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
-  mpProject: MpProjectUpdateOneWithoutPaymentsInput
   org: OrgUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
   updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
@@ -10526,13 +10438,18 @@ input PaymentUpdateWithoutUpdatedByDataInput {
   isIncome: Boolean
   purpose: String
   tochkaId: String
+  mpProjectId: Int
   article: ArticleUpdateOneWithoutPaymentsInput
   account: AccountUpdateOneWithoutPaymentsInput
   equipment: EquipmentUpdateOneWithoutPaymentsInput
-  mpProject: MpProjectUpdateOneWithoutPaymentsInput
   org: OrgUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
+}
+
+input PaymentUpdateWithWhereUniqueNestedInput {
+  where: PaymentWhereUniqueInput!
+  data: PaymentUpdateDataInput!
 }
 
 input PaymentUpdateWithWhereUniqueWithoutAccountInput {
@@ -10555,11 +10472,6 @@ input PaymentUpdateWithWhereUniqueWithoutEquipmentInput {
   data: PaymentUpdateWithoutEquipmentDataInput!
 }
 
-input PaymentUpdateWithWhereUniqueWithoutMpProjectInput {
-  where: PaymentWhereUniqueInput!
-  data: PaymentUpdateWithoutMpProjectDataInput!
-}
-
 input PaymentUpdateWithWhereUniqueWithoutOrgInput {
   where: PaymentWhereUniqueInput!
   data: PaymentUpdateWithoutOrgDataInput!
@@ -10573,6 +10485,12 @@ input PaymentUpdateWithWhereUniqueWithoutPersonInput {
 input PaymentUpdateWithWhereUniqueWithoutUpdatedByInput {
   where: PaymentWhereUniqueInput!
   data: PaymentUpdateWithoutUpdatedByDataInput!
+}
+
+input PaymentUpsertWithWhereUniqueNestedInput {
+  where: PaymentWhereUniqueInput!
+  update: PaymentUpdateDataInput!
+  create: PaymentCreateInput!
 }
 
 input PaymentUpsertWithWhereUniqueWithoutAccountInput {
@@ -10597,12 +10515,6 @@ input PaymentUpsertWithWhereUniqueWithoutEquipmentInput {
   where: PaymentWhereUniqueInput!
   update: PaymentUpdateWithoutEquipmentDataInput!
   create: PaymentCreateWithoutEquipmentInput!
-}
-
-input PaymentUpsertWithWhereUniqueWithoutMpProjectInput {
-  where: PaymentWhereUniqueInput!
-  update: PaymentUpdateWithoutMpProjectDataInput!
-  create: PaymentCreateWithoutMpProjectInput!
 }
 
 input PaymentUpsertWithWhereUniqueWithoutOrgInput {
@@ -10844,10 +10756,31 @@ input PaymentWhereInput {
 
   """All values not ending with the given string."""
   tochkaId_not_ends_with: String
+  mpProjectId: Int
+
+  """All values that are not equal to given value."""
+  mpProjectId_not: Int
+
+  """All values that are contained in given list."""
+  mpProjectId_in: [Int!]
+
+  """All values that are not contained in given list."""
+  mpProjectId_not_in: [Int!]
+
+  """All values less than the given value."""
+  mpProjectId_lt: Int
+
+  """All values less than or equal the given value."""
+  mpProjectId_lte: Int
+
+  """All values greater than the given value."""
+  mpProjectId_gt: Int
+
+  """All values greater than or equal the given value."""
+  mpProjectId_gte: Int
   article: ArticleWhereInput
   account: AccountWhereInput
   equipment: EquipmentWhereInput
-  mpProject: MpProjectWhereInput
   org: OrgWhereInput
   person: PersonWhereInput
   createdBy: UserWhereInput
@@ -12535,7 +12468,6 @@ type Query {
   opTypes(where: OpTypeWhereInput, orderBy: OpTypeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OpType]!
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
   orgs(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Org]!
-  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment]!
   persons(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Person]!
   procs(where: ProcWhereInput, orderBy: ProcOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Proc]!
   prods(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Prod]!
@@ -12545,6 +12477,7 @@ type Query {
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   workpieces(where: WorkpieceWhereInput, orderBy: WorkpieceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Workpiece]!
   statuses(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Status]!
+  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment]!
   accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account]!
   docs(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Doc]!
   dealStatuses(where: DealStatusWhereInput, orderBy: DealStatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [DealStatus]!
@@ -12569,7 +12502,6 @@ type Query {
   opType(where: OpTypeWhereUniqueInput!): OpType
   order(where: OrderWhereUniqueInput!): Order
   org(where: OrgWhereUniqueInput!): Org
-  payment(where: PaymentWhereUniqueInput!): Payment
   person(where: PersonWhereUniqueInput!): Person
   proc(where: ProcWhereUniqueInput!): Proc
   prod(where: ProdWhereUniqueInput!): Prod
@@ -12579,6 +12511,7 @@ type Query {
   user(where: UserWhereUniqueInput!): User
   workpiece(where: WorkpieceWhereUniqueInput!): Workpiece
   status(where: StatusWhereUniqueInput!): Status
+  payment(where: PaymentWhereUniqueInput!): Payment
   account(where: AccountWhereUniqueInput!): Account
   doc(where: DocWhereUniqueInput!): Doc
   dealStatus(where: DealStatusWhereUniqueInput!): DealStatus
@@ -12603,7 +12536,6 @@ type Query {
   opTypesConnection(where: OpTypeWhereInput, orderBy: OpTypeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OpTypeConnection!
   ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
   orgsConnection(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgConnection!
-  paymentsConnection(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentConnection!
   personsConnection(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PersonConnection!
   procsConnection(where: ProcWhereInput, orderBy: ProcOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProcConnection!
   prodsConnection(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProdConnection!
@@ -12613,6 +12545,7 @@ type Query {
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   workpiecesConnection(where: WorkpieceWhereInput, orderBy: WorkpieceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WorkpieceConnection!
   statusesConnection(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StatusConnection!
+  paymentsConnection(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentConnection!
   accountsConnection(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AccountConnection!
   docsConnection(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DocConnection!
   dealStatusesConnection(where: DealStatusWhereInput, orderBy: DealStatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DealStatusConnection!
@@ -13189,7 +13122,6 @@ type Subscription {
   opType(where: OpTypeSubscriptionWhereInput): OpTypeSubscriptionPayload
   order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
   org(where: OrgSubscriptionWhereInput): OrgSubscriptionPayload
-  payment(where: PaymentSubscriptionWhereInput): PaymentSubscriptionPayload
   person(where: PersonSubscriptionWhereInput): PersonSubscriptionPayload
   proc(where: ProcSubscriptionWhereInput): ProcSubscriptionPayload
   prod(where: ProdSubscriptionWhereInput): ProdSubscriptionPayload
@@ -13199,6 +13131,7 @@ type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   workpiece(where: WorkpieceSubscriptionWhereInput): WorkpieceSubscriptionPayload
   status(where: StatusSubscriptionWhereInput): StatusSubscriptionPayload
+  payment(where: PaymentSubscriptionWhereInput): PaymentSubscriptionPayload
   account(where: AccountSubscriptionWhereInput): AccountSubscriptionPayload
   doc(where: DocSubscriptionWhereInput): DocSubscriptionPayload
   dealStatus(where: DealStatusSubscriptionWhereInput): DealStatusSubscriptionPayload

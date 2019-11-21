@@ -2,6 +2,7 @@ const { GraphQLServer } = require('graphql-yoga')
 const { Prisma } = require('prisma-binding')
 const resolvers = require('./resolvers')
 const { getUserId } = require('./utils/auth')
+const { report } = require('./rest/report')
 const express = require('express')
 
 const db = new Prisma({
@@ -22,10 +23,14 @@ const server = new GraphQLServer({
 		url: req.request.protocol + '://' + req.request.get('host'),
 		userId: getUserId(req),
 		db
-	})
+	}),
+	resolverValidationOptions: {
+    requireResolversForResolveType: false
+  }
 })
 
 // server.express.get('/confirm/:token', confirmEmail)
+server.express.get('/report', (req, res) => report(req, res, db))
 
 server.express.use('/uploads', express.static('uploads'))
 

@@ -231,7 +231,7 @@ input PaymentInput {
   id: ID
 	articleId: ID
 	equipmentId: ID
-  mpProjectId: ID
+  mpProjectId: Int
 	orgId: ID
 	personId: ID
   dateLocal: String

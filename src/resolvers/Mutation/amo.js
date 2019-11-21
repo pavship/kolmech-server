@@ -20,7 +20,7 @@ let Amo = null
 const amoConnect = async ctx => {
   const { db } = ctx
   // console.log('await db.query.serverDatas({}, { id amoExpiresAt, amoCookie }) > ', await db.query.serverDatas({}, '{ id amoExpiresAt, amoCookie }'))
-  let [{ id, amoExpiresAt, amoCookie}] = 
+  let [{ id, amoExpiresAt, amoCookie }] = 
     await db.query.serverDatas({}, '{ id amoExpiresAt, amoCookie }')
   const isExpired = amoExpiresAt < Date.now()/1000
   if (isExpired) {

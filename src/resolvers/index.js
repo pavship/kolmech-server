@@ -1,5 +1,6 @@
 const { File } = require('./File')
 const { Query } = require('./Query/Query')
+const { megaplanQueries } = require('./Query/megaplanQueries')
 const { orgQueries } = require('./Query/orgQueries')
 const { Subscription } = require('./Subscription')
 const { amo } = require('./Mutation/amo')
@@ -34,7 +35,8 @@ module.exports = {
   File,
   Query: {
     ...Query, //simple queries collection
-    ...orgQueries
+    ...orgQueries,
+    ...megaplanQueries
   },
   Mutation: {
     ...amo,

@@ -188,13 +188,11 @@ type Model {
 }
 
 type MpProject {
-	id: ID! @unique
-	mpId: Int! @unique
+	Id: Int! @unique
 	Name: String!
 	Status: String
 	SuperProjectId: Int
 	TimeUpdated: String
-	payments: [Payment!]!
 }
 
 type Op {
@@ -263,7 +261,7 @@ type Payment {
 	tochkaId: String
 	account: Account
 	equipment: Equipment
-	mpProject: MpProject
+	mpProjectId: Int
 	org: Org
 	person: Person
 	createdBy: User @relation(name: "PaymentsCreatedByUser")

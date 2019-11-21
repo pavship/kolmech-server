@@ -8,19 +8,23 @@ const unrestrictedOperations = [
 	'ConfirmEmail'
 ]
 
-function getUserId(ctx) {
+function getUserId(req) {
 	// console.log('Object.keys(request) > ', Object.keys(request))
 	// console.log('Object.keys(request.headers) > ', Object.keys(request.headers))
 	// console.log('Object.keys(request.body) > ', Object.keys(request.body))
 	// console.log('request.body.operationName > ', request.body.operationName)
 	
 	// if (request.body.operationName === 'Login') return null
-	const { request } = ctx
-	const { operationName } = request.body
-	console.log('operationName > ', operationName)
-	if (unrestrictedOperations.includes(operationName)) return null
-
-	const Authorization = request.get('Authorization')
+	const { request } = req
+	let Authorization = null
+	if (request) {
+		const { operationName } = request.body
+		console.log('operationName > ', operationName)
+		if (unrestrictedOperations.includes(operationName)) return null
+		Authorization = request.get('Authorization')
+	} else {
+		Authorization = req.headers ? req.headers.authorization : null
+	}
 	if (Authorization) {
 		const token = Authorization.replace('Bearer ', '')
 		// @ts-ignore
