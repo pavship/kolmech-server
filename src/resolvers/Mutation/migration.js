@@ -214,18 +214,24 @@ const migration = {
 			{ name: 'lend', rusName: 'Займ (Выдача)', isLoan: true},
 			{ name: 'loan', rusName: 'Займ (Получение)', isLoan: true, isIncome: true},
 			{ name: 'equipmentInstallation', rusName: 'Подключение оборудования', relations: { set: ['EQUIPMENT'] }},
-			{ name: 'equipmentPurchase', rusName: 'Покупка оборудования', relations: { set: ['EQUIPMENT'] }},
+			{ name: 'equipment', rusName: 'Оборудование', relations: { set: ['EQUIPMENT'] }},
+			{ name: 'mail', rusName: 'Корреспонденция'},
 			{ name: 'maintainance', rusName: 'ТО Оборудования', relations: { set: ['EQUIPMENT'] }},
+			{ name: 'materials', rusName: 'Материалы'},
 			{ name: 'modernization', rusName: 'Модернизация оборудования', relations: { set: ['EQUIPMENT'] }},
 			{ name: 'nonCoreRevenue', rusName: 'Выручка (Неосновная деятельность)', isIncome: true},
 			{ name: 'otherExpenses', rusName: 'Прочие расходы'},
 			{ name: 'repair', rusName: 'Ремонт оборудования', relations: { set: ['EQUIPMENT'] }},
 			{ name: 'revenue', rusName: 'Выручка (Основная деятельность)', isIncome: true},
+			{ name: 'rig', rusName: 'Оснастка'},
 			{ name: 'salary', rusName: 'ЗП'},
+			{ name: 'spares', rusName: 'Запчасти'},
+			{ name: 'services', rusName: 'Услуги'},
 			{ name: 'subcontract', rusName: 'Субподряд'},
-			{ name: 'tools', rusName: 'Оснастка/Инструмент', relations: { set: ['EQUIPMENT'] }},
+			{ name: 'tools', rusName: 'Инструмент', relations: { set: ['EQUIPMENT'] }},
 			{ name: 'training', rusName: 'Обучение персонала'},
 			{ name: 'transport', rusName: 'Транспорт'},
+			{ name: 'tubes', rusName: 'Трубы'},
 		]
 		const existing = await ctx.db.query.articles({}, '{ id name }')
 		const existingNames = existing.map(a => a.name)
@@ -316,6 +322,19 @@ const migration = {
 		))
 		return { count: created.length + updated.length }
 	},
+
+	async populateInnsIntoPayments(_, __, ctx, info) {
+		const { db } = ctx
+		const payments = await db.query.payments({}, '{ id inn org { inn } }')
+		for (p of payments) {
+			if (!p.org) continue
+			await db.mutation.updatePayment({
+				where: { id: p.id },
+				data: { inn: p.org.inn}
+			})
+		}
+		return db.query.payments({}, '{ id inn org { inn } }')
+	}
 
 }
 

@@ -19,7 +19,8 @@ const payment = {
       // for new records, connect payment to this user's default account
       if (!validated.id) {
         validated.accountId = (await db.query.user({ 
-          where: { id: userId }
+          // where: { id: userId }
+          where: { email: 'pavship.developer@tutamail.com' }
         }, ' { account { id} }' )).account.id
       }
       const mutationObj = await generateMutationObject(validated, 'payment', ctx, { includeUser: true })

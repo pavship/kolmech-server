@@ -1,6 +1,7 @@
 const { File } = require('./File')
 const { Query } = require('./Query/Query')
-const { megaplanQueries } = require('./Query/megaplanQueries')
+const { moedelo: moedeloQueries } = require('./Query/moedelo')
+const { megaplan: megaplanQueries } = require('./Query/megaplan')
 const { orgQueries } = require('./Query/orgQueries')
 const { Subscription } = require('./Subscription')
 const { amo } = require('./Mutation/amo')
@@ -25,6 +26,7 @@ const { task } = require('./Mutation/task')
 const { tel } = require('./Mutation/tel')
 const { tochka } = require('./Mutation/tochka')
 const { employee } = require('./Mutation/employee')
+const { mdKontragent } = require('./Mutation/mdKontragent')
 const { migration } = require('./Mutation/migration')
 const { mixed } = require('./Mutation/mixed')
 const { model } = require('./Mutation/model')
@@ -36,7 +38,8 @@ module.exports = {
   Query: {
     ...Query, //simple queries collection
     ...orgQueries,
-    ...megaplanQueries
+    ...megaplanQueries,
+    ...moedeloQueries,
   },
   Mutation: {
     ...amo,
@@ -61,6 +64,7 @@ module.exports = {
     ...tel,
     ...tochka,
     ...employee,
+    ...mdKontragent,
     ...migration,
     ...mixed,
     ...model,

@@ -14,6 +14,7 @@ type Query {
   enquiry (id: ID!): Enquiry
   equipment (id: ID!): Equipment
   equipments: [Equipment!]!
+  mdKontragents: [MdKontragent!]!
   me: User
   model (id: ID!): Model
   models: [Model!]!
@@ -45,6 +46,7 @@ type Mutation {
   createDrawings(modelId: ID!, files: [Upload!]!): [Drawing!]!
   createEnquiry(dateLocal: String!, orgId: ID!, modelId: ID!, qty: Int!): Enquiry
   createEnquiryEvent(enquiryId: ID!, htmlText: String, statusId: ID, doc: DocCreateInput): Event
+  createMdKontragent(inn: String!): MdKontragent
   createOrg(inn: String!): Org
   deleteAllEnquiries: BatchPayload!
   deleteAllOrgs: BatchPayload!
@@ -90,6 +92,7 @@ type Mutation {
   importModels: BatchPayload!
   connectEnquiriesToDocsAndStatus: BatchPayload!
   populateEquipment: BatchPayload
+  populateInnsIntoPayments: [Payment!]!
   populateOpTypes: BatchPayload
   populateOrderFullnums: BatchPayload
   populatePaymentArticles: BatchPayload
@@ -231,6 +234,8 @@ input PaymentInput {
   id: ID
 	articleId: ID
 	equipmentId: ID
+  inn: String
+  mdKontragentId: Int
   mpProjectId: Int
 	orgId: ID
 	personId: ID

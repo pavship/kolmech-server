@@ -232,7 +232,7 @@ const createContract = async (_, { id, date = toLocalDateString(new Date()) }, {
   return { statusText: 'OK' }
 }
 
-const createPostEnvelopeAddressInsert = async (_, { orgId: orgIdArg, amoId: amoIdArg, dealId }, ctx, info) => {
+const createPostEnvelopeAddressInsert = async (_, { orgId: orgIdArg, amoId: amoIdArg }, ctx, info) => {
   const { db } = ctx
   let data = null
   let company = null
@@ -246,6 +246,8 @@ const createPostEnvelopeAddressInsert = async (_, { orgId: orgIdArg, amoId: amoI
     console.log('company > ', JSON.stringify(company, null, 2))
     const innCustomField = company.custom_fields.find(f => f.name === 'ИНН')
     const inn = innCustomField ? innCustomField.values[0].value : ''
+    console.log('data > ', data)
+    console.log('!data > ', !data)
     console.log('inn > ', inn)
     if (!data) {
       if (inn) data = await createOrg(_, { inn }, ctx, '{ id name ulName }')
@@ -255,6 +257,7 @@ const createPostEnvelopeAddressInsert = async (_, { orgId: orgIdArg, amoId: amoI
   }
   // console.log('company > ', company)
   const amoId = amoIdArg || data.amoId
+  console.log('data > ', data)
   const { name, ulName } = data
   console.log('amoId, name, ulName > ', amoId, name, ulName)
   // const company = await getAmoCompany(_, { amoId }, ctx, info)

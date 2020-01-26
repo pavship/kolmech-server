@@ -8,10 +8,6 @@ const client = new GraphQLClient(
 )
 
 const Query = {
-	me(_, __, ctx, info) {
-		const { userId, db } = ctx
-		return db.query.user({ where: { id: userId } }, info)
-	},
 	
 	async confirmEmail(_, { token }, ctx, info) {
 		try {
@@ -92,6 +88,11 @@ const Query = {
 		return ctx.db.query.employees({ where: { org: { id: orgId } } }, info)
 	},
 
+	me(_, __, ctx, info) {
+		const { userId, db } = ctx
+		return db.query.user({ where: { id: userId } }, info)
+	},
+
 	model(_, { id }, ctx, info) {
 		return ctx.db.query.model({ where: { id } }, info)
 	},
@@ -116,8 +117,13 @@ const Query = {
 		return ctx.db.query.tasks({}, info)
 	},
 
-	payments(_, __, ctx, info) {
-		return ctx.db.query.payments({ orderBy: 'dateLocal_DESC' }, info)
+	async payments(_, __, ctx, info) {
+		const { db, userId } = ctx
+		const { role } = await db.query.user({ where: { id: userId } }, '{ role }')
+		return db.query.payments({
+			orderBy: 'dateLocal_DESC',
+			...role !== 'OWNER' && { last: 30 }
+		}, info)
 	},
 
 	persons(_, __, ctx, info) {

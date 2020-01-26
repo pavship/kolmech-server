@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Thu Nov 21 2019 22:37:22 GMT+0300 (GMT+03:00)
+# timestamp: Sun Jan 26 2020 19:52:22 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
@@ -363,6 +363,10 @@ type AggregateFile {
 }
 
 type AggregateFileLink {
+  count: Int!
+}
+
+type AggregateMdKontragent {
   count: Int!
 }
 
@@ -6676,6 +6680,227 @@ Long can represent values between -(2^63) and 2^63 - 1.
 """
 scalar Long
 
+type MdKontragent {
+  Id: Int!
+  Inn: String!
+  Name: String!
+}
+
+"""A connection to a list of items."""
+type MdKontragentConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [MdKontragentEdge]!
+  aggregate: AggregateMdKontragent!
+}
+
+input MdKontragentCreateInput {
+  Id: Int!
+  Inn: String!
+  Name: String!
+}
+
+"""An edge in a connection."""
+type MdKontragentEdge {
+  """The item at the end of the edge."""
+  node: MdKontragent!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum MdKontragentOrderByInput {
+  Id_ASC
+  Id_DESC
+  Inn_ASC
+  Inn_DESC
+  Name_ASC
+  Name_DESC
+  id_ASC
+  id_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type MdKontragentPreviousValues {
+  Id: Int!
+  Inn: String!
+  Name: String!
+}
+
+type MdKontragentSubscriptionPayload {
+  mutation: MutationType!
+  node: MdKontragent
+  updatedFields: [String!]
+  previousValues: MdKontragentPreviousValues
+}
+
+input MdKontragentSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [MdKontragentSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [MdKontragentSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [MdKontragentSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: MdKontragentWhereInput
+}
+
+input MdKontragentUpdateInput {
+  Id: Int
+  Inn: String
+  Name: String
+}
+
+input MdKontragentUpdateManyMutationInput {
+  Id: Int
+  Inn: String
+  Name: String
+}
+
+input MdKontragentWhereInput {
+  """Logical AND on all given filters."""
+  AND: [MdKontragentWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [MdKontragentWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [MdKontragentWhereInput!]
+  Id: Int
+
+  """All values that are not equal to given value."""
+  Id_not: Int
+
+  """All values that are contained in given list."""
+  Id_in: [Int!]
+
+  """All values that are not contained in given list."""
+  Id_not_in: [Int!]
+
+  """All values less than the given value."""
+  Id_lt: Int
+
+  """All values less than or equal the given value."""
+  Id_lte: Int
+
+  """All values greater than the given value."""
+  Id_gt: Int
+
+  """All values greater than or equal the given value."""
+  Id_gte: Int
+  Inn: String
+
+  """All values that are not equal to given value."""
+  Inn_not: String
+
+  """All values that are contained in given list."""
+  Inn_in: [String!]
+
+  """All values that are not contained in given list."""
+  Inn_not_in: [String!]
+
+  """All values less than the given value."""
+  Inn_lt: String
+
+  """All values less than or equal the given value."""
+  Inn_lte: String
+
+  """All values greater than the given value."""
+  Inn_gt: String
+
+  """All values greater than or equal the given value."""
+  Inn_gte: String
+
+  """All values containing the given string."""
+  Inn_contains: String
+
+  """All values not containing the given string."""
+  Inn_not_contains: String
+
+  """All values starting with the given string."""
+  Inn_starts_with: String
+
+  """All values not starting with the given string."""
+  Inn_not_starts_with: String
+
+  """All values ending with the given string."""
+  Inn_ends_with: String
+
+  """All values not ending with the given string."""
+  Inn_not_ends_with: String
+  Name: String
+
+  """All values that are not equal to given value."""
+  Name_not: String
+
+  """All values that are contained in given list."""
+  Name_in: [String!]
+
+  """All values that are not contained in given list."""
+  Name_not_in: [String!]
+
+  """All values less than the given value."""
+  Name_lt: String
+
+  """All values less than or equal the given value."""
+  Name_lte: String
+
+  """All values greater than the given value."""
+  Name_gt: String
+
+  """All values greater than or equal the given value."""
+  Name_gte: String
+
+  """All values containing the given string."""
+  Name_contains: String
+
+  """All values not containing the given string."""
+  Name_not_contains: String
+
+  """All values starting with the given string."""
+  Name_starts_with: String
+
+  """All values not starting with the given string."""
+  Name_not_starts_with: String
+
+  """All values ending with the given string."""
+  Name_ends_with: String
+
+  """All values not ending with the given string."""
+  Name_not_ends_with: String
+}
+
+input MdKontragentWhereUniqueInput {
+  Id: Int
+  Inn: String
+}
+
 type Model implements Node {
   id: ID!
   article: String
@@ -7179,7 +7404,6 @@ type MpProject {
   Status: String
   SuperProjectId: Int
   TimeUpdated: String
-  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
 }
 
 """A connection to a list of items."""
@@ -7198,7 +7422,6 @@ input MpProjectCreateInput {
   Status: String
   SuperProjectId: Int
   TimeUpdated: String
-  payments: PaymentCreateManyInput
 }
 
 """An edge in a connection."""
@@ -7282,7 +7505,6 @@ input MpProjectUpdateInput {
   Status: String
   SuperProjectId: Int
   TimeUpdated: String
-  payments: PaymentUpdateManyInput
 }
 
 input MpProjectUpdateManyMutationInput {
@@ -7466,9 +7688,6 @@ input MpProjectWhereInput {
 
   """All values not ending with the given string."""
   TimeUpdated_not_ends_with: String
-  payments_every: PaymentWhereInput
-  payments_some: PaymentWhereInput
-  payments_none: PaymentWhereInput
 }
 
 input MpProjectWhereUniqueInput {
@@ -7491,12 +7710,14 @@ type Mutation {
   createExec(data: ExecCreateInput!): Exec!
   createFile(data: FileCreateInput!): File!
   createFileLink(data: FileLinkCreateInput!): FileLink!
+  createMdKontragent(data: MdKontragentCreateInput!): MdKontragent!
   createModel(data: ModelCreateInput!): Model!
   createMpProject(data: MpProjectCreateInput!): MpProject!
   createOp(data: OpCreateInput!): Op!
   createOpType(data: OpTypeCreateInput!): OpType!
   createOrder(data: OrderCreateInput!): Order!
   createOrg(data: OrgCreateInput!): Org!
+  createPayment(data: PaymentCreateInput!): Payment!
   createPerson(data: PersonCreateInput!): Person!
   createProc(data: ProcCreateInput!): Proc!
   createProd(data: ProdCreateInput!): Prod!
@@ -7506,7 +7727,6 @@ type Mutation {
   createUser(data: UserCreateInput!): User!
   createWorkpiece(data: WorkpieceCreateInput!): Workpiece!
   createStatus(data: StatusCreateInput!): Status!
-  createPayment(data: PaymentCreateInput!): Payment!
   createAccount(data: AccountCreateInput!): Account!
   createDoc(data: DocCreateInput!): Doc!
   createDealStatus(data: DealStatusCreateInput!): DealStatus!
@@ -7525,12 +7745,14 @@ type Mutation {
   updateExec(data: ExecUpdateInput!, where: ExecWhereUniqueInput!): Exec
   updateFile(data: FileUpdateInput!, where: FileWhereUniqueInput!): File
   updateFileLink(data: FileLinkUpdateInput!, where: FileLinkWhereUniqueInput!): FileLink
+  updateMdKontragent(data: MdKontragentUpdateInput!, where: MdKontragentWhereUniqueInput!): MdKontragent
   updateModel(data: ModelUpdateInput!, where: ModelWhereUniqueInput!): Model
   updateMpProject(data: MpProjectUpdateInput!, where: MpProjectWhereUniqueInput!): MpProject
   updateOp(data: OpUpdateInput!, where: OpWhereUniqueInput!): Op
   updateOpType(data: OpTypeUpdateInput!, where: OpTypeWhereUniqueInput!): OpType
   updateOrder(data: OrderUpdateInput!, where: OrderWhereUniqueInput!): Order
   updateOrg(data: OrgUpdateInput!, where: OrgWhereUniqueInput!): Org
+  updatePayment(data: PaymentUpdateInput!, where: PaymentWhereUniqueInput!): Payment
   updatePerson(data: PersonUpdateInput!, where: PersonWhereUniqueInput!): Person
   updateProc(data: ProcUpdateInput!, where: ProcWhereUniqueInput!): Proc
   updateProd(data: ProdUpdateInput!, where: ProdWhereUniqueInput!): Prod
@@ -7540,7 +7762,6 @@ type Mutation {
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateWorkpiece(data: WorkpieceUpdateInput!, where: WorkpieceWhereUniqueInput!): Workpiece
   updateStatus(data: StatusUpdateInput!, where: StatusWhereUniqueInput!): Status
-  updatePayment(data: PaymentUpdateInput!, where: PaymentWhereUniqueInput!): Payment
   updateAccount(data: AccountUpdateInput!, where: AccountWhereUniqueInput!): Account
   updateDoc(data: DocUpdateInput!, where: DocWhereUniqueInput!): Doc
   updateDealStatus(data: DealStatusUpdateInput!, where: DealStatusWhereUniqueInput!): DealStatus
@@ -7559,12 +7780,14 @@ type Mutation {
   deleteExec(where: ExecWhereUniqueInput!): Exec
   deleteFile(where: FileWhereUniqueInput!): File
   deleteFileLink(where: FileLinkWhereUniqueInput!): FileLink
+  deleteMdKontragent(where: MdKontragentWhereUniqueInput!): MdKontragent
   deleteModel(where: ModelWhereUniqueInput!): Model
   deleteMpProject(where: MpProjectWhereUniqueInput!): MpProject
   deleteOp(where: OpWhereUniqueInput!): Op
   deleteOpType(where: OpTypeWhereUniqueInput!): OpType
   deleteOrder(where: OrderWhereUniqueInput!): Order
   deleteOrg(where: OrgWhereUniqueInput!): Org
+  deletePayment(where: PaymentWhereUniqueInput!): Payment
   deletePerson(where: PersonWhereUniqueInput!): Person
   deleteProc(where: ProcWhereUniqueInput!): Proc
   deleteProd(where: ProdWhereUniqueInput!): Prod
@@ -7574,7 +7797,6 @@ type Mutation {
   deleteUser(where: UserWhereUniqueInput!): User
   deleteWorkpiece(where: WorkpieceWhereUniqueInput!): Workpiece
   deleteStatus(where: StatusWhereUniqueInput!): Status
-  deletePayment(where: PaymentWhereUniqueInput!): Payment
   deleteAccount(where: AccountWhereUniqueInput!): Account
   deleteDoc(where: DocWhereUniqueInput!): Doc
   deleteDealStatus(where: DealStatusWhereUniqueInput!): DealStatus
@@ -7593,12 +7815,14 @@ type Mutation {
   upsertExec(where: ExecWhereUniqueInput!, create: ExecCreateInput!, update: ExecUpdateInput!): Exec!
   upsertFile(where: FileWhereUniqueInput!, create: FileCreateInput!, update: FileUpdateInput!): File!
   upsertFileLink(where: FileLinkWhereUniqueInput!, create: FileLinkCreateInput!, update: FileLinkUpdateInput!): FileLink!
+  upsertMdKontragent(where: MdKontragentWhereUniqueInput!, create: MdKontragentCreateInput!, update: MdKontragentUpdateInput!): MdKontragent!
   upsertModel(where: ModelWhereUniqueInput!, create: ModelCreateInput!, update: ModelUpdateInput!): Model!
   upsertMpProject(where: MpProjectWhereUniqueInput!, create: MpProjectCreateInput!, update: MpProjectUpdateInput!): MpProject!
   upsertOp(where: OpWhereUniqueInput!, create: OpCreateInput!, update: OpUpdateInput!): Op!
   upsertOpType(where: OpTypeWhereUniqueInput!, create: OpTypeCreateInput!, update: OpTypeUpdateInput!): OpType!
   upsertOrder(where: OrderWhereUniqueInput!, create: OrderCreateInput!, update: OrderUpdateInput!): Order!
   upsertOrg(where: OrgWhereUniqueInput!, create: OrgCreateInput!, update: OrgUpdateInput!): Org!
+  upsertPayment(where: PaymentWhereUniqueInput!, create: PaymentCreateInput!, update: PaymentUpdateInput!): Payment!
   upsertPerson(where: PersonWhereUniqueInput!, create: PersonCreateInput!, update: PersonUpdateInput!): Person!
   upsertProc(where: ProcWhereUniqueInput!, create: ProcCreateInput!, update: ProcUpdateInput!): Proc!
   upsertProd(where: ProdWhereUniqueInput!, create: ProdCreateInput!, update: ProdUpdateInput!): Prod!
@@ -7608,7 +7832,6 @@ type Mutation {
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertWorkpiece(where: WorkpieceWhereUniqueInput!, create: WorkpieceCreateInput!, update: WorkpieceUpdateInput!): Workpiece!
   upsertStatus(where: StatusWhereUniqueInput!, create: StatusCreateInput!, update: StatusUpdateInput!): Status!
-  upsertPayment(where: PaymentWhereUniqueInput!, create: PaymentCreateInput!, update: PaymentUpdateInput!): Payment!
   upsertAccount(where: AccountWhereUniqueInput!, create: AccountCreateInput!, update: AccountUpdateInput!): Account!
   upsertDoc(where: DocWhereUniqueInput!, create: DocCreateInput!, update: DocUpdateInput!): Doc!
   upsertDealStatus(where: DealStatusWhereUniqueInput!, create: DealStatusCreateInput!, update: DealStatusUpdateInput!): DealStatus!
@@ -7627,12 +7850,14 @@ type Mutation {
   updateManyExecs(data: ExecUpdateManyMutationInput!, where: ExecWhereInput): BatchPayload!
   updateManyFiles(data: FileUpdateManyMutationInput!, where: FileWhereInput): BatchPayload!
   updateManyFileLinks(data: FileLinkUpdateManyMutationInput!, where: FileLinkWhereInput): BatchPayload!
+  updateManyMdKontragents(data: MdKontragentUpdateManyMutationInput!, where: MdKontragentWhereInput): BatchPayload!
   updateManyModels(data: ModelUpdateManyMutationInput!, where: ModelWhereInput): BatchPayload!
   updateManyMpProjects(data: MpProjectUpdateManyMutationInput!, where: MpProjectWhereInput): BatchPayload!
   updateManyOps(data: OpUpdateManyMutationInput!, where: OpWhereInput): BatchPayload!
   updateManyOpTypes(data: OpTypeUpdateManyMutationInput!, where: OpTypeWhereInput): BatchPayload!
   updateManyOrders(data: OrderUpdateManyMutationInput!, where: OrderWhereInput): BatchPayload!
   updateManyOrgs(data: OrgUpdateManyMutationInput!, where: OrgWhereInput): BatchPayload!
+  updateManyPayments(data: PaymentUpdateManyMutationInput!, where: PaymentWhereInput): BatchPayload!
   updateManyPersons(data: PersonUpdateManyMutationInput!, where: PersonWhereInput): BatchPayload!
   updateManyProcs(data: ProcUpdateManyMutationInput!, where: ProcWhereInput): BatchPayload!
   updateManyProds(data: ProdUpdateManyMutationInput!, where: ProdWhereInput): BatchPayload!
@@ -7642,7 +7867,6 @@ type Mutation {
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyWorkpieces(data: WorkpieceUpdateManyMutationInput!, where: WorkpieceWhereInput): BatchPayload!
   updateManyStatuses(data: StatusUpdateManyMutationInput!, where: StatusWhereInput): BatchPayload!
-  updateManyPayments(data: PaymentUpdateManyMutationInput!, where: PaymentWhereInput): BatchPayload!
   updateManyAccounts(data: AccountUpdateManyMutationInput!, where: AccountWhereInput): BatchPayload!
   updateManyDocs(data: DocUpdateManyMutationInput!, where: DocWhereInput): BatchPayload!
   updateManyDealStatuses(data: DealStatusUpdateManyMutationInput!, where: DealStatusWhereInput): BatchPayload!
@@ -7661,12 +7885,14 @@ type Mutation {
   deleteManyExecs(where: ExecWhereInput): BatchPayload!
   deleteManyFiles(where: FileWhereInput): BatchPayload!
   deleteManyFileLinks(where: FileLinkWhereInput): BatchPayload!
+  deleteManyMdKontragents(where: MdKontragentWhereInput): BatchPayload!
   deleteManyModels(where: ModelWhereInput): BatchPayload!
   deleteManyMpProjects(where: MpProjectWhereInput): BatchPayload!
   deleteManyOps(where: OpWhereInput): BatchPayload!
   deleteManyOpTypes(where: OpTypeWhereInput): BatchPayload!
   deleteManyOrders(where: OrderWhereInput): BatchPayload!
   deleteManyOrgs(where: OrgWhereInput): BatchPayload!
+  deleteManyPayments(where: PaymentWhereInput): BatchPayload!
   deleteManyPersons(where: PersonWhereInput): BatchPayload!
   deleteManyProcs(where: ProcWhereInput): BatchPayload!
   deleteManyProds(where: ProdWhereInput): BatchPayload!
@@ -7676,7 +7902,6 @@ type Mutation {
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyWorkpieces(where: WorkpieceWhereInput): BatchPayload!
   deleteManyStatuses(where: StatusWhereInput): BatchPayload!
-  deleteManyPayments(where: PaymentWhereInput): BatchPayload!
   deleteManyAccounts(where: AccountWhereInput): BatchPayload!
   deleteManyDocs(where: DocWhereInput): BatchPayload!
   deleteManyDealStatuses(where: DealStatusWhereInput): BatchPayload!
@@ -9965,6 +10190,7 @@ type Payment implements Node {
   updatedAt: DateTime!
   amount: Float
   article: Article
+  inn: String
   isIncome: Boolean
   purpose: String
   tochkaId: String
@@ -9990,6 +10216,7 @@ type PaymentConnection {
 input PaymentCreateInput {
   dateLocal: DateTime!
   amount: Float
+  inn: String
   isIncome: Boolean
   purpose: String
   tochkaId: String
@@ -10001,11 +10228,6 @@ input PaymentCreateInput {
   person: PersonCreateOneWithoutPaymentsInput
   createdBy: UserCreateOneWithoutCreatedPaymentsInput
   updatedBy: UserCreateOneWithoutUpdatedPaymentsInput
-}
-
-input PaymentCreateManyInput {
-  create: [PaymentCreateInput!]
-  connect: [PaymentWhereUniqueInput!]
 }
 
 input PaymentCreateManyWithoutAccountInput {
@@ -10046,6 +10268,7 @@ input PaymentCreateManyWithoutUpdatedByInput {
 input PaymentCreateWithoutAccountInput {
   dateLocal: DateTime!
   amount: Float
+  inn: String
   isIncome: Boolean
   purpose: String
   tochkaId: String
@@ -10061,6 +10284,7 @@ input PaymentCreateWithoutAccountInput {
 input PaymentCreateWithoutArticleInput {
   dateLocal: DateTime!
   amount: Float
+  inn: String
   isIncome: Boolean
   purpose: String
   tochkaId: String
@@ -10076,6 +10300,7 @@ input PaymentCreateWithoutArticleInput {
 input PaymentCreateWithoutCreatedByInput {
   dateLocal: DateTime!
   amount: Float
+  inn: String
   isIncome: Boolean
   purpose: String
   tochkaId: String
@@ -10091,6 +10316,7 @@ input PaymentCreateWithoutCreatedByInput {
 input PaymentCreateWithoutEquipmentInput {
   dateLocal: DateTime!
   amount: Float
+  inn: String
   isIncome: Boolean
   purpose: String
   tochkaId: String
@@ -10106,6 +10332,7 @@ input PaymentCreateWithoutEquipmentInput {
 input PaymentCreateWithoutOrgInput {
   dateLocal: DateTime!
   amount: Float
+  inn: String
   isIncome: Boolean
   purpose: String
   tochkaId: String
@@ -10121,6 +10348,7 @@ input PaymentCreateWithoutOrgInput {
 input PaymentCreateWithoutPersonInput {
   dateLocal: DateTime!
   amount: Float
+  inn: String
   isIncome: Boolean
   purpose: String
   tochkaId: String
@@ -10136,6 +10364,7 @@ input PaymentCreateWithoutPersonInput {
 input PaymentCreateWithoutUpdatedByInput {
   dateLocal: DateTime!
   amount: Float
+  inn: String
   isIncome: Boolean
   purpose: String
   tochkaId: String
@@ -10168,6 +10397,8 @@ enum PaymentOrderByInput {
   updatedAt_DESC
   amount_ASC
   amount_DESC
+  inn_ASC
+  inn_DESC
   isIncome_ASC
   isIncome_DESC
   purpose_ASC
@@ -10184,6 +10415,7 @@ type PaymentPreviousValues {
   createdAt: DateTime!
   updatedAt: DateTime!
   amount: Float
+  inn: String
   isIncome: Boolean
   purpose: String
   tochkaId: String
@@ -10229,25 +10461,10 @@ input PaymentSubscriptionWhereInput {
   node: PaymentWhereInput
 }
 
-input PaymentUpdateDataInput {
-  dateLocal: DateTime
-  amount: Float
-  isIncome: Boolean
-  purpose: String
-  tochkaId: String
-  mpProjectId: Int
-  article: ArticleUpdateOneWithoutPaymentsInput
-  account: AccountUpdateOneWithoutPaymentsInput
-  equipment: EquipmentUpdateOneWithoutPaymentsInput
-  org: OrgUpdateOneWithoutPaymentsInput
-  person: PersonUpdateOneWithoutPaymentsInput
-  createdBy: UserUpdateOneWithoutCreatedPaymentsInput
-  updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
-}
-
 input PaymentUpdateInput {
   dateLocal: DateTime
   amount: Float
+  inn: String
   isIncome: Boolean
   purpose: String
   tochkaId: String
@@ -10259,20 +10476,12 @@ input PaymentUpdateInput {
   person: PersonUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
   updatedBy: UserUpdateOneWithoutUpdatedPaymentsInput
-}
-
-input PaymentUpdateManyInput {
-  create: [PaymentCreateInput!]
-  connect: [PaymentWhereUniqueInput!]
-  disconnect: [PaymentWhereUniqueInput!]
-  delete: [PaymentWhereUniqueInput!]
-  update: [PaymentUpdateWithWhereUniqueNestedInput!]
-  upsert: [PaymentUpsertWithWhereUniqueNestedInput!]
 }
 
 input PaymentUpdateManyMutationInput {
   dateLocal: DateTime
   amount: Float
+  inn: String
   isIncome: Boolean
   purpose: String
   tochkaId: String
@@ -10345,6 +10554,7 @@ input PaymentUpdateManyWithoutUpdatedByInput {
 input PaymentUpdateWithoutAccountDataInput {
   dateLocal: DateTime
   amount: Float
+  inn: String
   isIncome: Boolean
   purpose: String
   tochkaId: String
@@ -10360,6 +10570,7 @@ input PaymentUpdateWithoutAccountDataInput {
 input PaymentUpdateWithoutArticleDataInput {
   dateLocal: DateTime
   amount: Float
+  inn: String
   isIncome: Boolean
   purpose: String
   tochkaId: String
@@ -10375,6 +10586,7 @@ input PaymentUpdateWithoutArticleDataInput {
 input PaymentUpdateWithoutCreatedByDataInput {
   dateLocal: DateTime
   amount: Float
+  inn: String
   isIncome: Boolean
   purpose: String
   tochkaId: String
@@ -10390,6 +10602,7 @@ input PaymentUpdateWithoutCreatedByDataInput {
 input PaymentUpdateWithoutEquipmentDataInput {
   dateLocal: DateTime
   amount: Float
+  inn: String
   isIncome: Boolean
   purpose: String
   tochkaId: String
@@ -10405,6 +10618,7 @@ input PaymentUpdateWithoutEquipmentDataInput {
 input PaymentUpdateWithoutOrgDataInput {
   dateLocal: DateTime
   amount: Float
+  inn: String
   isIncome: Boolean
   purpose: String
   tochkaId: String
@@ -10420,6 +10634,7 @@ input PaymentUpdateWithoutOrgDataInput {
 input PaymentUpdateWithoutPersonDataInput {
   dateLocal: DateTime
   amount: Float
+  inn: String
   isIncome: Boolean
   purpose: String
   tochkaId: String
@@ -10435,6 +10650,7 @@ input PaymentUpdateWithoutPersonDataInput {
 input PaymentUpdateWithoutUpdatedByDataInput {
   dateLocal: DateTime
   amount: Float
+  inn: String
   isIncome: Boolean
   purpose: String
   tochkaId: String
@@ -10445,11 +10661,6 @@ input PaymentUpdateWithoutUpdatedByDataInput {
   org: OrgUpdateOneWithoutPaymentsInput
   person: PersonUpdateOneWithoutPaymentsInput
   createdBy: UserUpdateOneWithoutCreatedPaymentsInput
-}
-
-input PaymentUpdateWithWhereUniqueNestedInput {
-  where: PaymentWhereUniqueInput!
-  data: PaymentUpdateDataInput!
 }
 
 input PaymentUpdateWithWhereUniqueWithoutAccountInput {
@@ -10485,12 +10696,6 @@ input PaymentUpdateWithWhereUniqueWithoutPersonInput {
 input PaymentUpdateWithWhereUniqueWithoutUpdatedByInput {
   where: PaymentWhereUniqueInput!
   data: PaymentUpdateWithoutUpdatedByDataInput!
-}
-
-input PaymentUpsertWithWhereUniqueNestedInput {
-  where: PaymentWhereUniqueInput!
-  update: PaymentUpdateDataInput!
-  create: PaymentCreateInput!
 }
 
 input PaymentUpsertWithWhereUniqueWithoutAccountInput {
@@ -10672,6 +10877,46 @@ input PaymentWhereInput {
 
   """All values greater than or equal the given value."""
   amount_gte: Float
+  inn: String
+
+  """All values that are not equal to given value."""
+  inn_not: String
+
+  """All values that are contained in given list."""
+  inn_in: [String!]
+
+  """All values that are not contained in given list."""
+  inn_not_in: [String!]
+
+  """All values less than the given value."""
+  inn_lt: String
+
+  """All values less than or equal the given value."""
+  inn_lte: String
+
+  """All values greater than the given value."""
+  inn_gt: String
+
+  """All values greater than or equal the given value."""
+  inn_gte: String
+
+  """All values containing the given string."""
+  inn_contains: String
+
+  """All values not containing the given string."""
+  inn_not_contains: String
+
+  """All values starting with the given string."""
+  inn_starts_with: String
+
+  """All values not starting with the given string."""
+  inn_not_starts_with: String
+
+  """All values ending with the given string."""
+  inn_ends_with: String
+
+  """All values not ending with the given string."""
+  inn_not_ends_with: String
   isIncome: Boolean
 
   """All values that are not equal to given value."""
@@ -12462,12 +12707,14 @@ type Query {
   execs(where: ExecWhereInput, orderBy: ExecOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Exec]!
   files(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [File]!
   fileLinks(where: FileLinkWhereInput, orderBy: FileLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [FileLink]!
+  mdKontragents(where: MdKontragentWhereInput, orderBy: MdKontragentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MdKontragent]!
   models(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Model]!
   mpProjects(where: MpProjectWhereInput, orderBy: MpProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MpProject]!
   ops(where: OpWhereInput, orderBy: OpOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Op]!
   opTypes(where: OpTypeWhereInput, orderBy: OpTypeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OpType]!
   orders(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Order]!
   orgs(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Org]!
+  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment]!
   persons(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Person]!
   procs(where: ProcWhereInput, orderBy: ProcOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Proc]!
   prods(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Prod]!
@@ -12477,7 +12724,6 @@ type Query {
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   workpieces(where: WorkpieceWhereInput, orderBy: WorkpieceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Workpiece]!
   statuses(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Status]!
-  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment]!
   accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account]!
   docs(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Doc]!
   dealStatuses(where: DealStatusWhereInput, orderBy: DealStatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [DealStatus]!
@@ -12496,12 +12742,14 @@ type Query {
   exec(where: ExecWhereUniqueInput!): Exec
   file(where: FileWhereUniqueInput!): File
   fileLink(where: FileLinkWhereUniqueInput!): FileLink
+  mdKontragent(where: MdKontragentWhereUniqueInput!): MdKontragent
   model(where: ModelWhereUniqueInput!): Model
   mpProject(where: MpProjectWhereUniqueInput!): MpProject
   op(where: OpWhereUniqueInput!): Op
   opType(where: OpTypeWhereUniqueInput!): OpType
   order(where: OrderWhereUniqueInput!): Order
   org(where: OrgWhereUniqueInput!): Org
+  payment(where: PaymentWhereUniqueInput!): Payment
   person(where: PersonWhereUniqueInput!): Person
   proc(where: ProcWhereUniqueInput!): Proc
   prod(where: ProdWhereUniqueInput!): Prod
@@ -12511,7 +12759,6 @@ type Query {
   user(where: UserWhereUniqueInput!): User
   workpiece(where: WorkpieceWhereUniqueInput!): Workpiece
   status(where: StatusWhereUniqueInput!): Status
-  payment(where: PaymentWhereUniqueInput!): Payment
   account(where: AccountWhereUniqueInput!): Account
   doc(where: DocWhereUniqueInput!): Doc
   dealStatus(where: DealStatusWhereUniqueInput!): DealStatus
@@ -12530,12 +12777,14 @@ type Query {
   execsConnection(where: ExecWhereInput, orderBy: ExecOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ExecConnection!
   filesConnection(where: FileWhereInput, orderBy: FileOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
   fileLinksConnection(where: FileLinkWhereInput, orderBy: FileLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): FileLinkConnection!
+  mdKontragentsConnection(where: MdKontragentWhereInput, orderBy: MdKontragentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): MdKontragentConnection!
   modelsConnection(where: ModelWhereInput, orderBy: ModelOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ModelConnection!
   mpProjectsConnection(where: MpProjectWhereInput, orderBy: MpProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): MpProjectConnection!
   opsConnection(where: OpWhereInput, orderBy: OpOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OpConnection!
   opTypesConnection(where: OpTypeWhereInput, orderBy: OpTypeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OpTypeConnection!
   ordersConnection(where: OrderWhereInput, orderBy: OrderOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrderConnection!
   orgsConnection(where: OrgWhereInput, orderBy: OrgOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OrgConnection!
+  paymentsConnection(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentConnection!
   personsConnection(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PersonConnection!
   procsConnection(where: ProcWhereInput, orderBy: ProcOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProcConnection!
   prodsConnection(where: ProdWhereInput, orderBy: ProdOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProdConnection!
@@ -12545,7 +12794,6 @@ type Query {
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   workpiecesConnection(where: WorkpieceWhereInput, orderBy: WorkpieceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WorkpieceConnection!
   statusesConnection(where: StatusWhereInput, orderBy: StatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StatusConnection!
-  paymentsConnection(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentConnection!
   accountsConnection(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AccountConnection!
   docsConnection(where: DocWhereInput, orderBy: DocOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DocConnection!
   dealStatusesConnection(where: DealStatusWhereInput, orderBy: DealStatusOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DealStatusConnection!
@@ -13116,12 +13364,14 @@ type Subscription {
   exec(where: ExecSubscriptionWhereInput): ExecSubscriptionPayload
   file(where: FileSubscriptionWhereInput): FileSubscriptionPayload
   fileLink(where: FileLinkSubscriptionWhereInput): FileLinkSubscriptionPayload
+  mdKontragent(where: MdKontragentSubscriptionWhereInput): MdKontragentSubscriptionPayload
   model(where: ModelSubscriptionWhereInput): ModelSubscriptionPayload
   mpProject(where: MpProjectSubscriptionWhereInput): MpProjectSubscriptionPayload
   op(where: OpSubscriptionWhereInput): OpSubscriptionPayload
   opType(where: OpTypeSubscriptionWhereInput): OpTypeSubscriptionPayload
   order(where: OrderSubscriptionWhereInput): OrderSubscriptionPayload
   org(where: OrgSubscriptionWhereInput): OrgSubscriptionPayload
+  payment(where: PaymentSubscriptionWhereInput): PaymentSubscriptionPayload
   person(where: PersonSubscriptionWhereInput): PersonSubscriptionPayload
   proc(where: ProcSubscriptionWhereInput): ProcSubscriptionPayload
   prod(where: ProdSubscriptionWhereInput): ProdSubscriptionPayload
@@ -13131,7 +13381,6 @@ type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   workpiece(where: WorkpieceSubscriptionWhereInput): WorkpieceSubscriptionPayload
   status(where: StatusSubscriptionWhereInput): StatusSubscriptionPayload
-  payment(where: PaymentSubscriptionWhereInput): PaymentSubscriptionPayload
   account(where: AccountSubscriptionWhereInput): AccountSubscriptionPayload
   doc(where: DocSubscriptionWhereInput): DocSubscriptionPayload
   dealStatus(where: DealStatusSubscriptionWhereInput): DealStatusSubscriptionPayload
@@ -14005,6 +14254,7 @@ type UserPreviousValues {
 }
 
 enum UserRole {
+  OWNER
   INACTIVE
 }
 

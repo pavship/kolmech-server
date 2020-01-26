@@ -175,6 +175,12 @@ type FileLink {
 	storeId: ID
 }
 
+type MdKontragent {
+	Id: Int! @unique
+	Inn: String! @unique
+	Name: String!
+}
+
 type Model {
 	id: ID! @unique
 	article: String
@@ -256,6 +262,7 @@ type Payment {
 	updatedAt: DateTime!
 	amount: Float
 	article: Article @relation(name: "PaymentArticle")
+	inn: String
 	isIncome: Boolean		# only to specify bank payments
 	purpose: String
 	tochkaId: String
@@ -413,5 +420,6 @@ enum TelType {
 }
 
 enum UserRole {
+	OWNER
 	INACTIVE
 }
