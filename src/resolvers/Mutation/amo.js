@@ -1,14 +1,5 @@
 
 const axios = require('axios')
-const AmoCRM = require( 'amocrm-js' )
-
-const crm = new AmoCRM({
-  domain: process.env.AMO_DOMAIN,
-  auth: {
-    login: process.env.AMO_LOGIN,
-    hash: process.env.AMO_HASH
-  }
-})
 
 const baseURL = `https://${process.env.AMO_DOMAIN}.amocrm.ru`
 
