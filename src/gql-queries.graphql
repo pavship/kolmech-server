@@ -1,0 +1,569 @@
+------- APP --------
+
+mutation Login {
+  login (
+    email: ""
+    password: ""
+  ) { token }
+}
+mutation Signup {
+  signup (
+    email: ""
+    password: ""
+    fName: ""
+  ) { token }
+}
+mutation createPostEnvelopeAddressInsert {
+  createPostEnvelopeAddressInsert (amoId: 66413267) { statusText }
+}
+mutation createOrg {
+  createOrg (inn: "6629018317") { id name ulName }
+}
+mutation syncDealStatuses {
+  syncDealStatuses { statusText }
+}
+mutation syncDeals {
+  syncDeals { count }
+}
+mutation populateOpTypes {
+  populateOpTypes { count }
+}
+mutation populatePaymentArticles {
+  populatePaymentArticles { count }
+}
+mutation populateInnsIntoPayments {
+  populateInnsIntoPayments { id inn org { inn } }
+}
+mutation syncMpProjects {
+  syncMpProjects { statusText }
+}
+query mdKontragents {
+  mdKontragents {
+    Id
+    Name
+    Inn
+  }
+}
+query articles {
+  articles {
+    rusName
+    # batches (where: {
+    #   # model: { id: "cjwkksfdv0144099717og15l5"}
+    # }) {
+    #   model {
+    #     name
+    #   }
+      # procs {
+      #   ops {
+      #     opType {
+      #       name
+      #     }
+      #   }
+      # }
+    # }
+  }
+}
+
+
+------- DATABASE --------
+
+query allAccounts {
+  accounts {
+    id
+    name
+  	number
+  }
+}
+query allAppoints {
+  appoints {
+    id
+    bpStat {
+      factCost
+      factLabor
+      planCost
+      planLabor
+    }
+  }
+}
+query allArticles {
+  articles {
+    id
+    name
+    rusName
+    relations
+  }
+}
+query allBatches {
+  batches
+  	(where: { id: "cjzha7lyf003a07978q38pq9e" })
+  {
+    id
+    qty
+    deal {
+      amoId
+      name
+    }
+  	elements {
+      id
+      sort
+      op {
+        id
+        dealLabor
+        opType {
+          name
+        }
+        appoints {
+          id
+          exec {
+            id
+            person {
+              id
+              amoName
+            }
+          }
+        }
+      }
+      proc {
+        id
+        ops {
+          id
+          dealLabor
+          opType {
+            name
+          }
+          appoints {
+            id
+            exec {
+              id
+              person {
+                id
+                amoName
+              }
+            }
+          }
+        }
+      }
+    }
+    model {
+      id
+      name
+    }
+    
+  }
+}
+query allBpStats {
+  bpStats {
+    id
+    appoint {
+      id
+    }
+    batch {
+      id
+      model {
+        name
+      }
+    }
+  }
+}
+query allDealStatuses {
+  dealStatuses {
+    id
+    amoId
+    name
+    sort
+  }
+}
+query allDeals {
+  deals
+  	(where: {amoId: 16029925})
+  {
+    id
+    amoId
+    name
+    date
+    batches (orderBy: sort_ASC) {
+      id
+      qty
+      sort
+      model {
+        id
+        name
+        drawings {
+          id
+          name
+        }
+      }
+      workpiece {
+        id
+        name
+        material
+        drawing {
+          id
+          name
+        }
+      }
+      procs {
+        id
+        ops {
+          dealLabor
+          opType {
+            name
+          }
+        }
+      }
+    }
+  }
+}
+query allDrawings {
+  drawings {
+    id
+    name
+    model {
+      id
+    }
+    workpiece {
+      id
+    }
+  }
+}
+query allElements {
+  elements 
+  	# (where: {ops_some: {id: "cjwqa3p0d02jg0997ffbg7bak"}})
+  {
+    id
+    op {
+      id
+    }
+    proc {
+      id
+    }
+  }
+}
+query allEquipments {
+  equipments {
+    id
+    name
+  }
+}
+query allExecs {
+  execs 
+  	# (where: {ops_some: {id: "45599399"}})
+  {
+    id
+    person {
+      id
+      amoName
+    }
+    opTypes {
+      id
+      name
+    }
+    appoints {
+      id
+      op {
+        id
+        opType {
+          id
+          name
+        }
+      }
+    }
+  }
+}
+query allModels {
+  models {
+    id
+    name
+  }
+  procs {
+    id
+    ops {
+      dealLabor
+      opType {
+        name
+      }
+    }
+  }
+}
+query allOrgs {
+  orgs
+  	# (where: {id: "cjuelpj7t000c0752eczjfsyl"})
+  	# (where: {amoId: 45221939})
+  	(where: {inn: "2312108067"})
+  {
+    id
+    inn
+    amoId
+    moedeloId
+    name
+    ulName
+  }
+}
+query allOps {
+  ops {
+    id
+    laborPrice
+    opType {
+      opClass
+    }
+  }
+}
+query allOpTypes {
+  opTypes {
+    id
+    laborCost
+    laborPrice
+    name
+    opClass
+  }
+}
+query allPayments {
+  payments {
+    id
+    tochkaId
+    amount
+    isIncome
+  }
+}
+query allPersons {
+  persons 
+  	(where: { id: "cjz5r8ofl00gq0897cquibvxq" })
+  {
+    id
+    amoName
+    amoId
+    exec {
+      id
+      appoints {
+        id
+        op {
+          id
+          proc {
+            id
+            batches {
+              id
+              deal {
+                name
+              }
+            }
+          }
+        }
+      }
+      opTypes {
+        name
+      }
+    }
+    user {
+      id
+    }
+  }
+}
+query allProcs {
+  procs {
+    id
+    batches {
+      model {
+        name
+      }
+    }
+    ops {
+      id
+      dealLabor
+      opType {
+        name
+      }
+    }
+  }
+}
+query allTasks {
+  tasks {
+    id
+    from
+  }
+}
+query allUsers {
+  users
+  	# (where: { person: { id: "cjm88ac1000ig0938vuhxv87a" }})
+  {
+    id
+    email
+    person {
+      amoName
+    }
+    role
+  }
+}
+query serverDatas {
+  serverDatas {
+    id
+    amoExpiresAt
+    amoCookie
+  } 
+}
+mutation createAccount {
+	createAccount(data: {
+		name: "Точка Суппорт",
+		number: "40702810601500021026"
+	}) { id }
+}
+mutation createArticle {
+  createArticle (data: {
+    name: "equipmentPurchase"
+    rusName: "Покупка оборудования"
+    relations: { set: ["EQUIPMENT"] }
+  }) { id }
+}
+mutation createEquipment {
+  createEquipment (data: {
+    name: "Тепловентиляторы Volcano"
+  }) { id }
+}
+mutation createOpType {
+  createOpType( data: {
+    name: "Расточная",
+    opClass: MACHINING,
+    laborPrice: 1650
+  }) { id }
+}
+mutation deleteManyAppoints {
+  deleteManyAppoints { count }
+}
+mutation deleteManyBatches {
+  deleteManyBatches (where: {
+    id_in: [
+      "cjy3f4i0r00yl07977gzmr80o",
+    ]
+  }) { count }
+}
+mutation deleteManyDeals {
+  deleteManyDeals { count }
+}
+mutation deleteManyDrawings {
+  deleteManyDrawings (where: {
+    id_in: [
+      "cjwdv9n4h004b075204a43d4m",
+      "cjwe2ij14008207527tb4ndg9",
+      "cjwkkgd8s012o09970sjhp30d",
+      "cjwo38di4023u0997y18bluq9",
+      "cjwo3beno024u0997pmxd4kfq",
+      "cjwo3bfhy02500997bii0nzqw",
+      "cjwo3bgin02560997d9ngw2km",
+      "cjwo3c543025a0997207ia26k",
+    ]
+  }) { count }
+}
+mutation deleteManyElements {
+  deleteManyElements (where: {
+    id_in: [
+      "cjz4jmui700b60897rv0o1ozv",
+      "cjz4jmuid00b80897ryt9wjvj",
+    ]
+  }) {
+    count
+  }
+}
+mutation deleteManyExecs {
+  deleteManyExecs (where: {
+    id_in: [
+      "cjwtmpgqz006z0997i8hsyjh1",
+    ]
+  }) {
+    count
+  }
+}
+mutation deleteManyModels {
+  deleteManyModels (where: {
+    id_in: [
+      "cjwtmpgqz006z0997i8hsyjh1",
+      "cjwkkcydr012f0997prtso896",
+    ]
+  }) {
+    count
+  }
+}
+mutation deleteManyMpProjects {
+  deleteManyMpProjects { count }
+}
+mutation deleteManyOps {
+  deleteManyOps(where: {
+    # proc: {
+    #   id: "cjwkq4kb2019a0997h9f1pglp"
+    # }
+  }) { count }
+}mutation deleteManyOrgs {
+  deleteManyOrgs(where: {
+    # proc: {
+      # id: "cjwkq4kb2019a0997h9f1pglp"
+    	amoId: 40513293
+    # }
+  }) { count }
+}
+mutation deleteManyProcs {
+  deleteManyProcs(where: {
+    # id: "cjwkq4kb2019a0997h9f1pglp"
+  }) { count }
+}
+mutation updateOpType {
+  updateOpType(where: {
+    id: "cjvyf8yu900eq0752py71v1r7"
+  }, data: {
+    laborPrice: 1650
+  }) { id }
+}
+mutation updateEquipment {
+  updateEquipment(where: {
+    id: "cjxit5v3300b30797o7sos6zj"
+  }, data: {
+    name: "МонтажСтройЭлектро"
+  }) { id }
+}
+mutation updateOrg {
+  updateOrg(where: {
+    id: "cjxit5v3300b30797o7sos6zj"
+  }, data: {
+    # inn: "5906139025"
+    name: "МонтажСтройЭлектро"
+    amoId: 54170645
+    ulName: "ООО \"МОНТАЖСТРОЙЭЛЕКТРО\""
+  }) { id }
+}
+mutation upsertDeal {
+  upsertDeal(where: {
+    amoId: 10078251
+  },
+  update: {
+    name: "updatedName"
+  },
+  create: {
+    name: "newDeal"
+  }) {
+    id
+    amoId
+    name
+    date
+    batches {
+      id
+      qty
+      model {
+        id
+        name
+      }
+      procs {
+        id
+        ops {
+          dealLabor
+          opType {
+            name
+          }
+        }
+      }
+    }
+  }
+}
+mutation updateUser {
+  updateUser(where: {
+    id: "cjm88ac0t00if0938vopmnitx"
+  }, data: {
+    role: OWNER
+  }) { id }
+}

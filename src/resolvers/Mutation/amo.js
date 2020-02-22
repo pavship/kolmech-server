@@ -124,15 +124,20 @@ const syncWithAmoContacts = async(_, __, ctx, info) => {
   try {
     const { userId, db } = ctx
     const amo = await amoConnect(ctx)
-    const { data: {_embedded: { items }}} = await amo.get('/api/v2/contacts')
-    // console.log('res > ', res)
-    const contacts = items.map(({ id, name }) => ({ id, name }))
-    console.log('contacts > ', JSON.stringify(contacts, null, 2))
+    const results = await Promise.all([0, 500, 1000, 1500, 2000, 2500, 3000, 3500].map(offset =>
+      amo.get('/api/v2/contacts?limit_rows=500&limit_offset=' + offset)
+    ))
+    const contacts = results
+      .filter(({ status }) => status === 200)
+      .map(({ data: {_embedded: { items }}}) => items.map(({ id, name }) => ({ id, name })))
+      .reduce((contacts, items) => [...contacts, ...items], [])
     const persons = await db.query.persons({
       where: {
         id_not_in: [
           'cjm85kntr00f009385au7tolq', //Admin
           'cjnfcpohm0d4h0724cmtoe8sj', //Server
+          'ck5vawx4y013l07974hxx8hdt', //Administrator dev
+          'ck5vipa7100l9063866esnp1n', //Administrator prod
         ]
       }
     }, '{ id fName lName amoId amoName }')

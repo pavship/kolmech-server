@@ -122,7 +122,7 @@ const Query = {
 		const { role } = await db.query.user({ where: { id: userId } }, '{ role }')
 		return db.query.payments({
 			orderBy: 'dateLocal_DESC',
-			...role !== 'OWNER' && { last: 30 }
+			...role !== 'OWNER' && { first: 30 }
 		}, info)
 	},
 
