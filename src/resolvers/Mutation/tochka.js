@@ -13,14 +13,14 @@ const baseHeaders = {
 const accounts = [{
   token: process.env.TOCHKA_API_TOKEN,
   account_code: process.env.TOCHKA_ACCOUNT_CODE_IP,
-  date_start: '2019-06-01'
+  initialDate: '2019-01-01'
 },{
   token: process.env.TOCHKA_KFSUPPORT_API_TOKEN,
   account_code: process.env.TOCHKA_KFSUPPORT_ACCOUNT_CODE,
-  date_start: '2019-01-01'
+  initialDate: '2019-07-01'
 }]
 
-const fetchTochkaPayments = async () => {
+const getTochkaPayments = async () => {
   const paymentArrs = await Promise.all(accounts.map(async ({
     token,
     account_code,
@@ -44,122 +44,150 @@ const fetchTochkaPayments = async () => {
     const { request_id } = await res.json()
     // 2. fetch payments from tochka server
     const statementUrl = baseUrl + '/result/' + request_id
-    const statementResponse = await fetch(statementUrl, {
+    const res1 = await fetch(statementUrl, {
       method: 'GET',
       headers
     })
-    const statusText = statementResponse.statusText
-    if (statusText !== 'OK') throw new Error(`Ошибка сервера Точка. Статус запроса для счета № ${i + 1}: ` + statusText)
-    return (await statementResponse.json()).payments
+    if (res1.statusText !== 'OK')
+      throw new Error(`Ошибка сервера Точка. Статус запроса для счета № ${i + 1}: ` + statusText)
+    return (await res1.json()).payments
+      .map(p => ({ ...p, account_code }))
   }))
-  const payments = paymentArrs.reduce((payments, arr) => [ ...payments, ...arr ], [])
+  const payments = paymentArrs
+    .reduce((payments, arr) => [ ...payments, ...arr ], [])
+    .sort(({ x_payment_id: a }, { x_payment_id: b }) => a < b ? -1 : a === b ? 0 : 1)
   // require('fs').writeFileSync('payments.json', JSON.stringify(payments, null, 2))
-  console.log('payments[payments.length - 25] > ', payments[payments.length - 25])
   return payments
 }
 
-const formatTochkaPayments = async (_, payments, ctx, info) => {
+
+const syncWithTochkaPayments = async (_, __, ctx, info) => {
   const { db } = ctx
-  const counterparties = payments
-    .map(({
-      counterparty_inn: inn,
-      counterparty_name: tochkaName,
-    }) => ({ inn, tochkaName }))
-  const inns = counterparties
-    .reduce((inns, { inn }) => [
+
+  // 1. define statement period (to get only recent payments)
+  for (let acc of accounts) {
+    const lastPayment = (await db.query.payments({
+      where: { account: { number: acc.account_code } },
+      orderBy: 'dateLocal_ASC',
+      last: 1
+    }, '{ dateLocal }'))[0]
+    acc.date_start = lastPayment && lastPayment.dateLocal > acc.initialDate
+      ? lastPayment.dateLocal.slice(0,10)
+      : acc.initialDate
+    // populate accountId for the final update
+    acc.id = (await db.query.accounts({
+      where: { number: acc.account_code }
+    }, '{ id }'))[0].id
+  }
+  let dateStart = accounts
+    .map(({ date_start }) => date_start )
+    .sort()[0]
+  accounts.forEach(ac => ac.date_start = dateStart)
+  // console.log('accounts > ', accounts)
+
+  // 2. get tochka payments
+  const tochkaPayments = await getTochkaPayments()
+
+  // 3. prepare orgs to connect to tochkaPayments
+  const inns = tochkaPayments
+    .reduce((inns, { counterparty_inn: inn }) => [
       ...inns,
       ...(!inn || inn === '0' || inns.findIndex(inn1 => inn1 === inn) !== -1) ? [] : [inn]
     ], [])
   const orgs = await upsertOrgsByInn(_, inns, ctx, info)
+
+  // 4. prepare all persons to connect to tochkaPayments
   const persons = (await db.query.persons({}, '{ id, amoName, amoId }'))
     .filter(({ amoId }) => amoId > 0)
     .map(({ id, amoName }) => ({ id, amoNameLowerCase: amoName.toLowerCase()}))
-  // count number of payments for each day to generate unique dateLocal
-  paymentDateCounter = {}
-  return payments.map(p => {
-    paymentDateCounter[p.payment_date] = count = 
-      (paymentDateCounter[p.payment_date] || 0) + 1
-    return {
-      amount: Math.abs(parseFloat(p.payment_amount)),
-      dateLocal: (p.payment_date.split('.').reverse().join('-') + 'T00:00:00.000Z')
-        .slice(0, -count.toString().length - 1)
-        + count + 'Z',
-      isIncome: parseFloat(p.payment_amount) > 0,
-      inn: p.counterparty_inn,
-      org: orgs.find(o => p.counterparty_inn === o.inn),
-      person: persons.find(pers => p.counterparty_name.toLowerCase().startsWith(pers.amoNameLowerCase)),
-      purpose: p.payment_purpose,
-      tochkaId: p.payment_bank_system_id,
-    }
-  })
-}
+  
+  // 5. get existing payments to exclude duplicates
+  const existingTochkaIds = (
+    await db.query.payments({
+      where: {
+        account: {
+          number_in: accounts.map(({ account_code }) => account_code)
+        },
+        dateLocal_gte: dateStart
+      }
+    }, '{ tochkaId }')
+  ).map(({ tochkaId }) => tochkaId)
+  console.log('existingTochkaIds.length > ', existingTochkaIds.length)
+  
+  // 6. preparedPayments to populate the db
+  // count number of payments for each day to generate unique dateLocal value
+  const paymentDateCounter = {}
+  let count = 0
 
-const tochka = {
-  async getTochkaPayments(_, __, ctx, info) {
-    return await formatTochkaPayments(_, await fetchTochkaPayments(), ctx, info)
-  },
-	async syncWithTochkaPayments(_, __, ctx, info) {
-    const { db } = ctx
-    // const mode = 'syncAll' // TODO add 'syncNew' mode
-    const accountIds = (await db.query.accounts({
-      where: { number_in: [
-        process.env.TOCHKA_ACCOUNT_CODE_IP,
-        process.env.TOCHKA_KFSUPPORT_ACCOUNT_CODE
-      ] }
-    }, '{ id }')).map(({ id }) => id )
-    const tochkaPayments = (await tochka.getTochkaPayments(_, __, ctx, info))
-    console.log('tochkaPayments.length > ', tochkaPayments.length)
-    // console.log('tochkaPayments[tochkaPayments.length-25] > ', tochkaPayments[tochkaPayments.length-25])
-    console.log('accountIds > ', accountIds)
-    const payments = await db.query.payments({
-      where: { account: { id_in: accountIds } }
-    }, '{ id dateLocal tochkaId }')
-    console.log('payments.length > ', payments.length)
-    const tochkaIds = payments.map(({ tochkaId }) => tochkaId)
-    const toCreate = tochkaPayments
-      .filter(p => !tochkaIds.includes(p.tochkaId))
-      .map(p => {
-        const orgId = p.org && p.org.id
-        const personId = p.person && p.person.id
-        delete p.org
-        delete p.person
-        return {
-          ...p,
-          ...orgId && { org: {
-            connect: {
-              id: orgId
-            }
-          }},
-          ...personId && { person: {
-            connect: {
-              id: personId
-            }
-          }}
+  const preparedPayments = tochkaPayments
+    .map(p => {
+      paymentDateCounter[p.payment_date] = count = 
+        (paymentDateCounter[p.payment_date] || 0) + 1
+      return {
+        account_code: p.account_code,
+        amount: Math.abs(parseFloat(p.payment_amount)),
+        dateLocal: (p.payment_date.split('.').reverse().join('-') + 'T00:00:00.000Z')
+          .slice(0, -count.toString().length - 1)
+          + count + 'Z',
+        isIncome: parseFloat(p.payment_amount) > 0,
+        inn: p.counterparty_inn,
+        org: orgs.find(o => p.counterparty_inn === o.inn),
+        person: persons.find(pers => p.counterparty_name.toLowerCase().startsWith(pers.amoNameLowerCase)),
+        purpose: p.payment_purpose,
+        tochkaId: p.x_payment_id,
+      }
+    })
+    .filter(p => !existingTochkaIds.includes(p.tochkaId))
+    .map(p => {
+      const orgId = p.org && p.org.id
+      const personId = p.person && p.person.id
+      delete p.org
+      delete p.person
+      return {
+        ...p,
+        ...orgId && { org: {
+          connect: {
+            id: orgId
+          }
+        }},
+        ...personId && { person: {
+          connect: {
+            id: personId
+          }
+        }}
+      }
+    })
+  // console.log('preparedPayments.length > ', preparedPayments.length)
+  // console.log('preparedPayments[0] > ', preparedPayments[0])
+  // require('fs').writeFileSync('preparedPayments.json', JSON.stringify(preparedPayments, null, 2))
+
+  // 7. write to db for each account
+
+  const results = await Promise.all(accounts.map(({ id, account_code }) => {
+    const toCreate = preparedPayments
+      .filter(p => p.account_code === account_code)
+      .map(p => { delete p.account_code; return p })
+    return db.mutation.updateAccount({
+      where: { id },
+      data: {
+        payments: {
+          ...toCreate.length && {create: toCreate }
         }
-      })
-      console.log('toCreate.length > ', toCreate.length)
-
-    // const deleted = await db.mutation.deleteManyPayments({
-    //   where: { account: { id: accountId } }
-    // }, '{ count }')
-    // console.log('deleted > ', deleted)
-
-    // await db.mutation.updateAccount({
-    //   where: { id: accountId },
-    //   data: {
-    //     payments: {
-    //       ...toCreate.length && {create: toCreate }
-    //     }
-    //   }
-    // }, '{ id }')
-
-    return { count: toCreate.length }
-  },
-  // async tochkaOrgs (_, __, ctx, info) {
-  //   const url = 'https://enter.tochka.com/api/v1/organization/list'
-  // }
+      }
+    }, '{ id }')
+  }))
+  
+  
+  // console.log('results > ', results)
+  // return { count: 0 }
+  // return { count: results
+  //   .reduce((payments, arr) => [ ...payments, ...arr ], []).length }
+  return { count: preparedPayments.length }
 }
 
 module.exports = {
-	tochka
+	tochka: {
+    getTochkaPayments,
+    syncWithTochkaPayments
+  }
 }

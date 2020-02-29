@@ -104,7 +104,7 @@ const auth = {
 		if (!valid) {
 			throw new Error('Invalid password')
 		}
-		console.log(user.person.fName + ' ' + user.person.lName + ' (' + email + ') '  + 'logged in')
+		console.log((user.person.amoName || '') + ' (' + email + ') '  + 'logged in')
 		return {
 			token: jwt.sign(
 				{ userId: user.id },
