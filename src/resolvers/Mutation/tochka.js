@@ -1,6 +1,7 @@
 const axios = require('axios')
 const { toLocalISOString } = require('../../utils/dates')
 const { org: { upsertOrgsByInn } } = require('./org')
+const { migration: { populateAccountsBalances } } = require('./migration')
 
 const baseUrl = 'https://enter.tochka.com/api/v1/statement'
 
@@ -176,7 +177,10 @@ const syncWithTochkaPayments = async (_, __, ctx, info) => {
       }
     }, '{ id }')
   }))
-  
+
+  // 8. update accounts' balances
+
+  await populateAccountsBalances(_, __, ctx, '{ id }')
   
   // console.log('results > ', results)
   // return { count: 0 }

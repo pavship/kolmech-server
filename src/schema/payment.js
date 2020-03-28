@@ -3,16 +3,21 @@ const { idValidationType } = require('./commonTypes')
 
 const validationSchema = object().shape({
   id: idValidationType.notRequired(),
-  amount: number()
-    .positive('зачение должно быть положительным')
+  accountId: idValidationType
     .when('id', (id, schema) => id
       ? schema.notRequired()
-      : schema.required('введите сумму платежа'),
+      : schema.required('выберите счет для проведения платежа')
     ),
   articleId: idValidationType
     .when('id', (id, schema) => id
       ? schema.notRequired()
       : schema.required('выберите основание платежа')
+    ),
+  amount: number()
+    .positive('зачение должно быть положительным')
+    .when('id', (id, schema) => id
+      ? schema.notRequired()
+      : schema.required('введите сумму платежа'),
     ),
   // dateLocal: date('неверный формат даты')
   dateLocal: string()

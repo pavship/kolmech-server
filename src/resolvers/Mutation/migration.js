@@ -334,6 +334,27 @@ const migration = {
 			})
 		}
 		return db.query.payments({}, '{ id inn org { inn } }')
+	},
+
+	async populateAccountsBalances(_, __, ctx, info) {
+		const { db } = ctx
+		const payments = await db.query.payments({}, '{ id account { id } amount isIncome article { id isIncome } }')
+		const accounts = await db.query.accounts({}, '{ id initialAmount }')
+		accounts.forEach(ac => ac.balance = ac.initialAmount)
+		const accountsWithBalances = payments
+			.reduce((accs, p) => {
+				const ac = accs.find(ac => ac.id === p.account.id)
+				const isIncome = p.article ? p.article.isIncome : p.isIncome
+				ac.balance += (isIncome ? 1 : -1) * p.amount
+				return accs
+			}, accounts )
+		for (const { id, balance } of accountsWithBalances) {
+			await db.mutation.updateAccount({
+				where: { id },
+				data: { balance }
+			})
+		}
+		return db.query.accounts({}, info)
 	}
 
 }

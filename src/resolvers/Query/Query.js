@@ -29,8 +29,19 @@ const Query = {
 		}
 	},
 
-	accounts(_, __, ctx, info) {
-		return ctx.db.query.accounts({ orderBy: 'name_ASC' }, info)
+	async accounts(_, __, ctx, info) {
+		const { db, userId } = ctx
+		const { role, account, accounts } = await db.query.user({ where: { id: userId } }, '{ role, account { id } accounts { id } }')
+		if (role === 'OWNER') return ctx.db.query.accounts({ orderBy: 'name_ASC' }, info)
+		return db.query.accounts({
+			where: {
+				OR: [
+					{ id: account.id },
+					{ id_in: accounts.map(({id}) => id) }
+				]
+			},
+			orderBy: 'name_ASC'
+		}, info)
 	},
 
 	articles(_, __, ctx, info) {
@@ -119,10 +130,19 @@ const Query = {
 
 	async payments(_, __, ctx, info) {
 		const { db, userId } = ctx
-		const { role } = await db.query.user({ where: { id: userId } }, '{ role }')
+		const { role, account } = await db.query.user({ where: { id: userId } }, '{ role, account { id } }')
+		if (role === 'OWNER') return db.query.payments({ orderBy: 'dateLocal_DESC' }, info)
 		return db.query.payments({
+			where: {
+				OR: [{
+					account: { id: account.id }
+				},{
+					createdBy: { id: userId }
+				}]
+			},
 			orderBy: 'dateLocal_DESC',
-			...role !== 'OWNER' && { first: 30 }
+			first: 30
+			// ...role !== 'OWNER' && { first: 30 }
 		}, info)
 	},
 

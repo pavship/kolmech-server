@@ -1,8 +1,10 @@
 # source: http://localhost:4466
-# timestamp: Sun Jan 26 2020 19:52:22 GMT+0300 (GMT+03:00)
+# timestamp: Wed Mar 25 2020 23:32:16 GMT+0300 (GMT+03:00)
 
 type Account implements Node {
   id: ID!
+  balance: Float
+  initialAmount: Float
   name: String
   number: String
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
@@ -19,9 +21,16 @@ type AccountConnection {
 }
 
 input AccountCreateInput {
+  balance: Float
+  initialAmount: Float
   name: String
   number: String
   payments: PaymentCreateManyWithoutAccountInput
+}
+
+input AccountCreateManyInput {
+  create: [AccountCreateInput!]
+  connect: [AccountWhereUniqueInput!]
 }
 
 input AccountCreateOneInput {
@@ -35,6 +44,8 @@ input AccountCreateOneWithoutPaymentsInput {
 }
 
 input AccountCreateWithoutPaymentsInput {
+  balance: Float
+  initialAmount: Float
   name: String
   number: String
 }
@@ -51,6 +62,10 @@ type AccountEdge {
 enum AccountOrderByInput {
   id_ASC
   id_DESC
+  balance_ASC
+  balance_DESC
+  initialAmount_ASC
+  initialAmount_DESC
   name_ASC
   name_DESC
   number_ASC
@@ -63,6 +78,8 @@ enum AccountOrderByInput {
 
 type AccountPreviousValues {
   id: ID!
+  balance: Float
+  initialAmount: Float
   name: String
   number: String
 }
@@ -107,18 +124,33 @@ input AccountSubscriptionWhereInput {
 }
 
 input AccountUpdateDataInput {
+  balance: Float
+  initialAmount: Float
   name: String
   number: String
   payments: PaymentUpdateManyWithoutAccountInput
 }
 
 input AccountUpdateInput {
+  balance: Float
+  initialAmount: Float
   name: String
   number: String
   payments: PaymentUpdateManyWithoutAccountInput
 }
 
+input AccountUpdateManyInput {
+  create: [AccountCreateInput!]
+  connect: [AccountWhereUniqueInput!]
+  disconnect: [AccountWhereUniqueInput!]
+  delete: [AccountWhereUniqueInput!]
+  update: [AccountUpdateWithWhereUniqueNestedInput!]
+  upsert: [AccountUpsertWithWhereUniqueNestedInput!]
+}
+
 input AccountUpdateManyMutationInput {
+  balance: Float
+  initialAmount: Float
   name: String
   number: String
 }
@@ -142,8 +174,15 @@ input AccountUpdateOneWithoutPaymentsInput {
 }
 
 input AccountUpdateWithoutPaymentsDataInput {
+  balance: Float
+  initialAmount: Float
   name: String
   number: String
+}
+
+input AccountUpdateWithWhereUniqueNestedInput {
+  where: AccountWhereUniqueInput!
+  data: AccountUpdateDataInput!
 }
 
 input AccountUpsertNestedInput {
@@ -154,6 +193,12 @@ input AccountUpsertNestedInput {
 input AccountUpsertWithoutPaymentsInput {
   update: AccountUpdateWithoutPaymentsDataInput!
   create: AccountCreateWithoutPaymentsInput!
+}
+
+input AccountUpsertWithWhereUniqueNestedInput {
+  where: AccountWhereUniqueInput!
+  update: AccountUpdateDataInput!
+  create: AccountCreateInput!
 }
 
 input AccountWhereInput {
@@ -205,6 +250,50 @@ input AccountWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  balance: Float
+
+  """All values that are not equal to given value."""
+  balance_not: Float
+
+  """All values that are contained in given list."""
+  balance_in: [Float!]
+
+  """All values that are not contained in given list."""
+  balance_not_in: [Float!]
+
+  """All values less than the given value."""
+  balance_lt: Float
+
+  """All values less than or equal the given value."""
+  balance_lte: Float
+
+  """All values greater than the given value."""
+  balance_gt: Float
+
+  """All values greater than or equal the given value."""
+  balance_gte: Float
+  initialAmount: Float
+
+  """All values that are not equal to given value."""
+  initialAmount_not: Float
+
+  """All values that are contained in given list."""
+  initialAmount_in: [Float!]
+
+  """All values that are not contained in given list."""
+  initialAmount_not_in: [Float!]
+
+  """All values less than the given value."""
+  initialAmount_lt: Float
+
+  """All values less than or equal the given value."""
+  initialAmount_lte: Float
+
+  """All values greater than the given value."""
+  initialAmount_gt: Float
+
+  """All values greater than or equal the given value."""
+  initialAmount_gte: Float
   name: String
 
   """All values that are not equal to given value."""
@@ -14129,6 +14218,7 @@ type User implements Node {
   person: Person
   events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
   account: Account
+  accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account!]
   createdPayments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
   updatedPayments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
 }
@@ -14151,6 +14241,7 @@ input UserCreateInput {
   person: PersonCreateOneWithoutUserInput
   events: EventCreateManyWithoutUserInput
   account: AccountCreateOneInput
+  accounts: AccountCreateManyInput
   createdPayments: PaymentCreateManyWithoutCreatedByInput
   updatedPayments: PaymentCreateManyWithoutUpdatedByInput
 }
@@ -14183,6 +14274,7 @@ input UserCreateWithoutCreatedPaymentsInput {
   person: PersonCreateOneWithoutUserInput
   events: EventCreateManyWithoutUserInput
   account: AccountCreateOneInput
+  accounts: AccountCreateManyInput
   updatedPayments: PaymentCreateManyWithoutUpdatedByInput
 }
 
@@ -14193,6 +14285,7 @@ input UserCreateWithoutEventsInput {
   role: UserRole
   person: PersonCreateOneWithoutUserInput
   account: AccountCreateOneInput
+  accounts: AccountCreateManyInput
   createdPayments: PaymentCreateManyWithoutCreatedByInput
   updatedPayments: PaymentCreateManyWithoutUpdatedByInput
 }
@@ -14204,6 +14297,7 @@ input UserCreateWithoutPersonInput {
   role: UserRole
   events: EventCreateManyWithoutUserInput
   account: AccountCreateOneInput
+  accounts: AccountCreateManyInput
   createdPayments: PaymentCreateManyWithoutCreatedByInput
   updatedPayments: PaymentCreateManyWithoutUpdatedByInput
 }
@@ -14216,6 +14310,7 @@ input UserCreateWithoutUpdatedPaymentsInput {
   person: PersonCreateOneWithoutUserInput
   events: EventCreateManyWithoutUserInput
   account: AccountCreateOneInput
+  accounts: AccountCreateManyInput
   createdPayments: PaymentCreateManyWithoutCreatedByInput
 }
 
@@ -14305,6 +14400,7 @@ input UserUpdateInput {
   person: PersonUpdateOneWithoutUserInput
   events: EventUpdateManyWithoutUserInput
   account: AccountUpdateOneInput
+  accounts: AccountUpdateManyInput
   createdPayments: PaymentUpdateManyWithoutCreatedByInput
   updatedPayments: PaymentUpdateManyWithoutUpdatedByInput
 }
@@ -14360,6 +14456,7 @@ input UserUpdateWithoutCreatedPaymentsDataInput {
   person: PersonUpdateOneWithoutUserInput
   events: EventUpdateManyWithoutUserInput
   account: AccountUpdateOneInput
+  accounts: AccountUpdateManyInput
   updatedPayments: PaymentUpdateManyWithoutUpdatedByInput
 }
 
@@ -14370,6 +14467,7 @@ input UserUpdateWithoutEventsDataInput {
   role: UserRole
   person: PersonUpdateOneWithoutUserInput
   account: AccountUpdateOneInput
+  accounts: AccountUpdateManyInput
   createdPayments: PaymentUpdateManyWithoutCreatedByInput
   updatedPayments: PaymentUpdateManyWithoutUpdatedByInput
 }
@@ -14381,6 +14479,7 @@ input UserUpdateWithoutPersonDataInput {
   role: UserRole
   events: EventUpdateManyWithoutUserInput
   account: AccountUpdateOneInput
+  accounts: AccountUpdateManyInput
   createdPayments: PaymentUpdateManyWithoutCreatedByInput
   updatedPayments: PaymentUpdateManyWithoutUpdatedByInput
 }
@@ -14393,6 +14492,7 @@ input UserUpdateWithoutUpdatedPaymentsDataInput {
   person: PersonUpdateOneWithoutUserInput
   events: EventUpdateManyWithoutUserInput
   account: AccountUpdateOneInput
+  accounts: AccountUpdateManyInput
   createdPayments: PaymentUpdateManyWithoutCreatedByInput
 }
 
@@ -14564,6 +14664,9 @@ input UserWhereInput {
   events_some: EventWhereInput
   events_none: EventWhereInput
   account: AccountWhereInput
+  accounts_every: AccountWhereInput
+  accounts_some: AccountWhereInput
+  accounts_none: AccountWhereInput
   createdPayments_every: PaymentWhereInput
   createdPayments_some: PaymentWhereInput
   createdPayments_none: PaymentWhereInput

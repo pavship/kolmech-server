@@ -5,33 +5,105 @@ const nodemailer = require('nodemailer')
 const { serverTransporter } = require('../../utils/mail')
 
 const auth = {
+	// async signup(_, {
+	// 	email,
+	// 	password,
+	// 	fName: fNameArg,
+	// 	lName: lNameArg,
+	// 	mName: mNameArg,
+	// 	regName,
+	// 	tel: telInput,
+	// 	country
+	// }, ctx, info) {
+	// 	let fName = fNameArg
+	// 	let lName = lNameArg
+	// 	let mName = mNameArg
+	// 	if (regName) {
+	// 		const [fNameDerived, lNameDerived, mNameDerived] = parseOrThrow(parseFullname, regName)
+	// 		fName = fNameArg || fNameDerived
+	// 		lName = lNameArg || lNameDerived
+	// 		mName = mNameArg || mNameDerived
+	// 		console.log('fNameDerived, lNameDerived, mNameDerived > ', fNameDerived, lNameDerived, mNameDerived)
+	// 	}
+	// 	if (!fName) throw new Error('Введите Ваше полное имя для регистрации')
+	// 	let tel = ''
+	// 	if (telInput) {
+	// 		if (!country) throw new Error('Не указан код страны телефона')
+	// 		tel = parseOrThrow(parsePhone, telInput, { country })
+	// 		console.log('tel > ', tel)
+	// 	}
+	// 	const passwordHash = await bcrypt.hash(password, 10)
+	// 	const user = await ctx.db.mutation.createUser({
+	// 		data: {
+	// 			email,
+	// 			confirmed: false,
+	// 			password: passwordHash,
+	// 			person: {
+	// 				create: {
+	// 					fName,
+	// 					...lName && { lName },
+	// 					...mName && { mName },
+	// 					...regName && { regName },
+	// 					...(tel && {
+	// 						tels: {
+	// 							create: {
+	// 								number: tel,
+	// 								default: true
+	// 							}
+	// 						}
+	// 					})
+	// 				}
+	// 			}
+	// 		}
+	// 	})
+	// 	// TODO Send email confirmation link, thus check the email address exists
+	// 	const confirmationToken = jwt.sign(
+	// 		{ userId: user.id },
+	// 		process.env.APP_SECRET
+	// 	)
+	// 	const confirmationUrl = 'http://localhost:3003/confirm/' + confirmationToken
+	// 	// let transporter = nodemailer.createTransport({
+	// 	// 	service: '"Yandex"', // no need to set host or port etc.
+	// 	// 	auth: {
+	// 	// 			user: 'pavship.dev@yandex.ru',
+	// 	// 			pass: process.env.EMAIL_PASS,
+	// 	// 	}
+	// 	// })
+	// 	let mailOptions = {
+	// 		from: '"honingovanie.ru" <pavship.dev@yandex.ru>', // sender address
+	// 		to: 'pavship.developer@tutamail.com', // list of receivers
+	// 		subject: 'Подтвердите email @', // Subject line
+	// 		// text: 'Hello world?', // plain text body
+	// 		html: `<p>Пожалуйста подтвердите свой email, нажав на <a href="${confirmationUrl}">эту ссылку</a>.`
+	// 	}
+	// 	serverTransporter.sendMail(mailOptions, (error, info) => {
+	// 		if (error) {
+	// 			console.log(error)
+	// 			// In case email is invalid, reject with explanatory error message
+	// 			throw new Error('Не удалось отправить почту на указанный email')
+	// 		}
+	// 		console.log('Message sent: %s', info.messageId);
+	// 	})
+	// 	const token = jwt.sign(
+	// 		{ userId: user.id },
+	// 		process.env.APP_SECRET,
+	// 		{ expiresIn: '15h' }
+	// 	)
+	// 	return {
+	// 		token,
+	// 		person: user.person
+	// 	}
+	// },
+
 	async signup(_, {
 		email,
 		password,
-		fName: fNameArg,
-		lName: lNameArg,
-		mName: mNameArg,
-		regName,
-		tel: telInput,
-		country
+		fName,
+		lName,
 	}, ctx, info) {
-		let fName = fNameArg
-		let lName = lNameArg
-		let mName = mNameArg
-		if (regName) {
-			const [fNameDerived, lNameDerived, mNameDerived] = parseOrThrow(parseFullname, regName)
-			fName = fNameArg || fNameDerived
-			lName = lNameArg || lNameDerived
-			mName = mNameArg || mNameDerived
-			console.log('fNameDerived, lNameDerived, mNameDerived > ', fNameDerived, lNameDerived, mNameDerived)
-		}
-		if (!fName) throw new Error('Введите Ваше полное имя для регистрации')
-		let tel = ''
-		if (telInput) {
-			if (!country) throw new Error('Не указан код страны телефона')
-			tel = parseOrThrow(parsePhone, telInput, { country })
-			console.log('tel > ', tel)
-		}
+		const { db } = ctx
+		const [ person ] = await db.query.persons({ where: { amoName_starts_with: lName + ' ' + fName }}, '{ id }')
+		if (!person) throw new Error('Имя не доступно для регистрации')
 		const passwordHash = await bcrypt.hash(password, 10)
 		const user = await ctx.db.mutation.createUser({
 			data: {
@@ -39,50 +111,9 @@ const auth = {
 				confirmed: false,
 				password: passwordHash,
 				person: {
-					create: {
-						fName,
-						...lName && { lName },
-						...mName && { mName },
-						...regName && { regName },
-						...(tel && {
-							tels: {
-								create: {
-									number: tel,
-									default: true
-								}
-							}
-						})
-					}
+					connect: { id: person.id }
 				}
 			}
-		})
-		// TODO Send email confirmation link, thus check the email address exists
-		const confirmationToken = jwt.sign(
-			{ userId: user.id },
-			process.env.APP_SECRET
-		)
-		const confirmationUrl = 'http://localhost:3003/confirm/' + confirmationToken
-		// let transporter = nodemailer.createTransport({
-		// 	service: '"Yandex"', // no need to set host or port etc.
-		// 	auth: {
-		// 			user: 'pavship.dev@yandex.ru',
-		// 			pass: process.env.EMAIL_PASS,
-		// 	}
-		// })
-		let mailOptions = {
-			from: '"honingovanie.ru" <pavship.dev@yandex.ru>', // sender address
-			to: 'pavship.developer@tutamail.com', // list of receivers
-			subject: 'Подтвердите email @', // Subject line
-			// text: 'Hello world?', // plain text body
-			html: `<p>Пожалуйста подтвердите свой email, нажав на <a href="${confirmationUrl}">эту ссылку</a>.`
-		}
-		serverTransporter.sendMail(mailOptions, (error, info) => {
-			if (error) {
-				console.log(error)
-				// In case email is invalid, reject with explanatory error message
-				throw new Error('Не удалось отправить почту на указанный email')
-			}
-			console.log('Message sent: %s', info.messageId);
 		})
 		const token = jwt.sign(
 			{ userId: user.id },
