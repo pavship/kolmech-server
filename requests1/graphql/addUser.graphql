@@ -1,0 +1,87 @@
+#app
+mutation Login {
+  login (
+    email: ""
+    password: ""
+  ) { token }
+}
+mutation Signup {
+  signup (
+    email: ""
+    password: ""
+    fName: ""
+    lName: ""
+  ) { token }
+}
+mutation populateAccountsBalances {
+  populateAccountsBalances { 
+  	id
+    name
+    initialAmount
+    balance
+  }
+}
+
+#db
+query allUsers {
+  users {
+    id
+    email
+    role
+    account {
+      id
+      name
+    }
+    accounts {
+      id
+      name
+    }
+    person {
+      id
+    	amoName
+  	}
+  }
+}
+query allAccounts {
+  accounts {
+    id
+    name
+    balance
+  }
+}
+query payments {
+  payments (where: {
+    person: {
+      id: ""
+    }
+  }) {
+    id
+    dateLocal
+    amount
+  }
+}
+mutation createAccount {
+  createAccount (data: {
+    name: "Цветов"
+  }) {
+    id
+    name
+    balance
+  }
+}
+mutation updateUser {
+  updateUser (where: { id: "" }, data: {
+    account: {
+      connect: {
+        id: ""
+      }
+    },
+    accounts: {
+      connect: {
+        id: ""
+      }
+    }
+  }) {
+    id
+  }
+}

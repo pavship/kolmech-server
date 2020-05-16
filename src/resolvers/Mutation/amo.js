@@ -128,12 +128,12 @@ const syncWithAmoContacts = async(_, __, ctx, info) => {
           'cjm85kntr00f009385au7tolq', //Admin
           'cjnfcpohm0d4h0724cmtoe8sj', //Server
           'ck5vawx4y013l07974hxx8hdt', //Administrator dev
-          'ck5vipa7100l9063866esnp1n', //Administrator prod
+          //'ck5vipa7100l9063866esnp1n', //Administrator prod - has been added to AmoContacts
         ]
       }
     }, '{ id fName lName amoId amoName }')
     // assign amoIds to existing users 
-    // just once for migration purpose
+    // THIS PART USED JUST ONCE FOR MIGRATION PURPOSE
     // Then, every Person except Admin and Server has corresponding contact in AmoCRM
     // const updated = await Promise.all(persons.map(({
     //   id,
@@ -149,6 +149,25 @@ const syncWithAmoContacts = async(_, __, ctx, info) => {
     //     }
     //   }, '{ id }')
     // }))
+
+    // THIS PART USED FOR DEBUG
+    // for (const { id: amoId, name: amoName } of contacts) {
+    //   const person = persons.find(p => p.amoId === amoId)
+    //   console.log('person, amoId, amoName > ', person, amoId, amoName)
+    //   if (!person) await db.mutation.createPerson({
+    //     data: {
+    //       amoId,
+    //       amoName
+    //     }
+    //   }, '{ amoId amoName }')
+    //   if (person && person.amoName === amoName) continue
+    //   if (person) await db.mutation.updatePerson({ where: { amoId },
+    //     data: {
+    //       amoName
+    //     }
+    //   }, '{ amoId amoName }')
+    // }
+
     const handled = await Promise.all(contacts.map(({
       id: amoId,
       name: amoName
@@ -167,6 +186,7 @@ const syncWithAmoContacts = async(_, __, ctx, info) => {
         }
       }, '{ amoId amoName }')
     }))
+
     // const upserted = handled.filter(c => !!c) //filter out nulls
     const toDelete = persons.filter(p => !contacts.map(c => c.id).includes(p.amoId))
     const deleted = await db.mutation.deleteManyPersons({
