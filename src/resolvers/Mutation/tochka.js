@@ -1,5 +1,6 @@
 const axios = require('axios')
 const { toLocalISOString } = require('../../utils/dates')
+const { safeStringify } = require('../../utils/reqResToJson')
 const { org: { upsertOrgsByInn } } = require('./org')
 const { migration: { populateAccountsBalances } } = require('./migration')
 
@@ -39,16 +40,22 @@ const getTochkaPayments = async () => {
         account_code,
         bank_code: '044525999',
         date_start,
+        // date_start: '2020-03-30',
         date_end: toLocalISOString(new Date).slice(0,10)
       })
     })
     const { request_id } = await res.json()
+    // console.log('request_id > ', request_id)
     // 2. fetch payments from tochka server
     const statementUrl = baseUrl + '/result/' + request_id
     const res1 = await fetch(statementUrl, {
       method: 'GET',
       headers
     })
+    // console.log('res1 > ', res1)
+    // require('fs').writeFileSync('res1.json', safeStringify(res1))
+    // const tp = JSON.parse(require('fs').readFileSync('payments.json'))
+    // console.log('tp.length > ', tp.length)
     if (res1.statusText !== 'OK')
       throw new Error(`Ошибка сервера Точка. Статус запроса для счета № ${i + 1}: ` + statusText)
     return (await res1.json()).payments
