@@ -37,7 +37,7 @@ const payment = {
       }
       else {
         const result = await db.mutation.updatePayment(mutationObj, info)
-        if (input.amount) await populateAccountsBalances(_, _, ctx, '{ id }')
+        if (input.amount || input.accountId) await populateAccountsBalances(_, _, ctx, '{ id }')
         return result
       }
     } catch (err) {

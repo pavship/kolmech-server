@@ -8,6 +8,7 @@ const mdKontragents = async (_, { inn }, ctx, info) => {
     const { statusText, data } = await moedelo.get(url)
     if (statusText !== 'OK')
       throw new Error (`Could not get kontragent from Moedelo, statusText > ${statusText}`)
+      // console.log('data.ResourceList > ', data.ResourceList)
     return data.ResourceList
   } catch (err) {
     console.log('mdKontragents query err > ', err)

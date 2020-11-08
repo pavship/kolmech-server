@@ -57,7 +57,7 @@ const getTochkaPayments = async () => {
     // const tp = JSON.parse(require('fs').readFileSync('payments.json'))
     // console.log('tp.length > ', tp.length)
     if (res1.statusText !== 'OK')
-      throw new Error(`Ошибка сервера Точка. Статус запроса для счета № ${i + 1}: ` + statusText)
+      throw new Error(`Ошибка сервера Точка. Статус запроса для счета № ${i + 1}: ` + res1.statusText)
     return (await res1.json()).payments
       .map(p => ({ ...p, account_code }))
   }))
@@ -140,7 +140,7 @@ const syncWithTochkaPayments = async (_, __, ctx, info) => {
         isIncome: parseFloat(p.payment_amount) > 0,
         inn: p.counterparty_inn,
         org: orgs.find(o => p.counterparty_inn === o.inn),
-        person: persons.find(pers => p.counterparty_name.toLowerCase().startsWith(pers.amoNameLowerCase)),
+        person: persons.find(pers => !!pers.amoNameLowerCase && p.counterparty_name.toLowerCase().includes(pers.amoNameLowerCase)),
         purpose: p.payment_purpose,
         tochkaId: p.x_payment_id,
       }

@@ -317,12 +317,26 @@ query allOpTypes {
     opClass
   }
 }
-query allPayments {
-  payments {
+query AllPayments {
+  payments (where: { org: { id:"cjuhaolrq019b0738fufhhsus"}}
+  	orderBy: dateLocal_DESC
+  ) {
     id
-    tochkaId
-    amount
-    isIncome
+    # amount
+    # dateLocal
+    # article {
+    #   id
+    #   name
+    # }
+    # org {
+    #   id
+    #   name
+    # }
+    person {
+      id
+      amoName
+    }
+    # purpose
   }
 }
 query allPersons {
@@ -526,6 +540,16 @@ mutation updateOrg {
     amoId: 54170645
     ulName: "ООО \"МОНТАЖСТРОЙЭЛЕКТРО\""
   }) { id }
+}
+mutation updatePayment {
+  updatePayment (where: { id:"ckby3glj107xw063893tjiebh"},
+  data: {
+    person: {
+      disconnect: true
+    }
+  }) {
+    id
+  }
 }
 mutation upsertDeal {
   upsertDeal(where: {
